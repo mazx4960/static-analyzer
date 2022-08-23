@@ -32,3 +32,4 @@ Name | Mobile | Email | Development OS/Toolchain
 Chen Xihao | 96376285 | chenxihao@u.nus.edu | MacOS 12 / CLion 
 Desmond Tan Jing Shen | 90481763 | desmondtanjs@u.nus.edu | MacOS 12 / CLion
 Soo Wei Kang Kelvin | 96605926 | kelvin.soo@u.nus.edu | Windows 10 / Visual Studio 2022
+Lee En En | 97609822 | leeenen@u.nus.edu | Windows 10 / Visual Studio 2022
