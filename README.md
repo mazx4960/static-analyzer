@@ -29,4 +29,4 @@ No additional instructions required.
 
 Name | Mobile | Email | Development OS/Toolchain
 -:|:-:|:-|-|
-John Doe | 99887766 | john@doe.com | Windows 10/Visual Studio 2019
+Chen Xihao | 96376285 | chenxihao@nus.edu.sg | MacOS 12 / Visual Studio 2019
