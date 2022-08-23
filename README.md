@@ -30,3 +30,4 @@ No additional instructions required.
 Name | Mobile | Email | Development OS/Toolchain
 -:|:-:|:-|-|
 Chen Xihao | 96376285 | chenxihao@u.nus.edu | MacOS 12 / Visual Studio 2019
+Desmond Tan Jing Shen | 90481763 | desmondtanjs@u.nus.edu | MacOS 12 / CLion
