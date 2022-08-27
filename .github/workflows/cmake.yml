@@ -24,7 +24,7 @@ jobs:
       - name: Build Project
         shell: bash
         run: |
-          cd Team00/Code00
+          cd Team14/Code14
           mkdir build
           cd build
           cmake -S ../ -B .
