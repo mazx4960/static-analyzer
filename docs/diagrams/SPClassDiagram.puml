@@ -1,0 +1,96 @@
+@startuml
+
+class SPManager
+
+class SourceReader {
+    string readSource()
+}
+
+class Lexer {
+    Token getNext()
+    []Token lex()
+}
+
+abstract class Token {
+}
+class Symbol
+class Literal
+class Keyword
+class Operator
+
+class Parser
+class SyntaxChecker
+class SimpleGrammarRule
+abstract class SimpleSymbol
+class SimpleTerminal
+class SimpleNonterminal
+
+class SimpleAST
+abstract class SimpleEntity
+abstract class SimpleContainer
+class SimpleProgram
+class SimpleProcedure
+class SimpleIf
+class SimpleWhile
+class SimpleCall
+class SimpleAssign
+class SimpleRead
+class SimplePrint
+
+abstract class DesignExtractor {
+    void extractDesign(SimpleAST)
+}
+class EntityExtractor
+class PatternExtractor
+class RelationshipExtractor
+
+class Populator
+
+class SimpleASTVisitor {
+    void extractEntity(SimpleEntity)
+    void extractRelationship(SimpleEntity)
+    void extractPattern(SimpleEntity)
+}
+
+SPManager -left-> SourceReader : readSource()
+SPManager -down-> Lexer
+SPManager -down-> Parser : parse()
+SPManager -right-> DesignExtractor : extractDesign()
+SPManager -right-> Populator : populate()
+
+Token <|.. Symbol
+Token <|.. Literal
+Token <|.. Keyword
+Token <|.. Operator
+
+Lexer o-- Token
+Parser .left.> Lexer: getNext()
+Parser -down-> SyntaxChecker : check()
+SyntaxChecker -down-> SimpleGrammarRule : check()
+SimpleSymbol <|.. SimpleNonterminal
+SimpleSymbol <|.. SimpleTerminal
+SimpleTerminal o-- Token
+SimpleGrammarRule *-- SimpleNonterminal
+SimpleGrammarRule *-- SimpleSymbol
+Parser *-down-> SimpleAST
+SimpleAST *-- SimpleProgram
+SimpleContainer ..|> SimpleEntity
+SimpleCall ..|> SimpleEntity
+SimpleAssign ..|> SimpleEntity
+SimpleRead ..|> SimpleEntity
+SimplePrint ..|> SimpleEntity
+SimpleIf ..|> SimpleContainer
+SimpleWhile ..|> SimpleContainer
+SimpleProcedure ..|> SimpleContainer
+SimpleProgram ..|> SimpleContainer
+SimpleContainer *-- SimpleEntity
+
+DesignExtractor <|.. EntityExtractor
+DesignExtractor <|.. PatternExtractor
+DesignExtractor <|.. RelationshipExtractor
+
+DesignExtractor -- SimpleASTVisitor
+SimpleASTVisitor -- SimpleAST
+
+@enduml
+
