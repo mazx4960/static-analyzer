@@ -1,0 +1,56 @@
+@startuml
+
+class SPManager
+
+class SourceReader {
+    string readSource()
+}
+
+class Lexer {
+    Token getNext()
+    []Token lex()
+}
+
+abstract class Token {
+}
+class Symbol
+class Literal
+class Keyword
+class Operator
+class Separator
+
+class Parser
+class SyntaxChecker
+class GrammarRule
+class AST
+
+abstract class DesignExtractor {
+    void extractDesign(AST)
+}
+class EntityExtractor
+class PatternExtractor
+class RelationshipExtractor
+
+SPManager -left-> SourceReader : readSource()
+SPManager -down-> Lexer
+SPManager -down-> Parser : parse()
+SPManager -right-> DesignExtractor : extractDesign()
+
+Token <|.. Symbol
+Token <|.. Literal
+Token <|.. Keyword
+Token <|.. Operator
+Token <|.. Separator
+
+Lexer o-- Token
+Parser .left.> Lexer: getNext()
+Parser *-down-> AST
+Parser -down-> SyntaxChecker : check()
+SyntaxChecker -down-> GrammarRule : check()
+
+DesignExtractor <|.. EntityExtractor
+DesignExtractor <|.. PatternExtractor
+DesignExtractor <|.. RelationshipExtractor
+
+@enduml
+
