@@ -1,0 +1,160 @@
+@startuml
+
+class SP {}
+
+class QPS {}
+
+interface PopulatePKB {
+	void populate(data)
+}
+
+interface QueryPKB {
+	Results query(input)
+}
+
+abstract class "EntityManager" {
+	void populate(data)
+	Results query(input)
+}
+
+abstract class "PatternManager" {
+	void populate(data)
+	Results query(input)
+}
+
+abstract class "AbstractionManager" {
+	void populate(data)
+	Results query(input)
+}
+
+class VariableEntity {
+	variableTable
+	void populate(data)
+	Results query(input)
+}
+
+class ReadEntity {
+	readTable
+	void populate(data)
+	Results query(input)
+}
+
+class PrintEntity {
+	printTable
+	void populate(data)
+	Results query(input)
+}
+
+class CallEntity {
+	callTable
+	void populate(data)
+	Results query(input)
+}
+
+class IfEntity {
+	ifTable
+	void populate(data)
+	Results query(input)
+}
+
+class WhileEntity {
+	whileTable
+	void populate(data)
+	Results query(input)
+}
+
+
+class ConstantEntity {
+	constantTable
+	void populate(data)
+	Results query(input)
+}
+
+
+class ProcedureEntity {
+	procedureTable
+	void populate(data)
+	Results query(input)
+}
+
+class AssignEntity {
+	assignTable
+	void populate(data)
+	Results query(input)
+}
+
+ class Pattern {
+	patternTable
+	void populate(data)
+	Results query(input)
+}
+
+class Modifies {
+	modifiesTable
+	void populate(data)
+	Results query(input)
+}
+
+class Follows {
+	followsTable
+	void populate(data)
+	Results query(input)
+}
+
+class FollowsT{
+	followsTTable
+	void populate(data)
+	Results query(input)
+}
+
+class Uses { 
+	usesTable
+	void populate(data)
+	Results query(input)
+}
+
+class Parent{
+	parentTable
+	void populate(data)
+	Results query(input)
+}
+
+class ParentT{
+	parentTTable
+	void populate(data)
+	Results query(input)
+}
+
+
+SP -down- PopulatePKB
+
+QPS -down- QueryPKB
+
+PopulatePKB <|.down. EntityManager
+QueryPKB <|.down. EntityManager
+
+PopulatePKB <|.down.  PatternManager
+QueryPKB <|.down. PatternManager
+
+PopulatePKB <|.down.  AbstractionManager
+QueryPKB <|.down. AbstractionManager
+
+VariableEntity  *-up- EntityManager
+ReadEntity  *-up- EntityManager
+PrintEntity  *-up- EntityManager
+CallEntity  *-up- EntityManager
+IfEntity  *-up- EntityManager
+WhileEntity  *-up- EntityManager
+ConstantEntity  *-up- EntityManager
+ProcedureEntity  *-up- EntityManager
+AssignEntity  *-up- EntityManager
+Pattern *-up- PatternManager
+Modifies *-up- AbstractionManager
+Follows *-up- AbstractionManager
+FollowsT *-up- AbstractionManager
+Uses *-up- AbstractionManager
+Parent *-up- AbstractionManager
+ParentT *-up- AbstractionManager
+
+@enduml
+
