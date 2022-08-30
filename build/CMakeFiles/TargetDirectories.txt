@@ -1,0 +1,14 @@
+/mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build/src/spa/CMakeFiles/spa.dir
+/mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build/src/spa/CMakeFiles/edit_cache.dir
+/mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build/src/spa/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build/src/autotester/CMakeFiles/autotester.dir
+/mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build/src/autotester/CMakeFiles/edit_cache.dir
+/mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build/src/autotester/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build/src/unit_testing/CMakeFiles/unit_testing.dir
+/mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build/src/unit_testing/CMakeFiles/edit_cache.dir
+/mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build/src/unit_testing/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build/src/integration_testing/CMakeFiles/integration_testing.dir
+/mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build/src/integration_testing/CMakeFiles/edit_cache.dir
+/mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build/src/integration_testing/CMakeFiles/rebuild_cache.dir

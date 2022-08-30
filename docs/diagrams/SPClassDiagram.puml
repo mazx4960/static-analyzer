@@ -24,17 +24,7 @@ class Separator
 class Parser
 class SimpleGrammarRule
 
-class SimpleAST
-abstract class SimpleEntity
-abstract class SimpleContainer
-class SimpleProgram
-class SimpleProcedure
-class SimpleIf
-class SimpleWhile
-class SimpleCall
-class SimpleAssign
-class SimpleRead
-class SimplePrint
+class AST
 
 class DesignExtractor {
     void extractDesign(SimpleAST)
@@ -71,18 +61,7 @@ Token <|.. Separator
 Lexer o-- Token
 Parser .left.> Lexer: getNext()
 Parser -down-> SimpleGrammarRule : check()
-Parser *-down-> SimpleAST
-SimpleAST *-- SimpleProgram
-SimpleContainer ..|> SimpleEntity
-SimpleCall ..|> SimpleEntity
-SimpleAssign ..|> SimpleEntity
-SimpleRead ..|> SimpleEntity
-SimplePrint ..|> SimpleEntity
-SimpleIf ..|> SimpleContainer
-SimpleWhile ..|> SimpleContainer
-SimpleProcedure ..|> SimpleContainer
-SimpleProgram ..|> SimpleContainer
-SimpleContainer *-- SimpleEntity
+Parser *-down-> AST
 
 Extractor <|.. EntityExtractor
 Extractor <|.. PatternExtractor

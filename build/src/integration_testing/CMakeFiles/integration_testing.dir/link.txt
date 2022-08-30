@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 CMakeFiles/integration_testing.dir/src/TestFrontEnd.cpp.o CMakeFiles/integration_testing.dir/src/main.cpp.o -o integration_testing  ../spa/libspa.a 

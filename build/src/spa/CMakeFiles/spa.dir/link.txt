@@ -1,0 +1,2 @@
+/usr/bin/ar qc libspa.a CMakeFiles/spa.dir/src/PKB/PKB.cpp.o CMakeFiles/spa.dir/src/QPS/QPS.cpp.o CMakeFiles/spa.dir/src/SP/SP.cpp.o CMakeFiles/spa.dir/src/UI/UI.cpp.o
+/usr/bin/ranlib libspa.a

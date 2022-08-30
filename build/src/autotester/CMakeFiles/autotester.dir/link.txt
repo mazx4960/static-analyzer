@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 CMakeFiles/autotester.dir/src/TestWrapper.cpp.o -o autotester  ../spa/libspa.a /mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/Team14/Code14/lib/autotester/x86_64/Linux/Release/libautotester.a -lpthread 
