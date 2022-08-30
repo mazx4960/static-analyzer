@@ -22,34 +22,21 @@ class Operator
 class Separator
 
 class Parser
-class SimpleGrammarRule
+class GrammarRule
 
 class SimpleAST
-abstract class SimpleEntity
-abstract class SimpleContainer
-class SimpleProgram
-class SimpleProcedure
-class SimpleIf
-class SimpleWhile
-class SimpleCall
-class SimpleAssign
-class SimpleRead
-class SimplePrint
 
 class DesignExtractor {
-    void extractDesign(SimpleAST)
+    DesignAbstraction[] extractDesign(SimpleAST)
 }
-abstract class Extractor {
-    void extract(SimpleAST)
+abstract class AbstractExtractor {
+    DesignAbstraction extract(SimpleAST)
 }
 class EntityExtractor {
-    void extract(SimpleAST)
 }
 class PatternExtractor {
-    void extract(SimpleAST)
 }
 class RelationshipExtractor {
-    void extract(SimpleAST)
 }
 
 class PKBInterface
@@ -70,25 +57,14 @@ Token <|.. Separator
 
 Lexer o-- Token
 Parser .left.> Lexer: getNext()
-Parser -down-> SimpleGrammarRule : check()
+Parser -down-> GrammarRule : check()
 Parser *-down-> SimpleAST
-SimpleAST *-- SimpleProgram
-SimpleContainer ..|> SimpleEntity
-SimpleCall ..|> SimpleEntity
-SimpleAssign ..|> SimpleEntity
-SimpleRead ..|> SimpleEntity
-SimplePrint ..|> SimpleEntity
-SimpleIf ..|> SimpleContainer
-SimpleWhile ..|> SimpleContainer
-SimpleProcedure ..|> SimpleContainer
-SimpleProgram ..|> SimpleContainer
-SimpleContainer *-- SimpleEntity
 
-Extractor <|.. EntityExtractor
-Extractor <|.. PatternExtractor
-Extractor <|.. RelationshipExtractor
+AbstractExtractor <|.. EntityExtractor
+AbstractExtractor <|.. PatternExtractor
+AbstractExtractor <|.. RelationshipExtractor
 
-DesignExtractor --> Extractor : extract()
+DesignExtractor --> AbstractExtractor : extract()
 
 @enduml
 
