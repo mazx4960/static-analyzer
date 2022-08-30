@@ -4,61 +4,59 @@ class SP
 class QPS
 class PKB
 
-abstract class PopulatePKB {
+abstract class PKBWriter {
 	void populate(Abstraction)
 }
 
-abstract class QueryPKB {
+abstract class PKBReader {
 	Results query(Query)
 }
 
-abstract class "EntityManager"
-abstract class "AbstractionManager"
-abstract class "PatternManager"
+class "EntityManager"
+class "AbstractionManager"
+class "PatternManager"
 
 abstract class "SIMPLEAbstraction"
 abstract class "SIMPLEEntity"
 abstract class "QueryPattern"
 
-class VariableEntity {
+class Variable {
 	variableTable
 }
 
-class ReadEntity {
+class Read {
 	readTable
 }
 
-class PrintEntity {
+class Print {
 	printTable
 }
 
-class CallEntity {
+class Call {
 	callTable
 }
 
-class IfEntity {
+class If {
 	ifTable
 }
 
-class WhileEntity {
+class While {
 	whileTable
 }
 
-
-class ConstantEntity {
+class Constant {
 	constantTable
 }
 
-
-class ProcedureEntity {
+class Procedure{
 	procedureTable
 }
 
-class AssignEntity {
+class Assign {
 	assignTable
 }
 
- class Pattern {
+class Pattern {
 	patternTable
 }
 
@@ -70,10 +68,6 @@ class Follows {
 	followsTable
 }
 
-class FollowsT{
-	followsTTable
-}
-
 class Uses { 
 	usesTable
 }
@@ -82,61 +76,53 @@ class Parent{
 	parentTable
 }
 
-class ParentT{
-	parentTTable
-}
 
+PKB *-down- PKBWriter
+PKB *-down- PKBReader
+SP -down- PKBWriter
+QPS -down- PKBReader
 
-PKB *-down- PopulatePKB
-PKB *-down- QueryPKB
-SP -down- PopulatePKB
-QPS -down- QueryPKB
+PKBWriter <|.down. EntityManager
+PKBReader <|.down. EntityManager
 
-PopulatePKB <|.down. EntityManager
-QueryPKB <|.down. EntityManager
+PKBWriter <|.down.  PatternManager
+PKBReader <|.down. PatternManager
 
-PopulatePKB <|.down.  PatternManager
-QueryPKB <|.down. PatternManager
+PKBWriter <|.left.  AbstractionManager
+PKBReader <|.left. AbstractionManager
 
-PopulatePKB <|.down.  AbstractionManager
-QueryPKB <|.down. AbstractionManager
+Variable -up-* EntityManager
+Read -up-* EntityManager
+Print  -up-* EntityManager
+Call -up-* EntityManager
+If -up-* EntityManager
+While -up-* EntityManager
+Constant -up-* EntityManager
+Procedure -up-* EntityManager
+Assign -up-* EntityManager
 
-VariableEntity  -up-* EntityManager
-ReadEntity  -up-* EntityManager
-PrintEntity  -up-* EntityManager
-CallEntity  -up-* EntityManager
-IfEntity  -up-* EntityManager
-WhileEntity  -up-* EntityManager
-ConstantEntity  -up-* EntityManager
-ProcedureEntity  -up-* EntityManager
-AssignEntity  -up-* EntityManager
-
-VariableEntity -down-|> SIMPLEEntity
-ReadEntity -down-|> SIMPLEEntity
-PrintEntity -down-|> SIMPLEEntity
-CallEntity -down-|> SIMPLEEntity
-IfEntity -down-|> SIMPLEEntity
-WhileEntity -down-|> SIMPLEEntity
-ConstantEntity -down-|> SIMPLEEntity
-ProcedureEntity -down-|> SIMPLEEntity
-AssignEntity -down-|> SIMPLEEntity
+Variable -down-|> SIMPLEEntity
+Read -down-|> SIMPLEEntity
+Print -down-|> SIMPLEEntity
+Call -down-|> SIMPLEEntity
+If -down-|> SIMPLEEntity
+While -down-|> SIMPLEEntity
+Constant -down-|> SIMPLEEntity
+Procedure -down-|> SIMPLEEntity
+Assign -down-|> SIMPLEEntity
 
 Modifies -up-* AbstractionManager
 Follows -up-* AbstractionManager
-FollowsT -up-* AbstractionManager
 Uses -up-* AbstractionManager
 Parent -up-* AbstractionManager
-ParentT -up-* AbstractionManager
+
 
 Modifies -down-|> SIMPLEAbstraction
 Follows -down-|> SIMPLEAbstraction
-FollowsT -down-|> SIMPLEAbstraction
 Uses -down-|> SIMPLEAbstraction
 Parent -down-|> SIMPLEAbstraction
-ParentT -down-|> SIMPLEAbstraction
 
 Pattern -up-* PatternManager
 Pattern -down-|> QueryPattern
 
 @enduml
-
