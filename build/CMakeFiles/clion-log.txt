@@ -1,8 +1,0 @@
-C:\WINDOWS\system32\wsl.exe --distribution Ubuntu --exec /usr/bin/zsh -c "export CMAKE_COLOR_DIAGNOSTICS=ON && export CLION_IDE=TRUE && export JETBRAINS_IDE=TRUE && cd /mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build && /usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Release -G 'CodeBlocks - Unix Makefiles' -S /mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/Team14/Code14 -B /mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build"
--- /mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/Team14/Code14 /mnt/c/Users/desmo/Desktop/22s1-cp-spa-team-14/build
--- Configuring done
-CMake Error at src/spa/CMakeLists.txt:3 (add_library):
-  No SOURCES given to target: spa
-
-
-CMake Generate step failed.  Build files cannot be regenerated correctly.
