@@ -2,7 +2,7 @@
 
 #include "Interface/Interface.h"
 #include "Interface/UIInterface.h"
-#include "Interface/PKBInterface.h"
+#include "PKB/PKBInterface/PKBInterface.h"
 
 
 using namespace std;
