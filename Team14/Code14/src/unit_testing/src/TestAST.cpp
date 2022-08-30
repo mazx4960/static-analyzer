@@ -1,5 +1,5 @@
 
-#include "commons/TNode.h"
+#include "QPS/TNode/TNode.h"
 
 #include "catch.hpp"
 using namespace std;
