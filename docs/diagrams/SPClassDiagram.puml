@@ -1,6 +1,6 @@
 @startuml
 
-class SP
+class SPManager
 class UI
 class PKB
 
@@ -22,34 +22,31 @@ class Operator
 class Separator
 
 class Parser
-class SimpleGrammarRule
+class GrammarRule
 
 class AST
 
 class DesignExtractor {
-    void extractDesign(SimpleAST)
+    DesignAbstraction[] extractDesign(AST)
 }
-abstract class Extractor {
-    void extract(SimpleAST)
+abstract class AbstractExtractor {
+    DesignAbstraction extract(AST)
 }
 class EntityExtractor {
-    void extract(SimpleAST)
 }
 class PatternExtractor {
-    void extract(SimpleAST)
 }
 class RelationshipExtractor {
-    void extract(SimpleAST)
 }
 
 class PKBInterface
 
-SP *-left- UIInterface
-SP *-left- PKBInterface
-SP *-down- Lexer
-SP *-down- Parser
-SP *-right- DesignExtractor
-PKBInterface -up- PKB
+SPManager *-left- UIInterface
+SPManager *-up- PKBInterface
+SPManager *-down- Lexer
+SPManager *-down- Parser
+SPManager *-right- DesignExtractor
+PKBInterface -right- PKB
 UIInterface -up- UI
 
 Token <|.. Symbol
@@ -60,14 +57,14 @@ Token <|.. Separator
 
 Lexer o-- Token
 Parser .left.> Lexer: getNext()
-Parser -down-> SimpleGrammarRule : check()
+Parser -down-> GrammarRule : check()
 Parser *-down-> AST
 
-Extractor <|.. EntityExtractor
-Extractor <|.. PatternExtractor
-Extractor <|.. RelationshipExtractor
+AbstractExtractor <|.. EntityExtractor
+AbstractExtractor <|.. PatternExtractor
+AbstractExtractor <|.. RelationshipExtractor
 
-DesignExtractor --> Extractor : extract()
+DesignExtractor --> AbstractExtractor : extract()
 
 @enduml
 
