@@ -2,12 +2,13 @@
 
 class SP
 class QPS
+class PKB
 
-interface PopulatePKB {
+abstract class PopulatePKB {
 	void populate(Abstraction)
 }
 
-interface QueryPKB {
+abstract class QueryPKB {
 	Results query(Query)
 }
 
@@ -86,8 +87,9 @@ class ParentT{
 }
 
 
+PKB *-down- PopulatePKB
+PKB *-down- QueryPKB
 SP -down- PopulatePKB
-
 QPS -down- QueryPKB
 
 PopulatePKB <|.down. EntityManager
