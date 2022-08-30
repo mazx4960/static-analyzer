@@ -1,133 +1,95 @@
 @startuml
 
-class SP {}
+class SP
+class QPS
+class PKB
 
-class QPS {}
-
-interface PopulatePKB {
-	void populate(data)
+abstract class PopulatePKB {
+	void populate(Abstraction)
 }
 
-interface QueryPKB {
-	Results query(input)
+abstract class QueryPKB {
+	Results query(Query)
 }
 
-abstract class "EntityManager" {
-	void populate(data)
-	Results query(input)
-}
+abstract class "EntityManager"
+abstract class "AbstractionManager"
+abstract class "PatternManager"
 
-abstract class "PatternManager" {
-	void populate(data)
-	Results query(input)
-}
-
-abstract class "AbstractionManager" {
-	void populate(data)
-	Results query(input)
-}
+abstract class "SIMPLEAbstraction"
+abstract class "SIMPLEEntity"
+abstract class "QueryPattern"
 
 class VariableEntity {
 	variableTable
-	void populate(data)
-	Results query(input)
 }
 
 class ReadEntity {
 	readTable
-	void populate(data)
-	Results query(input)
 }
 
 class PrintEntity {
 	printTable
-	void populate(data)
-	Results query(input)
 }
 
 class CallEntity {
 	callTable
-	void populate(data)
-	Results query(input)
 }
 
 class IfEntity {
 	ifTable
-	void populate(data)
-	Results query(input)
 }
 
 class WhileEntity {
 	whileTable
-	void populate(data)
-	Results query(input)
 }
 
 
 class ConstantEntity {
 	constantTable
-	void populate(data)
-	Results query(input)
 }
 
 
 class ProcedureEntity {
 	procedureTable
-	void populate(data)
-	Results query(input)
 }
 
 class AssignEntity {
 	assignTable
-	void populate(data)
-	Results query(input)
 }
 
  class Pattern {
 	patternTable
-	void populate(data)
-	Results query(input)
 }
 
 class Modifies {
 	modifiesTable
-	void populate(data)
-	Results query(input)
 }
 
 class Follows {
 	followsTable
-	void populate(data)
-	Results query(input)
 }
 
 class FollowsT{
 	followsTTable
-	void populate(data)
-	Results query(input)
 }
 
 class Uses { 
 	usesTable
-	void populate(data)
-	Results query(input)
 }
 
 class Parent{
 	parentTable
-	void populate(data)
-	Results query(input)
 }
 
 class ParentT{
 	parentTTable
-	void populate(data)
-	Results query(input)
 }
 
 
+PKB *-down- PopulatePKB
+PKB *-down- QueryPKB
 SP -down- PopulatePKB
-
 QPS -down- QueryPKB
 
 PopulatePKB <|.down. EntityManager
@@ -139,22 +101,42 @@ QueryPKB <|.down. PatternManager
 PopulatePKB <|.down.  AbstractionManager
 QueryPKB <|.down. AbstractionManager
 
-VariableEntity  *-up- EntityManager
-ReadEntity  *-up- EntityManager
-PrintEntity  *-up- EntityManager
-CallEntity  *-up- EntityManager
-IfEntity  *-up- EntityManager
-WhileEntity  *-up- EntityManager
-ConstantEntity  *-up- EntityManager
-ProcedureEntity  *-up- EntityManager
-AssignEntity  *-up- EntityManager
-Pattern *-up- PatternManager
-Modifies *-up- AbstractionManager
-Follows *-up- AbstractionManager
-FollowsT *-up- AbstractionManager
-Uses *-up- AbstractionManager
-Parent *-up- AbstractionManager
-ParentT *-up- AbstractionManager
+VariableEntity  -up-* EntityManager
+ReadEntity  -up-* EntityManager
+PrintEntity  -up-* EntityManager
+CallEntity  -up-* EntityManager
+IfEntity  -up-* EntityManager
+WhileEntity  -up-* EntityManager
+ConstantEntity  -up-* EntityManager
+ProcedureEntity  -up-* EntityManager
+AssignEntity  -up-* EntityManager
+
+VariableEntity -down-|> SIMPLEEntity
+ReadEntity -down-|> SIMPLEEntity
+PrintEntity -down-|> SIMPLEEntity
+CallEntity -down-|> SIMPLEEntity
+IfEntity -down-|> SIMPLEEntity
+WhileEntity -down-|> SIMPLEEntity
+ConstantEntity -down-|> SIMPLEEntity
+ProcedureEntity -down-|> SIMPLEEntity
+AssignEntity -down-|> SIMPLEEntity
+
+Modifies -up-* AbstractionManager
+Follows -up-* AbstractionManager
+FollowsT -up-* AbstractionManager
+Uses -up-* AbstractionManager
+Parent -up-* AbstractionManager
+ParentT -up-* AbstractionManager
+
+Modifies -down-|> SIMPLEAbstraction
+Follows -down-|> SIMPLEAbstraction
+FollowsT -down-|> SIMPLEAbstraction
+Uses -down-|> SIMPLEAbstraction
+Parent -down-|> SIMPLEAbstraction
+ParentT -down-|> SIMPLEAbstraction
+
+Pattern -up-* PatternManager
+Pattern -down-|> QueryPattern
 
 @enduml
 

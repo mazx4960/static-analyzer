@@ -1,14 +1,16 @@
 @startuml
 
-class SPManager
+class SP
+class UI
+class PKB
 
-class SourceReader {
-    string readSource()
+class UIInterface {
+    string readSourceFile()
 }
 
 class Lexer {
     Token getNext()
-    []Token lex()
+    Token[] lex()
 }
 
 abstract class Token {
@@ -50,13 +52,15 @@ class RelationshipExtractor {
     void extract(SimpleAST)
 }
 
-class Populator
+class PKBInterface
 
-SPManager -left-> SourceReader : readSource()
-SPManager -down-> Lexer
-SPManager -down-> Parser : parse()
-SPManager -right-> DesignExtractor : extractDesign()
-SPManager -right-> Populator : populate()
+SP *-left- UIInterface
+SP *-left- PKBInterface
+SP *-down- Lexer
+SP *-down- Parser
+SP *-right- DesignExtractor
+PKBInterface -up- PKB
+UIInterface -up- UI
 
 Token <|.. Symbol
 Token <|.. Literal

@@ -21,7 +21,8 @@ class UIInterface {
 }
 
 class PKBInterface {
-	List query(Abstraction abstraction)
+	List getAllEntity()
+	List queryPKB(PKBQuery query)
 }
 
 class QPS {
@@ -49,12 +50,9 @@ class QueryEvaluator {
 Evaluator <|.down. QueryEvaluator
 
 Parser <|.down. QueryParser
-Parser <|.down. SIMPLEParser
 
-Tokens <|.down. SIMPLETokens
 Tokens <|.down. QueryTokens
 
-QueryTokens <|.down. UNKNOWN
 QueryTokens <|.down. Select
 
 Visitor <|.down. PQLVisitor
