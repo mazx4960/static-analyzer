@@ -1,11 +1,7 @@
 #pragma once
 using namespace std;
 
-#include "Interface/Interface.h"
-
-
-#ifndef SPA_QPSINTERFACE_H
-#define SPA_QPSINTERFACE_H
+#include "commons/Interface/Interface.h"
 
 
 class QPSInterface : public Interface {

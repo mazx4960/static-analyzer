@@ -5,11 +5,7 @@
 #pragma once
 using namespace std;
 
-#include "Interface/Interface.h"
-
-
-#ifndef SPA_SPINTERFACE_H
-#define SPA_SPINTERFACE_H
+#include "commons/Interface/Interface.h"
 
 
 class SPInterface : public Interface {

@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Interface/Interface.h"
-#include "Interface/UIInterface.h"
-#include "PKB/PKBInterface/PKBInterface.h"
+#include "commons/Interface/Interface.h"
 
 
 using namespace std;

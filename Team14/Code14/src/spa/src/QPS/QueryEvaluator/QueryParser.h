@@ -1,14 +1,10 @@
 //
 // Created by Xihao Chen on 30/8/22.
 //
-
-#ifndef SPA_QUERYPARSER_H
-#define SPA_QUERYPARSER_H
+#pragma once
+using namespace std;
 
 
 class QueryParser {
 
 };
-
-
-#endif //SPA_QUERYPARSER_H

@@ -9,10 +9,6 @@
 using namespace std;
 
 
-#ifndef SPA_UI_H
-#define SPA_UI_H
-
-
 class UI {
     string getSimpleProgramme();
 
@@ -25,6 +21,3 @@ class UI {
 
     string display(string)
 };
-
-
-#endif //SPA_UI_H

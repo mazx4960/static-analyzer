@@ -1,5 +1,6 @@
-class TNode
-{
-public:
+#pragma once
+using namespace std;
 
+
+class TNode {
 };

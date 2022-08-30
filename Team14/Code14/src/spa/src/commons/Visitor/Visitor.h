@@ -2,13 +2,10 @@
 // Created by Xihao Chen on 30/8/22.
 //
 
-#ifndef SPA_VISITOR_H
-#define SPA_VISITOR_H
+#pragma once
+using namespace std;
 
 
 class Visitor {
 
 };
-
-
-#endif //SPA_VISITOR_H

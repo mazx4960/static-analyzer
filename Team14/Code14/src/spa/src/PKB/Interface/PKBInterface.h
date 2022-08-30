@@ -4,16 +4,9 @@
 #pragma once
 using namespace std;
 
-#include "Interface/Interface.h"
-
-
-#ifndef SPA_PKBINTERFACE_H
-#define SPA_PKBINTERFACE_H
+#include "commons/Interface/Interface.h"
 
 
 class PKBInterface : public Interface {
 
 };
-
-
-#endif //SPA_PKBINTERFACE_H
