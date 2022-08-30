@@ -1,62 +1,59 @@
 @startuml
 
 abstract class  "Parser" {
-	parse()
 }
 
-abstract class  "Tokens" {}
+abstract class  "Token" {}
 
 abstract class  "Visitor" {
 	preview()
 }
 
 abstract class  "Evaluator" {
-	evaluate()
+}
+
+abstract class "EvaluationStrategy" {
 }
 
 class UIInterface {
-	inputSIMPLE()
-	inputQuery()
-	printResult()
 }
 
 class PKBInterface {
-	List getAllEntity()
-	List queryPKB(PKBQuery query)
 }
 
 class QPS {
-	processQPL(String query)
-	String getResult()
+	string[] process(String query)
 }
 
 class QueryParser {
-	Tokens parseQPL(String query)
-	validateTokens(Tokens tokens)
+	Token[] parse(String query)
+	validateTokens(Token[] tokens)
 }
 
 class PQLTokeniser {
-	Tokens tokenize(String query)
+	Token[] tokenize(String query)
+}
+
+class QueryToken {
+    bool validate(String tokenString)
 }
 
 class PQLValidator {
-	validateTokens(Tokens tokens)
+	bool validateToken(Token[] tokens)
 }
 
 class QueryEvaluator {
-	List evaluate(Tokens tokens)
+	string[] evaluate(Token[] tokens)
 }
 
 Evaluator <|.down. QueryEvaluator
 
 Parser <|.down. QueryParser
 
-Tokens <|.down. QueryTokens
-
-QueryTokens <|.down. Select
+Token <|.down. QueryToken
 
 Visitor <|.down. PQLVisitor
-PQLVisitor <|.down. PQLValidator
+PQLVisitor <|-down- PQLValidator
 
 UI -down- UIInterface
 PKB -down- PKBInterface
@@ -69,7 +66,8 @@ QPS *-down- QueryEvaluator
 QueryParser *-down- PQLTokeniser
 QueryParser *-down- PQLValidator
 
-PQLTokeniser *-down- QueryTokens
+PQLTokeniser *-down- QueryToken
+PQLTokeniser -down- SyntaxValidator
 
 PQLValidator *-down- SyntaxValidator
 PQLValidator *-down- SemanticsValidator
@@ -77,8 +75,14 @@ PQLValidator *-down- SemanticsValidator
 QueryEvaluator *-down- SubqueryEvaluator
 QueryEvaluator *-down- ResultAggregator
 
-SubqueryEvaluator <|.down. STEvaluator
-SubqueryEvaluator <|.down. PatternEvaluator
+EvaluationStrategy <|.down. SuchThatStrategy
+EvaluationStrategy <|.down.PatternStrategy
+
+SuchThatEvaluator *-down- SuchThatStrategy
+PatternEvaluator *-down- PatternStrategy
+
+SubqueryEvaluator <|-down- SuchThatEvaluator
+SubqueryEvaluator <|-down- PatternEvaluator
 SubqueryEvaluator -right- ResultAggregator
 
 @enduml
