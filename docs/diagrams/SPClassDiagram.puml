@@ -17,13 +17,10 @@ class Symbol
 class Literal
 class Keyword
 class Operator
+class Separator
 
 class Parser
-class SyntaxChecker
 class SimpleGrammarRule
-abstract class SimpleSymbol
-class SimpleTerminal
-class SimpleNonterminal
 
 class SimpleAST
 abstract class SimpleEntity
@@ -37,20 +34,23 @@ class SimpleAssign
 class SimpleRead
 class SimplePrint
 
-abstract class DesignExtractor {
+class DesignExtractor {
     void extractDesign(SimpleAST)
 }
-class EntityExtractor
-class PatternExtractor
-class RelationshipExtractor
+abstract class Extractor {
+    void extract(SimpleAST)
+}
+class EntityExtractor {
+    void extract(SimpleAST)
+}
+class PatternExtractor {
+    void extract(SimpleAST)
+}
+class RelationshipExtractor {
+    void extract(SimpleAST)
+}
 
 class Populator
-
-class SimpleASTVisitor {
-    void extractEntity(SimpleEntity)
-    void extractRelationship(SimpleEntity)
-    void extractPattern(SimpleEntity)
-}
 
 SPManager -left-> SourceReader : readSource()
 SPManager -down-> Lexer
@@ -62,16 +62,11 @@ Token <|.. Symbol
 Token <|.. Literal
 Token <|.. Keyword
 Token <|.. Operator
+Token <|.. Separator
 
 Lexer o-- Token
 Parser .left.> Lexer: getNext()
-Parser -down-> SyntaxChecker : check()
-SyntaxChecker -down-> SimpleGrammarRule : check()
-SimpleSymbol <|.. SimpleNonterminal
-SimpleSymbol <|.. SimpleTerminal
-SimpleTerminal o-- Token
-SimpleGrammarRule *-- SimpleNonterminal
-SimpleGrammarRule *-- SimpleSymbol
+Parser -down-> SimpleGrammarRule : check()
 Parser *-down-> SimpleAST
 SimpleAST *-- SimpleProgram
 SimpleContainer ..|> SimpleEntity
@@ -85,12 +80,11 @@ SimpleProcedure ..|> SimpleContainer
 SimpleProgram ..|> SimpleContainer
 SimpleContainer *-- SimpleEntity
 
-DesignExtractor <|.. EntityExtractor
-DesignExtractor <|.. PatternExtractor
-DesignExtractor <|.. RelationshipExtractor
+Extractor <|.. EntityExtractor
+Extractor <|.. PatternExtractor
+Extractor <|.. RelationshipExtractor
 
-DesignExtractor -- SimpleASTVisitor
-SimpleASTVisitor -- SimpleAST
+DesignExtractor --> Extractor : extract()
 
 @enduml
 
