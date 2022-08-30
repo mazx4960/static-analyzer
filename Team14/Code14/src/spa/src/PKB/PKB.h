@@ -1,23 +1,16 @@
+//
+// Created by Xihao Chen on 30/8/22.
+//
 #pragma once
-
-#include<stdio.h>
-#include <iostream>
-#include <string>
-#include <vector>
-
 using namespace std;
-typedef short PROC;
 
-class TNode;
+#ifndef SPA_PKB_H
+#define SPA_PKB_H
 
-class VarTable;  // no need to #include "VarTable.h" as all I need is pointer
 
 class PKB {
-private:
-    Interface
-public:
-	static VarTable* varTable; 
-	static int setProcToAST(PROC p, TNode* r);
-	static TNode* getRootAST (PROC p);
 
 };
+
+
+#endif //SPA_PKB_H
