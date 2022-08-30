@@ -4,7 +4,7 @@ abstract class  "Parser" {
 	parse()
 }
 
-abstract class  "Tokens" {}
+abstract class  "Token" {}
 
 abstract class  "Visitor" {
 	preview()
@@ -21,29 +21,29 @@ class UIInterface {
 }
 
 class PKBInterface {
-	List query(Abstraction abstraction)
+	List query(Abstraction)
 }
 
 class QPS {
-	processQPL(String query)
+	Result processQPL(String)
 	String getResult()
 }
 
 class QueryParser {
-	Tokens parseQPL(String query)
-	validateTokens(Tokens tokens)
+	Token[] parseQPL(String)
+	bool validateTokens(Token[])
 }
 
-class PQLTokeniser {
-	Tokens tokenize(String query)
+class PQLTokenizer {
+	Token[] tokenize(String)
 }
 
 class PQLValidator {
-	validateTokens(Tokens tokens)
+	validateTokens(Token[])
 }
 
 class QueryEvaluator {
-	List evaluate(Tokens tokens)
+	List evaluate(Token[])
 }
 
 Evaluator <|.down. QueryEvaluator
@@ -51,11 +51,11 @@ Evaluator <|.down. QueryEvaluator
 Parser <|.down. QueryParser
 Parser <|.down. SIMPLEParser
 
-Tokens <|.down. SIMPLETokens
-Tokens <|.down. QueryTokens
+Token <|.down. SIMPLEToken
+Token <|.down. QueryToken
 
-QueryTokens <|.down. UNKNOWN
-QueryTokens <|.down. Select
+QueryToken <|.down. UNKNOWN
+QueryToken <|.down. Select
 
 Visitor <|.down. PQLVisitor
 PQLVisitor <|.down. PQLValidator
@@ -68,10 +68,10 @@ QPS *-up- PKBInterface
 QPS *-down- QueryParser
 QPS *-down- QueryEvaluator
 
-QueryParser *-down- PQLTokeniser
+QueryParser *-down- PQLTokenizer
 QueryParser *-down- PQLValidator
 
-PQLTokeniser *-down- QueryTokens
+PQLTokenizer *-down- QueryToken
 
 PQLValidator *-down- SyntaxValidator
 PQLValidator *-down- SemanticsValidator
@@ -79,7 +79,7 @@ PQLValidator *-down- SemanticsValidator
 QueryEvaluator *-down- SubqueryEvaluator
 QueryEvaluator *-down- ResultAggregator
 
-SubqueryEvaluator <|.down. STEvaluator
+SubqueryEvaluator <|.down. SuchThatEvaluator
 SubqueryEvaluator <|.down. PatternEvaluator
 SubqueryEvaluator -right- ResultAggregator
 
