@@ -1,0 +1,44 @@
+@startuml
+
+abstract class TNode {
+    bool isEqual(TNode other);
+    string toString();
+}
+class AST
+class SymbolNode
+class LiteralNode
+class CondNode
+class OpNode
+class CallNode
+class AssignNode
+class ReadNode
+class PrintNode
+class IfNode
+class WhileNode
+class ProcedureNode
+class StmtListNode
+
+'root node
+AST .down.|> TNode
+
+'atomic nodes
+SymbolNode .up.|> TNode
+LiteralNode .up.|> TNode
+
+'expression nodes
+CondNode .up.|> TNode
+OpNode .up.|> TNode
+
+'method calls
+CallNode .up.|> TNode
+AssignNode .up.|> TNode
+ReadNode .up.|> TNode
+PrintNode .up.|> TNode
+
+'statements
+IfNode .up.|> TNode
+WhileNode .up.|> TNode
+ProcedureNode .up.|> TNode
+StmtListNode .up.|> TNode
+
+@enduml

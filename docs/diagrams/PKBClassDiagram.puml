@@ -1,0 +1,128 @@
+@startuml
+
+class SP
+class QPS
+class PKB
+
+abstract class PKBWriter {
+	void populate(Abstraction)
+}
+
+abstract class PKBReader {
+	Results query(Query)
+}
+
+class "EntityManager"
+class "AbstractionManager"
+class "PatternManager"
+
+abstract class "SIMPLEAbstraction"
+abstract class "SIMPLEEntity"
+abstract class "QueryPattern"
+
+class Variable {
+	variableTable
+}
+
+class Read {
+	readTable
+}
+
+class Print {
+	printTable
+}
+
+class Call {
+	callTable
+}
+
+class If {
+	ifTable
+}
+
+class While {
+	whileTable
+}
+
+class Constant {
+	constantTable
+}
+
+class Procedure{
+	procedureTable
+}
+
+class Assign {
+	assignTable
+}
+
+class Pattern {
+	patternTable
+}
+
+class Modifies {
+	modifiesTable
+}
+
+class Follows {
+	followsTable
+}
+
+class Uses { 
+	usesTable
+}
+
+class Parent{
+	parentTable
+}
+
+
+PKB *-down- PKBWriter
+PKB *-down- PKBReader
+SP -down- PKBWriter
+QPS -down- PKBReader
+
+PKBWriter <|.down. EntityManager
+PKBReader <|.down. EntityManager
+
+PKBWriter <|.down.  PatternManager
+PKBReader <|.down. PatternManager
+
+PKBWriter <|.left.  AbstractionManager
+PKBReader <|.left. AbstractionManager
+
+Variable -up-* EntityManager
+Read -up-* EntityManager
+Print  -up-* EntityManager
+Call -up-* EntityManager
+If -up-* EntityManager
+While -up-* EntityManager
+Constant -up-* EntityManager
+Procedure -up-* EntityManager
+Assign -up-* EntityManager
+
+Variable -down-|> SIMPLEEntity
+Read -down-|> SIMPLEEntity
+Print -down-|> SIMPLEEntity
+Call -down-|> SIMPLEEntity
+If -down-|> SIMPLEEntity
+While -down-|> SIMPLEEntity
+Constant -down-|> SIMPLEEntity
+Procedure -down-|> SIMPLEEntity
+Assign -down-|> SIMPLEEntity
+
+Modifies -up-* AbstractionManager
+Follows -up-* AbstractionManager
+Uses -up-* AbstractionManager
+Parent -up-* AbstractionManager
+
+
+Modifies -down-|> SIMPLEAbstraction
+Follows -down-|> SIMPLEAbstraction
+Uses -down-|> SIMPLEAbstraction
+Parent -down-|> SIMPLEAbstraction
+
+Pattern -up-* PatternManager
+Pattern -down-|> QueryPattern
+
+@enduml

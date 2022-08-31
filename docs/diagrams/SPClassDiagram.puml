@@ -1,0 +1,70 @@
+@startuml
+
+class SPManager
+class UI
+class PKB
+
+class UIInterface {
+    string readSourceFile()
+}
+
+class Lexer {
+    Token getNext()
+    Token[] lex()
+}
+
+abstract class Token {
+}
+class Symbol
+class Literal
+class Keyword
+class Operator
+class Separator
+
+class Parser
+class GrammarRule
+
+class AST
+
+class DesignExtractor {
+    DesignAbstraction[] extractDesign(AST)
+}
+abstract class AbstractExtractor {
+    DesignAbstraction extract(AST)
+}
+class EntityExtractor {
+}
+class PatternExtractor {
+}
+class RelationshipExtractor {
+}
+
+class PKBInterface
+
+SPManager *-left- UIInterface
+SPManager *-up- PKBInterface
+SPManager *-down- Lexer
+SPManager *-down- Parser
+SPManager *-right- DesignExtractor
+PKBInterface -right- PKB
+UIInterface -up- UI
+
+Token <|.. Symbol
+Token <|.. Literal
+Token <|.. Keyword
+Token <|.. Operator
+Token <|.. Separator
+
+Lexer o-- Token
+Parser .left.> Lexer: getNext()
+Parser -down-> GrammarRule : check()
+Parser *-down-> AST
+
+AbstractExtractor <|.. EntityExtractor
+AbstractExtractor <|.. PatternExtractor
+AbstractExtractor <|.. RelationshipExtractor
+
+DesignExtractor --> AbstractExtractor : extract()
+
+@enduml
+
