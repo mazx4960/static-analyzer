@@ -1,22 +1,22 @@
-cmake_minimum_required (VERSION 3.20.2)
-project (SPA)
+cmake_minimum_required(VERSION 3.20.2)
+project(SPA)
 
 set(CMAKE_VERBOSE_MAKEFILE on)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${PROJECT_SOURCE_DIR}/cmake")
-message (STATUS "${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}")
-if("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
+message(STATUS "${PROJECT_SOURCE_DIR} ${PROJECT_BINARY_DIR}")
+if ("${PROJECT_SOURCE_DIR}" STREQUAL "${PROJECT_BINARY_DIR}")
     message(FATAL_ERROR "In-source builds are forbidden.")
-endif()
+endif ()
 
-if(NOT CMAKE_BUILD_TYPE)
+if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
-endif()
+endif ()
 
-if(NOT MSVC)
-  set(CMAKE_CXX_FLAGS_DEBUG "-g")
-  set(CMAKE_CXX_FLAGS_RELEASE "-O3")
-endif()
+if (NOT MSVC)
+    set(CMAKE_CXX_FLAGS_DEBUG "-g")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -fprofile-arcs -ftest-coverage")
+endif ()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)

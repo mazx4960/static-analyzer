@@ -1,0 +1,17 @@
+changelog:
+  exclude:
+  categories:
+    - title: Breaking Changes 🛠
+      labels:
+        - breaking
+    - title: Exciting New Features 🎉
+      labels:
+        - epic
+        - enhancement
+        - story
+    - title: Bug Fixes 🐛
+      labels:
+        - bug
+    - title: Other Changes
+      labels:
+        - task
