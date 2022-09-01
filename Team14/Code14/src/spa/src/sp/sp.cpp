@@ -1,5 +1,4 @@
 #include "sp.h"
-#include "component_interface/sp_interface.h"
 
 SP::SP() {
   this->interface = SPInterface();

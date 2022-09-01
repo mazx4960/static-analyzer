@@ -1,6 +1,5 @@
 #pragma once
 
-#include "commons/component_interface/interface.h"
 #include "pkb/component_interface/pkb_interface.h"
 #include "qps/component_interface/qps_interface.h"
 

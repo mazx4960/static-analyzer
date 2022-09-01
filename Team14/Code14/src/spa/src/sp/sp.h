@@ -1,6 +1,5 @@
 #pragma once
 
-#include "commons/component_interface/interface.h"
 #include "pkb/component_interface/pkb_interface.h"
 #include "sp/component_interface/sp_interface.h"
 class SP {

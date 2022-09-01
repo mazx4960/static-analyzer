@@ -2,10 +2,9 @@
 #pragma once
 
 #include <string>
-#include "commons/component_interface/interface.h"
 #include "sp/component_interface/sp_interface.h"
 #include "qps/component_interface/qps_interface.h"
-#include "component_interface/ui_interface.h"
+#include "ui/component_interface/ui_interface.h"
 
 class UI {
  private:

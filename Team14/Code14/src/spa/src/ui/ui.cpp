@@ -1,8 +1,6 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "ui.h"
-#include "commons/component_interface/interface.h"
-#include "component_interface/ui_interface.h"
 
 UI::UI() {
   this->interface = UIInterface();
