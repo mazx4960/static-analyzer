@@ -1,10 +1,8 @@
-//
-// Created by Xihao Chen on 30/8/22.
-//
+// Copyright 2022 CS3203 Team14. All rights reserved.
 #pragma once
-using namespace std;
 
-#include "commons/Interface/Interface.h"
+
+#include "commons/component_interface/Interface.h"
 
 
 class UIInterface : public Interface {

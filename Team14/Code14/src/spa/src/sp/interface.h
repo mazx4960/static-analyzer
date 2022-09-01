@@ -2,5 +2,6 @@
 
 #pragma once
 
-class Parser {
+class SPInterface {
+ public:
 };

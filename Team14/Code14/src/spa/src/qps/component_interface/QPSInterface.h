@@ -1,9 +1,6 @@
 #pragma once
-using namespace std;
 
-#include "commons/Interface/Interface.h"
-
+#include "commons/component_interface/Interface.h"
 
 class QPSInterface : public Interface {
-
 };

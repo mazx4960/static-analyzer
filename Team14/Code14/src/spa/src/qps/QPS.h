@@ -1,15 +1,10 @@
 #pragma once
 
-#include "commons/Interface/Interface.h"
-
-
-using namespace std;
-
+#include "commons/component_interface/Interface.h"
 
 class QPS {
-private:
-    Interface UIInterface;
+ private:
+  Interface UIInterface;
 
-    Interface PKBInterface;
-
+  Interface PKBInterface;
 };

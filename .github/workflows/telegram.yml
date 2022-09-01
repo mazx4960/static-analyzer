@@ -20,4 +20,4 @@ jobs:
             ${{ github.actor }} created a new commit.
             Commit message: ${{ github.event.pull_request.title }}
             
-            Review now -> ${{ github.event.pull_request.url }}
+            Review now -> https://github.com/nus-cs3203/22s1-cp-spa-team-14/pulls

@@ -1,2 +1,6 @@
-#define CATCH_CONFIG_MAIN  // ThiATCH_CONFIG_MAIN
-#include "catch.hpp"
+#include "gtest/gtest.h"
+
+int main() {
+  testing::InitGoogleTest();
+  return RUN_ALL_TESTS();
+}
