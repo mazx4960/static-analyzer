@@ -2,6 +2,4 @@
 
 #pragma once
 
-
-class Interface {
-};
+class Interface {};

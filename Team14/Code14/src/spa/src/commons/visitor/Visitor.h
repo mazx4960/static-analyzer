@@ -2,5 +2,4 @@
 
 #pragma once
 
-class Visitor {
-};
+class Visitor {};

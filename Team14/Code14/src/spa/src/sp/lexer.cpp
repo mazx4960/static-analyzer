@@ -12,9 +12,7 @@ Lexer::Lexer(std::ifstream* s) {
   tmp = "";
 }
 
-char Lexer::peek() {
-  return char(source_stream->peek());
-}
+char Lexer::peek() { return char(source_stream->peek()); }
 char Lexer::advance() {
   column_number++;
   return char(source_stream->get());
@@ -25,7 +23,8 @@ char Lexer::advance() {
 void Lexer::ignore_whitespace() {
   std::string s;
   s = peek();
-  while (!source_stream->eof() && valid_whitespace.find(s) != valid_whitespace.end()) {
+  while (!source_stream->eof() &&
+         valid_whitespace.find(s) != valid_whitespace.end()) {
     if (peek() == '\n') {
       line_number++;
       column_number = 0;
@@ -86,7 +85,8 @@ Token* Lexer::next_token() {
     if (valid_operators.find(tmp) != valid_whitespace.end()) {
       return new OperatorToken(tmp);
     } else {
-      throw LexSyntaxError(line_number, column_number, "Invalid operator " + tmp);
+      throw LexSyntaxError(line_number, column_number,
+                           "Invalid operator " + tmp);
     }
     return new OperatorToken(tmp);
   } else if (valid_separators.find(tmp) != valid_whitespace.end()) {
@@ -95,7 +95,8 @@ Token* Lexer::next_token() {
   }
 
   // Something went wrong :/
-  throw LexSyntaxError(line_number, column_number, "Unexpected character: " + tmp);
+  throw LexSyntaxError(line_number, column_number,
+                       "Unexpected character: " + tmp);
 }
 std::vector<Token*> Lexer::lex() {
   std::vector<Token*> tokens;

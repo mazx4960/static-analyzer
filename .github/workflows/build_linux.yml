@@ -1,0 +1,40 @@
+name: Linux Build
+
+on: [ push ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    timeout-minutes: 3
+    strategy:
+      fail-fast: true
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Project
+        shell: bash
+        run: |
+          chmod +x scripts/build.sh
+          scripts/build.sh
+      - name: Run Tests
+        shell: bash
+        run: |
+          chmod +x scripts/test.sh
+          scripts/test.sh
+      - name: Generate Coverage files
+        shell: bash
+        run: |
+          sudo apt install lcov
+          lcov --capture --directory . --output-file coverage.info
+          lcov --list coverage.info
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}

@@ -13,15 +13,14 @@ class Lexer {
   int line_number;
   int column_number;
   std::ifstream* source_stream;
-  std::string tmp;// temporary string to store a value
-  std::unordered_set<std::string> valid_whitespace = {
-      " ", "\t", "\r", "\n"};
+  std::string tmp;  // temporary string to store a value
+  std::unordered_set<std::string> valid_whitespace = {" ", "\t", "\r", "\n"};
   std::unordered_set<std::string> valid_single_operators = {
       "+", "-", "*", "/", "%", "<", ">", "&", "|", "!", "="};
   std::unordered_set<std::string> valid_operators = {
-      "+", "-", "*", "/", "%", "<", ">", ">=", "<=", "&&", "||", "!=", "==", "="};
-  std::unordered_set<std::string> valid_separators = {
-      ";", "(", ")", "{", "}"};
+      "+",  "-",  "*",  "/",  "%",  "<",  ">",
+      ">=", "<=", "&&", "||", "!=", "==", "="};
+  std::unordered_set<std::string> valid_separators = {";", "(", ")", "{", "}"};
   std::unordered_set<std::string> valid_keywords = {
       "procedure", "if", "then", "else", "while", "read", "print", "call"};
 

@@ -1,6 +1,6 @@
-name: CI for Cmake Project - Windows
+name: Windows Build
 
-on: [push, pull_request]
+on: [ push ]
 
 # If you are doing triggering your workflow from pushes or merging more than twice a day on average,
 # please execute your workflow on a schedule instead.
@@ -10,7 +10,7 @@ on: [push, pull_request]
 #     - cron: "0 09,23 * * *"
 
 env:
-    BUILD_TYPE: Release
+  BUILD_TYPE: Release
 
 jobs:
   build:
@@ -18,9 +18,8 @@ jobs:
     strategy:
       fail-fast: true
     runs-on: windows-latest
-
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Build Project
         shell: bash
         run: |
@@ -32,3 +31,4 @@ jobs:
           cmake --build . --target integration_testing --config release
           cmake --build . --target autotester --config Release
           cd ../
+

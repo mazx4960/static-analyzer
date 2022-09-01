@@ -25,40 +25,34 @@ class Token {
 class SymbolToken : public Token {
  public:
   explicit SymbolToken(std::string value)
-      : Token(TokenType::SYMBOL, std::move(value)) {
-  }
+      : Token(TokenType::SYMBOL, std::move(value)) {}
 };
 
 class LiteralToken : public Token {
  public:
   explicit LiteralToken(std::string value)
-      : Token(TokenType::LITERAL, std::move(value)) {
-  }
+      : Token(TokenType::LITERAL, std::move(value)) {}
 };
 
 class KeywordToken : public Token {
  public:
   explicit KeywordToken(std::string value)
-      : Token(TokenType::KEYWORD, std::move(value)) {
-  }
+      : Token(TokenType::KEYWORD, std::move(value)) {}
 };
 
 class OperatorToken : public Token {
  public:
   explicit OperatorToken(std::string value)
-      : Token(TokenType::OPERATOR, std::move(value)) {
-  }
+      : Token(TokenType::OPERATOR, std::move(value)) {}
 };
 
 class SeparatorToken : public Token {
  public:
   explicit SeparatorToken(std::string value)
-      : Token(TokenType::SEPARATOR, std::move(value)) {
-  }
+      : Token(TokenType::SEPARATOR, std::move(value)) {}
 };
 
 class EndOfFileToken : public Token {
  public:
-  EndOfFileToken() : Token(TokenType::END_OF_FILE, "") {
-  }
+  EndOfFileToken() : Token(TokenType::END_OF_FILE, "") {}
 };
