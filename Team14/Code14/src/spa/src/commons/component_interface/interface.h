@@ -2,4 +2,7 @@
 
 #pragma once
 
-class Interface {};
+class Interface {
+ public:
+  Interface() = default;
+};

@@ -1,5 +1,5 @@
 #pragma once
 
-#include "commons/component_interface/Interface.h"
+#include "commons/component_interface/interface.h"
 
 class QPSInterface : public Interface {};
