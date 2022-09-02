@@ -1,0 +1,29 @@
+// Copyright 2022 CS3203 Team14. All rights reserved.
+
+#pragma once
+
+#include <fstream>
+#include <unordered_set>
+#include <vector>
+
+#include "commons/lexer/lexer.h"
+#include "sp/simple_token.h"
+
+class SimpleLexer : Lexer {
+ private:
+  std::unordered_set<std::string> valid_single_operators = {
+      "+", "-", "*", "/", "%", "<", ">", "&", "|", "!", "="};
+  std::unordered_set<std::string> valid_operators = {
+      "+", "-", "*", "/", "%", "<", ">", ">=", "<=", "&&", "||", "!=", "==", "="};
+  std::unordered_set<std::string> valid_separators = {
+      ";", "(", ")", "{", "}"};
+  std::unordered_set<std::string> valid_keywords = {
+      "procedure", "if", "then", "else", "while", "read", "print", "call"};
+
+  void read_operators();
+
+ public:
+  explicit SimpleLexer(std::ifstream* source_stream) : Lexer(source_stream) {};
+  SimpleToken* next_token() override;
+  std::vector<SimpleToken*> lex();
+};
