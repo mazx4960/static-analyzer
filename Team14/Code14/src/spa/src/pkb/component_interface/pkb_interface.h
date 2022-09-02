@@ -2,5 +2,12 @@
 #pragma once
 
 #include "commons/component_interface/interface.h"
+#include "pkb/pkb.h"
 
-class PKBInterface : public Interface {};
+class PKBInterface : public Interface {
+ private:
+  PKB component;
+
+ public:
+  PKBInterface();
+};

@@ -2,8 +2,16 @@
 #pragma once
 
 #include "commons/component_interface/interface.h"
+#include "qps/component_interface/qps_interface.h"
+#include "sp/component_interface/sp_interface.h"
+#include "ui/ui.h"
 
 class UIInterface : public Interface {
+ private:
+  UI component;
+
  public:
-  UIInterface() : Interface() {};
+  UIInterface();
+  void set_interface(QPSInterface *);
+  void set_interface(SPInterface *);
 };
