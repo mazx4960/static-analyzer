@@ -6,8 +6,8 @@
 
 class PKBInterface : public Interface {
  private:
-  PKB component;
+  PKB *component;
 
  public:
-  explicit PKBInterface(PKB component);
+  explicit PKBInterface(PKB *component);
 };

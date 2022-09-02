@@ -2,9 +2,9 @@
 
 #include "sp_interface.h"
 
-SPInterface::SPInterface(SP component) {
+SPInterface::SPInterface(SP *component) {
   this->component = component;
 }
 void SPInterface::set_interface(PKBInterface *interface) {
-  this->component.set_interface(interface);
+  this->component->set_interface(interface);
 }

@@ -8,10 +8,10 @@
 
 class UIInterface : public Interface {
  private:
-  UI component;
+  UI *component;
 
  public:
-  explicit UIInterface(UI);
+  explicit UIInterface(UI *);
   void set_interface(QPSInterface *);
   void set_interface(SPInterface *);
 };

@@ -2,6 +2,6 @@
 
 #include "pkb_interface.h"
 
-PKBInterface::PKBInterface(PKB component) {
+PKBInterface::PKBInterface(PKB *component) {
   this->component = component;
 }

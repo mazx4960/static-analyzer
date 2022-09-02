@@ -4,10 +4,10 @@ SPA::SPA() {
   /*
    * Instantiate subcomponent adaptor interfaces.
    */
-  this->pkb_interface = new PKBInterface(PKB());
-  this->qps_interface = new QPSInterface(QPS());
-  this->sp_interface = new SPInterface(SP());
-  this->ui_interface = new UIInterface(UI());
+  this->pkb_interface = new PKBInterface(new PKB());
+  this->qps_interface = new QPSInterface(new QPS());
+  this->sp_interface = new SPInterface(new SP());
+  this->ui_interface = new UIInterface(new UI());
 
   /*
    * Pass interfaces to other components with dependency only.
