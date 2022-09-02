@@ -93,5 +93,9 @@ ModNode::ModNode(ExprNode* leftExpression, ExprNode* rightExpression)
 VariableNode::VariableNode(std::string variableName)
     : variableName(variableName) {}
 
+std::string VariableNode::getName() {
+  return variableName;
+}
+
 ConstantNode::ConstantNode(int value)
     : value(value) {}
