@@ -11,7 +11,7 @@ class UIInterface : public Interface {
   UI component;
 
  public:
-  UIInterface();
+  explicit UIInterface(UI);
   void set_interface(QPSInterface *);
   void set_interface(SPInterface *);
 };

@@ -2,8 +2,8 @@
 
 #include "ui_interface.h"
 
-UIInterface::UIInterface() {
-  this->component = UI();
+UIInterface::UIInterface(UI component) {
+  this->component = component;
 }
 void UIInterface::set_interface(QPSInterface *interface) {
   this->component.set_interface(interface);

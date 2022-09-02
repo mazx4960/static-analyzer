@@ -9,5 +9,5 @@ class PKBInterface : public Interface {
   PKB component;
 
  public:
-  PKBInterface();
+  explicit PKBInterface(PKB component);
 };

@@ -10,6 +10,6 @@ class SPInterface : public Interface {
   SP component;
 
  public:
-  SPInterface();
+  explicit SPInterface(SP);
   void set_interface(PKBInterface *);
 };
