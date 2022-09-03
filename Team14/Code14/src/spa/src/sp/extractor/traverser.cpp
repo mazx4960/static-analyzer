@@ -1,69 +1,73 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 #include "traverser.h"
 
-void Traverser::Visit(Node *node, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op) {
-  if (test(node)) {
-    op(node);
+void Traverser::Visit(Node *node, const std::function<void(Node *)> &op) {
+  op(node);
+}
+void Traverser::TraverseProgram(ProgramNode *node, const std::function<void(Node *)> &op) {
+  Visit(node, op);
+  for (auto child : node->GetProcedures()) {
+    TraverseProcedure(child, op);
   }
 }
-void Traverser::TraverseProgram(Node *node, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op) {
-  Visit(node, test, op);
-  for (auto child : node->GetChildren()) {
-    TraverseProcedure(child, test, op);
+void Traverser::TraverseProcedure(ProcedureNode *node, const std::function<void(Node *)> &op) {
+  Visit(node, op);
+  for (auto child : node->GetStmts()) {
+    TraverseStmt(child, op);
   }
 }
-void Traverser::TraverseProcedure(Node *node, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op) {
-  Visit(node, test, op);
-  for (auto child : node->GetChildren()) {
-    TraverseStmt(child, test, op);
-  }
-}
-void Traverser::TraverseStmt(Node *node, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op) {
-  Visit(node, test, op);
+void Traverser::TraverseStmt(StmtNode *node, const std::function<void(Node *)> &op) {
+  Visit(node, op);
   switch (node->GetType()) {
     case NodeType::kAssign:
-      TraverseAssign(node, test, op);
+      TraverseAssign(node, op);
       break;
     case NodeType::kCall:
-      TraverseCall(node, test, op);
+      TraverseCall(node, op);
       break;
     case NodeType::kIf:
-      TraverseIf(node, test, op);
+      TraverseIf(node, op);
       break;
     case NodeType::kWhile:
-      TraverseWhile(node, test, op);
+      TraverseWhile(node, op);
       break;
     case NodeType::kPrint:
-      TraversePrint(node, test, op);
+      TraversePrint(node, op);
       break;
     case NodeType::kRead:
-      TraverseRead(node, test, op);
+      TraverseRead(node, op);
       break;
     default:
       break;
   }
 }
-void Traverser::TraverseAssign(Node *node, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op) {
-  Visit(node, test, op);
+void Traverser::TraverseAssign(AssignNode *node, const std::function<void(Node *)> &op) {
+  Visit(node, op);
 }
-void Traverser::TraverseCall(Node *node, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op) {
-  Visit(node, test, op);
+void Traverser::TraverseCall(CallNode *node, const std::function<void(Node *)> &op) {
+  Visit(node, op);
 }
-void Traverser::TraverseIf(Node *node, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op) {
-  Visit(node, test, op);
+void Traverser::TraverseIf(IfNode *node, const std::function<void(Node *)> &op) {
+  Visit(node, op);
 }
-void Traverser::TraverseWhile(Node *node, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op) {
-  Visit(node, test, op);
+void Traverser::TraverseWhile(WhileNode *node, const std::function<void(Node *)> &op) {
+  Visit(node, op);
 }
-void Traverser::TraversePrint(Node *node, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op) {
-  Visit(node, test, op);
+void Traverser::TraversePrint(PrintNode *node, const std::function<void(Node *)> &op) {
+  Visit(node, op);
 }
-void Traverser::TraverseRead(Node *node, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op) {
-  Visit(node, test, op);
+void Traverser::TraverseRead(ReadNode *node, const std::function<void(Node *)> &op) {
+  Visit(node, op);
 }
-void Traverser::TraverseCond(Node *node, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op) {
-  Visit(node, test, op);
+void Traverser::TraverseCond(CondNode *node, const std::function<void(Node *)> &op) {
+  Visit(node, op);
 }
-void Traverser::TraverseExpr(Node *node, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op) {
-  Visit(node, test, op);
+void Traverser::TraverseExpr(ExprNode *node, const std::function<void(Node *)> &op) {
+  Visit(node, op);
+}
+void Traverser::TraverseVariable(VariableNode *node, const std::function<void(Node *)> &op) {
+  Visit(node, op);
+}
+void Traverser::TraverseConstant(ConstantNode *node, const std::function<void(Node *)> &op) {
+  Visit(node, op);
 }

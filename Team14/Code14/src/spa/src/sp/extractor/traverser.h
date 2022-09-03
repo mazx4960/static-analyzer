@@ -9,18 +9,18 @@
 class Traverser {
  private:
  public:
-  Traverser() = default;
-  virtual ~Traverser() = default;
-  static void Visit(Node *, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op);
-  static void TraverseProgram(Node *, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op);
-  static void TraverseProcedure(Node *, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op);
-  static void TraverseStmt(Node *, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op);
-  static void TraverseAssign(Node *, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op);
-  static void TraverseCall(Node *, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op);
-  static void TraverseIf(Node *, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op);
-  static void TraverseWhile(Node *, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op);
-  static void TraversePrint(Node *, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op);
-  static void TraverseRead(Node *, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op);
-  static void TraverseCond(Node *, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op);
-  static void TraverseExpr(Node *, const std::function<bool(Node *)> &test, const std::function<void(Node *)> &op);
+  static void Visit(Node *, const std::function<void(Node *)> &op);
+  static void TraverseProgram(ProgramNode *, const std::function<void(Node *)> &op);
+  static void TraverseProcedure(ProcedureNode *, const std::function<void(Node *)> &op);
+  static void TraverseStmt(StmtNode *, const std::function<void(Node *)> &op);
+  static void TraverseAssign(AssignNode *, const std::function<void(Node *)> &op);
+  static void TraverseCall(CallNode *, const std::function<void(Node *)> &op);
+  static void TraverseIf(IfNode *, const std::function<void(Node *)> &op);
+  static void TraverseWhile(WhileNode *, const std::function<void(Node *)> &op);
+  static void TraversePrint(PrintNode *, const std::function<void(Node *)> &op);
+  static void TraverseRead(ReadNode *, const std::function<void(Node *)> &op);
+  static void TraverseCond(CondNode *, const std::function<void(Node *)> &op);
+  static void TraverseExpr(ExprNode *, const std::function<void(Node *)> &op);
+  static void TraverseVariable(VariableNode *, const std::function<void(Node *)> &op);
+  static void TraverseConstant(ConstantNode *, const std::function<void(Node *)> &op);
 };
