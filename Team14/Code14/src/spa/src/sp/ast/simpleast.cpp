@@ -4,7 +4,7 @@ SimpleAstNode::SimpleAstNode(SimpleNodeType nodeType)
     : nodeType(nodeType) {}
 
 ProgramNode::ProgramNode(std::vector<ProcedureNode*> procedures)
-    : SimpleAstNode(SimpleNodeType::PROGRAM), 
+    : SimpleAstNode(SimpleNodeType::PROGRAM),
       procedures(procedures) {}
 
 ProcedureNode::ProcedureNode(std::string procName, StatementListNode* statementList)
@@ -16,7 +16,7 @@ StatementListNode::StatementListNode(std::vector<StatementNode*> statements)
     : SimpleAstNode(SimpleNodeType::STATEMENT_LIST),
       statements(statements) {}
 
-StatementNode::StatementNode(SimpleNodeType nodeType) 
+StatementNode::StatementNode(SimpleNodeType nodeType)
     : SimpleAstNode(nodeType),
       stmtNo(0) {}
 
@@ -52,16 +52,16 @@ CondExprNode::CondExprNode(SimpleNodeType nodeType)
     : SimpleAstNode(nodeType) {}
 
 NotExprNode::NotExprNode(CondExprNode* negatedConditional)
-    : CondExprNode(SimpleNodeType::NOT), 
+    : CondExprNode(SimpleNodeType::NOT),
       negatedConditional(negatedConditional) {}
 
 AndExprNode::AndExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional)
-    : CondExprNode(SimpleNodeType::NOT),
+    : CondExprNode(SimpleNodeType::AND),
       firstConditional(firstConditional),
       secondConditional(secondConditional) {}
 
 OrExprNode::OrExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional)
-    : CondExprNode(SimpleNodeType::NOT),
+    : CondExprNode(SimpleNodeType::OR),
       firstConditional(firstConditional),
       secondConditional(secondConditional) {}
 
@@ -121,4 +121,3 @@ VariableNode::VariableNode(std::string variableName)
 ConstantNode::ConstantNode(int value)
     : ReferenceNode(SimpleNodeType::CONSTANT),
       value(value) {}
-

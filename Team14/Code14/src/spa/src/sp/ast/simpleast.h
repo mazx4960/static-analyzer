@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
+
 #include "simplenodetype.h"
 
 class SimpleAstNode;
@@ -24,7 +25,6 @@ class FactorNode;
 class ReferenceNode;
 class VariableNode;
 class ConstantNode;
-
 
 class SimpleAstNode {
  private:
@@ -210,7 +210,7 @@ class PlusNode : public ExprNode {
 };
 
 class MinusNode : public ExprNode {
- public:;
+ public:
   MinusNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
 };
 

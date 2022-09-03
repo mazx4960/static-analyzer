@@ -14,7 +14,7 @@ enum class SimpleNodeType {
   COND_EXPR,
   NOT,
   AND,
-  OR_NODE,
+  OR,
   REL_EXPR,
   GT,
   GTE,
