@@ -1,7 +1,7 @@
 #pragma once
 
 #include "compositegrammar.h"
-#include "sp/ast/simpleast.h"
+#include "sp/ast/node/simpleast.h"
 
 using TokenIterator = std::vector<Token *>::iterator;
 
