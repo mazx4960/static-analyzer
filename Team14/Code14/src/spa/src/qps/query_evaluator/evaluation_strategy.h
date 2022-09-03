@@ -1,6 +1,8 @@
 #pragma once
 
 #include "pkb/component_interface/pkb_interface.h"
+#include "qps/pql/query/query.h"
+
 class EvaluationStrategy {
  protected:
   PKBInterface pkb_interface_;

@@ -19,6 +19,7 @@ class QueryCall {
   CallType type_;
   QueryDeclaration query_declaration_;
   std::vector<QueryClause> clause_vector_;
+ public:
   CallType getType();
   QueryDeclaration getDeclaration();
   std::vector<QueryClause> getClauseVector();

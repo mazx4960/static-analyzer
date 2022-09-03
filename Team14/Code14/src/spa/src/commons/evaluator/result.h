@@ -2,14 +2,14 @@
 
 #include <string>
 #include <vector>
-#include "qps/qpl/synonym/synonym.h"
+#include "qps/pql/query_synonym/query_synonym.h"
 class Result {
  private:
-  Synonym syn_;
+  QuerySynonym syn_;
 
   std::vector<std::string> results_;
 
  public:
-  explicit Result(Synonym &syn, std::vector<std::string> &results) : syn_(syn), results_(results) {};
+  explicit Result(QuerySynonym &syn, std::vector<std::string> &results) : syn_(syn), results_(results) {};
 
 };
