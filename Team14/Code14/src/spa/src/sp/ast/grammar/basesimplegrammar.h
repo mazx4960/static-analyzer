@@ -1,9 +1,10 @@
 #pragma once
 
-#include "compositegrammar.h"
 #include "sp/ast/node/simpleast.h"
+#include "commons/token/token.h"
 
-using TokenIterator = std::vector<Token *>::iterator;
+
+using TokenIterator = std::vector<Token*>::iterator;
 
 // Defines a rule that creates an AST node from a token stream
 class SimpleGrammarRule {
