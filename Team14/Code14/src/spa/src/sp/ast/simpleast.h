@@ -130,20 +130,20 @@ class NotExprNode : public CondExprNode {
   explicit NotExprNode(CondExprNode* negatedConditional);
 };
 
-class AndExprNode : public CondExprNode {
+class BinaryCondExprNode : public CondExprNode {
  private:
   CondExprNode* firstConditional_;
   CondExprNode* secondConditional_;
+ public:
+  BinaryCondExprNode(SimpleNodeType nodeType, CondExprNode* firstConditional, CondExprNode* secondConditional);
+};
 
+class AndExprNode : public BinaryCondExprNode {
  public:
   AndExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional);
 };
 
-class OrExprNode : public CondExprNode {
- private:
-  CondExprNode* firstConditional_;
-  CondExprNode* secondConditional_;
-
+class OrExprNode : public BinaryCondExprNode {
  public:
   OrExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional);
 };
