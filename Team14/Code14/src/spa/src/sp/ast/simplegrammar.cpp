@@ -1,35 +1,33 @@
 #include "simplegrammar.h"
-#include "token.h"
-#include "exceptions.h"
 
-CompositeGrammarRule::CompositeGrammarRule(std::vector<RuleFragment*> ruleFragments)
-    : ruleFragments(ruleFragments) {}
+#include <utility>
+#include "commons/token/token.h"
 
 SimpleAstNode* CompositeGrammarRule::parseNode(TokenIterator& tokenStream) {
-  std::vector<SimpleAstNode*> childNodes{};
-  for (auto ruleFragment : ruleFragments) {
-    ruleFragment->parseStream(tokenStream, childNodes);
+  std::vector<SimpleAstNode*> child_nodes{};
+  for (auto *rule_fragment : ruleFragments_) {
+    rule_fragment->parseStream(tokenStream, child_nodes);
   }
-  return assembleNode(childNodes);
+  return assembleNode(child_nodes);
 }
 
 ProgramNode* ProgramGrammarRule::parseNode(TokenIterator& tokenStream) {
   std::vector<ProcedureNode*> procedures{};
-  ProcedureGrammarRule procedureParser{};
-  procedures.push_back(procedureParser.parseNode(tokenStream));
-  while (*tokenStream != EndOfFileToken()) {
-    procedures.push_back(procedureParser.parseNode(tokenStream));
+  ProcedureGrammarRule procedure_parser{};
+  procedures.push_back(procedure_parser.parseNode(tokenStream));
+  while (!(**tokenStream == EndOfFileToken())) {
+    procedures.push_back(procedure_parser.parseNode(tokenStream));
   }
   return new ProgramNode(procedures);
 }
 
 ProcedureGrammarRule::ProcedureGrammarRule()
-    : CompositeGrammarRule(
-        new TokenRuleFragment(new Token(TokenType.KEYWORD, "procedure")),
+    : CompositeGrammarRule(std::vector<RuleFragment*>{
+        new TokenRuleFragment(new LiteralToken("procedure")),
         new NodeRuleFragment(new VariableGrammarRule()),
-        new TokenRuleFragment(new Token(TokenType.SEPARATOR, "{")),
-        new NodeRuleFragment(new StatementListGrammarRule()),
-        new TokenRuleFragment(new Token(TokenType.SEPARATOR, "{"))) {}
+        new TokenRuleFragment(new RoundOpenBracketToken()),
+        new NodeRuleFragment(new StatementGrammarRule()),
+        new TokenRuleFragment(new RoundCloseBracketToken())}) {}
 
 ProcedureNode* ProcedureGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNodes) {
   return new ProcedureNode(

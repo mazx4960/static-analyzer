@@ -1,7 +1,7 @@
 #pragma once
 
-#include "simplegrammar.h"
-#include "token.h"
+#include "commons/token/token.h"
+#include "basesimplegrammar.h"
 
 class RuleFragment {
  public:
@@ -10,18 +10,28 @@ class RuleFragment {
 
 class TokenRuleFragment : public RuleFragment {
  private:
-  Token tokenToMatch;
+  Token* tokenToMatch_;
 
  public:
-  TokenRuleFragment(Token token);
-  void parseStream(TokenIterator& stream, std::vector<SimpleAstNode*>& childNodes);
+  explicit TokenRuleFragment(Token* token);
+  void parseStream(TokenIterator& stream, std::vector<SimpleAstNode*>& childNodes) override;
 };
 
 class NodeRuleFragment : public RuleFragment {
  private:
-  SimpleGrammarRule* nextRule;
+  SimpleGrammarRule* nextRule_;
 
  public:
-  NodeRuleFragment(SimpleGrammarRule* rule);
-  void parseStream(TokenIterator& stream, std::vector<SimpleAstNode*>& childNodes);
+  void parseStream(TokenIterator& stream, std::vector<SimpleAstNode*>& childNodes) override;
+  explicit NodeRuleFragment(SimpleGrammarRule* rule);
+};
+
+// Defines a rule that reads multiple tokens and/or other AST nodes
+class CompositeGrammarRule : public SimpleGrammarRule {
+ private:
+  std::vector<RuleFragment*> ruleFragments_;
+  virtual SimpleAstNode* assembleNode(std::vector<SimpleAstNode*>) = 0;
+ public:
+  CompositeGrammarRule(std::vector<RuleFragment*> ruleFragments);
+  SimpleAstNode* parseNode(TokenIterator& tokenStream);
 };

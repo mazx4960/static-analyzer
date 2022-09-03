@@ -1,25 +1,7 @@
 #pragma once
 
-#include "simpleast.h"
 #include "compositegrammar.h"
-
-typedef std::vector<Token*>::iterator TokenIterator;
-
-// Defines a rule that creates an AST node from a token stream
-class SimpleGrammarRule {
- public:
-  virtual SimpleAstNode* parseNode(TokenIterator& tokenStream) = 0;
-};
-
-// Defines a rule that reads multiple tokens and/or other AST nodes
-class CompositeGrammarRule : public SimpleGrammarRule {
- private:
-  std::vector<RuleFragment*> ruleFragments;
-  virtual SimpleAstNode* assembleNode(std::vector<SimpleAstNode*>) = 0;
- public:
-  CompositeGrammarRule(std::vector<RuleFragment*> ruleFragments);
-  SimpleAstNode* parseNode(TokenIterator& tokenStream);
-};
+#include "sp/ast/simpleast.h"
 
 class ProgramGrammarRule : public SimpleGrammarRule {
  public:
@@ -32,16 +14,12 @@ class ProcedureGrammarRule : public CompositeGrammarRule {
 
  public:
   ProcedureGrammarRule();
+  ProcedureNode* parseNode(TokenIterator& tokenStream);
 };
 
 class StatementListGrammarRule : public SimpleGrammarRule {
  public:
   StatementListNode* parseNode(TokenIterator& tokenStream);
-};
-
-class StatementGrammarRule : public SimpleGrammarRule {
- public:
-  StatementNode* parseNode(TokenIterator& tokenStream);
 };
 
 class StatementGrammarRule : public SimpleGrammarRule {
