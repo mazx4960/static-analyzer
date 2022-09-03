@@ -1,5 +1,5 @@
 #include "simplegrammar.h"
-
+#include "commons/parser/parser_exceptions.h"
 #include "commons/token/token.h"
 
 SimpleAstNode* CompositeGrammarRule::parseNode(TokenIterator& tokenStream) {
@@ -112,4 +112,18 @@ AssignNode* AssignGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNod
   return new AssignNode(
       static_cast<VariableNode*>(childNodes[0]),
       static_cast<RelFactorNode*>(childNodes[1]));
+}
+
+VariableNode* VariableGrammarRule::parseNode(TokenIterator& tokenStream) {
+  if ((*tokenStream)->type == TokenType::kSymbol) {
+    return new VariableNode((*tokenStream++)->value);
+  }
+  throw ParseSyntaxError("Expected variable, got " + (*tokenStream++)->value);
+}
+
+ConstantNode* ConstantGrammarRule::parseNode(TokenIterator& tokenStream) {
+  if ((*tokenStream)->type == TokenType::kLiteral) {
+    return new ConstantNode(std::stoi((*tokenStream++)->value));
+  }
+  throw ParseSyntaxError("Expected constant, got " + (*tokenStream++)->value);
 }
