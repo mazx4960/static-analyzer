@@ -13,13 +13,13 @@
 
 class SPA {
  private:
-  PKBInterface *pkb_interface;
+  PKBInterface pkb_interface = PKBInterface();
 
-  QPSInterface *qps_interface;
+  QPSInterface qps_interface = QPSInterface();
 
-  SPInterface *sp_interface;
+  SPInterface sp_interface = SPInterface();
 
-  UIInterface *ui_interface;
+  UIInterface ui_interface = UIInterface();
 
  public:
   SPA();

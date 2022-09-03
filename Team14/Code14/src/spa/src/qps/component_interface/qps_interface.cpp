@@ -2,9 +2,6 @@
 
 #include "qps_interface.h"
 
-QPSInterface::QPSInterface(QPS *component) {
-  this->component = component;
-}
 void QPSInterface::set_interface(PKBInterface *interface) {
-  this->component->set_interface(interface);
+  this->component.set_interface(interface);
 }

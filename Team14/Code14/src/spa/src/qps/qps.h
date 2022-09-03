@@ -7,6 +7,6 @@ class QPS {
   PKBInterface *pkb_interface = nullptr;
 
  public:
-  QPS();
+  QPS() = default;
   void set_interface(PKBInterface *);
 };

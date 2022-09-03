@@ -7,9 +7,8 @@
 
 class QPSInterface : public Interface {
  private:
-  QPS *component;
+  QPS component;
 
  public:
-  explicit QPSInterface(QPS *);
   void set_interface(PKBInterface *);
 };
