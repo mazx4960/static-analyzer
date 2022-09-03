@@ -1,5 +1,3 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
-#pragma once
-
-class QueryEvaluator {};
+#include "query_evaluator.h"
