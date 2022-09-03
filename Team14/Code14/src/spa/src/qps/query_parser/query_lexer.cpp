@@ -16,9 +16,8 @@ Token* QueryLexer::next_token() {
     this->read_alphanumeric();
     if (this->valid_keywords_.find(this->tmp_) != this->valid_whitespace_.end()) {
       return new KeywordToken(this->tmp_);
-    } else {
-      return new SymbolToken(this->tmp_);
     }
+    return new SymbolToken(this->tmp_);
   } else if (isdigit(c)) {
     // Literal
     this->read_digits();

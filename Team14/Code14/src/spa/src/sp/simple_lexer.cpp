@@ -26,9 +26,8 @@ Token* SimpleLexer::next_token() {
     read_alphanumeric();
     if (valid_keywords_.find(tmp_) != valid_whitespace_.end()) {
       return new KeywordToken(tmp_);
-    } else {
-      return new SymbolToken(tmp_);
     }
+    return new SymbolToken(tmp_);
   } else if (isdigit(c)) {
     // Literal
     read_digits();
@@ -53,9 +52,8 @@ Token* SimpleLexer::next_token() {
     read_operators();
     if (valid_operators_.find(tmp_) != valid_whitespace_.end()) {
       return new OperatorToken(tmp_);
-    } else {
-      throw LexSyntaxError(line_number_, column_number_, "Invalid operator " + tmp_);
     }
+    throw LexSyntaxError(line_number_, column_number_, "Invalid operator " + tmp_);
   }
 
   // Something went wrong :/
