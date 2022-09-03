@@ -23,11 +23,10 @@ Token* SimpleLexer::next_token() {
   tmp = c;
   if (isalpha(c)) {
     // Symbol or keyword
-    read_alpha();
+    read_alphanumeric();
     if (valid_keywords.find(tmp) != valid_whitespace.end()) {
       return new KeywordToken(tmp);
     } else {
-      read_alphanumeric();
       return new SymbolToken(tmp);
     }
   } else if (isdigit(c)) {

@@ -13,11 +13,10 @@ Token* QueryLexer::next_token() {
   this->tmp = c;
   if (isalpha(c)) {
     // Keyword or symbol
-    this->read_alpha();
+    this->read_alphanumeric();
     if (this->valid_keywords.find(this->tmp) != this->valid_whitespace.end()) {
       return new KeywordToken(this->tmp);
     } else {
-      this->read_alphanumeric();
       return new SymbolToken(this->tmp);
     }
   } else if (isdigit(c)) {
