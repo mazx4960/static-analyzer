@@ -1,7 +1,9 @@
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
+
+#include "simplenodetype.h"
 
 class SimpleAstNode;
 class ProgramNode;
@@ -16,28 +18,32 @@ class IfNode;
 class AssignNode;
 class CondExprNode;
 class RelExprNode;
+class RelFactorNode;
 class ExprNode;
-class TermNode;
-class FactorNode;
 class ReferenceNode;
 class VariableNode;
 class ConstantNode;
 
+class SimpleAstNode {
+ private:
+  SimpleNodeType nodeType_;
 
-class SimpleAstNode {};
+ public:
+  explicit SimpleAstNode(SimpleNodeType nodeType);
+};
 
 class ProgramNode : public SimpleAstNode {
  private:
-  std::vector<ProcedureNode*> procedures;
+  std::vector<ProcedureNode*> procedures_;
 
  public:
-  ProgramNode(std::vector<ProcedureNode*> procedures);
+  explicit ProgramNode(std::vector<ProcedureNode*> procedures);
 };
 
 class ProcedureNode : public SimpleAstNode {
  private:
-  std::string procName;
-  StatementListNode* statementList;
+  std::string procName_;
+  StatementListNode* statementList_;
 
  public:
   ProcedureNode(std::string procName, StatementListNode* statementList);
@@ -45,48 +51,48 @@ class ProcedureNode : public SimpleAstNode {
 
 class StatementListNode : public SimpleAstNode {
  private:
-  std::vector<StatementNode*> statements;
+  std::vector<StatementNode*> statements_;
 
  public:
-  StatementListNode(std::vector<StatementNode*> statements);
+  explicit StatementListNode(std::vector<StatementNode*> statements);
 };
 
 class StatementNode : public SimpleAstNode {
  private:
-  int stmtNo;
+  int stmtNo_;
 
  public:
-  StatementNode();
+  explicit StatementNode(SimpleNodeType nodeType);
 };
 
 class ReadNode : public StatementNode {
  private:
-  VariableNode* variable;
+  VariableNode* variable_;
 
  public:
-  ReadNode(VariableNode* variable);
+  explicit ReadNode(VariableNode* variable);
 };
 
 class PrintNode : public StatementNode {
  private:
-  VariableNode* variable;
+  VariableNode* variable_;
 
  public:
-  PrintNode(VariableNode* variable);
+  explicit PrintNode(VariableNode* variable);
 };
 
 class CallNode : public StatementNode {
  private:
-  std::string procedureName;
+  std::string procedureName_;
 
  public:
-  CallNode(std::string procedureName);
+  explicit CallNode(std::string procedureName);
 };
 
 class WhileNode : public StatementNode {
  private:
-  CondExprNode* conditional;
-  StatementListNode* statementList;
+  CondExprNode* conditional_;
+  StatementListNode* statementList_;
 
  public:
   WhileNode(CondExprNode* conditional, StatementListNode* statementList);
@@ -94,9 +100,9 @@ class WhileNode : public StatementNode {
 
 class IfNode : public StatementNode {
  private:
-  CondExprNode* conditional;
-  StatementListNode* thenStatementList;
-  StatementListNode* elseStatementList;
+  CondExprNode* conditional_;
+  StatementListNode* thenStatementList_;
+  StatementListNode* elseStatementList_;
 
  public:
   IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, StatementListNode* elseStatementList);
@@ -104,27 +110,30 @@ class IfNode : public StatementNode {
 
 class AssignNode : public StatementNode {
  private:
-  VariableNode* variable;
-  ExprNode* expression;
+  VariableNode* variable_;
+  ExprNode* expression_;
 
  public:
   AssignNode(VariableNode* variable, ExprNode* expression);
 };
 
-class CondExprNode : public SimpleAstNode {};
+class CondExprNode : public SimpleAstNode {
+ public:
+  explicit CondExprNode(SimpleNodeType nodeType);
+};
 
 class NotExprNode : public CondExprNode {
  private:
-  CondExprNode* negatedConditional;
+  CondExprNode* negatedConditional_;
 
  public:
-  NotExprNode(CondExprNode* negatedConditional);
+  explicit NotExprNode(CondExprNode* negatedConditional);
 };
 
 class AndExprNode : public CondExprNode {
  private:
-  CondExprNode* firstConditional;
-  CondExprNode* secondConditional;
+  CondExprNode* firstConditional_;
+  CondExprNode* secondConditional_;
 
  public:
   AndExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional);
@@ -132,131 +141,109 @@ class AndExprNode : public CondExprNode {
 
 class OrExprNode : public CondExprNode {
  private:
-  CondExprNode* firstConditional;
-  CondExprNode* secondConditional;
+  CondExprNode* firstConditional_;
+  CondExprNode* secondConditional_;
 
  public:
   OrExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional);
 };
 
-class RelExprNode : public CondExprNode {};
-
-class GreaterThanNode : public RelExprNode {
+class RelExprNode : public CondExprNode {
  private:
-  ExprNode* leftFactor;
-  ExprNode* rightFactor;
+  RelFactorNode* leftFactor_;
+  RelFactorNode* rightFactor_;
 
  public:
-  GreaterThanNode(ExprNode* leftFactor, ExprNode* rightFactor);
+  RelExprNode(SimpleNodeType nodeType, RelFactorNode* leftFactor, RelFactorNode* rightFactor);
+};
+
+class GreaterThanNode : public RelExprNode {
+ public:
+  GreaterThanNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor);
 };
 
 class GreaterThanEqualNode : public RelExprNode {
- private:
-  ExprNode* leftFactor;
-  ExprNode* rightFactor;
-
  public:
-  GreaterThanEqualNode(ExprNode* leftFactor, ExprNode* rightFactor);
+  GreaterThanEqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor);
 };
 
 class LessThanNode : public RelExprNode {
- private:
-  ExprNode* leftFactor;
-  ExprNode* rightFactor;
-
  public:
-  LessThanNode(ExprNode* leftFactor, ExprNode* rightFactor);
+  LessThanNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor);
 };
 
 class LessThanEqualNode : public RelExprNode {
- private:
-  ExprNode* leftFactor;
-  ExprNode* rightFactor;
-
  public:
-  LessThanEqualNode(ExprNode* leftFactor, ExprNode* rightFactor);
+  LessThanEqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor);
 };
 
 class EqualNode : public RelExprNode {
- private:
-  ExprNode* leftFactor;
-  ExprNode* rightFactor;
-
  public:
-  EqualNode(ExprNode* leftFactor, ExprNode* rightFactor);
+  EqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor);
 };
 
 class NotEqualNode : public RelExprNode {
- private:
-  ExprNode* leftFactor;
-  ExprNode* rightFactor;
-
  public:
-  NotEqualNode(ExprNode* leftFactor, ExprNode* rightFactor);
+  NotEqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor);
 };
 
-class ExprNode : public SimpleAstNode {};
+class RelFactorNode : public SimpleAstNode {
+ public:
+  explicit RelFactorNode(SimpleNodeType nodeType);
+};
 
-class PlusNode : public ExprNode {
+class ExprNode : public RelFactorNode {
  private:
-  ExprNode* leftExpression;
-  ExprNode* rightExpression;
+  RelFactorNode* leftExpression_;
+  RelFactorNode* rightExpression_;
 
  public:
-  PlusNode(ExprNode* leftExpression, ExprNode* rightExpression);
+  ExprNode(SimpleNodeType nodeType, RelFactorNode* leftExpression, RelFactorNode* rightExpression);
+};
+
+class PlusNode : public ExprNode {
+
+ public:
+  PlusNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
 };
 
 class MinusNode : public ExprNode {
- private:
-  ExprNode* leftExpression;
-  ExprNode* rightExpression;
-
- public:;
-  MinusNode(ExprNode* leftExpression, ExprNode* rightExpression);
+ public:
+  MinusNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
 };
 
 class TimesNode : public ExprNode {
- private:
-  ExprNode* leftExpression;
-  ExprNode* rightExpression;
-
  public:
-  TimesNode(ExprNode* leftExpression, ExprNode* rightExpression);
+  TimesNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
 };
 
 class DivNode : public ExprNode {
- private:
-  ExprNode* leftExpression;
-  ExprNode* rightExpression;
-
  public:
-  DivNode(ExprNode* leftExpression, ExprNode* rightExpression);
+  DivNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
 };
 
 class ModNode : public ExprNode {
- private:
-  ExprNode* leftExpression;
-  ExprNode* rightExpression;
-
  public:
-  ModNode(ExprNode* leftExpression, ExprNode* rightExpression);
+  ModNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
 };
 
-class ReferenceNode : public SimpleAstNode {};
+class ReferenceNode : public RelFactorNode {
+ public:
+  explicit ReferenceNode(SimpleNodeType nodeType);
+};
 
 class VariableNode : public ReferenceNode {
  private:
-  std::string variableName;
+  std::string variableName_;
 
  public:
-  VariableNode(std::string variableName);
-  std::string getName();
+  explicit VariableNode(std::string variableName);
 };
 
 class ConstantNode : public ReferenceNode {
  private:
-  int value;
+  int value_;
 
  public:
-  ConstantNode(int value);
+  explicit ConstantNode(int value);
 };
