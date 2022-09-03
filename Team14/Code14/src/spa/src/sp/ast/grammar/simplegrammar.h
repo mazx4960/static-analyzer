@@ -1,6 +1,7 @@
 #pragma once
 
 #include "compositegrammar.h"
+#include "earlychoicegrammar.h"
 #include "sp/ast/node/simpleast.h"
 
 class ProgramGrammarRule : public SimpleGrammarRule {
@@ -21,9 +22,9 @@ class StatementListGrammarRule : public SimpleGrammarRule {
   StatementListNode* parseNode(TokenIterator& tokenStream);
 };
 
-class StatementGrammarRule : public SimpleGrammarRule {
+class StatementGrammarRule : public EarlyChoiceGrammarRule {
  public:
-  StatementNode* parseNode(TokenIterator& tokenStream);
+  StatementGrammarRule();
 };
 
 class ReadGrammarRule : public CompositeGrammarRule {
@@ -79,9 +80,9 @@ class RelExprGrammarRule : public SimpleGrammarRule {
   RelExprNode* parseNode(TokenIterator& tokenStream);
 };
 
-class RelFactorGrammarRule : public SimpleGrammarRule {
+class RelFactorGrammarRule : public EarlyChoiceGrammarRule {
  public:
-  RelFactorNode* parseNode(TokenIterator& tokenStream);
+  RelFactorGrammarRule();
 };
 
 class ExprGrammarRule : public SimpleGrammarRule {
@@ -94,14 +95,14 @@ class TermGrammarRule : public SimpleGrammarRule {
   ExprNode* parseNode(TokenIterator& tokenStream);
 };
 
-class FactorGrammarRule : public SimpleGrammarRule {
+class FactorGrammarRule : public EarlyChoiceGrammarRule {
  public:
-  ExprNode* parseNode(TokenIterator& tokenStream);
+  FactorGrammarRule();
 };
 
-class ReferenceGrammarRule : public SimpleGrammarRule {
+class ReferenceGrammarRule : public EarlyChoiceGrammarRule {
  public:
-  ReferenceNode* parseNode(TokenIterator& tokenStream);
+  ReferenceGrammarRule();
 };
 
 class VariableGrammarRule : public SimpleGrammarRule {

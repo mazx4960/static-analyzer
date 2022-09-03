@@ -33,6 +33,27 @@ ProcedureNode* ProcedureGrammarRule::assembleNode(std::vector<SimpleAstNode*> ch
       static_cast<StatementListNode*>(childNodes[1]));
 }
 
+StatementGrammarRule::StatementGrammarRule()
+    : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
+        std::make_pair([](TokenIterator tokenStream) -> bool {
+          return !(**tokenStream == EndOfFileToken()) && **(tokenStream + 1) == OperatorToken("=");
+        }, new AssignGrammarRule()),
+        std::make_pair([](TokenIterator tokenStream) -> bool {
+          return **tokenStream == KeywordToken("read");
+        }, new ReadGrammarRule()),
+        std::make_pair([](TokenIterator tokenStream) -> bool {
+          return **tokenStream == KeywordToken("print");
+        }, new PrintGrammarRule()),
+        std::make_pair([](TokenIterator tokenStream) -> bool {
+          return **tokenStream == KeywordToken("call");
+        }, new CallGrammarRule()),
+        std::make_pair([](TokenIterator tokenStream) -> bool {
+          return **tokenStream == KeywordToken("while");
+        }, new WhileGrammarRule()),
+        std::make_pair([](TokenIterator tokenStream) -> bool {
+          return **tokenStream == KeywordToken("if");
+        }, new IfGrammarRule()), }) {}
+
 ReadGrammarRule::ReadGrammarRule()
     : CompositeGrammarRule(std::vector<RuleFragment*>{
         new TokenRuleFragment(new LiteralToken("read")),
@@ -113,6 +134,42 @@ AssignNode* AssignGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNod
       static_cast<VariableNode*>(childNodes[0]),
       static_cast<RelFactorNode*>(childNodes[1]));
 }
+
+RelFactorGrammarRule::RelFactorGrammarRule()
+    : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
+        std::make_pair([](TokenIterator tokenStream)-> bool {
+          if (**tokenStream == RoundOpenBracketToken()) return true;
+          if (**tokenStream == EndOfFileToken()) return false;
+          return **(tokenStream) == OperatorToken("+")
+              || **(tokenStream) == OperatorToken("-")
+              || **(tokenStream) == OperatorToken("*")
+              || **(tokenStream) == OperatorToken("/")
+              || **(tokenStream) == OperatorToken("%");
+        }, new ExprGrammarRule()),
+        std::make_pair([](TokenIterator tokenStream)-> bool {
+          return true;
+        }, new ReferenceGrammarRule()),
+    }) {}
+
+FactorGrammarRule::FactorGrammarRule()
+    : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
+        std::make_pair([](TokenIterator tokenStream)-> bool {
+          return **tokenStream == RoundOpenBracketToken();
+        }, new ExprGrammarRule()),
+        std::make_pair([](TokenIterator tokenStream)-> bool {
+          return true;
+        }, new ReferenceGrammarRule()),
+    }) {}
+
+ReferenceGrammarRule::ReferenceGrammarRule()
+    : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
+        std::make_pair([](TokenIterator tokenStream)-> bool {
+          return (*tokenStream)->type == TokenType::kSymbol;
+        }, new VariableGrammarRule()),
+        std::make_pair([](TokenIterator tokenStream)-> bool {
+          return (*tokenStream)->type == TokenType::kLiteral;
+        }, new ConstantGrammarRule()),
+    }) {}
 
 VariableNode* VariableGrammarRule::parseNode(TokenIterator& tokenStream) {
   if ((*tokenStream)->type == TokenType::kSymbol) {
