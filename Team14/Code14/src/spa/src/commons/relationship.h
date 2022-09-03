@@ -19,6 +19,9 @@ class Relationship {
 
  public:
   Relationship(RsType type, Entity first, Entity second);
+  RsType GetType();
+  Entity GetFirst();
+  Entity GetSecond();
   bool operator==(const Relationship &other) const;
 };
 
