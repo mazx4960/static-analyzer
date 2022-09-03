@@ -24,7 +24,7 @@ jobs:
         with:
           build_dir: build
           exclude: "catch.hpp"
-          clang_tidy_version: 11
+          clang_tidy_version: 12
           config_file: ".clang-tidy"
           max_comments: 5
       
