@@ -1,3 +1,6 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
-#include "UIInterface.h"
+#pragma once
+
+class Interface {
+};
