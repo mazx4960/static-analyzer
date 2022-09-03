@@ -7,7 +7,7 @@
 #include <string>
 
 class SIMPLEEntity {
-public:
-	virtual std::map<std::string, std::list<int>>*
-		populate(std::string entity, std::list<int> lines) = 0;
-}
+ public:
+  virtual std::map<std::string, std::list<int>>*
+  populate(std::string entity, std::list<int> lines) = 0;
+};

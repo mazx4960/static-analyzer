@@ -10,10 +10,10 @@
 #include "pkb/entity/simple_entity.h"
 
 class Variable : public SIMPLEEntity {
-private:
-	std::map<std::string, std::list<int>> variableTable;
+ private:
+  std::map<std::string, std::list<int>> variableTable;
 
-public:
-	std::map<std::string, std::list<int>>*
-		populate(std::string variable, std::list<int> lines);
-}
+ public:
+  std::map<std::string, std::list<int>>*
+  populate(std::string variable, std::list<int> lines);
+};

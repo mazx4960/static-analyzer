@@ -8,10 +8,10 @@
 #include "pkb/entity/variable.h"
 
 class EntityManager {
-private:
-	Variable v;
+ private:
+  Variable v;
 
-public:
-	std::map<std::string, std::list<int>>*
-		populate(std::string variable, std::list<int> lines);
-}
+ public:
+  std::map<std::string, std::list<int>>*
+  populate(std::string variable, std::list<int> lines);
+};
