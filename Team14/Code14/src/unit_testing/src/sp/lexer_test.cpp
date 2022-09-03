@@ -1,8 +1,7 @@
-#include "sp/lexer.h"
+#include "sp/simple_lexer.h"
+#include "commons/token/token.h"
 
 #include <gtest/gtest.h>
-
-#include "sp/token.h"
 
 TEST(LexerTest, TestBasic) {
   auto* s = new std::ifstream("Team14/Tests14/simple_code/basic.txt");

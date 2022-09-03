@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "commons/lexer/lexer.h"
-#include "sp/simple_token.h"
+#include "commons/token/token.h"
 
 class SimpleLexer : Lexer {
  private:
@@ -24,6 +24,6 @@ class SimpleLexer : Lexer {
 
  public:
   explicit SimpleLexer(std::ifstream* source_stream) : Lexer(source_stream) {};
-  SimpleToken* next_token() override;
-  std::vector<SimpleToken*> lex();
+  Token* next_token() override;
+  std::vector<Token*> lex() override;
 };

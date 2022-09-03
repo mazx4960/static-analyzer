@@ -4,9 +4,10 @@
 
 #include <utility>
 
-Token::Token(std::string value) {
+Token::Token(TokenType type, std::string value) {
+  this->type = type;
   this->value = std::move(value);
 }
 bool Token::operator==(const Token &other) const {
-  return this->value == other.value;
+  return this->type == other.type && this->value == other.value;
 }

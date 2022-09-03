@@ -3,7 +3,7 @@
 #pragma once
 
 #include "commons/lexer/lexer.h"
-#include "qps/query_token.h"
+#include "commons/token/token.h"
 
 #include <fstream>
 #include <unordered_set>
@@ -16,7 +16,7 @@ class QueryLexer: public Lexer {
   std::unordered_set<std::string> valid_assign_operators = {
       "+", "-", "*", "/", "%", "<", ">"};
   std::unordered_set<std::string> valid_separators = {
-      ";", "(", ")", ","};
+      ";", "(", ")", ",", "\""};
   std::unordered_set<std::string> valid_keywords = {
       "Select", "such", "that", "Follows", "Parent", "Uses",
       "Modifies", "pattern", "stmt", "read", "print", "call", "while",
@@ -24,6 +24,6 @@ class QueryLexer: public Lexer {
 
  public:
   explicit QueryLexer(std::ifstream* source_stream) : Lexer(source_stream) {};
-  QueryToken* next_token() override;
-  std::vector<QueryToken*> lex();
+  Token* next_token() override;
+  std::vector<Token*> lex() override;
 };

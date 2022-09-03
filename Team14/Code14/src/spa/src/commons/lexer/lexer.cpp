@@ -57,6 +57,7 @@ void Lexer::read_alphanumeric() {
     this->tmp += this->advance();
   }
 }
+
 Token* Lexer::next_token() {
   ignore_whitespace();
   if (source_stream->eof()) {
@@ -68,9 +69,20 @@ Token* Lexer::next_token() {
   if (isalpha(c) || isdigit(c)) {
     // Symbol
     read_alphanumeric();
-    return new Token(tmp);
+    return new SymbolToken(tmp);
   }
 
   // Something went wrong :/
   throw LexSyntaxError(line_number, column_number, "Unexpected character: " + tmp);
+}
+
+std::vector<Token*> Lexer::lex() {
+  std::vector<Token*> tokens;
+  Token* token = this->next_token();
+  while (token) {
+    tokens.push_back(token);
+    token = next_token();
+  }
+  tokens.push_back(new EndOfFileToken());
+  return tokens;
 }

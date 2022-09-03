@@ -13,7 +13,7 @@ void SimpleLexer::read_operators() {
     tmp += advance();
   }
 }
-SimpleToken* SimpleLexer::next_token() {
+Token* SimpleLexer::next_token() {
   ignore_whitespace();
   if (source_stream->eof()) {
     return nullptr;
@@ -51,9 +51,9 @@ SimpleToken* SimpleLexer::next_token() {
   // Something went wrong :/
   throw LexSyntaxError(line_number, column_number, "Unexpected character: " + tmp);
 }
-std::vector<SimpleToken*> SimpleLexer::lex() {
-  std::vector<SimpleToken*> tokens;
-  SimpleToken* token = next_token();
+std::vector<Token*> SimpleLexer::lex() {
+  std::vector<Token*> tokens;
+  Token* token = next_token();
   while (token) {
     tokens.push_back(token);
     token = next_token();

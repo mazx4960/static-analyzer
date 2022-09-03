@@ -3,7 +3,7 @@
 #include "query_lexer.h"
 #include "query_lexer_exceptions.h"
 
-QueryToken* QueryLexer::next_token() {
+Token* QueryLexer::next_token() {
   this->ignore_whitespace();
   if (this->source_stream->eof()) {
     return nullptr;
@@ -35,9 +35,9 @@ QueryToken* QueryLexer::next_token() {
   // Something went wrong :/
   throw LexSyntaxError(this->line_number, this->column_number, "Unexpected character: " + this->tmp);
 }
-std::vector<QueryToken*> QueryLexer::lex() {
-  std::vector<QueryToken*> tokens;
-  QueryToken* token = this->next_token();
+std::vector<Token*> QueryLexer::lex() {
+  std::vector<Token*> tokens;
+  Token* token = next_token();
   while (token) {
     tokens.push_back(token);
     token = next_token();
@@ -45,4 +45,3 @@ std::vector<QueryToken*> QueryLexer::lex() {
   tokens.push_back(new EndOfFileToken());
   return tokens;
 }
-
