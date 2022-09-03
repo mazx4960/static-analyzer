@@ -1,50 +1,52 @@
 #include "simpleast.h"
 
+#include <utility>
+
 SimpleAstNode::SimpleAstNode(SimpleNodeType nodeType)
-    : nodeType(nodeType) {}
+    : nodeType_(nodeType) {}
 
 ProgramNode::ProgramNode(std::vector<ProcedureNode*> procedures)
-    : SimpleAstNode(SimpleNodeType::PROGRAM),
-      procedures(procedures) {}
+    : SimpleAstNode(SimpleNodeType::kProgram),
+      procedures_(std::move(procedures)) {}
 
 ProcedureNode::ProcedureNode(std::string procName, StatementListNode* statementList)
-    : SimpleAstNode(SimpleNodeType::PROCEDURE),
-      procName(procName),
-      statementList(statementList) {}
+    : SimpleAstNode(SimpleNodeType::kProcedure),
+      procName_(std::move(procName)),
+      statementList_(statementList) {}
 
 StatementListNode::StatementListNode(std::vector<StatementNode*> statements)
-    : SimpleAstNode(SimpleNodeType::STATEMENT_LIST),
-      statements(statements) {}
+    : SimpleAstNode(SimpleNodeType::kStatementList),
+      statements_(std::move(statements)) {}
 
 StatementNode::StatementNode(SimpleNodeType nodeType)
     : SimpleAstNode(nodeType),
-      stmtNo(0) {}
+      stmtNo_(0) {}
 
 ReadNode::ReadNode(VariableNode* variable)
-    : StatementNode(SimpleNodeType::READ),
-      variable(variable) {}
+    : StatementNode(SimpleNodeType::kRead),
+      variable_(variable) {}
 
 PrintNode::PrintNode(VariableNode* variable)
-    : StatementNode(SimpleNodeType::PRINT),
+    : StatementNode(SimpleNodeType::kPrint),
       variable(variable) {}
 
 CallNode::CallNode(std::string procedureName)
-    : StatementNode(SimpleNodeType::CALL),
-      procedureName(procedureName) {}
+    : StatementNode(SimpleNodeType::kCall),
+      procedureName(std::move(procedureName)) {}
 
 WhileNode::WhileNode(CondExprNode* conditional, StatementListNode* statementList)
-    : StatementNode(SimpleNodeType::WHILE),
+    : StatementNode(SimpleNodeType::kWhile),
       conditional(conditional),
       statementList(statementList) {}
 
 IfNode::IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, StatementListNode* elseStatementList)
-    : StatementNode(SimpleNodeType::IF),
+    : StatementNode(SimpleNodeType::kIf),
       conditional(conditional),
       thenStatementList(thenStatementList),
       elseStatementList(elseStatementList) {}
 
 AssignNode::AssignNode(VariableNode* variable, ExprNode* expression)
-    : StatementNode(SimpleNodeType::ASSIGN),
+    : StatementNode(SimpleNodeType::kAssign),
       variable(variable),
       expression(expression) {}
 
@@ -52,72 +54,72 @@ CondExprNode::CondExprNode(SimpleNodeType nodeType)
     : SimpleAstNode(nodeType) {}
 
 NotExprNode::NotExprNode(CondExprNode* negatedConditional)
-    : CondExprNode(SimpleNodeType::NOT),
-      negatedConditional(negatedConditional) {}
+    : CondExprNode(SimpleNodeType::kNot),
+      negatedConditional_(negatedConditional) {}
 
 AndExprNode::AndExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional)
-    : CondExprNode(SimpleNodeType::AND),
-      firstConditional(firstConditional),
-      secondConditional(secondConditional) {}
+    : CondExprNode(SimpleNodeType::kAnd),
+      firstConditional_(firstConditional),
+      secondConditional_(secondConditional) {}
 
 OrExprNode::OrExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional)
-    : CondExprNode(SimpleNodeType::OR),
-      firstConditional(firstConditional),
-      secondConditional(secondConditional) {}
+    : CondExprNode(SimpleNodeType::kOr),
+      firstConditional_(firstConditional),
+      secondConditional_(secondConditional) {}
 
 RelExprNode::RelExprNode(SimpleNodeType nodeType, RelFactorNode* leftFactor, RelFactorNode* rightFactor)
     : CondExprNode(nodeType),
-      leftFactor(leftFactor),
-      rightFactor(rightFactor) {}
+      leftFactor_(leftFactor),
+      rightFactor_(rightFactor) {}
 
 GreaterThanNode::GreaterThanNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor)
-    : RelExprNode(SimpleNodeType::GT, leftFactor, rightFactor) {}
+    : RelExprNode(SimpleNodeType::kGt, leftFactor, rightFactor) {}
 
 GreaterThanEqualNode::GreaterThanEqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor)
-    : RelExprNode(SimpleNodeType::GTE, leftFactor, rightFactor) {}
+    : RelExprNode(SimpleNodeType::kGte, leftFactor, rightFactor) {}
 
 LessThanNode::LessThanNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor)
-    : RelExprNode(SimpleNodeType::LT, leftFactor, rightFactor) {}
+    : RelExprNode(SimpleNodeType::kLt, leftFactor, rightFactor) {}
 
 LessThanEqualNode::LessThanEqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor)
-    : RelExprNode(SimpleNodeType::LTE, leftFactor, rightFactor) {}
+    : RelExprNode(SimpleNodeType::kLte, leftFactor, rightFactor) {}
 
 EqualNode::EqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor)
-    : RelExprNode(SimpleNodeType::EQ, leftFactor, rightFactor) {}
+    : RelExprNode(SimpleNodeType::kEq, leftFactor, rightFactor) {}
 
 NotEqualNode::NotEqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor)
-    : RelExprNode(SimpleNodeType::NEQ, leftFactor, rightFactor) {}
+    : RelExprNode(SimpleNodeType::kNeq, leftFactor, rightFactor) {}
 
 RelFactorNode::RelFactorNode(SimpleNodeType nodeType)
     : SimpleAstNode(nodeType) {}
 
 ExprNode::ExprNode(SimpleNodeType nodeType, RelFactorNode* leftExpression, RelFactorNode* rightExpression)
     : RelFactorNode(nodeType),
-      leftExpression(leftExpression),
-      rightExpression(rightExpression) {}
+      leftExpression_(leftExpression),
+      rightExpression_(rightExpression) {}
 
 PlusNode::PlusNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression)
-    : ExprNode(SimpleNodeType::PLUS, leftExpression, rightExpression) {}
+    : ExprNode(SimpleNodeType::kPlus, leftExpression, rightExpression) {}
 
 MinusNode::MinusNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression)
-    : ExprNode(SimpleNodeType::MINUS, leftExpression, rightExpression) {}
+    : ExprNode(SimpleNodeType::kMinus, leftExpression, rightExpression) {}
 
 TimesNode::TimesNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression)
-    : ExprNode(SimpleNodeType::TIMES, leftExpression, rightExpression) {}
+    : ExprNode(SimpleNodeType::kTimes, leftExpression, rightExpression) {}
 
 DivNode::DivNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression)
-    : ExprNode(SimpleNodeType::DIV, leftExpression, rightExpression) {}
+    : ExprNode(SimpleNodeType::kDiv, leftExpression, rightExpression) {}
 
 ModNode::ModNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression)
-    : ExprNode(SimpleNodeType::MOD, leftExpression, rightExpression) {}
+    : ExprNode(SimpleNodeType::kMod, leftExpression, rightExpression) {}
 
 ReferenceNode::ReferenceNode(SimpleNodeType nodeType)
     : RelFactorNode(nodeType) {}
 
 VariableNode::VariableNode(std::string variableName)
-    : ReferenceNode(SimpleNodeType::VARIABLE),
-      variableName(variableName) {}
+    : ReferenceNode(SimpleNodeType::kVariable),
+      variableName_(std::move(variableName)) {}
 
 ConstantNode::ConstantNode(int value)
-    : ReferenceNode(SimpleNodeType::CONSTANT),
-      value(value) {}
+    : ReferenceNode(SimpleNodeType::kConstant),
+      value_(value) {}
