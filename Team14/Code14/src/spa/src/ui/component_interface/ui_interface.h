@@ -8,7 +8,7 @@
 
 class UIInterface : public Interface {
  private:
-  UI component;
+  UI component_;
 
  public:
   void set_interface(QPSInterface *);

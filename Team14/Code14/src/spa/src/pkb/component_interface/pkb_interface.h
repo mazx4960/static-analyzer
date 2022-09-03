@@ -6,5 +6,5 @@
 
 class PKBInterface : public Interface {
  private:
-  PKB component;
+  PKB component_;
 };

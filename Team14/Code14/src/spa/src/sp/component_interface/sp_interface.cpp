@@ -3,5 +3,5 @@
 #include "sp_interface.h"
 
 void SPInterface::set_interface(PKBInterface *interface) {
-  this->component.set_interface(interface);
+  this->component_.set_interface(interface);
 }

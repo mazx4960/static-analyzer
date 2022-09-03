@@ -3,5 +3,5 @@
 #include "qps_interface.h"
 
 void QPSInterface::set_interface(PKBInterface *interface) {
-  this->component.set_interface(interface);
+  this->component_.set_interface(interface);
 }

@@ -7,7 +7,7 @@
 
 class SPInterface : public Interface {
  private:
-  SP component;
+  SP component_;
 
  public:
   void set_interface(PKBInterface *);

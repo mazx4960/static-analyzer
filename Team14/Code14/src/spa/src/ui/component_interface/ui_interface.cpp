@@ -3,8 +3,8 @@
 #include "ui_interface.h"
 
 void UIInterface::set_interface(QPSInterface *interface) {
-  this->component.set_interface(interface);
+  this->component_.set_interface(interface);
 }
 void UIInterface::set_interface(SPInterface *interface) {
-  this->component.set_interface(interface);
+  this->component_.set_interface(interface);
 }

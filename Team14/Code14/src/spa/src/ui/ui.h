@@ -7,9 +7,9 @@
 
 class UI {
  private:
-  SPInterface *sp_interface = nullptr;
+  SPInterface *sp_interface_ = nullptr;
 
-  QPSInterface *qps_interface = nullptr;
+  QPSInterface *qps_interface_ = nullptr;
 
  public:
   UI() = default;
