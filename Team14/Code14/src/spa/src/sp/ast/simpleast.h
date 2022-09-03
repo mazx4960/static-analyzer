@@ -30,6 +30,7 @@ class SimpleAstNode {
 
  public:
   explicit SimpleAstNode(SimpleNodeType nodeType);
+  SimpleNodeType GetNodeType();
 };
 
 class ProgramNode : public SimpleAstNode {
@@ -38,6 +39,7 @@ class ProgramNode : public SimpleAstNode {
 
  public:
   explicit ProgramNode(std::vector<ProcedureNode*> procedures);
+  std::vector<ProcedureNode*> GetProcedures();
 };
 
 class ProcedureNode : public SimpleAstNode {
@@ -47,6 +49,7 @@ class ProcedureNode : public SimpleAstNode {
 
  public:
   ProcedureNode(std::string procName, StatementListNode* statementList);
+  StatementListNode* GetStatementList();
 };
 
 class StatementListNode : public SimpleAstNode {
@@ -55,6 +58,7 @@ class StatementListNode : public SimpleAstNode {
 
  public:
   explicit StatementListNode(std::vector<StatementNode*> statements);
+  std::vector<StatementNode*> GetStatements();
 };
 
 class StatementNode : public SimpleAstNode {

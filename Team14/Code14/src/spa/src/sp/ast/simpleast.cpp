@@ -4,19 +4,29 @@
 
 SimpleAstNode::SimpleAstNode(SimpleNodeType nodeType)
     : nodeType_(nodeType) {}
+SimpleNodeType SimpleAstNode::GetNodeType() { return nodeType_; }
 
 ProgramNode::ProgramNode(std::vector<ProcedureNode*> procedures)
     : SimpleAstNode(SimpleNodeType::kProgram),
       procedures_(std::move(procedures)) {}
+std::vector<ProcedureNode*> ProgramNode::GetProcedures() {
+  return this->procedures_;
+}
 
 ProcedureNode::ProcedureNode(std::string procName, StatementListNode* statementList)
     : SimpleAstNode(SimpleNodeType::kProcedure),
       procName_(std::move(procName)),
       statementList_(statementList) {}
+StatementListNode* ProcedureNode::GetStatementList() {
+  return this->statementList_;
+}
 
 StatementListNode::StatementListNode(std::vector<StatementNode*> statements)
     : SimpleAstNode(SimpleNodeType::kStatementList),
       statements_(std::move(statements)) {}
+std::vector<StatementNode*> StatementListNode::GetStatements() {
+  return this->statements_;
+}
 
 StatementNode::StatementNode(SimpleNodeType nodeType)
     : SimpleAstNode(nodeType),
