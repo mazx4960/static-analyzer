@@ -111,10 +111,10 @@ class IfNode : public StatementNode {
 class AssignNode : public StatementNode {
  private:
   VariableNode* variable_;
-  ExprNode* expression_;
+  RelFactorNode* expression_;
 
  public:
-  AssignNode(VariableNode* variable, ExprNode* expression);
+  AssignNode(VariableNode* variable, RelFactorNode* expression);
 };
 
 class CondExprNode : public SimpleAstNode {

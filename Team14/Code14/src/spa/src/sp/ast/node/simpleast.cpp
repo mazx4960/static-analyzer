@@ -45,7 +45,7 @@ IfNode::IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, 
       thenStatementList_(thenStatementList),
       elseStatementList_(elseStatementList) {}
 
-AssignNode::AssignNode(VariableNode* variable, ExprNode* expression)
+AssignNode::AssignNode(VariableNode* variable, RelFactorNode* expression)
     : StatementNode(SimpleNodeType::kAssign),
       variable_(variable),
       expression_(expression) {}

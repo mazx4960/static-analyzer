@@ -10,11 +10,10 @@ class ProgramGrammarRule : public SimpleGrammarRule {
 
 class ProcedureGrammarRule : public CompositeGrammarRule {
  private:
-  ProcedureNode* assembleNode(std::vector<SimpleAstNode*>);
+  ProcedureNode* assembleNode(std::vector<SimpleAstNode*>) override;
 
  public:
   ProcedureGrammarRule();
-  ProcedureNode* parseNode(TokenIterator& tokenStream);
 };
 
 class StatementListGrammarRule : public SimpleGrammarRule {
@@ -27,34 +26,47 @@ class StatementGrammarRule : public SimpleGrammarRule {
   StatementNode* parseNode(TokenIterator& tokenStream);
 };
 
-class ReadGrammarRule : public SimpleGrammarRule {
+class ReadGrammarRule : public CompositeGrammarRule {
+ private:
+  ReadNode* assembleNode(std::vector<SimpleAstNode*>) override;
+
  public:
-  ReadNode* parseNode(TokenIterator& tokenStream);
+  ReadGrammarRule();
 };
 
-class PrintGrammarRule : public SimpleGrammarRule {
+class PrintGrammarRule : public CompositeGrammarRule {
+ private:
+  PrintNode* assembleNode(std::vector<SimpleAstNode*>) override;
  public:
-  PrintNode* parseNode(TokenIterator& tokenStream);
+  PrintGrammarRule();
 };
 
-class CallGrammarRule : public SimpleGrammarRule {
+class CallGrammarRule : public CompositeGrammarRule {
+ private:
+  CallNode* assembleNode(std::vector<SimpleAstNode*>) override;
  public:
-  CallNode* parseNode(TokenIterator& tokenStream);
+  CallGrammarRule();
 };
 
-class WhileGrammarRule : public SimpleGrammarRule {
+class WhileGrammarRule : public CompositeGrammarRule {
+ private:
+  WhileNode* assembleNode(std::vector<SimpleAstNode*>) override;
  public:
-  WhileNode* parseNode(TokenIterator& tokenStream);
+  WhileGrammarRule();
 };
 
-class IfGrammarRule : public SimpleGrammarRule {
+class IfGrammarRule : public CompositeGrammarRule {
+ private:
+  IfNode* assembleNode(std::vector<SimpleAstNode*>) override;
  public:
-  IfNode* parseNode(TokenIterator& tokenStream);
+  IfGrammarRule();
 };
 
-class AssignGrammarRule : public SimpleGrammarRule {
+class AssignGrammarRule : public CompositeGrammarRule {
+ private:
+  AssignNode* assembleNode(std::vector<SimpleAstNode*>) override;
  public:
-  AssignNode* parseNode(TokenIterator& tokenStream);
+  AssignGrammarRule();
 };
 
 class CondExprGrammarRule : public SimpleGrammarRule {
@@ -65,6 +77,11 @@ class CondExprGrammarRule : public SimpleGrammarRule {
 class RelExprGrammarRule : public SimpleGrammarRule {
  public:
   RelExprNode* parseNode(TokenIterator& tokenStream);
+};
+
+class RelFactorGrammarRule : public SimpleGrammarRule {
+ public:
+  RelFactorNode* parseNode(TokenIterator& tokenStream);
 };
 
 class ExprGrammarRule : public SimpleGrammarRule {
