@@ -1,3 +1,3 @@
 #pragma once
 
-class query_validator {};
+class QueryValidator {};
