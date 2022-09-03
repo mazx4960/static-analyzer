@@ -55,44 +55,44 @@ class OperatorToken : public Token {
 
 class QuoteToken : public Token {
  public:
-  explicit QuoteToken(std::string value)
-      : Token(TokenType::kQuote, std::move(value)) {}
+  explicit QuoteToken()
+      : Token(TokenType::kQuote, "\"") {}
 };
 
 class CommaToken : public Token {
  public:
-  explicit CommaToken(std::string value)
-      : Token(TokenType::kComma, std::move(value)) {}
+  explicit CommaToken()
+      : Token(TokenType::kComma, ",") {}
 };
 
 class SemicolonToken : public Token {
  public:
-  explicit SemicolonToken(std::string value)
-      : Token(TokenType::kSemicolon, std::move(value)) {}
+  explicit SemicolonToken()
+      : Token(TokenType::kSemicolon, ";") {}
 };
 
 class RoundOpenBracketToken : public Token {
  public:
-  explicit RoundOpenBracketToken(std::string value)
-      : Token(TokenType::kRoundOpenBracket, std::move(value)) {}
+  explicit RoundOpenBracketToken()
+      : Token(TokenType::kRoundOpenBracket, "(") {}
 };
 
 class RoundCloseBracketToken : public Token {
  public:
-  explicit RoundCloseBracketToken(std::string value)
-      : Token(TokenType::kRoundCloseBracket, std::move(value)) {}
+  explicit RoundCloseBracketToken()
+      : Token(TokenType::kRoundCloseBracket, ")") {}
 };
 
 class CurlyOpenBracketToken : public Token {
  public:
-  explicit CurlyOpenBracketToken(std::string value)
-      : Token(TokenType::kCurlyOpenBracket, std::move(value)) {}
+  explicit CurlyOpenBracketToken()
+      : Token(TokenType::kCurlyOpenBracket, "{") {}
 };
 
 class CurlyCloseBracket : public Token {
  public:
-  explicit CurlyCloseBracket(std::string value)
-      : Token(TokenType::kCurlyCloseBracket, std::move(value)) {}
+  explicit CurlyCloseBracket()
+      : Token(TokenType::kCurlyCloseBracket, "}") {}
 };
 
 class EndOfFileToken : public Token {

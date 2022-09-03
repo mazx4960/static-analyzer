@@ -35,19 +35,19 @@ Token* SimpleLexer::next_token() {
     return new LiteralToken(tmp);
   } else if (c == this->semicolon) {
     // Semicolon
-    return new SemicolonToken(this->tmp);
+    return new SemicolonToken();
   } else if (c == this->round_open_bracket) {
     // Round Open Bracket
-    return new RoundOpenBracketToken(this->tmp);
+    return new RoundOpenBracketToken();
   } else if (c == this->round_close_bracket) {
     // Round Close Bracket
-    return new RoundCloseBracketToken(this->tmp);
+    return new RoundCloseBracketToken();
   } else if (c == this->curly_open_bracket) {
     // Curly Open Bracket
-    return new CurlyOpenBracketToken(this->tmp);
+    return new CurlyOpenBracketToken();
   } else if (c == this->curly_close_bracket) {
     // Curly Close Bracket
-    return new CurlyCloseBracket(this->tmp);
+    return new CurlyCloseBracket();
   } else if (valid_single_operators.find(tmp) != valid_whitespace.end()) {
     // Operator
     read_operators();

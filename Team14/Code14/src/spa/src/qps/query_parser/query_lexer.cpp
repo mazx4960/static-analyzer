@@ -25,19 +25,19 @@ Token* QueryLexer::next_token() {
     return new LiteralToken(this->tmp);
   } else if (c == this->round_open_bracket) {
     // Round Open Bracket
-    return new RoundOpenBracketToken(this->tmp);
+    return new RoundOpenBracketToken();
   } else if (c == this->round_close_bracket) {
     // Round Close Bracket
-    return new RoundCloseBracketToken(this->tmp);
+    return new RoundCloseBracketToken();
   } else if (c == this->semicolon) {
     // Semicolon
-    return new SemicolonToken(this->tmp);
+    return new SemicolonToken();
   } else if (c == this->comma) {
     // Comma
-    return new CommaToken(this->tmp);
+    return new CommaToken();
   } else if (c == this->quote) {
     // Quote
-    return new QuoteToken(this->tmp);
+    return new QuoteToken();
   } else if (this->valid_assign_operators.find(this->tmp) != this->valid_whitespace.end()) {
     // Assign Operators
     return new OperatorToken(this->tmp);
