@@ -13,10 +13,9 @@ SimpleAstNode* CompositeGrammarRule::parseNode(TokenIterator& tokenStream) {
 ProgramNode* ProgramGrammarRule::parseNode(TokenIterator& tokenStream) {
   std::vector<ProcedureNode*> procedures{};
   ProcedureGrammarRule procedure_parser{};
-  procedures.push_back(procedure_parser.parseNode(tokenStream));
-  while (!(**tokenStream == EndOfFileToken())) {
-    procedures.push_back(procedure_parser.parseNode(tokenStream));
-  }
+  do {
+    procedures.push_back(static_cast<ProcedureNode*>(procedure_parser.parseNode(tokenStream)));
+  } while (!(**tokenStream == EndOfFileToken()));
   return new ProgramNode(procedures);
 }
 
