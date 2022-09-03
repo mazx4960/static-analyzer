@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include "simplenodetype.h"
 
 class SimpleAstNode;
 class ProgramNode;
@@ -16,6 +17,7 @@ class IfNode;
 class AssignNode;
 class CondExprNode;
 class RelExprNode;
+class RelFactorNode;
 class ExprNode;
 class TermNode;
 class FactorNode;
@@ -24,7 +26,13 @@ class VariableNode;
 class ConstantNode;
 
 
-class SimpleAstNode {};
+class SimpleAstNode {
+ private:
+  SimpleNodeType nodeType;
+
+ public:
+  SimpleAstNode(SimpleNodeType nodeType);
+};
 
 class ProgramNode : public SimpleAstNode {
  private:
@@ -56,7 +64,7 @@ class StatementNode : public SimpleAstNode {
   int stmtNo;
 
  public:
-  StatementNode();
+  StatementNode(SimpleNodeType nodeType);
 };
 
 class ReadNode : public StatementNode {
@@ -111,7 +119,10 @@ class AssignNode : public StatementNode {
   AssignNode(VariableNode* variable, ExprNode* expression);
 };
 
-class CondExprNode : public SimpleAstNode {};
+class CondExprNode : public SimpleAstNode {
+ public:
+  CondExprNode(SimpleNodeType nodeType);
+};
 
 class NotExprNode : public CondExprNode {
  private:
@@ -145,7 +156,7 @@ class RelExprNode : public CondExprNode {
   RelFactorNode* rightFactor;
 
  public:
-  RelExprNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor);
+  RelExprNode(SimpleNodeType nodeType, RelFactorNode* leftFactor, RelFactorNode* rightFactor);
 };
 
 class GreaterThanNode : public RelExprNode {
@@ -178,7 +189,10 @@ class NotEqualNode : public RelExprNode {
   NotEqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor);
 };
 
-class RelFactorNode : public SimpleAstNode {};
+class RelFactorNode : public SimpleAstNode {
+ public:
+  RelFactorNode(SimpleNodeType nodeType);
+};
 
 class ExprNode : public RelFactorNode {
  private:
@@ -186,7 +200,7 @@ class ExprNode : public RelFactorNode {
   RelFactorNode* rightExpression;
 
  public:
-  ExprNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
+  ExprNode(SimpleNodeType nodeType, RelFactorNode* leftExpression, RelFactorNode* rightExpression);
 };
 
 class PlusNode : public ExprNode {
@@ -215,7 +229,10 @@ class ModNode : public ExprNode {
   ModNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
 };
 
-class ReferenceNode : public RelFactorNode {};
+class ReferenceNode : public RelFactorNode {
+ public:
+  ReferenceNode(SimpleNodeType nodeType);
+};
 
 class VariableNode : public ReferenceNode {
  private:
