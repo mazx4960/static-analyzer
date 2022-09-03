@@ -10,9 +10,9 @@ TEST(LexerTest, TestBasic) {
   std::vector<Token*> tokens = lexer.lex();
   std::vector<Token*> expected = {
       new KeywordToken("procedure"), new SymbolToken("main"),
-      new SeparatorToken("{"),       new SymbolToken("x"),
+      new CurlyOpenBracketToken(),       new SymbolToken("x"),
       new OperatorToken("="),        new LiteralToken("1"),
-      new SeparatorToken(";"),       new SeparatorToken("}"),
+      new SemicolonToken(),       new CurlyCloseBracket(),
       new EndOfFileToken()};
   ASSERT_EQ(tokens.size(), expected.size());
   for (int i = 0; i < tokens.size(); ++i) {
