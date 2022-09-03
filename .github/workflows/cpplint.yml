@@ -1,26 +1,32 @@
-name: Linter
+name: clang-tidy-review
 
+# You can be more specific, but it currently only works on pull requests
 on:
-  push:
-    branches-ignore: [ "master" ]
   pull_request:
-    branches: [ "master" ]
+    branches:
+      - master
 
 jobs:
-  run-lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
-          fetch-depth: 0
+  build:
+    runs-on: ubuntu-22.04
 
-      - name: Run linting
-        uses: github/super-linter@v4
-        env:
-          VALIDATE_ALL_CODEBASE: false
-          VALIDATE_CPP: true
-          VALIDATE_CLANG_FORMAT: true
-          DEFAULT_BRANCH: "master"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Project
+        shell: bash
+        run: |
+          chmod +x scripts/build.sh
+          scripts/build.sh
+
+      - uses: ZedThree/clang-tidy-review@v0.9.0
+        id: review
+        with:
+          build_dir: build
+          exclude: "catch.hpp"
+          clang_tidy_version: 11
+          max_comments: 0
+      
+      # If there are any comments, fail the check
+      - if: steps.review.outputs.total_comments > 0
+        run: exit 1
