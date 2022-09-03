@@ -1,3 +1,6 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
-#include "Visitor.h"
+#pragma once
+
+class Interface {
+};
