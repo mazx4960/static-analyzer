@@ -139,110 +139,83 @@ class OrExprNode : public CondExprNode {
   OrExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional);
 };
 
-class RelExprNode : public CondExprNode {};
-
-class GreaterThanNode : public RelExprNode {
+class RelExprNode : public CondExprNode {
  private:
-  ExprNode* leftFactor;
-  ExprNode* rightFactor;
+  RelFactorNode* leftFactor;
+  RelFactorNode* rightFactor;
 
  public:
-  GreaterThanNode(ExprNode* leftFactor, ExprNode* rightFactor);
+  RelExprNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor);
+};
+
+class GreaterThanNode : public RelExprNode {
+ public:
+  GreaterThanNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor);
 };
 
 class GreaterThanEqualNode : public RelExprNode {
- private:
-  ExprNode* leftFactor;
-  ExprNode* rightFactor;
-
  public:
-  GreaterThanEqualNode(ExprNode* leftFactor, ExprNode* rightFactor);
+  GreaterThanEqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor);
 };
 
 class LessThanNode : public RelExprNode {
- private:
-  ExprNode* leftFactor;
-  ExprNode* rightFactor;
-
  public:
-  LessThanNode(ExprNode* leftFactor, ExprNode* rightFactor);
+  LessThanNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor);
 };
 
 class LessThanEqualNode : public RelExprNode {
- private:
-  ExprNode* leftFactor;
-  ExprNode* rightFactor;
-
  public:
-  LessThanEqualNode(ExprNode* leftFactor, ExprNode* rightFactor);
+  LessThanEqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor);
 };
 
 class EqualNode : public RelExprNode {
- private:
-  ExprNode* leftFactor;
-  ExprNode* rightFactor;
-
  public:
-  EqualNode(ExprNode* leftFactor, ExprNode* rightFactor);
+  EqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor);
 };
 
 class NotEqualNode : public RelExprNode {
- private:
-  ExprNode* leftFactor;
-  ExprNode* rightFactor;
-
  public:
-  NotEqualNode(ExprNode* leftFactor, ExprNode* rightFactor);
+  NotEqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor);
 };
 
-class ExprNode : public SimpleAstNode {};
+class RelFactorNode : public SimpleAstNode {};
 
-class PlusNode : public ExprNode {
+class ExprNode : public RelFactorNode {
  private:
-  ExprNode* leftExpression;
-  ExprNode* rightExpression;
+  RelFactorNode* leftExpression;
+  RelFactorNode* rightExpression;
 
  public:
-  PlusNode(ExprNode* leftExpression, ExprNode* rightExpression);
+  ExprNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
+};
+
+class PlusNode : public ExprNode {
+
+ public:
+  PlusNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
 };
 
 class MinusNode : public ExprNode {
- private:
-  ExprNode* leftExpression;
-  ExprNode* rightExpression;
-
  public:;
-  MinusNode(ExprNode* leftExpression, ExprNode* rightExpression);
+  MinusNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
 };
 
 class TimesNode : public ExprNode {
- private:
-  ExprNode* leftExpression;
-  ExprNode* rightExpression;
-
  public:
-  TimesNode(ExprNode* leftExpression, ExprNode* rightExpression);
+  TimesNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
 };
 
 class DivNode : public ExprNode {
- private:
-  ExprNode* leftExpression;
-  ExprNode* rightExpression;
-
  public:
-  DivNode(ExprNode* leftExpression, ExprNode* rightExpression);
+  DivNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
 };
 
 class ModNode : public ExprNode {
- private:
-  ExprNode* leftExpression;
-  ExprNode* rightExpression;
-
  public:
-  ModNode(ExprNode* leftExpression, ExprNode* rightExpression);
+  ModNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
 };
 
-class ReferenceNode : public SimpleAstNode {};
+class ReferenceNode : public RelFactorNode {};
 
 class VariableNode : public ReferenceNode {
  private:

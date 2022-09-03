@@ -46,49 +46,46 @@ OrExprNode::OrExprNode(CondExprNode* firstConditional, CondExprNode* secondCondi
     : firstConditional(firstConditional),
       secondConditional(secondConditional) {}
 
-GreaterThanNode::GreaterThanNode(ExprNode* leftFactor, ExprNode* rightFactor)
+RelExprNode::RelExprNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor)
     : leftFactor(leftFactor),
       rightFactor(rightFactor) {}
 
-GreaterThanEqualNode::GreaterThanEqualNode(ExprNode* leftFactor, ExprNode* rightFactor)
-    : leftFactor(leftFactor),
-      rightFactor(rightFactor) {}
+GreaterThanNode::GreaterThanNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor)
+    : RelExprNode(leftFactor, rightFactor) {}
 
-LessThanNode::LessThanNode(ExprNode* leftFactor, ExprNode* rightFactor)
-    : leftFactor(leftFactor),
-      rightFactor(rightFactor) {}
+GreaterThanEqualNode::GreaterThanEqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor)
+    : RelExprNode(leftFactor, rightFactor) {}
 
-LessThanEqualNode::LessThanEqualNode(ExprNode* leftFactor, ExprNode* rightFactor)
-    : leftFactor(leftFactor),
-      rightFactor(rightFactor) {}
+LessThanNode::LessThanNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor)
+    : RelExprNode(leftFactor, rightFactor) {}
 
-EqualNode::EqualNode(ExprNode* leftFactor, ExprNode* rightFactor)
-    : leftFactor(leftFactor),
-      rightFactor(rightFactor) {}
+LessThanEqualNode::LessThanEqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor)
+    : RelExprNode(leftFactor, rightFactor) {}
 
-NotEqualNode::NotEqualNode(ExprNode* leftFactor, ExprNode* rightFactor)
-    : leftFactor(leftFactor),
-      rightFactor(rightFactor) {}
+EqualNode::EqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor)
+    : RelExprNode(leftFactor, rightFactor) {}
 
-PlusNode::PlusNode(ExprNode* leftExpression, ExprNode* rightExpression)
+NotEqualNode::NotEqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor)
+    : RelExprNode(leftFactor, rightFactor) {}
+
+ExprNode::ExprNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression)
     : leftExpression(leftExpression),
       rightExpression(rightExpression) {}
 
-MinusNode::MinusNode(ExprNode* leftExpression, ExprNode* rightExpression)
-    : leftExpression(leftExpression),
-      rightExpression(rightExpression) {}
+PlusNode::PlusNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression)
+    : ExprNode(leftExpression, rightExpression) {}
 
-TimesNode::TimesNode(ExprNode* leftExpression, ExprNode* rightExpression)
-    : leftExpression(leftExpression),
-      rightExpression(rightExpression) {}
+MinusNode::MinusNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression)
+    : ExprNode(leftExpression, rightExpression) {}
 
-DivNode::DivNode(ExprNode* leftExpression, ExprNode* rightExpression)
-    : leftExpression(leftExpression),
-      rightExpression(rightExpression) {}
+TimesNode::TimesNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression)
+    : ExprNode(leftExpression, rightExpression) {}
 
-ModNode::ModNode(ExprNode* leftExpression, ExprNode* rightExpression)
-    : leftExpression(leftExpression),
-      rightExpression(rightExpression) {}
+DivNode::DivNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression)
+    : ExprNode(leftExpression, rightExpression) {}
+
+ModNode::ModNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression)
+    : ExprNode(leftExpression, rightExpression) {}
 
 VariableNode::VariableNode(std::string variableName)
     : variableName(variableName) {}
