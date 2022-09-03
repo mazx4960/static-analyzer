@@ -33,6 +33,21 @@ Token* SimpleLexer::next_token() {
     // Literal
     read_digits();
     return new LiteralToken(tmp);
+  } else if (c == this->semicolon) {
+    // Semicolon
+    return new SemicolonToken(this->tmp);
+  } else if (c == this->round_open_bracket) {
+    // Round Open Bracket
+    return new RoundOpenBracketToken(this->tmp);
+  } else if (c == this->round_close_bracket) {
+    // Round Close Bracket
+    return new RoundCloseBracketToken(this->tmp);
+  } else if (c == this->curly_open_bracket) {
+    // Curly Open Bracket
+    return new CurlyOpenBracketToken(this->tmp);
+  } else if (c == this->curly_close_bracket) {
+    // Curly Close Bracket
+    return new CurlyCloseBracket(this->tmp);
   } else if (valid_single_operators.find(tmp) != valid_whitespace.end()) {
     // Operator
     read_operators();
@@ -42,21 +57,8 @@ Token* SimpleLexer::next_token() {
       throw LexSyntaxError(line_number, column_number, "Invalid operator " + tmp);
     }
     return new OperatorToken(tmp);
-  } else if (valid_separators.find(tmp) != valid_whitespace.end()) {
-    // Separator
-    return new SeparatorToken(tmp);
   }
 
   // Something went wrong :/
   throw LexSyntaxError(line_number, column_number, "Unexpected character: " + tmp);
-}
-std::vector<Token*> SimpleLexer::lex() {
-  std::vector<Token*> tokens;
-  Token* token = next_token();
-  while (token) {
-    tokens.push_back(token);
-    token = next_token();
-  }
-  tokens.push_back(new EndOfFileToken());
-  return tokens;
 }

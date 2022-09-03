@@ -11,12 +11,15 @@
 
 class SimpleLexer : Lexer {
  private:
+  char semicolon = ';';
+  char round_open_bracket = '(';
+  char round_close_bracket = ')';
+  char curly_open_bracket = '{';
+  char curly_close_bracket = '}';
   std::unordered_set<std::string> valid_single_operators = {
       "+", "-", "*", "/", "%", "<", ">", "&", "|", "!", "="};
   std::unordered_set<std::string> valid_operators = {
       "+", "-", "*", "/", "%", "<", ">", ">=", "<=", "&&", "||", "!=", "==", "="};
-  std::unordered_set<std::string> valid_separators = {
-      ";", "(", ")", "{", "}"};
   std::unordered_set<std::string> valid_keywords = {
       "procedure", "if", "then", "else", "while", "read", "print", "call"};
 
@@ -25,5 +28,4 @@ class SimpleLexer : Lexer {
  public:
   explicit SimpleLexer(std::ifstream* source_stream) : Lexer(source_stream) {};
   Token* next_token() override;
-  std::vector<Token*> lex() override;
 };

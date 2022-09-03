@@ -23,24 +23,27 @@ Token* QueryLexer::next_token() {
     // Literal
     this->read_digits();
     return new LiteralToken(this->tmp);
+  } else if (c == this->round_open_bracket) {
+    // Round Open Bracket
+    return new RoundOpenBracketToken(this->tmp);
+  } else if (c == this->round_close_bracket) {
+    // Round Close Bracket
+    return new RoundCloseBracketToken(this->tmp);
+  } else if (c == this->semicolon) {
+    // Semicolon
+    return new SemicolonToken(this->tmp);
+  } else if (c == this->comma) {
+    // Comma
+    return new CommaToken(this->tmp);
+  } else if (c == this->quote) {
+    // Quote
+    return new QuoteToken(this->tmp);
   } else if (this->valid_assign_operators.find(this->tmp) != this->valid_whitespace.end()) {
-    // Assign Operator
+    // Assign Operators
     return new OperatorToken(this->tmp);
-  } else if (this->valid_separators.find(this->tmp) != this->valid_whitespace.end()) {
-    // Separator
-    return new SeparatorToken(this->tmp);
   }
 
   // Something went wrong :/
   throw LexSyntaxError(this->line_number, this->column_number, "Unexpected character: " + this->tmp);
 }
-std::vector<Token*> QueryLexer::lex() {
-  std::vector<Token*> tokens;
-  Token* token = next_token();
-  while (token) {
-    tokens.push_back(token);
-    token = next_token();
-  }
-  tokens.push_back(new EndOfFileToken());
-  return tokens;
-}
+

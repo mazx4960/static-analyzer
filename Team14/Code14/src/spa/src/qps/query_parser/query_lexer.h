@@ -11,12 +11,13 @@
 
 class QueryLexer: public Lexer {
  private:
-  std::unordered_set<std::string> valid_whitespace = {
-      " ", "\t", "\r", "\n"};
+  char round_open_bracket = '(';
+  char round_close_bracket = ')';
+  char semicolon = ';';
+  char comma = ',';
+  char quote = '\"';
   std::unordered_set<std::string> valid_assign_operators = {
       "+", "-", "*", "/", "%", "<", ">"};
-  std::unordered_set<std::string> valid_separators = {
-      ";", "(", ")", ",", "\""};
   std::unordered_set<std::string> valid_keywords = {
       "Select", "such", "that", "Follows", "Parent", "Uses",
       "Modifies", "pattern", "stmt", "read", "print", "call", "while",
@@ -25,5 +26,4 @@ class QueryLexer: public Lexer {
  public:
   explicit QueryLexer(std::ifstream* source_stream) : Lexer(source_stream) {};
   Token* next_token() override;
-  std::vector<Token*> lex() override;
 };
