@@ -5,18 +5,18 @@
 #include "lexer_exceptions.h"
 
 Lexer::Lexer(std::ifstream* s) {
-  line_number = 0;
-  column_number = 0;
-  source_stream = s;
-  tmp = "";
+  line_number_ = 0;
+  column_number_ = 0;
+  source_stream_ = s;
+  tmp_ = "";
 }
 
 char Lexer::peek() {
-  return char(source_stream->peek());
+  return char(source_stream_->peek());
 }
 char Lexer::advance() {
-  column_number++;
-  return char(source_stream->get());
+  column_number_++;
+  return char(source_stream_->get());
 }
 /*
  * Skips whitespace characters.
@@ -24,10 +24,10 @@ char Lexer::advance() {
 void Lexer::ignore_whitespace() {
   std::string s;
   s = peek();
-  while (!source_stream->eof() && valid_whitespace.find(s) != valid_whitespace.end()) {
+  while (!source_stream_->eof() && valid_whitespace_.find(s) != valid_whitespace_.end()) {
     if (peek() == '\n') {
-      line_number++;
-      column_number = 0;
+      line_number_++;
+      column_number_ = 0;
     }
     advance();
     s = peek();
@@ -38,7 +38,7 @@ void Lexer::ignore_whitespace() {
  */
 void Lexer::read_alpha() {
   while (isalpha(peek())) {
-    tmp += advance();
+    tmp_ += advance();
   }
 }
 /*
@@ -46,7 +46,7 @@ void Lexer::read_alpha() {
  */
 void Lexer::read_digits() {
   while (isdigit(peek())) {
-    tmp += advance();
+    tmp_ += advance();
   }
 }
 /*
@@ -54,26 +54,26 @@ void Lexer::read_digits() {
  */
 void Lexer::read_alphanumeric() {
   while (isalpha(peek()) || isdigit(peek())) {
-    this->tmp += this->advance();
+    this->tmp_ += this->advance();
   }
 }
 
 Token* Lexer::next_token() {
   ignore_whitespace();
-  if (source_stream->eof()) {
+  if (source_stream_->eof()) {
     return nullptr;
   }
 
   char c = advance();
-  tmp = c;
+  tmp_ = c;
   if (isalpha(c) || isdigit(c)) {
     // Symbol
     read_alphanumeric();
-    return new SymbolToken(tmp);
+    return new SymbolToken(tmp_);
   }
 
   // Something went wrong :/
-  throw LexSyntaxError(line_number, column_number, "Unexpected character: " + tmp);
+  throw LexSyntaxError(line_number_, column_number_, "Unexpected character: " + tmp_);
 }
 
 std::vector<Token*> Lexer::lex() {

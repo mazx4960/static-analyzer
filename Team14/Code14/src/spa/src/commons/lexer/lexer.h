@@ -10,11 +10,18 @@
 
 class Lexer {
  protected:
-  int line_number;
-  int column_number;
-  std::ifstream* source_stream;
-  std::string tmp;// temporary string to store a value
-  std::unordered_set<std::string> valid_whitespace = {
+  int line_number_;
+  int column_number_;
+  std::ifstream* source_stream_;
+  std::string tmp_;// temporary string to store a value
+  const char semicolon_ = ';';
+  const char comma_ = ',';
+  const char quote_ = '\"';
+  const char round_open_bracket_ = '(';
+  const char round_close_bracket_ = ')';
+  const char curly_open_bracket_ = '{';
+  const char curly_close_bracket_ = '}';
+  std::unordered_set<std::string> valid_whitespace_ = {
       " ", "\t", "\r", "\n"};
 
   virtual char peek();

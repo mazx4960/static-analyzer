@@ -11,14 +11,9 @@
 
 class QueryLexer: public Lexer {
  private:
-  char round_open_bracket = '(';
-  char round_close_bracket = ')';
-  char semicolon = ';';
-  char comma = ',';
-  char quote = '\"';
-  std::unordered_set<std::string> valid_assign_operators = {
+  std::unordered_set<std::string> valid_assign_operators_ = {
       "+", "-", "*", "/", "%", "<", ">"};
-  std::unordered_set<std::string> valid_keywords = {
+  std::unordered_set<std::string> valid_keywords_ = {
       "Select", "such", "that", "Follows", "Parent", "Uses",
       "Modifies", "pattern", "stmt", "read", "print", "call", "while",
       "if", "assign", "variable", "constant", "procedure"};

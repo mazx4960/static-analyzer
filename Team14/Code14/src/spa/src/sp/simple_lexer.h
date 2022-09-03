@@ -11,16 +11,12 @@
 
 class SimpleLexer : Lexer {
  private:
-  char semicolon = ';';
-  char round_open_bracket = '(';
-  char round_close_bracket = ')';
-  char curly_open_bracket = '{';
-  char curly_close_bracket = '}';
-  std::unordered_set<std::string> valid_single_operators = {
+
+  std::unordered_set<std::string> valid_single_operators_ = {
       "+", "-", "*", "/", "%", "<", ">", "&", "|", "!", "="};
-  std::unordered_set<std::string> valid_operators = {
+  std::unordered_set<std::string> valid_operators_ = {
       "+", "-", "*", "/", "%", "<", ">", ">=", "<=", "&&", "||", "!=", "==", "="};
-  std::unordered_set<std::string> valid_keywords = {
+  std::unordered_set<std::string> valid_keywords_ = {
       "procedure", "if", "then", "else", "while", "read", "print", "call"};
 
   void read_operators();

@@ -5,45 +5,45 @@
 
 Token* QueryLexer::next_token() {
   this->ignore_whitespace();
-  if (this->source_stream->eof()) {
+  if (this->source_stream_->eof()) {
     return nullptr;
   }
 
   char c = this->advance();
-  this->tmp = c;
+  this->tmp_ = c;
   if (isalpha(c)) {
     // Keyword or symbol
     this->read_alphanumeric();
-    if (this->valid_keywords.find(this->tmp) != this->valid_whitespace.end()) {
-      return new KeywordToken(this->tmp);
+    if (this->valid_keywords_.find(this->tmp_) != this->valid_whitespace_.end()) {
+      return new KeywordToken(this->tmp_);
     } else {
-      return new SymbolToken(this->tmp);
+      return new SymbolToken(this->tmp_);
     }
   } else if (isdigit(c)) {
     // Literal
     this->read_digits();
-    return new LiteralToken(this->tmp);
-  } else if (c == this->round_open_bracket) {
+    return new LiteralToken(this->tmp_);
+  } else if (c == this->round_open_bracket_) {
     // Round Open Bracket
     return new RoundOpenBracketToken();
-  } else if (c == this->round_close_bracket) {
+  } else if (c == this->round_close_bracket_) {
     // Round Close Bracket
     return new RoundCloseBracketToken();
-  } else if (c == this->semicolon) {
+  } else if (c == this->semicolon_) {
     // Semicolon
     return new SemicolonToken();
-  } else if (c == this->comma) {
+  } else if (c == this->comma_) {
     // Comma
     return new CommaToken();
-  } else if (c == this->quote) {
+  } else if (c == this->quote_) {
     // Quote
     return new QuoteToken();
-  } else if (this->valid_assign_operators.find(this->tmp) != this->valid_whitespace.end()) {
+  } else if (this->valid_assign_operators_.find(this->tmp_) != this->valid_whitespace_.end()) {
     // Assign Operators
-    return new OperatorToken(this->tmp);
+    return new OperatorToken(this->tmp_);
   }
 
   // Something went wrong :/
-  throw LexSyntaxError(this->line_number, this->column_number, "Unexpected character: " + this->tmp);
+  throw LexSyntaxError(this->line_number_, this->column_number_, "Unexpected character: " + this->tmp_);
 }
 
