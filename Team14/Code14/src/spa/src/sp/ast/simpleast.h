@@ -238,6 +238,7 @@ class VariableNode : public ReferenceNode {
 
  public:
   explicit VariableNode(std::string variableName);
+  std::string getName();
 };
 
 class ConstantNode : public ReferenceNode {

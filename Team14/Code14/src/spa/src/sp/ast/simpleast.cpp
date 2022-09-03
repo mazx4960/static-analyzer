@@ -121,7 +121,7 @@ VariableNode::VariableNode(std::string variableName)
       variableName_(std::move(variableName)) {}
 
 std::string VariableNode::getName() {
-  return variableName;
+  return variableName_;
 }
 
 ConstantNode::ConstantNode(int value)
