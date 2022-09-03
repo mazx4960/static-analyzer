@@ -5,18 +5,18 @@
 
 #include "entity.h"
 
-Relationship::Relationship(RsType type, Entity first, Entity second) : type(type),
-                                                                       first(std::move(first)),
-                                                                       second(std::move(second)) {}
+Relationship::Relationship(RsType type, Entity first, Entity second) : type_(type),
+                                                                       first_(std::move(first)),
+                                                                       second_(std::move(second)) {}
 bool Relationship::operator==(const Relationship& other) const {
-  return this->type == other.type && this->first == other.first && this->second == other.second;
+  return this->type_ == other.type_ && this->first_ == other.first_ && this->second_ == other.second_;
 }
 RsType Relationship::GetType() {
-  return this->type;
+  return this->type_;
 }
 Entity Relationship::GetFirst() {
-  return this->first;
+  return this->first_;
 }
 Entity Relationship::GetSecond() {
-  return this->second;
+  return this->second_;
 }

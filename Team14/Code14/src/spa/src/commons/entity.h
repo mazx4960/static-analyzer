@@ -5,16 +5,16 @@
 #include <string>
 
 enum class EntityType {
-  Procedure,
-  Statement,
-  Variable,
-  Constant,
+  kProcedure,
+  kStatement,
+  kVariable,
+  kConstant,
 };
 
 class Entity {
  private:
-  EntityType type;
-  std::string name;
+  EntityType type_;
+  std::string name_;
 
  public:
   Entity(EntityType type, std::string name);
@@ -26,34 +26,34 @@ class Entity {
 class ProcedureEntity : public Entity {
  public:
   explicit ProcedureEntity(std::string name)
-      : Entity(EntityType::Procedure, std::move(name)) {}
+      : Entity(EntityType::kProcedure, std::move(name)) {}
 };
 
 class VariableEntity : public Entity {
  public:
   explicit VariableEntity(std::string name)
-      : Entity(EntityType::Variable, std::move(name)) {}
+      : Entity(EntityType::kVariable, std::move(name)) {}
 };
 
 class ConstantEntity : public Entity {
  public:
   explicit ConstantEntity(std::string name)
-      : Entity(EntityType::Constant, std::move(name)) {}
+      : Entity(EntityType::kConstant, std::move(name)) {}
 };
 
 enum class StmtType {
-  Assign,
-  Call,
-  If,
-  While,
-  Print,
-  Read,
+  kAssign,
+  kCall,
+  kIf,
+  kWhile,
+  kPrint,
+  kRead,
 };
 
 class StatementEntity : public Entity {
  private:
-  int stmt_no;
-  StmtType stmt_type;
+  int stmt_no_;
+  StmtType stmt_type_;
 
  public:
   explicit StatementEntity(StmtType stmt_type, int stmt_no);
@@ -65,35 +65,35 @@ class StatementEntity : public Entity {
 class ReadEntity : public StatementEntity {
  public:
   explicit ReadEntity(int stmt_no)
-      : StatementEntity(StmtType::Read, stmt_no) {}
+      : StatementEntity(StmtType::kRead, stmt_no) {}
 };
 
 class PrintEntity : public StatementEntity {
  public:
   explicit PrintEntity(int stmt_no)
-      : StatementEntity(StmtType::Print, stmt_no) {}
+      : StatementEntity(StmtType::kPrint, stmt_no) {}
 };
 
 class AssignEntity : public StatementEntity {
  public:
   explicit AssignEntity(int stmt_no)
-      : StatementEntity(StmtType::Assign, stmt_no) {}
+      : StatementEntity(StmtType::kAssign, stmt_no) {}
 };
 
 class CallEntity : public StatementEntity {
  public:
   explicit CallEntity(int stmt_no)
-      : StatementEntity(StmtType::Call, stmt_no) {}
+      : StatementEntity(StmtType::kCall, stmt_no) {}
 };
 
 class WhileEntity : public StatementEntity {
  public:
   explicit WhileEntity(int stmt_no)
-      : StatementEntity(StmtType::While, stmt_no) {}
+      : StatementEntity(StmtType::kWhile, stmt_no) {}
 };
 
 class IfEntity : public StatementEntity {
  public:
   explicit IfEntity(int stmt_no)
-      : StatementEntity(StmtType::If, stmt_no) {}
+      : StatementEntity(StmtType::kIf, stmt_no) {}
 };

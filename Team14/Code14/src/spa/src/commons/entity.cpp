@@ -3,30 +3,30 @@
 #include "entity.h"
 
 Entity::Entity(EntityType type, std::string name) {
-  this->type = type;
-  this->name = std::move(name);
+  this->type_ = type;
+  this->name_ = std::move(name);
 }
 EntityType Entity::GetType() {
-  return this->type;
+  return this->type_;
 }
 std::string Entity::GetName() {
-  return this->name;
+  return this->name_;
 }
 bool Entity::operator==(const Entity& other) const {
-  return this->type == other.type && this->name == other.name;
+  return this->type_ == other.type_ && this->name_ == other.name_;
 }
 
 StatementEntity::StatementEntity(StmtType stmt_type, int stmt_no)
-    : Entity(EntityType::Statement, "") {
-  this->stmt_type = stmt_type;
-  this->stmt_no = stmt_no;
+    : Entity(EntityType::kStatement, "") {
+  this->stmt_type_ = stmt_type;
+  this->stmt_no_ = stmt_no;
 }
 StmtType StatementEntity::GetStmtType() {
-  return this->stmt_type;
+  return this->stmt_type_;
 }
 int StatementEntity::GetStmtNo() const {
-  return this->stmt_no;
+  return this->stmt_no_;
 }
 bool StatementEntity::operator==(const StatementEntity& other) const {
-  return this->stmt_type == other.stmt_type && this->stmt_no == other.stmt_no;
+  return this->stmt_type_ == other.stmt_type_ && this->stmt_no_ == other.stmt_no_;
 }
