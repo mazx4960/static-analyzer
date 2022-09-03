@@ -28,27 +28,27 @@ ReadNode::ReadNode(VariableNode* variable)
 
 PrintNode::PrintNode(VariableNode* variable)
     : StatementNode(SimpleNodeType::kPrint),
-      variable(variable) {}
+      variable_(variable) {}
 
 CallNode::CallNode(std::string procedureName)
     : StatementNode(SimpleNodeType::kCall),
-      procedureName(std::move(procedureName)) {}
+      procedureName_(std::move(procedureName)) {}
 
 WhileNode::WhileNode(CondExprNode* conditional, StatementListNode* statementList)
     : StatementNode(SimpleNodeType::kWhile),
-      conditional(conditional),
-      statementList(statementList) {}
+      conditional_(conditional),
+      statementList_(statementList) {}
 
 IfNode::IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, StatementListNode* elseStatementList)
     : StatementNode(SimpleNodeType::kIf),
-      conditional(conditional),
-      thenStatementList(thenStatementList),
-      elseStatementList(elseStatementList) {}
+      conditional_(conditional),
+      thenStatementList_(thenStatementList),
+      elseStatementList_(elseStatementList) {}
 
 AssignNode::AssignNode(VariableNode* variable, ExprNode* expression)
     : StatementNode(SimpleNodeType::kAssign),
-      variable(variable),
-      expression(expression) {}
+      variable_(variable),
+      expression_(expression) {}
 
 CondExprNode::CondExprNode(SimpleNodeType nodeType)
     : SimpleAstNode(nodeType) {}

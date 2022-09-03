@@ -75,7 +75,7 @@ class ReadNode : public StatementNode {
 
 class PrintNode : public StatementNode {
  private:
-  VariableNode* variable;
+  VariableNode* variable_;
 
  public:
   explicit PrintNode(VariableNode* variable);
@@ -83,7 +83,7 @@ class PrintNode : public StatementNode {
 
 class CallNode : public StatementNode {
  private:
-  std::string procedureName;
+  std::string procedureName_;
 
  public:
   explicit CallNode(std::string procedureName);
@@ -91,8 +91,8 @@ class CallNode : public StatementNode {
 
 class WhileNode : public StatementNode {
  private:
-  CondExprNode* conditional;
-  StatementListNode* statementList;
+  CondExprNode* conditional_;
+  StatementListNode* statementList_;
 
  public:
   WhileNode(CondExprNode* conditional, StatementListNode* statementList);
@@ -100,9 +100,9 @@ class WhileNode : public StatementNode {
 
 class IfNode : public StatementNode {
  private:
-  CondExprNode* conditional;
-  StatementListNode* thenStatementList;
-  StatementListNode* elseStatementList;
+  CondExprNode* conditional_;
+  StatementListNode* thenStatementList_;
+  StatementListNode* elseStatementList_;
 
  public:
   IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, StatementListNode* elseStatementList);
@@ -110,8 +110,8 @@ class IfNode : public StatementNode {
 
 class AssignNode : public StatementNode {
  private:
-  VariableNode* variable;
-  ExprNode* expression;
+  VariableNode* variable_;
+  ExprNode* expression_;
 
  public:
   AssignNode(VariableNode* variable, ExprNode* expression);
