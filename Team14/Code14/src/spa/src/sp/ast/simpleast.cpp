@@ -152,6 +152,6 @@ std::string VariableNode::GetVariableName() {
 ConstantNode::ConstantNode(int value)
     : ReferenceNode(SimpleNodeType::kConstant),
       value_(value) {}
-int ConstantNode::GetValue() {
+int ConstantNode::GetValue() const {
   return this->value_;
 }

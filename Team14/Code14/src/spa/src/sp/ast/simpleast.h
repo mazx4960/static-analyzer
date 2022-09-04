@@ -50,7 +50,7 @@ class ProcedureNode : public SimpleAstNode {
 
  public:
   ProcedureNode(std::string procName, StatementListNode* statementList);
-  std::string GetProcName() const;
+  [[nodiscard]] std::string GetProcName() const;
   StatementListNode* GetStatementList();
 };
 
@@ -70,7 +70,7 @@ class StatementNode : public SimpleAstNode {
 
  public:
   explicit StatementNode(StmtType stmtType);
-  int GetStmtNo() const;
+  [[nodiscard]] int GetStmtNo() const;
   StmtType GetStmtType();
 };
 
@@ -257,5 +257,5 @@ class ConstantNode : public ReferenceNode {
 
  public:
   explicit ConstantNode(int value);
-  int GetValue();
+  [[nodiscard]] int GetValue() const;
 };
