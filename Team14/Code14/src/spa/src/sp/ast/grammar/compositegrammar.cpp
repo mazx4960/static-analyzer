@@ -12,10 +12,10 @@ void TokenRuleFragment::parseStream(TokenIterator& stream, std::vector<SimpleAst
   ++stream;
 }
 
-NodeRuleFragment::NodeRuleFragment(SimpleGrammarRule* rule) : nextRule_(rule) {}
+NodeRuleFragment::NodeRuleFragment(GrammarRuleProducer* ruleProducer) : nextRuleProducer_(ruleProducer) {}
 
 void NodeRuleFragment::parseStream(TokenIterator& stream, std::vector<SimpleAstNode*>& childNodes) {
-  childNodes.push_back(nextRule_->parseNode(stream));
+  childNodes.push_back(nextRuleProducer_->produce()->parseNode(stream));
 }
 
 CompositeGrammarRule::CompositeGrammarRule(std::vector<RuleFragment*> ruleFragments)
@@ -29,7 +29,7 @@ SimpleAstNode* CompositeGrammarRule::parseNode(TokenIterator& tokenStream) {
   return assembleNode(child_nodes);
 }
 
-ParenthesizedGrammarRule::ParenthesizedGrammarRule(SimpleGrammarRule* parenthesizedNode)
+ParenthesizedGrammarRule::ParenthesizedGrammarRule(GrammarRuleProducer* parenthesizedNode)
     : CompositeGrammarRule(std::vector<RuleFragment*>{
         new TokenRuleFragment(new RoundOpenBracketToken()),
         new NodeRuleFragment(parenthesizedNode),
@@ -40,7 +40,7 @@ SimpleAstNode* ParenthesizedGrammarRule::assembleNode(std::vector<SimpleAstNode*
   return children[0];
 }
 
-BracedGrammarRule::BracedGrammarRule(SimpleGrammarRule* parenthesizedNode)
+BracedGrammarRule::BracedGrammarRule(GrammarRuleProducer* parenthesizedNode)
     : CompositeGrammarRule(std::vector<RuleFragment*>{
         new TokenRuleFragment(new CurlyOpenBracketToken()),
         new NodeRuleFragment(parenthesizedNode),

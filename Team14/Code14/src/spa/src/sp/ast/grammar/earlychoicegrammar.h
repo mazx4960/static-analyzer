@@ -2,7 +2,7 @@
 
 #include "basesimplegrammar.h"
 
-using ConditionalRule = std::pair<bool(*)(TokenIterator), SimpleGrammarRule*>;
+using ConditionalRule = std::pair<bool(*)(TokenIterator), GrammarRuleProducer*>;
 
 class EarlyChoiceGrammarRule : public SimpleGrammarRule {
  private:

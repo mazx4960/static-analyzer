@@ -4,10 +4,10 @@
 
 class ListGrammarRule : public SimpleGrammarRule {
  private:
-  SimpleGrammarRule* childRule_;
+  GrammarRuleProducer* childRuleProducer_;
   virtual bool shouldStop(TokenIterator tokenStream) = 0;
   virtual SimpleAstNode* assembleNode(std::vector<SimpleAstNode*> children) = 0;
  public:
-  ListGrammarRule(SimpleGrammarRule* childRule);
+  ListGrammarRule(GrammarRuleProducer* childRuleProducer);
   SimpleAstNode* parseNode(TokenIterator &tokenStream) override;
 };

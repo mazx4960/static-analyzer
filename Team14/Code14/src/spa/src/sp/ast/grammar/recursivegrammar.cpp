@@ -2,11 +2,11 @@
 
 #include <utility>
 
-RecursiveGrammarRule::RecursiveGrammarRule(SimpleGrammarRule*(*baseRuleProducer)(), std::vector<std::pair<Token*, MergeFunction>> mergeRules)
+RecursiveGrammarRule::RecursiveGrammarRule(GrammarRuleProducer* baseRuleProducer, std::vector<std::pair<Token*, MergeFunction>> mergeRules)
     : baseRuleProducer_(baseRuleProducer), mergeRules_(std::move(mergeRules)) {}
 
 SimpleAstNode* RecursiveGrammarRule::parseNode(TokenIterator &tokenStream) {
-  SimpleGrammarRule* base_rule = baseRuleProducer_();
+  SimpleGrammarRule* base_rule = baseRuleProducer_->produce();
   SimpleAstNode* node = base_rule->parseNode(tokenStream);
   while (true) {
     for (auto [token, mergeFunction] : mergeRules_) {

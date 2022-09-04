@@ -6,11 +6,11 @@
 #include "commons/parser/parser_exceptions.h"
 
 #include <utility>
-LateChoiceGrammarRule::LateChoiceGrammarRule(SimpleGrammarRule *(*halfGrammarRuleProducer)(), std::vector<std::pair<Token*, MergeFunction>> mergeRules)
+LateChoiceGrammarRule::LateChoiceGrammarRule(GrammarRuleProducer* halfGrammarRuleProducer, std::vector<std::pair<Token*, MergeFunction>> mergeRules)
     : halfGrammarRuleProducer_(halfGrammarRuleProducer), mergeRules_(std::move(mergeRules)) {}
 
 SimpleAstNode* LateChoiceGrammarRule::parseNode(TokenIterator& tokenStream) {
-  SimpleGrammarRule* half_grammar_rule = halfGrammarRuleProducer_();
+  SimpleGrammarRule* half_grammar_rule = halfGrammarRuleProducer_->produce();
   SimpleAstNode* first_node = half_grammar_rule->parseNode(tokenStream);
   MergeFunction merge_function_to_use = nullptr;
   for (auto [token, merge_function] : mergeRules_) {

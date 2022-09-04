@@ -19,11 +19,11 @@ class TokenRuleFragment : public RuleFragment {
 
 class NodeRuleFragment : public RuleFragment {
  private:
-  SimpleGrammarRule* nextRule_;
+  GrammarRuleProducer* nextRuleProducer_;
 
  public:
   void parseStream(TokenIterator& stream, std::vector<SimpleAstNode*>& childNodes) override;
-  explicit NodeRuleFragment(SimpleGrammarRule* rule);
+  explicit NodeRuleFragment(GrammarRuleProducer* ruleProducer);
 };
 
 // Defines a rule that reads multiple tokens and/or other AST nodes
@@ -38,16 +38,16 @@ class CompositeGrammarRule : public SimpleGrammarRule {
 
 class ParenthesizedGrammarRule : public CompositeGrammarRule {
  private:
-  SimpleGrammarRule* parenthesizedNode_;
+  GrammarRuleProducer* parenthesizedNode_;
   SimpleAstNode* assembleNode(std::vector<SimpleAstNode*>) override;
  public:
-  explicit ParenthesizedGrammarRule(SimpleGrammarRule* parenthesizedNode);
+  explicit ParenthesizedGrammarRule(GrammarRuleProducer* parenthesizedNode);
 };
 
 class BracedGrammarRule : public CompositeGrammarRule {
  private:
-  SimpleGrammarRule* parenthesizedNode_;
+  GrammarRuleProducer* parenthesizedNode_;
   SimpleAstNode* assembleNode(std::vector<SimpleAstNode*>) override;
  public:
-  explicit BracedGrammarRule(SimpleGrammarRule* parenthesizedNode);
+  explicit BracedGrammarRule(GrammarRuleProducer* parenthesizedNode);
 };

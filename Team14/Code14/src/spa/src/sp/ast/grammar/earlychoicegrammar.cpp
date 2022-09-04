@@ -6,7 +6,7 @@ EarlyChoiceGrammarRule::EarlyChoiceGrammarRule(std::vector<ConditionalRule> cond
 SimpleAstNode* EarlyChoiceGrammarRule::parseNode(TokenIterator& tokenStream) {
   for (auto [condition, rule] : conditionalRules_) {
     if (condition(tokenStream)) {
-      return rule->parseNode(tokenStream);
+      return rule->produce()->parseNode(tokenStream);
     }
   }
   throw ParseSyntaxError("Could not instantiate new node at " + (*tokenStream)->value);
