@@ -11,8 +11,8 @@
 
 class EntityManager {
  private:
-  Variable v;
+  Variable v_;
 
  public:
-  std::list<std::string>* populate(std::list<Entity> entities);
+  std::list<std::string>* populate(const std::list<Entity>& entities);
 };

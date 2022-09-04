@@ -10,7 +10,7 @@
 
 class PKBPopulator {
    private:
-    EntityManager entityManager;
+    EntityManager entityManager_;
   
    public:
     std::list<std::string>* populate(std::list<Entity> entities);

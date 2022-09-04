@@ -9,6 +9,6 @@
 #include "pkb/entity/simple_entity.h"
 
 std::list<std::string>* Variable::populate(std::string variable) {
-  variableTable.push_back(variable);
-  return &variableTable;
+  variableTable_.push_back(variable);
+  return &variableTable_;
 }

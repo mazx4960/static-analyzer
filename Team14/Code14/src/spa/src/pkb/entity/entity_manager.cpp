@@ -10,11 +10,11 @@
 #include "commons/entity.h"
 #include "pkb/entity/variable.h"
 
-std::list<std::string>* EntityManager::populate(std::list<Entity> entities) { 
-  std::list<std::string>* variableTablePointer;
+std::list<std::string>* EntityManager::populate(const std::list<Entity>& entities) { 
+  std::list<std::string>* variable_table_pointer;
   for (auto entity : entities) {
-    std::string variableName = entity.GetName();
-    variableTablePointer = v.populate(variableName);
+    std::string variable_table = entity.GetName();
+    variable_table_pointer = v_.populate(variable_table);
   }
-  return variableTablePointer;
+  return variable_table_pointer;
 }

@@ -7,13 +7,14 @@
 #include <list>
 #include <map>
 #include <string>
+#include <utility>
 
 #include "commons/types.h"
 #include "commons/entity.h"
 #include "pkb/entity/entity_manager.h"
 
-EntityManager entityManager;
+EntityManager entity_manager;
 
 std::list<std::string>* PKBPopulator::populate(std::list<Entity> entities) {
-  return entityManager.populate(entities);
+  return entity_manager.populate(std::move(entities));
 }

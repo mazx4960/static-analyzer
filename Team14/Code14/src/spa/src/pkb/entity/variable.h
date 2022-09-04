@@ -11,8 +11,8 @@
 
 class Variable : public SIMPLEEntity {
  private:
-  std::list<std::string> variableTable;
+  std::list<std::string> variableTable_;
 
  public:
-  std::list<std::string>* populate(std::string variable);
+  std::list<std::string>* populate(std::string variable) override;
 };

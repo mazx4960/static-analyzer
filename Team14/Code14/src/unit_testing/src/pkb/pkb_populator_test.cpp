@@ -22,18 +22,17 @@ TEST(PKBPopulatorTest, TestBasic) {
 
     ptr = p.populate(entities); 
 
-    std::list<std::string> expectedTable{"x", "y"};
+    std::list<std::string> expected_table{"x", "y"};
 
-    std::list<std::string> resultTable = *ptr;
-    std::cout << resultTable.size() << "\n";
+    std::list<std::string> result_table = *ptr;
+    std::cout << result_table.size() << "\n";
 
-    ASSERT_EQ(resultTable.size(), expectedTable.size());
-    ASSERT_EQ(resultTable, expectedTable);
+    ASSERT_EQ(result_table.size(), expected_table.size()); 
 
-    std::list<std::string>::iterator result = resultTable.begin();
-    std::list<std::string>::iterator expected = expectedTable.begin();
+    auto result = result_table.begin();
+    auto expected = expected_table.begin();
 
-    for (; result != resultTable.end() && expected != expectedTable.end();
+    for (; result != result_table.end() && expected != expected_table.end();
         ++result, ++expected) {
       EXPECT_EQ(*result, *expected) << "Variables " << *result << " and " << *expected << " are not the same."; 
     } 
