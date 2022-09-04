@@ -158,6 +158,16 @@ CondExprGrammarRule::CondExprGrammarRule()
         }, new BinaryCondGrammarRule()),
     }) {}
 
+NotExprGrammarRule::NotExprGrammarRule()
+    : CompositeGrammarRule(std::vector<RuleFragment*>{
+        new TokenRuleFragment(new OperatorToken("!")),
+        new NodeRuleFragment(new ParenthesizedGrammarRule(new CondExprGrammarRule()))
+    }) {}
+
+NotExprNode* NotExprGrammarRule::assembleNode(std::vector<SimpleAstNode*> children) {
+  return static_cast<NotExprNode*>(children[0]);
+}
+
 BinaryCondGrammarRule::BinaryCondGrammarRule()
     : LateChoiceGrammarRule(
         []() -> SimpleGrammarRule* { return new ParenthesizedGrammarRule(new CondExprGrammarRule()); },

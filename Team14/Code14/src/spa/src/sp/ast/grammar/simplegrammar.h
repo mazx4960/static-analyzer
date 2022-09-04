@@ -84,9 +84,11 @@ class CondExprGrammarRule : public EarlyChoiceGrammarRule {
   CondExprGrammarRule();
 };
 
-class NotExprGrammarRule : public SimpleGrammarRule {
+class NotExprGrammarRule : public CompositeGrammarRule {
+ private:
+  NotExprNode* assembleNode(std::vector<SimpleAstNode*>) override;
  public:
-  NotExprNode* parseNode(TokenIterator& tokenStream);
+  NotExprGrammarRule();
 };
 
 class BinaryCondGrammarRule : public LateChoiceGrammarRule {
