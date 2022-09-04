@@ -17,23 +17,23 @@ void Traverser::TraverseProcedure(ProcedureNode *node, const std::function<void(
   }
 }
 void Traverser::TraverseStmt(StatementNode *node, const std::function<void(SimpleAstNode *)> &op) {
-  switch (node->GetNodeType()) {
-    case SimpleNodeType::kAssign:
+  switch (node->GetStmtType()) {
+    case StmtType::kAssign:
       TraverseAssign(static_cast<AssignNode *>(node), op);
       break;
-    case SimpleNodeType::kCall:
+    case StmtType::kCall:
       TraverseCall(static_cast<CallNode *>(node), op);
       break;
-    case SimpleNodeType::kIf:
+    case StmtType::kIf:
       TraverseIf(static_cast<IfNode *>(node), op);
       break;
-    case SimpleNodeType::kWhile:
+    case StmtType::kWhile:
       TraverseWhile(static_cast<WhileNode *>(node), op);
       break;
-    case SimpleNodeType::kPrint:
+    case StmtType::kPrint:
       TraversePrint(static_cast<PrintNode *>(node), op);
       break;
-    case SimpleNodeType::kRead:
+    case StmtType::kRead:
       TraverseRead(static_cast<ReadNode *>(node), op);
       break;
     default:
