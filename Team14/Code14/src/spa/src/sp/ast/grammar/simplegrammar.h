@@ -3,6 +3,7 @@
 #include "compositegrammar.h"
 #include "earlychoicegrammar.h"
 #include "listgrammar.h"
+#include "recursivegrammar.h"
 #include "sp/ast/node/simpleast.h"
 
 class ProgramGrammarRule : public ListGrammarRule {
@@ -112,14 +113,14 @@ class RelFactorGrammarRule : public EarlyChoiceGrammarRule {
   RelFactorGrammarRule();
 };
 
-class ExprGrammarRule : public SimpleGrammarRule {
+class ExprGrammarRule : public RecursiveGrammarRule {
  public:
-  ExprNode* parseNode(TokenIterator& tokenStream);
+  ExprGrammarRule();
 };
 
-class TermGrammarRule : public SimpleGrammarRule {
+class TermGrammarRule : public RecursiveGrammarRule {
  public:
-  ExprNode* parseNode(TokenIterator& tokenStream);
+  TermGrammarRule();
 };
 
 class FactorGrammarRule : public EarlyChoiceGrammarRule {

@@ -186,6 +186,29 @@ RelFactorGrammarRule::RelFactorGrammarRule()
         }, new ReferenceGrammarRule()),
     }) {}
 
+ExprGrammarRule::ExprGrammarRule()
+    : RecursiveGrammarRule(
+        []() -> SimpleGrammarRule* { return new TermGrammarRule(); },
+        std::vector<std::pair<Token*, MergeFunction>>{
+            std::make_pair(new OperatorToken("+"), [](SimpleAstNode* base, SimpleAstNode* next) -> SimpleAstNode* {
+              return new PlusNode(static_cast<ExprNode*>(base), static_cast<ExprNode*>(next));
+            }), std::make_pair(new OperatorToken("-"), [](SimpleAstNode* base, SimpleAstNode* next) -> SimpleAstNode* {
+              return new MinusNode(static_cast<ExprNode*>(base), static_cast<ExprNode*>(next));
+            })}) {}
+
+TermGrammarRule::TermGrammarRule()
+    : RecursiveGrammarRule(
+        []() -> SimpleGrammarRule* { return new FactorGrammarRule(); },
+        std::vector<std::pair<Token*, MergeFunction>>{
+            std::make_pair(new OperatorToken("*"), [](SimpleAstNode* base, SimpleAstNode* next) -> SimpleAstNode* {
+              return new TimesNode(static_cast<ExprNode*>(base), static_cast<ExprNode*>(next));
+            }),std::make_pair(new OperatorToken("/"), [](SimpleAstNode* base, SimpleAstNode* next) -> SimpleAstNode* {
+              return new DivNode(static_cast<ExprNode*>(base), static_cast<ExprNode*>(next));
+            }),
+            std::make_pair(new OperatorToken("%"), [](SimpleAstNode* base, SimpleAstNode* next) -> SimpleAstNode* {
+              return new MinusNode(static_cast<ExprNode*>(base), static_cast<ExprNode*>(next));
+            })}) {}
+
 FactorGrammarRule::FactorGrammarRule()
     : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
         std::make_pair([](TokenIterator tokenStream)-> bool {
