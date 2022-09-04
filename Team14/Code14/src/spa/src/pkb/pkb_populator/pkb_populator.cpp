@@ -15,6 +15,6 @@
 
 EntityManager entity_manager;
 
-std::list<std::string>* PKBPopulator::populate(std::list<Entity> entities) {
+std::list<std::string>* PKBPopulator::populate(const std::list<Entity>& entities) {
   return entity_manager.populate(std::move(entities));
 }
