@@ -1,0 +1,34 @@
+name: Windows Build
+
+on: [ push ]
+
+# If you are doing triggering your workflow from pushes or merging more than twice a day on average,
+# please execute your workflow on a schedule instead.
+# Comment the above 7 lines, and uncomment the following 3 lines
+# on:
+#   schedule:
+#     - cron: "0 09,23 * * *"
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    timeout-minutes: 3
+    strategy:
+      fail-fast: true
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Project
+        shell: bash
+        run: |
+          cd Team14/Code14
+          mkdir build
+          cd build
+          cmake -S ../ -B .
+          cmake --build . --target unit_testing --config release
+          cmake --build . --target integration_testing --config release
+          cmake --build . --target autotester --config Release
+          cd ../
+

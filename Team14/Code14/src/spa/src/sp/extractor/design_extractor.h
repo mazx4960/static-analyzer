@@ -2,5 +2,4 @@
 
 #pragma once
 
-class DesignExtractor {
-};
+class DesignExtractor {};

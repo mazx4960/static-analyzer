@@ -2,5 +2,4 @@
 
 #pragma once
 
-class SimpleParser {
-};
+class SimpleParser {};
