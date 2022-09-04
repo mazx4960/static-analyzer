@@ -61,3 +61,39 @@ CondExprGrammarRule* CondExprGrammarProducer::produce() {
 NotExprGrammarRule* NotExprGrammarProducer::produce() {
   return new NotExprGrammarRule();
 }
+
+BinaryCondGrammarRule* BinaryCondGrammarProducer::produce() {
+  return new BinaryCondGrammarRule();
+}
+
+RelExprGrammarRule* RelExprGrammarProducer::produce() {
+  return new RelExprGrammarRule();
+}
+
+RelFactorGrammarRule* RelFactorGrammarProducer::produce() {
+  return new RelFactorGrammarRule();
+}
+
+ExprGrammarRule* ExprGrammarProducer::produce() {
+  return new ExprGrammarRule();
+}
+
+TermGrammarRule* TermGrammarProducer::produce() {
+  return new TermGrammarRule();
+}
+
+FactorGrammarRule* FactorGrammarProducer::produce() {
+  return new FactorGrammarRule();
+}
+
+ReferenceGrammarRule* ReferenceGrammarProducer::produce() {
+  return new ReferenceGrammarRule();
+}
+
+VariableGrammarRule* VariableGrammarProducer::produce() {
+  return new VariableGrammarRule();
+}
+
+ConstantGrammarRule* ConstantGrammarProducer::produce() {
+  return new ConstantGrammarRule();
+}
