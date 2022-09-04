@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "commons/token/token.h"
-
 #include <fstream>
 #include <unordered_set>
 #include <vector>
+
+#include "token.h"
 
 class Lexer {
  protected:
@@ -34,5 +34,5 @@ class Lexer {
  public:
   explicit Lexer(std::ifstream* source_stream);
   virtual Token* next_token();
-  std::vector<Token*> lex();
+  virtual std::vector<Token*> lex();
 };

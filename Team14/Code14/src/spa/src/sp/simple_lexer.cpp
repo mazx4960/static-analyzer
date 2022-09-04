@@ -1,6 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "sp/simple_lexer.h"
+
 #include "commons/lexer/lexer_exceptions.h"
 
 /*
@@ -58,4 +59,7 @@ Token* SimpleLexer::next_token() {
 
   // Something went wrong :/
   throw LexSyntaxError(line_number_, column_number_, "Unexpected character: " + tmp_);
+}
+std::vector<Token*> SimpleLexer::lex() {
+  return Lexer::lex();
 }

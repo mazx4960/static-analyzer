@@ -1,7 +1,7 @@
-#include "qps/query_parser/query_lexer.h"
-#include "commons/token/token.h"
-
 #include <gtest/gtest.h>
+
+#include "commons/lexer/token.h"
+#include "qps/query_parser/query_lexer.h"
 
 TEST(QueryLexerTest, TestBasic) {
   auto* s = new std::ifstream("Team14/Tests14/pql_code/basic.txt");
