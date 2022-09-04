@@ -33,5 +33,21 @@ class CompositeGrammarRule : public SimpleGrammarRule {
   virtual SimpleAstNode* assembleNode(std::vector<SimpleAstNode*>) = 0;
  public:
   CompositeGrammarRule(std::vector<RuleFragment*> ruleFragments);
-  SimpleAstNode* parseNode(TokenIterator& tokenStream);
+  SimpleAstNode* parseNode(TokenIterator& tokenStream) override;
+};
+
+class ParenthesizedGrammarRule : public CompositeGrammarRule {
+ private:
+  SimpleGrammarRule* parenthesizedNode_;
+  SimpleAstNode* assembleNode(std::vector<SimpleAstNode*>) override;
+ public:
+  explicit ParenthesizedGrammarRule(SimpleGrammarRule* parenthesizedNode);
+};
+
+class BracedGrammarRule : public CompositeGrammarRule {
+ private:
+  SimpleGrammarRule* parenthesizedNode_;
+  SimpleAstNode* assembleNode(std::vector<SimpleAstNode*>) override;
+ public:
+  explicit BracedGrammarRule(SimpleGrammarRule* parenthesizedNode);
 };

@@ -23,9 +23,7 @@ ProcedureGrammarRule::ProcedureGrammarRule()
     : CompositeGrammarRule(std::vector<RuleFragment*>{
         new TokenRuleFragment(new LiteralToken("procedure")),
         new NodeRuleFragment(new VariableGrammarRule()),
-        new TokenRuleFragment(new RoundOpenBracketToken()),
-        new NodeRuleFragment(new StatementGrammarRule()),
-        new TokenRuleFragment(new RoundCloseBracketToken())}) {}
+        new NodeRuleFragment(new BracedGrammarRule(new StatementGrammarRule()))}) {}
 
 ProcedureNode* ProcedureGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNodes) {
   return new ProcedureNode(
@@ -109,12 +107,8 @@ CallNode* CallGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNodes) 
 WhileGrammarRule::WhileGrammarRule()
     : CompositeGrammarRule(std::vector<RuleFragment*>{
         new TokenRuleFragment(new LiteralToken("while")),
-        new TokenRuleFragment(new RoundOpenBracketToken()),
-        new NodeRuleFragment(new CondExprGrammarRule()),
-        new TokenRuleFragment(new RoundCloseBracketToken()),
-        new TokenRuleFragment(new CurlyOpenBracketToken()),
-        new NodeRuleFragment(new StatementListGrammarRule()),
-        new TokenRuleFragment(new CurlyCloseBracket())}) {}
+        new NodeRuleFragment(new ParenthesizedGrammarRule(new CondExprGrammarRule())),
+        new NodeRuleFragment(new BracedGrammarRule(new StatementListGrammarRule()))}) {}
 
 WhileNode* WhileGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNodes) {
   return new WhileNode(
@@ -125,17 +119,11 @@ WhileNode* WhileGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNodes
 IfGrammarRule::IfGrammarRule()
     : CompositeGrammarRule(std::vector<RuleFragment*>{
         new TokenRuleFragment(new LiteralToken("if")),
-        new TokenRuleFragment(new RoundOpenBracketToken()),
-        new NodeRuleFragment(new CondExprGrammarRule()),
-        new TokenRuleFragment(new RoundCloseBracketToken()),
+        new NodeRuleFragment(new ParenthesizedGrammarRule(new CondExprGrammarRule())),
         new TokenRuleFragment(new LiteralToken("then")),
-        new TokenRuleFragment(new CurlyOpenBracketToken()),
-        new NodeRuleFragment(new StatementListGrammarRule()),
-        new TokenRuleFragment(new CurlyCloseBracket()),
+        new NodeRuleFragment(new BracedGrammarRule(new StatementListGrammarRule())),
         new TokenRuleFragment(new LiteralToken("else")),
-        new TokenRuleFragment(new CurlyOpenBracketToken()),
-        new NodeRuleFragment(new StatementListGrammarRule()),
-        new TokenRuleFragment(new CurlyCloseBracket())}) {}
+        new NodeRuleFragment(new BracedGrammarRule(new StatementListGrammarRule()))}) {}
 
 IfNode* IfGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNodes) {
   return new IfNode(
@@ -170,20 +158,9 @@ CondExprGrammarRule::CondExprGrammarRule()
         }, new BinaryCondGrammarRule()),
     }) {}
 
-BracketedCondGrammarRule::BracketedCondGrammarRule()
-    : CompositeGrammarRule(std::vector<RuleFragment*>{
-        new TokenRuleFragment(new RoundOpenBracketToken()),
-        new NodeRuleFragment(new CondExprGrammarRule()),
-        new TokenRuleFragment(new RoundCloseBracketToken())
-    }) {}
-
-CondExprNode* BracketedCondGrammarRule::assembleNode(std::vector<SimpleAstNode*> children) {
-  return static_cast<CondExprNode*>(children[0]);
-}
-
 BinaryCondGrammarRule::BinaryCondGrammarRule()
     : LateChoiceGrammarRule(
-        []() -> SimpleGrammarRule* { return new BracketedCondGrammarRule(); },
+        []() -> SimpleGrammarRule* { return new ParenthesizedGrammarRule(new CondExprGrammarRule()); },
         std::vector<std::pair<Token*, MergeFunction>>{
             std::make_pair(new OperatorToken("&&"), [](SimpleAstNode* first, SimpleAstNode* second) -> SimpleAstNode* {
               return new AndExprNode(static_cast<CondExprNode*>(first), static_cast<CondExprNode*>(second));
@@ -259,7 +236,7 @@ FactorGrammarRule::FactorGrammarRule()
     : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
         std::make_pair([](TokenIterator tokenStream)-> bool {
           return **tokenStream == RoundOpenBracketToken();
-        }, new ExprGrammarRule()),
+        }, new ParenthesizedGrammarRule(new ExprGrammarRule())),
         std::make_pair([](TokenIterator tokenStream)-> bool {
           return true;
         }, new ReferenceGrammarRule()),

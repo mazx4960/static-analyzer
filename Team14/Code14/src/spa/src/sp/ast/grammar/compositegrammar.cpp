@@ -28,3 +28,25 @@ SimpleAstNode* CompositeGrammarRule::parseNode(TokenIterator& tokenStream) {
   }
   return assembleNode(child_nodes);
 }
+
+ParenthesizedGrammarRule::ParenthesizedGrammarRule(SimpleGrammarRule* parenthesizedNode)
+    : CompositeGrammarRule(std::vector<RuleFragment*>{
+        new TokenRuleFragment(new RoundOpenBracketToken()),
+        new NodeRuleFragment(parenthesizedNode),
+        new TokenRuleFragment(new RoundCloseBracketToken()),
+    }) {}
+
+SimpleAstNode* ParenthesizedGrammarRule::assembleNode(std::vector<SimpleAstNode*> children) {
+  return children[0];
+}
+
+BracedGrammarRule::BracedGrammarRule(SimpleGrammarRule* parenthesizedNode)
+    : CompositeGrammarRule(std::vector<RuleFragment*>{
+        new TokenRuleFragment(new CurlyOpenBracketToken()),
+        new NodeRuleFragment(parenthesizedNode),
+        new TokenRuleFragment(new CurlyCloseBracket()),
+    }) {}
+
+SimpleAstNode* BracedGrammarRule::assembleNode(std::vector<SimpleAstNode*> children) {
+  return children[0];
+}

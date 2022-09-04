@@ -89,13 +89,6 @@ class NotExprGrammarRule : public SimpleGrammarRule {
   NotExprNode* parseNode(TokenIterator& tokenStream);
 };
 
-class BracketedCondGrammarRule : public CompositeGrammarRule {
- private:
-  CondExprNode* assembleNode(std::vector<SimpleAstNode*> ) override;
- public:
-  BracketedCondGrammarRule();
-};
-
 class BinaryCondGrammarRule : public LateChoiceGrammarRule {
  public:
   BinaryCondGrammarRule();
