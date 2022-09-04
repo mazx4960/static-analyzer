@@ -13,5 +13,5 @@ class PKBPopulator {
     EntityManager entityManager_;
   
    public:
-    static std::list<std::string>* populate(const std::list<Entity>& entities);
+    static std::vector<std::string>* populate(const std::vector<Entity>& entities);
   };

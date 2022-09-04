@@ -2,13 +2,13 @@
 
 #include "pkb/entity/variable.h"
 
-#include <list>
+#include <vector>
 #include <map>
 #include <string>
 
 #include "pkb/entity/simple_entity.h"
 
-std::list<std::string>* Variable::populate(std::string variable) {
+std::vector<std::string>* Variable::populate(std::string variable) {
   variableTable_.push_back(variable);
   return &variableTable_;
-}
+} 

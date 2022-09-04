@@ -2,7 +2,7 @@
 
 #include "pkb/entity/entity_manager.h"
 
-#include <list>
+#include <vector>
 #include <map>
 #include <string>
 
@@ -10,11 +10,11 @@
 #include "commons/entity.h"
 #include "pkb/entity/variable.h"
 
-std::list<std::string>* EntityManager::populate(const std::list<Entity>& entities) { 
-  std::list<std::string>* variable_table_pointer;
+std::vector<std::string>* EntityManager::populate(const std::vector<Entity>& entities) { 
+  std::vector<std::string>* variable_table_pointer;
   for (auto entity : entities) {
-    std::string variable_table = entity.GetName();
-    variable_table_pointer = v_.populate(variable_table);
+    std::string variable_name = entity.GetName();
+    variable_table_pointer = v_.populate(variable_name);
   }
   return variable_table_pointer;
 }

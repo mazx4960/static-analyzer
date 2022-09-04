@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include <list>
+#include <vector>
 #include <map>
 #include <string>
 
-class SIMPLEEntity {
+class SimpleEntity {
  public:
-  virtual std::list<std::string>*
+  virtual std::vector<std::string>*
   populate(std::string entity) = 0;
 };

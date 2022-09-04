@@ -14,17 +14,17 @@
 
 TEST(PKBPopulatorTest, TestBasic) {
     PKBPopulator p;
-    std::list<std::string>* ptr;
+    std::vector<std::string>* ptr;
 
     Entity x(EntityType::kVariable, "x");
     Entity y(EntityType::kVariable, "y"); 
-    std::list<Entity> entities({x, y});
+    std::vector<Entity> entities({x, y});
 
-    ptr = p.populate(entities); 
+    ptr = PKBPopulator::populate(entities); 
 
-    std::list<std::string> expected_table{"x", "y"};
+    std::vector<std::string> expected_table{"x", "y"};
 
-    std::list<std::string> result_table = *ptr;
+    std::vector<std::string> result_table = *ptr;
     std::cout << result_table.size() << "\n";
 
     ASSERT_EQ(result_table.size(), expected_table.size()); 

@@ -3,16 +3,16 @@
 #pragma once
 
 #include <iostream>
-#include <list>
+#include <vector>
 #include <map>
 #include <string>
 
 #include "pkb/entity/simple_entity.h"
 
-class Variable : public SIMPLEEntity {
+class Variable : public SimpleEntity {
  private:
-  std::list<std::string> variableTable_;
+  std::vector<std::string> variableTable_;
 
  public:
-  std::list<std::string>* populate(std::string variable) override;
+  std::vector<std::string>* populate(std::string variable) override;
 };
