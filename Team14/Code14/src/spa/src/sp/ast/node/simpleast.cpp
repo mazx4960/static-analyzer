@@ -57,15 +57,16 @@ NotExprNode::NotExprNode(CondExprNode* negatedConditional)
     : CondExprNode(SimpleNodeType::kNot),
       negatedConditional_(negatedConditional) {}
 
-AndExprNode::AndExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional)
-    : CondExprNode(SimpleNodeType::kAnd),
+BinaryCondExprNode::BinaryCondExprNode(SimpleNodeType nodeType, CondExprNode* firstConditional, CondExprNode* secondConditional)
+    : CondExprNode(nodeType),
       firstConditional_(firstConditional),
       secondConditional_(secondConditional) {}
 
+AndExprNode::AndExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional)
+    : BinaryCondExprNode(SimpleNodeType::kAnd, firstConditional, secondConditional) {}
+
 OrExprNode::OrExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional)
-    : CondExprNode(SimpleNodeType::kOr),
-      firstConditional_(firstConditional),
-      secondConditional_(secondConditional) {}
+    : BinaryCondExprNode(SimpleNodeType::kOr, firstConditional, secondConditional) {}
 
 RelExprNode::RelExprNode(SimpleNodeType nodeType, RelFactorNode* leftFactor, RelFactorNode* rightFactor)
     : CondExprNode(nodeType),
