@@ -4,29 +4,27 @@
 
 #include "traverser.h"
 
-std::vector<Entity> EntityExtractor::extract() {
-  std::vector<Entity> entities;
-  auto op = [entities](SimpleAstNode *node) {
-    if (node->GetNodeType() == SimpleNodeType::ASSIGN) {
-      entities.push_back(AssignEntity(node->GetLineNumber()));
-    } else if (node->GetNodeType() == SimpleNodeType::CALL) {
-      entities.push_back(Entity(node->get_name(), EntityType::CALL));
-    } else if (node->GetNodeType() == SimpleNodeType::CONSTANT) {
-      entities.push_back(Entity(node->get_name(), EntityType::CONSTANT));
-    } else if (node->GetNodeType() == SimpleNodeType::IF) {
-      entities.push_back(Entity(node->get_name(), EntityType::IF));
-    } else if (node->GetNodeType() == SimpleNodeType::PROCEDURE) {
-      entities.push_back(Entity(node->get_name(), EntityType::PROCEDURE));
-    } else if (node->GetNodeType() == SimpleNodeType::PROGLINE) {
-      entities.push_back(Entity(node->get_name(), EntityType::PROGLINE));
-    } else if (node->GetNodeType() == SimpleNodeType::STMT) {
-      entities.push_back(Entity(node->get_name(), EntityType::STMT));
-    } else if (node->GetNodeType() == SimpleNodeType::STMTLST) {
-      entities.push_back(Entity(node->get_name(), EntityType::STMTLST));
-    } else if (node->GetNodeType() == SimpleNodeType::VARIABLE) {
-      entities.push_back(Entity(node->get_name(), EntityType::VARIABLE));
-    } else if (node->GetNodeType() == SimpleNodeType::WHILE) {
-      entities.push_back(Entity(node->get_name(), EntityType::WHILE));
+std::vector<Entity *> EntityExtractor::extract() {
+  std::vector<Entity *> entities;
+  auto const op = [&entities](SimpleAstNode *node) {
+    if (node->GetNodeType() == SimpleNodeType::kProcedure) {
+      auto proc_name = static_cast<ProcedureNode *>(node)->GetProcName();
+      Entity *entity = new ProcedureEntity(proc_name);
+      entities.push_back(entity);
+    } else if (node->GetNodeType() == SimpleNodeType::kStatement) {
+      auto *stmt = static_cast<StatementNode *>(node);
+      auto stmt_type = stmt->GetStmtType();
+      auto stmt_no = stmt->GetStmtNo();
+      Entity *entity = new StatementEntity(stmt_type, stmt_no);
+      entities.push_back(entity);
+    } else if (node->GetNodeType() == SimpleNodeType::kVariable) {
+      auto var_name = static_cast<VariableNode *>(node)->GetVariableName();
+      Entity *entity = new VariableEntity(var_name);
+      entities.push_back(entity);
+    } else if (node->GetNodeType() == SimpleNodeType::kConstant) {
+      auto const_name = static_cast<ConstantNode *>(node)->GetValue();
+      Entity *entity = new ConstantEntity(std::to_string(const_name));
+      entities.push_back(entity);
     }
   };
   Traverser::TraverseProgram(program_node_, op);

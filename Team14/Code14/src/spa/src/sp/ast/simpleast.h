@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "commons/entity.h"
 #include "simplenodetype.h"
 
 class SimpleAstNode;
@@ -49,6 +50,7 @@ class ProcedureNode : public SimpleAstNode {
 
  public:
   ProcedureNode(std::string procName, StatementListNode* statementList);
+  std::string GetProcName() const;
   StatementListNode* GetStatementList();
 };
 
@@ -64,10 +66,12 @@ class StatementListNode : public SimpleAstNode {
 class StatementNode : public SimpleAstNode {
  private:
   int stmtNo_;
+  StmtType stmtType_;
 
  public:
-  explicit StatementNode(SimpleNodeType nodeType);
-  int GetStmtNo();
+  explicit StatementNode(StmtType stmtType);
+  int GetStmtNo() const;
+  StmtType GetStmtType();
 };
 
 class ReadNode : public StatementNode {
@@ -135,20 +139,21 @@ class NotExprNode : public CondExprNode {
   explicit NotExprNode(CondExprNode* negatedConditional);
 };
 
-class AndExprNode : public CondExprNode {
+class BinaryCondExprNode : public CondExprNode {
  private:
   CondExprNode* firstConditional_;
   CondExprNode* secondConditional_;
 
  public:
+  BinaryCondExprNode(SimpleNodeType nodeType, CondExprNode* firstConditional, CondExprNode* secondConditional);
+};
+
+class AndExprNode : public BinaryCondExprNode {
+ public:
   AndExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional);
 };
 
-class OrExprNode : public CondExprNode {
- private:
-  CondExprNode* firstConditional_;
-  CondExprNode* secondConditional_;
-
+class OrExprNode : public BinaryCondExprNode {
  public:
   OrExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional);
 };
@@ -243,6 +248,7 @@ class VariableNode : public ReferenceNode {
 
  public:
   explicit VariableNode(std::string variableName);
+  std::string GetVariableName();
 };
 
 class ConstantNode : public ReferenceNode {
@@ -251,4 +257,5 @@ class ConstantNode : public ReferenceNode {
 
  public:
   explicit ConstantNode(int value);
+  int GetValue();
 };

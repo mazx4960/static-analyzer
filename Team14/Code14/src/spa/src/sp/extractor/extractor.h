@@ -12,13 +12,12 @@ class Extractor {
  public:
   explicit Extractor(ProgramNode* program_node) : program_node_(program_node){};
   ~Extractor() = default;
-  virtual std::vector<Entity> extract(){};
-  static bool IsStatementNode(SimpleAstNode* node);
+  virtual std::vector<Entity*> extract(){};
 };
 
 class EntityExtractor : public Extractor {
  public:
   explicit EntityExtractor(ProgramNode* program_node) : Extractor(program_node){};
   ~EntityExtractor() = default;
-  std::vector<Entity> extract() override;
+  std::vector<Entity*> extract() override;
 };

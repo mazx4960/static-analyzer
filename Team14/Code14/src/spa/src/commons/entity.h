@@ -3,6 +3,7 @@
 #pragma once
 
 #include <string>
+#include <utility>
 
 enum class EntityType {
   kProcedure,
