@@ -2,9 +2,9 @@
 #include "commons/parser/parser_exceptions.h"
 
 EarlyChoiceGrammarRule::EarlyChoiceGrammarRule(std::vector<ConditionalRule> conditionalRules)
-    : conditionalRules_(std::move(conditionalRules)) {}
+    : conditional_rules_(std::move(conditionalRules)) {}
 SimpleAstNode* EarlyChoiceGrammarRule::parseNode(TokenIterator& tokenStream) {
-  for (auto [condition, rule] : conditionalRules_) {
+  for (auto [condition, rule] : conditional_rules_) {
     if (condition(tokenStream)) {
       return rule->produce()->parseNode(tokenStream);
     }

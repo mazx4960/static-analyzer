@@ -1,6 +1,6 @@
 #include "simplegrammar.h"
 #include "commons/parser/parser_exceptions.h"
-#include "commons/token/token.h"
+#include "commons/lexer/token.h"
 #include "grammarproducer.h"
 
 ProgramGrammarRule::ProgramGrammarRule()
@@ -16,8 +16,8 @@ ProgramNode* ProgramGrammarRule::assembleNode(std::vector<SimpleAstNode*> childr
   return new ProgramNode(procedures);
 }
 
-bool ProgramGrammarRule::shouldStop(TokenIterator tokenStream) {
-  return **tokenStream == EndOfFileToken();
+bool ProgramGrammarRule::shouldStop(TokenIterator token_stream) {
+  return **token_stream == EndOfFileToken();
 }
 
 ProcedureGrammarRule::ProcedureGrammarRule()
@@ -26,10 +26,10 @@ ProcedureGrammarRule::ProcedureGrammarRule()
         new NodeRuleFragment(new VariableGrammarProducer()),
         new NodeRuleFragment(new BracedGrammarProducer(new StatementListGrammarProducer()))}) {}
 
-ProcedureNode* ProcedureGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNodes) {
+ProcedureNode* ProcedureGrammarRule::assembleNode(std::vector<SimpleAstNode*> child_nodes) {
   return new ProcedureNode(
-      static_cast<VariableNode*>(childNodes[0])->getName(),
-      static_cast<StatementListNode*>(childNodes[1]));
+      static_cast<VariableNode*>(child_nodes[0])->getName(),
+      static_cast<StatementListNode*>(child_nodes[1]));
 }
 
 StatementListGrammarRule::StatementListGrammarRule()
@@ -43,14 +43,14 @@ StatementListNode* StatementListGrammarRule::assembleNode(std::vector<SimpleAstN
   return new StatementListNode(statements);
 }
 
-bool StatementListGrammarRule::shouldStop(TokenIterator tokenStream) {
-  return **tokenStream == EndOfFileToken() && !(
-               **tokenStream == KeywordToken("read")
-               || **tokenStream == KeywordToken("print")
-               || **tokenStream == KeywordToken("call")
-               || **tokenStream == KeywordToken("while")
-               || **tokenStream == KeywordToken("print")
-               || **(tokenStream + 1) == OperatorToken("=")
+bool StatementListGrammarRule::shouldStop(TokenIterator token_stream) {
+  return **token_stream == EndOfFileToken() && !(
+               **token_stream == KeywordToken("read")
+               || **token_stream == KeywordToken("print")
+               || **token_stream == KeywordToken("call")
+               || **token_stream == KeywordToken("while")
+               || **token_stream == KeywordToken("print")
+               || **(token_stream + 1) == OperatorToken("=")
                );
 }
 

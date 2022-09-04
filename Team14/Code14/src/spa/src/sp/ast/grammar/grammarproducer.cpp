@@ -1,17 +1,17 @@
 #include "grammarproducer.h"
 
 ParenthesizedGrammarProducer::ParenthesizedGrammarProducer(GrammarRuleProducer* producer)
-    : parenthesizedRule_(producer) {}
+    : parenthesized_rule_(producer) {}
 
 ParenthesizedGrammarRule* ParenthesizedGrammarProducer::produce() {
-  return new ParenthesizedGrammarRule(parenthesizedRule_);
+  return new ParenthesizedGrammarRule(parenthesized_rule_);
 }
 
 BracedGrammarProducer::BracedGrammarProducer(GrammarRuleProducer* producer)
-    : bracedRule_(producer) {}
+    : braced_rule_(producer) {}
 
 BracedGrammarRule* BracedGrammarProducer::produce() {
-  return new BracedGrammarRule(bracedRule_);
+  return new BracedGrammarRule(braced_rule_);
 }
 
 ProgramGrammarRule* ProgramGrammarProducer::produce() {

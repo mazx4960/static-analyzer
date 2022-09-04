@@ -9,7 +9,7 @@
 
 class ProgramGrammarRule : public ListGrammarRule {
  private:
-  bool shouldStop(TokenIterator tokenStream) override;
+  bool shouldStop(TokenIterator token_stream) override;
   ProgramNode* assembleNode(std::vector<SimpleAstNode*> children) override;
  public:
   ProgramGrammarRule();
@@ -25,7 +25,7 @@ class ProcedureGrammarRule : public CompositeGrammarRule {
 
 class StatementListGrammarRule : public ListGrammarRule {
  private:
-  bool shouldStop(TokenIterator tokenStream) override;
+  bool shouldStop(TokenIterator token_stream) override;
   StatementListNode* assembleNode(std::vector<SimpleAstNode*> children) override;
  public:
   StatementListGrammarRule();

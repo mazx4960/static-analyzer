@@ -7,13 +7,14 @@
 
 #include <utility>
 LateChoiceGrammarRule::LateChoiceGrammarRule(GrammarRuleProducer* halfGrammarRuleProducer, std::vector<std::pair<Token*, MergeFunction>> mergeRules)
-    : halfGrammarRuleProducer_(halfGrammarRuleProducer), mergeRules_(std::move(mergeRules)) {}
+    : half_grammar_rule_producer_(halfGrammarRuleProducer),
+      merge_rules_(std::move(mergeRules)) {}
 
 SimpleAstNode* LateChoiceGrammarRule::parseNode(TokenIterator& tokenStream) {
-  SimpleGrammarRule* half_grammar_rule = halfGrammarRuleProducer_->produce();
+  SimpleGrammarRule* half_grammar_rule = half_grammar_rule_producer_->produce();
   SimpleAstNode* first_node = half_grammar_rule->parseNode(tokenStream);
   MergeFunction merge_function_to_use = nullptr;
-  for (auto [token, merge_function] : mergeRules_) {
+  for (auto [token, merge_function] : merge_rules_) {
     if (**tokenStream == *token) {
       merge_function_to_use = merge_function;
       break;

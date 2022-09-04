@@ -1,6 +1,6 @@
 #pragma once
 
-#include "commons/token/token.h"
+#include "commons/lexer/token.h"
 #include "basesimplegrammar.h"
 
 class RuleFragment {
@@ -10,7 +10,7 @@ class RuleFragment {
 
 class TokenRuleFragment : public RuleFragment {
  private:
-  Token* tokenToMatch_;
+  Token* token_to_match_;
 
  public:
   explicit TokenRuleFragment(Token* token);
@@ -19,7 +19,7 @@ class TokenRuleFragment : public RuleFragment {
 
 class NodeRuleFragment : public RuleFragment {
  private:
-  GrammarRuleProducer* nextRuleProducer_;
+  GrammarRuleProducer* next_rule_producer_;
 
  public:
   void parseStream(TokenIterator& stream, std::vector<SimpleAstNode*>& childNodes) override;
@@ -29,16 +29,16 @@ class NodeRuleFragment : public RuleFragment {
 // Defines a rule that reads multiple tokens and/or other AST nodes
 class CompositeGrammarRule : public SimpleGrammarRule {
  private:
-  std::vector<RuleFragment*> ruleFragments_;
+  std::vector<RuleFragment*> rule_fragments_;
   virtual SimpleAstNode* assembleNode(std::vector<SimpleAstNode*>) = 0;
  public:
-  CompositeGrammarRule(std::vector<RuleFragment*> ruleFragments);
+  explicit CompositeGrammarRule(std::vector<RuleFragment*> ruleFragments);
   SimpleAstNode* parseNode(TokenIterator& tokenStream) override;
 };
 
 class ParenthesizedGrammarRule : public CompositeGrammarRule {
  private:
-  GrammarRuleProducer* parenthesizedNode_;
+  GrammarRuleProducer* parenthesized_node_;
   SimpleAstNode* assembleNode(std::vector<SimpleAstNode*>) override;
  public:
   explicit ParenthesizedGrammarRule(GrammarRuleProducer* parenthesizedNode);

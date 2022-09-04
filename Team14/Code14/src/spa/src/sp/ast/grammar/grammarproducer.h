@@ -4,17 +4,17 @@
 
 class ParenthesizedGrammarProducer : public GrammarRuleProducer {
  private:
-  GrammarRuleProducer* parenthesizedRule_;
+  GrammarRuleProducer* parenthesized_rule_;
  public:
-  ParenthesizedGrammarProducer(GrammarRuleProducer* producer);
+  explicit ParenthesizedGrammarProducer(GrammarRuleProducer* producer);
   ParenthesizedGrammarRule* produce() override;
 };
 
 class BracedGrammarProducer : public GrammarRuleProducer {
  private:
-  GrammarRuleProducer* bracedRule_;
+  GrammarRuleProducer* braced_rule_;
  public:
-  BracedGrammarProducer(GrammarRuleProducer* producer);
+  explicit BracedGrammarProducer(GrammarRuleProducer* producer);
   BracedGrammarRule* produce() override;
 };
 

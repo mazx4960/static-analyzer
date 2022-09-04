@@ -3,27 +3,27 @@
 
 #include <utility>
 
-TokenRuleFragment::TokenRuleFragment(Token* token) : tokenToMatch_(std::move(token)) {}
+TokenRuleFragment::TokenRuleFragment(Token* token) : token_to_match_(std::move(token)) {}
 
 void TokenRuleFragment::parseStream(TokenIterator& stream, std::vector<SimpleAstNode*>& childNodes) {
-  if (!(**stream == *tokenToMatch_)) {
-    throw ParseSyntaxError("Expected " + tokenToMatch_->value + ", got " + (*stream)->value);
+  if (!(**stream == *token_to_match_)) {
+    throw ParseSyntaxError("Expected " + token_to_match_->value + ", got " + (*stream)->value);
   }
   ++stream;
 }
 
-NodeRuleFragment::NodeRuleFragment(GrammarRuleProducer* ruleProducer) : nextRuleProducer_(ruleProducer) {}
+NodeRuleFragment::NodeRuleFragment(GrammarRuleProducer* ruleProducer) : next_rule_producer_(ruleProducer) {}
 
 void NodeRuleFragment::parseStream(TokenIterator& stream, std::vector<SimpleAstNode*>& childNodes) {
-  childNodes.push_back(nextRuleProducer_->produce()->parseNode(stream));
+  childNodes.push_back(next_rule_producer_->produce()->parseNode(stream));
 }
 
 CompositeGrammarRule::CompositeGrammarRule(std::vector<RuleFragment*> ruleFragments)
-    : ruleFragments_(std::move(ruleFragments)) {}
+    : rule_fragments_(std::move(ruleFragments)) {}
 
 SimpleAstNode* CompositeGrammarRule::parseNode(TokenIterator& tokenStream) {
   std::vector<SimpleAstNode*> child_nodes{};
-  for (auto *rule_fragment : ruleFragments_) {
+  for (auto *rule_fragment : rule_fragments_) {
     rule_fragment->parseStream(tokenStream, child_nodes);
   }
   return assembleNode(child_nodes);
