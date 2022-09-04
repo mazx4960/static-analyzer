@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include "commons/lexer/lexer.h"
-#include "commons/token/token.h"
-
 #include <fstream>
 #include <unordered_set>
 #include <vector>
 
-class QueryLexer: public Lexer {
+#include "commons/lexer/lexer.h"
+#include "commons/lexer/token.h"
+
+class QueryLexer : public Lexer {
  private:
   std::unordered_set<std::string> valid_assign_operators_ = {
       "+", "-", "*", "/", "%", "<", ">"};
@@ -19,6 +19,6 @@ class QueryLexer: public Lexer {
       "if", "assign", "variable", "constant", "procedure"};
 
  public:
-  explicit QueryLexer(std::ifstream* source_stream) : Lexer(source_stream) {};
+  explicit QueryLexer(std::ifstream* source_stream) : Lexer(source_stream){};
   Token* next_token() override;
 };

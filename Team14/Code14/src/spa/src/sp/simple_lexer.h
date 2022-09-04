@@ -7,11 +7,10 @@
 #include <vector>
 
 #include "commons/lexer/lexer.h"
-#include "commons/token/token.h"
+#include "commons/lexer/token.h"
 
 class SimpleLexer : Lexer {
  private:
-
   std::unordered_set<std::string> valid_single_operators_ = {
       "+", "-", "*", "/", "%", "<", ">", "&", "|", "!", "="};
   std::unordered_set<std::string> valid_operators_ = {
@@ -22,6 +21,7 @@ class SimpleLexer : Lexer {
   void read_operators();
 
  public:
-  explicit SimpleLexer(std::ifstream* source_stream) : Lexer(source_stream) {};
+  explicit SimpleLexer(std::ifstream* source_stream) : Lexer(source_stream){};
   Token* next_token() override;
+  std::vector<Token*> lex() override;
 };
