@@ -2,14 +2,6 @@
 #include "commons/parser/parser_exceptions.h"
 #include "commons/token/token.h"
 
-SimpleAstNode* CompositeGrammarRule::parseNode(TokenIterator& tokenStream) {
-  std::vector<SimpleAstNode*> child_nodes{};
-  for (auto *rule_fragment : ruleFragments_) {
-    rule_fragment->parseStream(tokenStream, child_nodes);
-  }
-  return assembleNode(child_nodes);
-}
-
 ProgramNode* ProgramGrammarRule::parseNode(TokenIterator& tokenStream) {
   std::vector<ProcedureNode*> procedures{};
   ProcedureGrammarRule procedure_parser{};

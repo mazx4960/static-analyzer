@@ -20,3 +20,11 @@ void NodeRuleFragment::parseStream(TokenIterator& stream, std::vector<SimpleAstN
 
 CompositeGrammarRule::CompositeGrammarRule(std::vector<RuleFragment*> ruleFragments)
     : ruleFragments_(std::move(ruleFragments)) {}
+
+SimpleAstNode* CompositeGrammarRule::parseNode(TokenIterator& tokenStream) {
+  std::vector<SimpleAstNode*> child_nodes{};
+  for (auto *rule_fragment : ruleFragments_) {
+    rule_fragment->parseStream(tokenStream, child_nodes);
+  }
+  return assembleNode(child_nodes);
+}
