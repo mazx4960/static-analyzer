@@ -5,7 +5,7 @@
 
 TokenRuleFragment::TokenRuleFragment(Token* token) : token_to_match_(std::move(token)) {}
 
-void TokenRuleFragment::parseStream(TokenIterator& stream, std::vector<SimpleAstNode*>& childNodes) {
+void TokenRuleFragment::parseStream(TokenIterator& stream, std::vector<SimpleAstNode*>&  /*childNodes*/) {
   if (!(**stream == *token_to_match_)) {
     throw ParseSyntaxError("Expected " + token_to_match_->value + ", got " + (*stream)->value);
   }

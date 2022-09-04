@@ -10,6 +10,7 @@ ProgramGrammarRule::ProgramGrammarRule()
 
 ProgramNode* ProgramGrammarRule::assembleNode(std::vector<SimpleAstNode*> children) {
   std::vector<ProcedureNode*> procedures{};
+  procedures.reserve(children.size());
   for (auto* child : children) {
     procedures.push_back(static_cast<ProcedureNode*>(child));
   }
@@ -37,6 +38,7 @@ StatementListGrammarRule::StatementListGrammarRule()
 
 StatementListNode* StatementListGrammarRule::assembleNode(std::vector<SimpleAstNode*> children) {
   std::vector<StatementNode*> statements{};
+  statements.reserve(children.size());
   for (auto* child : children) {
     statements.push_back(static_cast<StatementNode*>(child));
   }
@@ -215,7 +217,7 @@ RelFactorGrammarRule::RelFactorGrammarRule()
               || **(tokenStream) == OperatorToken("/")
               || **(tokenStream) == OperatorToken("%");
         }, new ExprGrammarProducer()),
-        std::make_pair([](TokenIterator tokenStream)-> bool {
+        std::make_pair([](TokenIterator  /*tokenStream*/)-> bool {
           return true;
         }, new ReferenceGrammarProducer()),
     }) {}
@@ -248,7 +250,7 @@ FactorGrammarRule::FactorGrammarRule()
         std::make_pair([](TokenIterator tokenStream)-> bool {
           return **tokenStream == RoundOpenBracketToken();
         }, new ParenthesizedGrammarProducer(new ExprGrammarProducer())),
-        std::make_pair([](TokenIterator tokenStream)-> bool {
+        std::make_pair([](TokenIterator  /*tokenStream*/)-> bool {
           return true;
         }, new ReferenceGrammarProducer()),
     }) {}

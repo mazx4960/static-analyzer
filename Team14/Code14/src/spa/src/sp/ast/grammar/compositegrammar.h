@@ -46,7 +46,7 @@ class ParenthesizedGrammarRule : public CompositeGrammarRule {
 
 class BracedGrammarRule : public CompositeGrammarRule {
  private:
-  GrammarRuleProducer* parenthesizedNode_;
+  GrammarRuleProducer* parenthesized_node_;
   SimpleAstNode* assembleNode(std::vector<SimpleAstNode*>) override;
  public:
   explicit BracedGrammarRule(GrammarRuleProducer* parenthesizedNode);

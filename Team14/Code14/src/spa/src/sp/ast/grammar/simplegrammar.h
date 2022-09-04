@@ -128,10 +128,10 @@ class ReferenceGrammarRule : public EarlyChoiceGrammarRule {
 
 class VariableGrammarRule : public SimpleGrammarRule {
  public:
-  VariableNode* parseNode(TokenIterator& tokenStream);
+  VariableNode* parseNode(TokenIterator& tokenStream) override;
 };
 
 class ConstantGrammarRule : public SimpleGrammarRule {
  public:
-  ConstantNode* parseNode(TokenIterator& tokenStream);
+  ConstantNode* parseNode(TokenIterator& tokenStream) override;
 };
