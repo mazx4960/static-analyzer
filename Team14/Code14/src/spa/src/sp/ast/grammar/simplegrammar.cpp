@@ -135,6 +135,19 @@ AssignNode* AssignGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNod
       static_cast<RelFactorNode*>(childNodes[1]));
 }
 
+CondExprGrammarRule::CondExprGrammarRule()
+    : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
+        std::make_pair([](TokenIterator tokenStream)-> bool {
+          return (**tokenStream).type == TokenType::kSymbol;
+        }, new RelExprGrammarRule()),
+        std::make_pair([](TokenIterator tokenStream)-> bool {
+          return **tokenStream == OperatorToken("!");
+        }, new NotExprGrammarRule()),
+        std::make_pair([](TokenIterator tokenStream)-> bool {
+          return **tokenStream == RoundOpenBracketToken();
+        }, new BinaryCondGrammarRule()),
+    }) {}
+
 RelFactorGrammarRule::RelFactorGrammarRule()
     : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
         std::make_pair([](TokenIterator tokenStream)-> bool {

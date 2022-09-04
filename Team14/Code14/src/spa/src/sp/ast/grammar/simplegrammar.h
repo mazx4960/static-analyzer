@@ -70,9 +70,29 @@ class AssignGrammarRule : public CompositeGrammarRule {
   AssignGrammarRule();
 };
 
-class CondExprGrammarRule : public SimpleGrammarRule {
+class CondExprGrammarRule : public EarlyChoiceGrammarRule {
  public:
-  CondExprNode* parseNode(TokenIterator& tokenStream);
+  CondExprGrammarRule();
+};
+
+class NotExprGrammarRule : public SimpleGrammarRule {
+ public:
+  NotExprNode* parseNode(TokenIterator& tokenStream);
+};
+
+class BinaryCondGrammarRule : public SimpleGrammarRule {
+ public:
+  BinaryCondExprNode* parseNode(TokenIterator& tokenStream);
+};
+
+class AndExprGrammarRule : public SimpleGrammarRule {
+ public:
+  AndExprNode* parseNode(TokenIterator& tokenStream);
+};
+
+class OrExprGrammarRule : public SimpleGrammarRule {
+ public:
+  OrExprNode* parseNode(TokenIterator& tokenStream);
 };
 
 class RelExprGrammarRule : public SimpleGrammarRule {

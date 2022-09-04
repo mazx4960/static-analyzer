@@ -15,7 +15,7 @@ class SimpleLexer : Lexer {
   std::unordered_set<std::string> valid_single_operators_ = {
       "+", "-", "*", "/", "%", "<", ">", "&", "|", "!", "="};
   std::unordered_set<std::string> valid_operators_ = {
-      "+", "-", "*", "/", "%", "<", ">", ">=", "<=", "&&", "||", "!=", "==", "="};
+      "+", "-", "*", "/", "%", "<", ">", ">=", "<=", "&&", "||", "!=", "==", "=", "!"};
   std::unordered_set<std::string> valid_keywords_ = {
       "procedure", "if", "then", "else", "while", "read", "print", "call"};
 
