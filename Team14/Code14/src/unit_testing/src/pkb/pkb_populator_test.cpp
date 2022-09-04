@@ -20,7 +20,7 @@ TEST(PKBPopulatorTest, TestBasic) {
     Entity y(EntityType::kVariable, "y"); 
     std::list<Entity> entities({x, y});
 
-    ptr = p.populate(entities); 
+    ptr = PKBPopulator::populate(entities); 
 
     std::list<std::string> expected_table{"x", "y"};
 
