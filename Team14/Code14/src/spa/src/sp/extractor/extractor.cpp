@@ -101,10 +101,10 @@ std::vector<Relationship *> RelationshipExtractor::ExtractParent(SimpleAstNode *
     if (stmt_type == StmtType::kIf) {
       auto *if_stmt = static_cast<IfNode *>(stmt);
       Entity *parent = new WhileEntity(if_stmt->GetStmtNo());
-      auto *if_stmt_list = if_stmt->GetIfStatementList();
       auto *then_stmt_list = if_stmt->GetThenStatementList();
-      auto relationships = ExtractParentHelper(parent, if_stmt_list);
-      auto then_relationships = ExtractParentHelper(parent, then_stmt_list);
+      auto *else_stmt_list = if_stmt->GetElseStatementList();
+      auto relationships = ExtractParentHelper(parent, then_stmt_list);
+      auto then_relationships = ExtractParentHelper(parent, else_stmt_list);
       relationships.insert(relationships.end(), then_relationships.begin(), then_relationships.end());
       return relationships;
     }

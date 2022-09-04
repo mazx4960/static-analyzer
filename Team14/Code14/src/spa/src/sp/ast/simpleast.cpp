@@ -72,11 +72,11 @@ IfNode::IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, 
       conditional_(conditional),
       thenStatementList_(thenStatementList),
       elseStatementList_(elseStatementList) {}
-StatementListNode* IfNode::GetIfStatementList() {
-  return this->ifStatementList_;
-}
 StatementListNode* IfNode::GetThenStatementList() {
   return this->thenStatementList_;
+}
+StatementListNode* IfNode::GetElseStatementList() {
+  return this->elseStatementList_;
 }
 
 AssignNode::AssignNode(VariableNode* variable, ExprNode* expression)

@@ -116,8 +116,8 @@ class IfNode : public StatementNode {
 
  public:
   IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, StatementListNode* elseStatementList);
-  StatementListNode* GetIfStatementList();
   StatementListNode* GetThenStatementList();
+  StatementListNode* GetElseStatementList();
 };
 
 class AssignNode : public StatementNode {
