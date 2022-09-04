@@ -8,11 +8,12 @@
 #include <map>
 #include <string>
 
+#include "commons/types.h"
+#include "commons/entity.h"
 #include "pkb/entity/entity_manager.h"
 
 EntityManager entityManager;
 
-std::map<std::string, std::list<int>>*
-PKBPopulator::populate(std::string entity, std::list<int> lines) {
-	return entityManager.populate(entity, lines);
+std::list<std::string>* PKBPopulator::populate(std::list<Entity> entities) {
+  return entityManager.populate(entities);
 }

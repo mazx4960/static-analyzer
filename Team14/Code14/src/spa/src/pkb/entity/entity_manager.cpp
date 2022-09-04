@@ -6,9 +6,15 @@
 #include <map>
 #include <string>
 
+#include "commons/types.h"
+#include "commons/entity.h"
 #include "pkb/entity/variable.h"
 
-std::map<std::string, std::list<int>>*
-EntityManager::populate(std::string variable, std::list<int> lines) {
-	return v.populate(variable, lines);
+std::list<std::string>* EntityManager::populate(std::list<Entity> entities) { 
+  std::list<std::string>* variableTablePointer;
+  for (auto entity : entities) {
+    std::string variableName = entity.GetName();
+    variableTablePointer = v.populate(variableName);
+  }
+  return variableTablePointer;
 }

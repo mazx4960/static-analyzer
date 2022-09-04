@@ -11,9 +11,8 @@
 
 class Variable : public SIMPLEEntity {
  private:
-  std::map<std::string, std::list<int>> variableTable;
+  std::list<std::string> variableTable;
 
  public:
-  std::map<std::string, std::list<int>>*
-  populate(std::string variable, std::list<int> lines);
+  std::list<std::string>* populate(std::string variable);
 };

@@ -8,6 +8,6 @@
 
 class SIMPLEEntity {
  public:
-  virtual std::map<std::string, std::list<int>>*
-  populate(std::string entity, std::list<int> lines) = 0;
+  virtual std::list<std::string>*
+  populate(std::string entity) = 0;
 };

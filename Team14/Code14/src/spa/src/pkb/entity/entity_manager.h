@@ -5,6 +5,8 @@
 #include <map>
 #include <string>
 
+#include "commons/types.h"
+#include "commons/entity.h"
 #include "pkb/entity/variable.h"
 
 class EntityManager {
@@ -12,6 +14,5 @@ class EntityManager {
   Variable v;
 
  public:
-  std::map<std::string, std::list<int>>*
-  populate(std::string variable, std::list<int> lines);
+  std::list<std::string>* populate(std::list<Entity> entities);
 };

@@ -4,28 +4,37 @@
 
 #include <gtest/gtest.h>
 
+#include <iostream>
 #include <list>
 #include <map>
 #include <string>
 
+#include "commons/types.h"
+#include "commons/entity.h"
+
 TEST(PKBPopulatorTest, TestBasic) {
     PKBPopulator p;
-    std::map<std::string, std::list<int>>* ptr;
+    std::list<std::string>* ptr;
 
-    ptr = p.populate("x", { 1, 2, 3 });
-    ptr = p.populate("y", { 5, 6 });
-    std::map<std::string, std::list<int>> expectedTable;
-    std::pair<std::string, std::list<int>> one("x", { 1, 2, 3 });
-    std::pair<std::string, std::list<int>> two("y", { 5, 6 });
-    expectedTable.insert(one);
-    expectedTable.insert(two);
-    std::map<std::string, std::list<int>> variableTable = *ptr;
-    ASSERT_EQ(variableTable.size(), expectedTable.size());
-    ASSERT_EQ(variableTable, expectedTable);
+    Entity x(EntityType::kVariable, "x");
+    Entity y(EntityType::kVariable, "y"); 
+    std::list<Entity> entities({x, y});
 
-    for (auto result = variableTable.begin(), expected = expectedTable.begin();
-        result != variableTable.end(); ++result, ++expected) {
-        EXPECT_EQ(result->first, expected->first) << "Variable is not the same";
-        EXPECT_EQ(result->second, expected->second) << "Line numbers are not the same";
-    }
+    ptr = p.populate(entities); 
+
+    std::list<std::string> expectedTable{"x", "y"};
+
+    std::list<std::string> resultTable = *ptr;
+    std::cout << resultTable.size() << "\n";
+
+    ASSERT_EQ(resultTable.size(), expectedTable.size());
+    ASSERT_EQ(resultTable, expectedTable);
+
+    std::list<std::string>::iterator result = resultTable.begin();
+    std::list<std::string>::iterator expected = expectedTable.begin();
+
+    for (; result != resultTable.end() && expected != expectedTable.end();
+        ++result, ++expected) {
+      EXPECT_EQ(*result, *expected) << "Variables " << *result << " and " << *expected << " are not the same."; 
+    } 
 }

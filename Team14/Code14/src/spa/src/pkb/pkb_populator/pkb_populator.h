@@ -5,13 +5,13 @@
 #include <map>
 #include <string>
 
+#include "commons/types.h"
 #include "pkb/entity/entity_manager.h"
 
 class PKBPopulator {
- private:
-  EntityManager entityManager;
-
- public:
-  std::map<std::string, std::list<int>>*
-  populate(std::string entity, std::list<int> lines);
-};
+   private:
+    EntityManager entityManager;
+  
+   public:
+    std::list<std::string>* populate(std::list<Entity> entities);
+  };

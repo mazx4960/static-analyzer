@@ -8,8 +8,7 @@
 
 #include "pkb/entity/simple_entity.h"
 
-std::map<std::string, std::list<int>>*
-Variable::populate(std::string variable, std::list<int> lines) {
-	variableTable.insert(std::pair<std::string, std::list<int>>(variable, lines));
-	return &variableTable;
+std::list<std::string>* Variable::populate(std::string variable) {
+  variableTable.push_back(variable);
+  return &variableTable;
 }
