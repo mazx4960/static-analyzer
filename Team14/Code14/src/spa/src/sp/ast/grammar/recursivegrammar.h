@@ -2,8 +2,6 @@
 
 #include "basesimplegrammar.h"
 
-using MergeFunction = SimpleAstNode*(*)(SimpleAstNode*, SimpleAstNode*);
-
 class RecursiveGrammarRule : public SimpleGrammarRule {
  private:
   // Use a producer to avoid recursion

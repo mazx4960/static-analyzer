@@ -3,6 +3,7 @@
 #include "sp/ast/node/simpleast.h"
 #include "commons/token/token.h"
 
+using MergeFunction = SimpleAstNode*(*)(SimpleAstNode*, SimpleAstNode*);
 
 using TokenIterator = std::vector<Token*>::iterator;
 

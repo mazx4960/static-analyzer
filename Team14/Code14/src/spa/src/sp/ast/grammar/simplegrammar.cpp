@@ -170,6 +170,52 @@ CondExprGrammarRule::CondExprGrammarRule()
         }, new BinaryCondGrammarRule()),
     }) {}
 
+BracketedCondGrammarRule::BracketedCondGrammarRule()
+    : CompositeGrammarRule(std::vector<RuleFragment*>{
+        new TokenRuleFragment(new RoundOpenBracketToken()),
+        new NodeRuleFragment(new CondExprGrammarRule()),
+        new TokenRuleFragment(new RoundCloseBracketToken())
+    }) {}
+
+CondExprNode* BracketedCondGrammarRule::assembleNode(std::vector<SimpleAstNode*> children) {
+  return static_cast<CondExprNode*>(children[0]);
+}
+
+BinaryCondGrammarRule::BinaryCondGrammarRule()
+    : LateChoiceGrammarRule(
+        []() -> SimpleGrammarRule* { return new BracketedCondGrammarRule(); },
+        std::vector<std::pair<Token*, MergeFunction>>{
+            std::make_pair(new OperatorToken("&&"), [](SimpleAstNode* first, SimpleAstNode* second) -> SimpleAstNode* {
+              return new AndExprNode(static_cast<CondExprNode*>(first), static_cast<CondExprNode*>(second));
+            }), std::make_pair(new OperatorToken("||"), [](SimpleAstNode* first, SimpleAstNode* second) -> SimpleAstNode* {
+              return new OrExprNode(static_cast<CondExprNode*>(first), static_cast<CondExprNode*>(second));
+            })
+        }) {}
+
+RelExprGrammarRule::RelExprGrammarRule()
+    : LateChoiceGrammarRule(
+        []() -> SimpleGrammarRule* { return new RelFactorGrammarRule(); },
+        std::vector<std::pair<Token*, MergeFunction>>{
+            std::make_pair(new OperatorToken(">"), [](SimpleAstNode* first, SimpleAstNode* second) -> SimpleAstNode* {
+              return new GreaterThanNode(static_cast<RelFactorNode*>(first), static_cast<RelFactorNode*>(second));
+            }),
+            std::make_pair(new OperatorToken(">="), [](SimpleAstNode* first, SimpleAstNode* second) -> SimpleAstNode* {
+              return new GreaterThanEqualNode(static_cast<RelFactorNode*>(first), static_cast<RelFactorNode*>(second));
+            }),
+            std::make_pair(new OperatorToken("<"), [](SimpleAstNode* first, SimpleAstNode* second) -> SimpleAstNode* {
+              return new LessThanNode(static_cast<RelFactorNode*>(first), static_cast<RelFactorNode*>(second));
+            }),
+            std::make_pair(new OperatorToken("<="), [](SimpleAstNode* first, SimpleAstNode* second) -> SimpleAstNode* {
+              return new LessThanEqualNode(static_cast<RelFactorNode*>(first), static_cast<RelFactorNode*>(second));
+            }),
+            std::make_pair(new OperatorToken("=="), [](SimpleAstNode* first, SimpleAstNode* second) -> SimpleAstNode* {
+              return new EqualNode(static_cast<RelFactorNode*>(first), static_cast<RelFactorNode*>(second));
+            }),
+            std::make_pair(new OperatorToken("!="), [](SimpleAstNode* first, SimpleAstNode* second) -> SimpleAstNode* {
+              return new NotEqualNode(static_cast<RelFactorNode*>(first), static_cast<RelFactorNode*>(second));
+            }),
+        }) {}
+
 RelFactorGrammarRule::RelFactorGrammarRule()
     : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
         std::make_pair([](TokenIterator tokenStream)-> bool {

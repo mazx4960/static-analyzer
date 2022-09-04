@@ -2,6 +2,7 @@
 
 #include "compositegrammar.h"
 #include "earlychoicegrammar.h"
+#include "latechoicegrammar.h"
 #include "listgrammar.h"
 #include "recursivegrammar.h"
 #include "sp/ast/node/simpleast.h"
@@ -88,24 +89,21 @@ class NotExprGrammarRule : public SimpleGrammarRule {
   NotExprNode* parseNode(TokenIterator& tokenStream);
 };
 
-class BinaryCondGrammarRule : public SimpleGrammarRule {
+class BracketedCondGrammarRule : public CompositeGrammarRule {
+ private:
+  CondExprNode* assembleNode(std::vector<SimpleAstNode*> ) override;
  public:
-  BinaryCondExprNode* parseNode(TokenIterator& tokenStream);
+  BracketedCondGrammarRule();
 };
 
-class AndExprGrammarRule : public SimpleGrammarRule {
+class BinaryCondGrammarRule : public LateChoiceGrammarRule {
  public:
-  AndExprNode* parseNode(TokenIterator& tokenStream);
+  BinaryCondGrammarRule();
 };
 
-class OrExprGrammarRule : public SimpleGrammarRule {
+class RelExprGrammarRule : public LateChoiceGrammarRule {
  public:
-  OrExprNode* parseNode(TokenIterator& tokenStream);
-};
-
-class RelExprGrammarRule : public SimpleGrammarRule {
- public:
-  RelExprNode* parseNode(TokenIterator& tokenStream);
+  RelExprGrammarRule();
 };
 
 class RelFactorGrammarRule : public EarlyChoiceGrammarRule {
