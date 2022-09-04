@@ -2,11 +2,15 @@
 
 #include "compositegrammar.h"
 #include "earlychoicegrammar.h"
+#include "listgrammar.h"
 #include "sp/ast/node/simpleast.h"
 
-class ProgramGrammarRule : public SimpleGrammarRule {
+class ProgramGrammarRule : public ListGrammarRule {
+ private:
+  bool shouldStop(TokenIterator tokenStream) override;
+  ProgramNode* assembleNode(std::vector<SimpleAstNode*> children) override;
  public:
-  ProgramNode* parseNode(TokenIterator& tokenStream);
+  ProgramGrammarRule();
 };
 
 class ProcedureGrammarRule : public CompositeGrammarRule {
@@ -17,9 +21,12 @@ class ProcedureGrammarRule : public CompositeGrammarRule {
   ProcedureGrammarRule();
 };
 
-class StatementListGrammarRule : public SimpleGrammarRule {
+class StatementListGrammarRule : public ListGrammarRule {
+ private:
+  bool shouldStop(TokenIterator tokenStream) override;
+  StatementListNode* assembleNode(std::vector<SimpleAstNode*> children) override;
  public:
-  StatementListNode* parseNode(TokenIterator& tokenStream);
+  StatementListGrammarRule();
 };
 
 class StatementGrammarRule : public EarlyChoiceGrammarRule {

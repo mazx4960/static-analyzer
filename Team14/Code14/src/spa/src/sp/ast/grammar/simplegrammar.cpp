@@ -2,13 +2,21 @@
 #include "commons/parser/parser_exceptions.h"
 #include "commons/token/token.h"
 
-ProgramNode* ProgramGrammarRule::parseNode(TokenIterator& tokenStream) {
+ProgramGrammarRule::ProgramGrammarRule()
+    : ListGrammarRule(new ProcedureGrammarRule()) {}
+
+
+
+ProgramNode* ProgramGrammarRule::assembleNode(std::vector<SimpleAstNode*> children) {
   std::vector<ProcedureNode*> procedures{};
-  ProcedureGrammarRule procedure_parser{};
-  do {
-    procedures.push_back(static_cast<ProcedureNode*>(procedure_parser.parseNode(tokenStream)));
-  } while (!(**tokenStream == EndOfFileToken()));
+  for (auto* child : children) {
+    procedures.push_back(static_cast<ProcedureNode*>(child));
+  }
   return new ProgramNode(procedures);
+}
+
+bool ProgramGrammarRule::shouldStop(TokenIterator tokenStream) {
+  return **tokenStream == EndOfFileToken();
 }
 
 ProcedureGrammarRule::ProcedureGrammarRule()
@@ -23,6 +31,28 @@ ProcedureNode* ProcedureGrammarRule::assembleNode(std::vector<SimpleAstNode*> ch
   return new ProcedureNode(
       static_cast<VariableNode*>(childNodes[0])->getName(),
       static_cast<StatementListNode*>(childNodes[1]));
+}
+
+StatementListGrammarRule::StatementListGrammarRule()
+    : ListGrammarRule(new StatementGrammarRule()) {}
+
+StatementListNode* StatementListGrammarRule::assembleNode(std::vector<SimpleAstNode*> children) {
+  std::vector<StatementNode*> statements{};
+  for (auto* child : children) {
+    statements.push_back(static_cast<StatementNode*>(child));
+  }
+  return new StatementListNode(statements);
+}
+
+bool StatementListGrammarRule::shouldStop(TokenIterator tokenStream) {
+  return **tokenStream == EndOfFileToken() && !(
+               **tokenStream == KeywordToken("read")
+               || **tokenStream == KeywordToken("print")
+               || **tokenStream == KeywordToken("call")
+               || **tokenStream == KeywordToken("while")
+               || **tokenStream == KeywordToken("print")
+               || **(tokenStream + 1) == OperatorToken("=")
+               );
 }
 
 StatementGrammarRule::StatementGrammarRule()
