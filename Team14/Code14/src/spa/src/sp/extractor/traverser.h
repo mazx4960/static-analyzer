@@ -11,6 +11,7 @@ class Traverser {
  public:
   static void TraverseProgram(ProgramNode *, const std::function<void(SimpleAstNode *)> &op);
   static void TraverseProcedure(ProcedureNode *, const std::function<void(SimpleAstNode *)> &op);
+  static void TraverseStmtList(StatementListNode *, const std::function<void(SimpleAstNode *)> &op);
   static void TraverseStmt(StatementNode *, const std::function<void(SimpleAstNode *)> &op);
   static void TraverseAssign(AssignNode *, const std::function<void(SimpleAstNode *)> &op);
   static void TraverseCall(CallNode *, const std::function<void(SimpleAstNode *)> &op);

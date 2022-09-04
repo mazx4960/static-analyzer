@@ -105,6 +105,7 @@ class WhileNode : public StatementNode {
 
  public:
   WhileNode(CondExprNode* conditional, StatementListNode* statementList);
+  StatementListNode* GetStatementList();
 };
 
 class IfNode : public StatementNode {
@@ -115,6 +116,8 @@ class IfNode : public StatementNode {
 
  public:
   IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, StatementListNode* elseStatementList);
+  StatementListNode* GetIfStatementList();
+  StatementListNode* GetThenStatementList();
 };
 
 class AssignNode : public StatementNode {

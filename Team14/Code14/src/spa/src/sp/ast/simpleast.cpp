@@ -63,12 +63,21 @@ WhileNode::WhileNode(CondExprNode* conditional, StatementListNode* statementList
     : StatementNode(StmtType::kWhile),
       conditional_(conditional),
       statementList_(statementList) {}
+StatementListNode* WhileNode::GetStatementList() {
+  return this->statementList_;
+}
 
 IfNode::IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, StatementListNode* elseStatementList)
     : StatementNode(StmtType::kIf),
       conditional_(conditional),
       thenStatementList_(thenStatementList),
       elseStatementList_(elseStatementList) {}
+StatementListNode* IfNode::GetIfStatementList() {
+  return this->ifStatementList_;
+}
+StatementListNode* IfNode::GetThenStatementList() {
+  return this->thenStatementList_;
+}
 
 AssignNode::AssignNode(VariableNode* variable, ExprNode* expression)
     : StatementNode(StmtType::kAssign),

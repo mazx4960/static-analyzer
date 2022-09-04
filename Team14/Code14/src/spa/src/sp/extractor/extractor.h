@@ -3,21 +3,25 @@
 #pragma once
 
 #include "commons/entity.h"
+#include "commons/relationship.h"
 #include "sp/ast/simpleast.h"
 
 class Extractor {
- protected:
-  ProgramNode* program_node_;
-
  public:
-  explicit Extractor(ProgramNode* program_node) : program_node_(program_node){};
-  ~Extractor() = default;
-  virtual std::vector<Entity*> extract(){};
+  virtual std::vector<Entity *> ExtractEntity(ProgramNode *program_node){};
+  virtual std::vector<Relationship *> ExtractRelationship(ProgramNode *program_node){};
 };
 
 class EntityExtractor : public Extractor {
  public:
-  explicit EntityExtractor(ProgramNode* program_node) : Extractor(program_node){};
-  ~EntityExtractor() = default;
-  std::vector<Entity*> extract() override;
+  std::vector<Entity *> ExtractEntity(ProgramNode *program_node) override;
+};
+
+class RelationshipExtractor : public Extractor {
+ public:
+  std::vector<Relationship *> ExtractRelationship(ProgramNode *program_node) override;
+  static std::vector<Relationship *> ExtractFollows(StatementListNode *node);
+  static std::vector<Relationship *> ExtractParent(SimpleAstNode *node);
+  static std::vector<Relationship *> ExtractParentHelper(Entity *parent, StatementListNode *node);
+  static std::vector<Entity *> ExtractChildren(StatementListNode *node);
 };

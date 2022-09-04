@@ -11,8 +11,11 @@ void Traverser::TraverseProgram(ProgramNode *node, const std::function<void(Simp
 }
 void Traverser::TraverseProcedure(ProcedureNode *node, const std::function<void(SimpleAstNode *)> &op) {
   op(node);
-  auto *stmt_list = node->GetStatementList();
-  for (auto *child : stmt_list->GetStatements()) {
+  TraverseStmtList(node->GetStatementList(), op);
+}
+void Traverser::TraverseStmtList(StatementListNode *node, const std::function<void(SimpleAstNode *)> &op) {
+  op(node);
+  for (auto *child : node->GetStatements()) {
     TraverseStmt(child, op);
   }
 }
