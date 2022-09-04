@@ -67,6 +67,7 @@ class StatementNode : public SimpleAstNode {
 
  public:
   explicit StatementNode(SimpleNodeType nodeType);
+  int GetStmtNo();
 };
 
 class ReadNode : public StatementNode {

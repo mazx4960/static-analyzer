@@ -31,6 +31,7 @@ std::vector<StatementNode*> StatementListNode::GetStatements() {
 StatementNode::StatementNode(SimpleNodeType nodeType)
     : SimpleAstNode(nodeType),
       stmtNo_(0) {}
+int StatementNode::GetStmtNo() { return this->stmtNo_; }
 
 ReadNode::ReadNode(VariableNode* variable)
     : StatementNode(SimpleNodeType::kRead),

@@ -3,82 +3,70 @@
 
 #include "sp/ast/simpleast.h"
 
-void Traverser::TraverseProgram(ProgramNode *node, const std::function<void(SimpleAstNode *)> &before, const std::function<void(SimpleAstNode *)> &after) {
-  before(node);
+void Traverser::TraverseProgram(ProgramNode *node, const std::function<void(SimpleAstNode *)> &op) {
+  op(node);
   for (auto *child : node->GetProcedures()) {
-    TraverseProcedure(child, before, after);
+    TraverseProcedure(child, op);
   }
-  after(node);
 }
-void Traverser::TraverseProcedure(ProcedureNode *node, const std::function<void(SimpleAstNode *)> &before, const std::function<void(SimpleAstNode *)> &after) {
-  before(node);
+void Traverser::TraverseProcedure(ProcedureNode *node, const std::function<void(SimpleAstNode *)> &op) {
+  op(node);
   auto *stmt_list = node->GetStatementList();
   for (auto *child : stmt_list->GetStatements()) {
-    TraverseStmt(child, before, after);
+    TraverseStmt(child, op);
   }
-  after(node);
 }
-void Traverser::TraverseStmt(StatementNode *node, const std::function<void(SimpleAstNode *)> &before, const std::function<void(SimpleAstNode *)> &after) {
+void Traverser::TraverseStmt(StatementNode *node, const std::function<void(SimpleAstNode *)> &op) {
   switch (node->GetNodeType()) {
     case SimpleNodeType::kAssign:
-      TraverseAssign(static_cast<AssignNode *>(node), before, after);
+      TraverseAssign(static_cast<AssignNode *>(node), op);
       break;
     case SimpleNodeType::kCall:
-      TraverseCall(static_cast<CallNode *>(node), before, after);
+      TraverseCall(static_cast<CallNode *>(node), op);
       break;
     case SimpleNodeType::kIf:
-      TraverseIf(static_cast<IfNode *>(node), before, after);
+      TraverseIf(static_cast<IfNode *>(node), op);
       break;
     case SimpleNodeType::kWhile:
-      TraverseWhile(static_cast<WhileNode *>(node), before, after);
+      TraverseWhile(static_cast<WhileNode *>(node), op);
       break;
     case SimpleNodeType::kPrint:
-      TraversePrint(static_cast<PrintNode *>(node), before, after);
+      TraversePrint(static_cast<PrintNode *>(node), op);
       break;
     case SimpleNodeType::kRead:
-      TraverseRead(static_cast<ReadNode *>(node), before, after);
+      TraverseRead(static_cast<ReadNode *>(node), op);
       break;
     default:
       break;
   }
 }
-void Traverser::TraverseAssign(AssignNode *node, const std::function<void(SimpleAstNode *)> &before, const std::function<void(SimpleAstNode *)> &after) {
-  before(node);
-  after(node);
+void Traverser::TraverseAssign(AssignNode *node, const std::function<void(SimpleAstNode *)> &op) {
+  op(node);
 }
-void Traverser::TraverseCall(CallNode *node, const std::function<void(SimpleAstNode *)> &before, const std::function<void(SimpleAstNode *)> &after) {
-  before(node);
-  after(node);
+void Traverser::TraverseCall(CallNode *node, const std::function<void(SimpleAstNode *)> &op) {
+  op(node);
 }
-void Traverser::TraverseIf(IfNode *node, const std::function<void(SimpleAstNode *)> &before, const std::function<void(SimpleAstNode *)> &after) {
-  before(node);
-  after(node);
+void Traverser::TraverseIf(IfNode *node, const std::function<void(SimpleAstNode *)> &op) {
+  op(node);
 }
-void Traverser::TraverseWhile(WhileNode *node, const std::function<void(SimpleAstNode *)> &before, const std::function<void(SimpleAstNode *)> &after) {
-  before(node);
-  after(node);
+void Traverser::TraverseWhile(WhileNode *node, const std::function<void(SimpleAstNode *)> &op) {
+  op(node);
 }
-void Traverser::TraversePrint(PrintNode *node, const std::function<void(SimpleAstNode *)> &before, const std::function<void(SimpleAstNode *)> &after) {
-  before(node);
-  after(node);
+void Traverser::TraversePrint(PrintNode *node, const std::function<void(SimpleAstNode *)> &op) {
+  op(node);
 }
-void Traverser::TraverseRead(ReadNode *node, const std::function<void(SimpleAstNode *)> &before, const std::function<void(SimpleAstNode *)> &after) {
-  before(node);
-  after(node);
+void Traverser::TraverseRead(ReadNode *node, const std::function<void(SimpleAstNode *)> &op) {
+  op(node);
 }
-void Traverser::TraverseCond(CondExprNode *node, const std::function<void(SimpleAstNode *)> &before, const std::function<void(SimpleAstNode *)> &after) {
-  before(node);
-  after(node);
+void Traverser::TraverseCond(CondExprNode *node, const std::function<void(SimpleAstNode *)> &op) {
+  op(node);
 }
-void Traverser::TraverseExpr(ExprNode *node, const std::function<void(SimpleAstNode *)> &before, const std::function<void(SimpleAstNode *)> &after) {
-  before(node);
-  after(node);
+void Traverser::TraverseExpr(ExprNode *node, const std::function<void(SimpleAstNode *)> &op) {
+  op(node);
 }
-void Traverser::TraverseVariable(VariableNode *node, const std::function<void(SimpleAstNode *)> &before, const std::function<void(SimpleAstNode *)> &after) {
-  before(node);
-  after(node);
+void Traverser::TraverseVariable(VariableNode *node, const std::function<void(SimpleAstNode *)> &op) {
+  op(node);
 }
-void Traverser::TraverseConstant(ConstantNode *node, const std::function<void(SimpleAstNode *)> &before, const std::function<void(SimpleAstNode *)> &after) {
-  before(node);
-  after(node);
+void Traverser::TraverseConstant(ConstantNode *node, const std::function<void(SimpleAstNode *)> &op) {
+  op(node);
 }
