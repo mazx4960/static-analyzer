@@ -5,9 +5,9 @@
 
 TEST(LexerTest, TestBasic) {
   auto* s = new std::ifstream("Team14/Tests14/simple_code/basic.txt");
-  Lexer lexer(s);
+  SimpleLexer simple_lexer(s);
 
-  std::vector<Token*> tokens = lexer.lex();
+  std::vector<Token*> tokens = simple_lexer.lex();
   std::vector<Token*> expected = {
       new KeywordToken("procedure"), new SymbolToken("main"),
       new CurlyOpenBracketToken(), new SymbolToken("x"),

@@ -23,4 +23,5 @@ class SimpleLexer : Lexer {
  public:
   explicit SimpleLexer(std::ifstream* source_stream) : Lexer(source_stream){};
   Token* next_token() override;
+  std::vector<Token*> lex() override;
 };

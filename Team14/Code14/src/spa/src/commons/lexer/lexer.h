@@ -34,5 +34,5 @@ class Lexer {
  public:
   explicit Lexer(std::ifstream* source_stream);
   virtual Token* next_token();
-  std::vector<Token*> lex();
+  virtual std::vector<Token*> lex();
 };
