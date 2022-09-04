@@ -1,12 +1,11 @@
 #include "evaluation_strategy.h"
-#include "qps/pql/query_synonym/query_synonym.h"
 
-EvaluationStrategy EvaluationStrategy::getStrategy(PKBInterface &pkb_interface, Query &query) {
+EvaluationStrategy *EvaluationStrategy::getStrategy(PKBInterface &pkb_interface, Query &query) {
   if (query.getDeclarations().size() == 1) {
-    return SelectStrategy(pkb_interface, query);
+    return new SelectStrategy(pkb_interface, query);
   }
 
-  return SuchThatStrategy(pkb_interface, query);
+  return new SuchThatStrategy(pkb_interface, query);
 }
 
 Result SelectStrategy::evaluate() {
@@ -19,7 +18,8 @@ Result SelectStrategy::evaluate() {
 }
 
 Result SuchThatStrategy::evaluate() {
-  QuerySynonym placeholder_syn;
+  QuerySynonym placeholder_syn("placeholder");
   std::vector<std::string> placeholder_results(1);
+
   return Result(placeholder_syn, placeholder_results);
 }

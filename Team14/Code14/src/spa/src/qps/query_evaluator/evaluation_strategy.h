@@ -11,7 +11,7 @@ class EvaluationStrategy {
 
   EvaluationStrategy(PKBInterface &pkb_interface, Query &query) : pkb_interface_(pkb_interface), query_(query) {};
  public:
-  static EvaluationStrategy getStrategy(PKBInterface &, Query &);
+  static EvaluationStrategy *getStrategy(PKBInterface &, Query &);
   virtual Result evaluate() = 0;
 };
 
