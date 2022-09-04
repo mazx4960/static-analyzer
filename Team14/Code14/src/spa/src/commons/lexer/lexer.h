@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "commons/token/token.h"
-
 #include <fstream>
 #include <unordered_set>
 #include <vector>
+
+#include "token.h"
 
 class Lexer {
  protected:

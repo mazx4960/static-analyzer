@@ -1,8 +1,9 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "lexer.h"
-#include "commons/token/token.h"
+
 #include "lexer_exceptions.h"
+#include "token.h"
 
 Lexer::Lexer(std::ifstream* s) {
   line_number_ = 0;

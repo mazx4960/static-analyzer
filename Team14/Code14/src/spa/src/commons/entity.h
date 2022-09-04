@@ -4,12 +4,7 @@
 
 #include <string>
 
-enum class EntityType {
-  kProcedure,
-  kStatement,
-  kVariable,
-  kConstant,
-};
+#include "types.h"
 
 class Entity {
  private:
@@ -39,15 +34,6 @@ class ConstantEntity : public Entity {
  public:
   explicit ConstantEntity(std::string name)
       : Entity(EntityType::kConstant, std::move(name)) {}
-};
-
-enum class StmtType {
-  kAssign,
-  kCall,
-  kIf,
-  kWhile,
-  kPrint,
-  kRead,
 };
 
 class StatementEntity : public Entity {
