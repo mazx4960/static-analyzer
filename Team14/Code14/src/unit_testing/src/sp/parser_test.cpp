@@ -42,7 +42,7 @@ TEST(SimpleParserTest, TestBasic) {
   ASSERT_EQ(1, static_cast<ConstantNode *>(constant_node)->GetValue());
 }
 
-TEST(SimpleParserTestAssignment, BasicTest) {
+TEST(SimpleParserTestAssignment, AdvancedTest) {
   auto *s = new std::ifstream("Team14/Tests14/simple_code/assignment1.txt");
   SimpleLexer simple_lexer(s);
   std::vector<Token *> tokens = simple_lexer.lex();

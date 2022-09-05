@@ -14,8 +14,8 @@ class EntityExtractor {
 class RelationshipExtractor {
  public:
   static std::vector<Relationship *> Extract(SimpleAstNode *program_node);
-  static void ExtractFollows(SimpleAstNode *node, std::vector<Relationship *> relationships);
-  static void ExtractParent(SimpleAstNode *node, const std::vector<Relationship *> &relationships);
-  static void ExtractParentHelper(Entity *parent, StatementListNode *node, std::vector<Relationship *> relationships);
+  static void ExtractFollows(SimpleAstNode *node, std::vector<Relationship *> &relationships);
+  static void ExtractParent(SimpleAstNode *node, std::vector<Relationship *> &relationships);
+  static void ExtractParentHelper(Entity *parent, StatementListNode *node, std::vector<Relationship *> &relationships);
   static std::vector<Entity *> ExtractChildren(StatementListNode *node);
 };

@@ -2,6 +2,10 @@
 
 #include "extractor.h"
 
+#include <spdlog/spdlog.h>
+
+#include <iostream>
+
 #include "traverser.h"
 
 /**
@@ -53,12 +57,13 @@ std::vector<Relationship *> RelationshipExtractor::Extract(SimpleAstNode *progra
  * @param node
  * @return vector of follows relationships
  */
-void RelationshipExtractor::ExtractFollows(SimpleAstNode *node, std::vector<Relationship *> relationships) {
+void RelationshipExtractor::ExtractFollows(SimpleAstNode *node, std::vector<Relationship *> &relationships) {
   if (node->GetNodeType() != SimpleNodeType::kStatementList) {
     return;
   }
   Entity *prev_entity = nullptr;
   for (auto *stmt : static_cast<StatementListNode *>(node)->GetStatements()) {
+    std::cout << "Extracting follows relationship for statement " << stmt->GetStmtNo() << std::endl;
     auto stmt_type = stmt->GetStmtType();
     auto stmt_no = stmt->GetStmtNo();
     Entity *cur_entity = new StatementEntity(stmt_type, stmt_no);
@@ -75,8 +80,9 @@ void RelationshipExtractor::ExtractFollows(SimpleAstNode *node, std::vector<Rela
  * @param node
  * @return vector of parent relationships
  */
-void RelationshipExtractor::ExtractParent(SimpleAstNode *node, const std::vector<Relationship *> &relationships) {
+void RelationshipExtractor::ExtractParent(SimpleAstNode *node, std::vector<Relationship *> &relationships) {
   if (node->GetNodeType() == SimpleNodeType::kProcedure) {
+    std::cout << "Procedure" << std::endl;
     auto *proc = static_cast<ProcedureNode *>(node);
     auto *stmt_list = proc->GetStatementList();
     auto proc_name = proc->GetProcName();
@@ -110,7 +116,7 @@ void RelationshipExtractor::ExtractParent(SimpleAstNode *node, const std::vector
  * @param node
  * @return vector of parent relationships
  */
-void RelationshipExtractor::ExtractParentHelper(Entity *parent, StatementListNode *node, std::vector<Relationship *> relationships) {
+void RelationshipExtractor::ExtractParentHelper(Entity *parent, StatementListNode *node, std::vector<Relationship *> &relationships) {
   std::vector<Entity *> children = ExtractChildren(node);
   for (auto *child : children) {
     Relationship *parent_relationship = new ParentRelationship(parent, child);
