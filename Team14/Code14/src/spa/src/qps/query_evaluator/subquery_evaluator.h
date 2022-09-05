@@ -9,7 +9,6 @@ class SubQueryEvaluator {
   EvaluationStrategy *strategy_;
 
  public:
-  explicit SubQueryEvaluator(PKB &pkb_interface, QueryClause &query_clause_);
+  explicit SubQueryEvaluator(PKB *pkb, QueryClause &query_clause_);
   Result evaluate();
-
 };
