@@ -32,6 +32,7 @@ Result QueryEvaluator::evaluate() {
 
 
   // TODO: implement projection and aggregation
+  return Result::empty(query_synonym);
 
 }
 

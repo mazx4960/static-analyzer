@@ -6,7 +6,6 @@ EvaluationStrategy *EvaluationStrategy::getStrategy(PKBInterface &pkb_interface,
 
 Result SuchThatStrategy::evaluate() {
   QuerySynonym placeholder_syn("placeholder");
-  std::unordered_set<std::string> placeholder_results;
 
-  return Result(placeholder_syn, placeholder_results);
+  return Result::empty(placeholder_syn);
 }
