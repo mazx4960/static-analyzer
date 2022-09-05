@@ -1,6 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #pragma once
+#include<unordered_set>
 #include <vector>
 #include <map>
 #include <string>
@@ -14,5 +15,5 @@ class EntityManager {
   Variable v_;
 
  public:
-  std::vector<std::string>* populate(const std::vector<Entity>& entities);
+  std::unordered_set<std::string>* populate(const std::vector<Entity>& entities);
 };

@@ -1,6 +1,8 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #pragma once
+
+#include<unordered_set>
 #include <list>
 #include <map>
 #include <string>
@@ -13,5 +15,5 @@ class PKBPopulator {
     EntityManager entityManager_;
   
    public:
-    static std::vector<std::string>* populate(const std::vector<Entity>& entities);
+    static std::unordered_set<std::string>* populate(const std::vector<Entity>& entities);
   };

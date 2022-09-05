@@ -2,7 +2,8 @@
 
 #include "pkb/entity/entity_manager.h"
 
-#include <vector>
+#include<vector>
+#include <unordered_set>
 #include <map>
 #include <string>
 
@@ -10,11 +11,16 @@
 #include "commons/entity.h"
 #include "pkb/entity/variable.h"
 
-std::vector<std::string>* EntityManager::populate(const std::vector<Entity>& entities) { 
-  std::vector<std::string>* variable_table_pointer;
+std::unordered_set<std::string>* 
+EntityManager::populate(const std::vector<Entity>& entities) { 
+  std::unordered_set<std::string>* table_pointer;
   for (auto entity : entities) {
-    std::string variable_name = entity.GetName();
-    variable_table_pointer = v_.populate(variable_name);
+    EntityType entity_type = entity.GetType();
+    std::string entity_name = entity.GetName();
+    switch (entity_type) {
+      case EntityType::kVariable:
+        table_pointer = v_.populate(entity_name);
+    } 
   }
-  return variable_table_pointer;
+  return table_pointer;
 }

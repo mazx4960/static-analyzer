@@ -3,7 +3,7 @@
 #pragma once
 
 #include <iostream>
-#include <vector>
+#include <unordered_set>
 #include <map>
 #include <string>
 
@@ -11,8 +11,8 @@
 
 class Variable : public SimpleEntity {
  private:
-  std::vector<std::string> variableTable_;
+  std::unordered_set<std::string> variableTable_;
 
  public:
-  std::vector<std::string>* populate(std::string variable) override;
+  std::unordered_set<std::string>* populate(std::string variable) override;
 };
