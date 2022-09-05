@@ -3,13 +3,7 @@
 #pragma once
 
 #include "entity.h"
-
-enum class RsType {
-  kFollows,
-  kParent,
-  kUses,
-  kModifies,
-};
+#include "types.h"
 
 class Relationship {
  private:
