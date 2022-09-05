@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <vector>
+#include <unordered_set>
 #include "qps/pql/query_synonym/query_synonym.h"
 class Result {
  private:
@@ -9,19 +9,19 @@ class Result {
 
   QuerySynonym syn_;
 
-  std::vector<std::string> results_;
+  std::unordered_set<std::string> results_;
 
  protected:
-  explicit Result(QuerySynonym &syn, std::vector<std::string> &results, bool is_empty)
+  explicit Result(QuerySynonym &syn, std::unordered_set<std::string> &results, bool is_empty)
       : syn_(syn), results_(results), is_empty_(is_empty) {};
 
  public:
-  explicit Result(QuerySynonym &syn, std::vector<std::string> &results)
+  explicit Result(QuerySynonym &syn, std::unordered_set<std::string> &results)
       : syn_(syn), results_(results), is_empty_(false) {};
 
   static Result empty(QuerySynonym &);
 
   bool is_empty();
   QuerySynonym get_synonym();
-  std::vector<std::string> get_results_list();
+  std::unordered_set<std::string> get_results();
 };

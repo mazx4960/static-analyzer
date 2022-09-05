@@ -3,9 +3,9 @@
 #include "pkb_interface.h"
 #include "commons/relationship.h"
 
-Result PKBInterface::get(PkbQuery &query) {
-  std::vector<std::string> results_placeholder(0);
-  Synonym synonym_placeholder = Synonym("placeholder");
+Result PKBInterface::get(PKBQuery &query) {
+  std::unordered_set < std::string > results_placeholder;
+  QuerySynonym synonym_placeholder = QuerySynonym("placeholder");
   return Result(synonym_placeholder, results_placeholder);
 }
 

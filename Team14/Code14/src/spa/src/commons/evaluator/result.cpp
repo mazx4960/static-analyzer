@@ -1,7 +1,7 @@
 #include "result.h"
 
 Result Result::empty(QuerySynonym &syn) {
-  std::vector<std::string> empty;
+  std::unordered_set < std::string > empty;
   return Result(syn, empty, true);
 }
 
@@ -13,7 +13,7 @@ QuerySynonym Result::get_synonym() {
   return this->syn_;
 }
 
-std::vector<std::string> Result::get_results_list() {
+std::unordered_set<std::string> Result::get_results() {
   return this->results_;
 }
 

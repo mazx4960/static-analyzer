@@ -1,20 +1,22 @@
 #pragma once
 
-#include "qps/qpl/query_relationship/query_relationship.h"
-#include "qps/qpl/synonym/synonym.h"
+#include "commons/relationship.h"
+#include "qps/pql/query_synonym/query_synonym.h"
 
 /*
  * Object to be sent to PKB for query.
  */
 class PKBQuery {
  private:
+  VariableEntity *entity_type_;
+
   bool has_relationship_ = false;
 
-  QueryRelationship *rs_;
+  Relationship *rs_;
 
   bool has_synonym_ = false;
 
-  Synonym *syn_;
+  QuerySynonym *syn_;
 
   // TODO: add fields for pattern
 
@@ -22,13 +24,16 @@ class PKBQuery {
  public:
   PKBQuery() = default;
 
-  void setRelationship(QueryRelationship &rs);
-  bool hasRelationship();
-  QueryRelationship getRelationship();
+  void setEntityType(VariableEntity &);
+  VariableEntity getEntityType();
 
-  void setSynonym(Synonym &syn);
+  void setRelationship(Relationship &);
+  bool hasRelationship();
+  Relationship getRelationship();
+
+  void setSynonym(QuerySynonym &);
   bool hasSynonym();
-  Synonym getSynonym();
+  QuerySynonym getSynonym();
 
   // TODO: add methods for pattern
 };
