@@ -2,14 +2,14 @@
 
 #include <fstream>
 
-#include "pkb/component_interface/pkb_interface.h"
+#include "pkb/pkb.h"
 
 class SP {
  private:
-  PKB* pkb_;
+  PKB *pkb_;
 
  public:
   SP() = default;
-  void SetPKB(PKB* pkb);
-  void LoadSource(std::ifstream& source_stream);
+  void SetPKB(PKB *pkb);
+  void LoadSource(std::ifstream &source_stream);
 };
