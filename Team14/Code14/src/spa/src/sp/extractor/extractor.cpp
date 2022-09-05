@@ -63,7 +63,6 @@ void RelationshipExtractor::ExtractFollows(SimpleAstNode *node, std::vector<Rela
   }
   Entity *prev_entity = nullptr;
   for (auto *stmt : static_cast<StatementListNode *>(node)->GetStatements()) {
-    std::cout << "Extracting follows relationship for statement " << stmt->GetStmtNo() << std::endl;
     auto stmt_type = stmt->GetStmtType();
     auto stmt_no = stmt->GetStmtNo();
     Entity *cur_entity = new StatementEntity(stmt_type, stmt_no);
@@ -82,7 +81,6 @@ void RelationshipExtractor::ExtractFollows(SimpleAstNode *node, std::vector<Rela
  */
 void RelationshipExtractor::ExtractParent(SimpleAstNode *node, std::vector<Relationship *> &relationships) {
   if (node->GetNodeType() == SimpleNodeType::kProcedure) {
-    std::cout << "Procedure" << std::endl;
     auto *proc = static_cast<ProcedureNode *>(node);
     auto *stmt_list = proc->GetStatementList();
     auto proc_name = proc->GetProcName();
