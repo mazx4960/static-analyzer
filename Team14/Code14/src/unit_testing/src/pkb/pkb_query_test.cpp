@@ -12,7 +12,7 @@ TEST(VarQueryTest, EmptyResult) {
   Result result = manager.getResult(EntityType::kConstant, placeholder);
 
   std::unordered_set<std::string> v_result = result.get_results();
-  std::unordered_set<std::string> empty = Result::empty(placeholder).get_results();
+  std::unordered_set<std::string> empty_result = Result::empty(placeholder).get_results();
 
-  ASSERT_EQ(v_result, empty);
+  ASSERT_EQ(v_result, empty_result);
 }
