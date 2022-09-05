@@ -19,4 +19,6 @@ class UI {
   void SetSP(SP* sp);
   void SetQPS(QPS* qps);
   void Run();
+  void LoadSource();
+  void ExecuteQuery();
 };

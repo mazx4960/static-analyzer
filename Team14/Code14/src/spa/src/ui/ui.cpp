@@ -21,6 +21,11 @@ void UI::Run() {
     spdlog::error("SP or QPS not found! Exiting program...");
     return;
   }
+  LoadSource();
+  ExecuteQuery();
+  // TODO: print results
+}
+void UI::LoadSource() {
   spdlog::info("Reading source file...");
   std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
   std::ifstream source_stream(this->source_file_);
@@ -28,14 +33,13 @@ void UI::Run() {
   std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
   spdlog::info("Source file loaded.");
   spdlog::info("Time taken to load source file: {} ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
-
+}
+void UI::ExecuteQuery() {
   spdlog::info("Reading query file...");
-  begin = std::chrono::steady_clock::now();
+  std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
   std::ifstream query_stream(this->query_file_);
   // TODO: execute query
-  end = std::chrono::steady_clock::now();
+  std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
   spdlog::info("Query executed.");
   spdlog::info("Time taken to execute query: {} ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
-
-  // TODO: print results
 }
