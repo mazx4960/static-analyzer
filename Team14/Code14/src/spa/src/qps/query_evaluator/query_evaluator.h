@@ -6,6 +6,7 @@
 
 #include "evaluation_strategy.h"
 #include "subquery_evaluator.h"
+#include "qps/pql/query/query.h"
 
 class QueryEvaluator {
  private:

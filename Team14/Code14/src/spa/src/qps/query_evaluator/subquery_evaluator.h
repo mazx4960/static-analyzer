@@ -4,12 +4,12 @@
 
 class SubQueryEvaluator {
  private:
-  QueryCall query_call_;
+  QueryClause query_clause_;
 
   EvaluationStrategy *strategy_;
 
  public:
-  explicit SubQueryEvaluator(PKBInterface &pkb_interface, QueryCall &query_call);
+  explicit SubQueryEvaluator(PKBInterface &pkb_interface, QueryClause &query_clause_);
   Result evaluate();
 
 };
