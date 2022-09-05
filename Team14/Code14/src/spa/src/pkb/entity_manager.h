@@ -4,18 +4,21 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <unordered_map>
 
 #include "commons/types.h"
 #include "commons/entity.h"
-#include "pkb/entity/variable.h"
+#include "pkb/entity/simple_entity.h"
 #include "pkb/entity/result.h"
 #include "pkb/entity/pkb_query.h"
 
 class EntityManager {
  private:
-  VariableTable variable_table_;
 
  public:
+  std::unordered_map<EntityType, SimpleEntityTable *> entity_table_map_;
+
   void populate(std::vector<Entity *> &entities);
   Result getResult(EntityType, QuerySynonym);
+  int getCount();
 };

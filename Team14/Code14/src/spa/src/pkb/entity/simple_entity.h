@@ -5,10 +5,27 @@
 #include <string>
 #include <unordered_set>
 
+#include "commons/types.h"
 #include "pkb/entity/result.h"
 
 class SimpleEntityTable {
+ protected:
+  std::unordered_set<std::string> table_;
+
  public:
-  virtual void populate(std::string) = 0;
-  virtual Result getResult(QuerySynonym &) = 0;
+  static SimpleEntityTable *getTable(EntityType);
+
+  void populate(std::string);
+  Result getResult(QuerySynonym &);
+  int getCount();
+};
+
+class VariableTable : public SimpleEntityTable {
+ public:
+  VariableTable() = default;
+};
+
+class ConstantTable : public SimpleEntityTable {
+ public:
+  ConstantTable() = default;
 };

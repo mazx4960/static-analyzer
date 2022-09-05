@@ -7,22 +7,25 @@ void EntityManager::populate(std::vector<Entity *> &entities) {
     EntityType entity_type = entity->GetType();
     std::string entity_name = entity->GetName();
 
-    switch (entity_type) {
-      case EntityType::kVariable: variable_table_.populate(entity_name);
-      case EntityType::kProcedure: // fall-through;
-      case EntityType::kStatement: // fall-through;
-      case EntityType::kConstant: // fall-through;
-      default:continue;
+    if (this->entity_table_map_.find(entity_type) == this->entity_table_map_.end()) {
+      this->entity_table_map_[entity_type] = SimpleEntityTable::getTable(entity_type);
     }
+
+    this->entity_table_map_[entity_type]->populate(entity_name);
   }
 }
 
 Result EntityManager::getResult(EntityType type, QuerySynonym synonym) {
-  switch (type) {
-    case EntityType::kVariable: return variable_table_.getResult(synonym);
-    case EntityType::kProcedure: // fall-through;
-    case EntityType::kStatement: // fall-through;
-    case EntityType::kConstant: // fall-through;
-    default:throw std::invalid_argument("Entity type not implemented yet!");
+  if (this->entity_table_map_.find(type) == this->entity_table_map_.end()) {
+    return Result::empty(synonym);
   }
+  return this->entity_table_map_[type]->getResult(synonym);
+}
+
+int EntityManager::getCount() {
+  int count = 0;
+  for (auto &entity_table : this->entity_table_map_) {
+    count += entity_table.second->getCount();
+  }
+  return count;
 }
