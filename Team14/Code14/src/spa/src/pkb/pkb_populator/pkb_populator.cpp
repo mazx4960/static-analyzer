@@ -3,6 +3,7 @@
 
 #include "pkb/pkb_populator/pkb_populator.h"
 
+#include <unordered_set>
 #include <vector>
 #include <map>
 #include <string>
@@ -14,6 +15,6 @@
 
 EntityManager entity_manager;
 
-std::vector<std::string> *PKBPopulator::populate(const std::vector<Entity> &entities) {
-  return entity_manager.populate(std::move(entities));
+std::unordered_set<std::string> *PKBPopulator::populate(const std::vector<Entity> &entities) {
+  return entity_manager.populate(entities);
 }

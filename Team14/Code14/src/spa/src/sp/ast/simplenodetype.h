@@ -24,12 +24,3 @@ enum class SimpleNodeType {
   kVariable,
   kConstant
 };
-
-enum class SimpleStmtNodeType {
-  kRead,
-  kPrint,
-  kCall,
-  kWhile,
-  kIf,
-  kAssign,
-};
