@@ -33,7 +33,7 @@ TEST(ExtractorTest, TestEntity) {
     ASSERT_EQ(entities[i]->GetType(), expected[i]->GetType());
     ASSERT_EQ(entities[i]->GetName(), expected[i]->GetName());
   }
-};
+}
 
 TEST(ExtractorTest, TestRelationship) {
   auto *v1 = new VariableNode("v1");
@@ -58,4 +58,4 @@ TEST(ExtractorTest, TestRelationship) {
   for (int i = 0; i < relationships.size(); ++i) {
     ASSERT_EQ(relationships[i]->GetType(), expected[i]->GetType());
   }
-};
+}
