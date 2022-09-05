@@ -21,4 +21,7 @@ Result PKB::get(PKBQuery &query) {
 void PKB::save(std::vector<Entity *> &entities) {
   this->entity_manager_->populate(entities);
 }
+int PKB::getCount() {
+  return this->entity_manager_->getCount();
+}
 

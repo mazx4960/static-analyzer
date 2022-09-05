@@ -18,4 +18,5 @@ class PKB {
   PKB();
   Result get(PKBQuery &);
   void save(std::vector<Entity *> &entities);
+  int getCount();
 };
