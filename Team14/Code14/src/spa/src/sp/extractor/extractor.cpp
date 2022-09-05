@@ -30,7 +30,7 @@ std::vector<Entity *> EntityExtractor::ExtractEntity(ProgramNode *program_node) 
       entities.push_back(entity);
     }
   };
-  Traverser::TraverseProgram(program_node, op);
+  Traverser::TraverseNode(program_node, op);
   return entities;
 }
 
@@ -51,7 +51,7 @@ std::vector<Relationship *> RelationshipExtractor::ExtractRelationship(ProgramNo
     std::vector<Relationship *> parent = ExtractParent(node);
     relationships.insert(relationships.end(), parent.begin(), parent.end());
   };
-  Traverser::TraverseProgram(program_node, op);
+  Traverser::TraverseNode(program_node, op);
   return relationships;
 }
 /**
