@@ -6,20 +6,21 @@
 
 #include "evaluation_strategy.h"
 #include "subquery_evaluator.h"
+#include "pkb/entity/pkb_query.h"
 #include "qps/pql/query/query.h"
 
 class QueryEvaluator {
  private:
   Query query_;
 
-  PKBInterface pkb_interface_;
+  PKB *pkb_;
 
   std::vector<Result> partial_results_list_;
 
   std::unordered_map<QueryDeclaration, std::unordered_set<std::string>, QueryDeclarationHashFunction> context_;
 
  public:
-  QueryEvaluator(PKBInterface &pkb_interface, Query &query) : pkb_interface_(pkb_interface), query_(query) {};
+  QueryEvaluator(PKB *pkb, Query &query) : pkb_(pkb), query_(query) {};
 
   Result evaluate();
 };
