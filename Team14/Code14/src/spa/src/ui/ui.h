@@ -1,23 +1,24 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 #pragma once
 
+#include <fstream>
 #include <string>
-#include "sp/component_interface/sp_interface.h"
-#include "qps/component_interface/qps_interface.h"
+
+#include "qps/qps.h"
+#include "sp/sp.h"
 
 class UI {
  private:
-  SPInterface *sp_interface_ = nullptr;
-
-  QPSInterface *qps_interface_ = nullptr;
+  SP* sp_;
+  QPS* qps_;
+  std::string source_file_;
+  std::string query_file_;
 
  public:
-  UI() = default;
-  std::string getSimpleProgramme();
-  std::string evaluateSimpleProgramme(std::string);
-  std::string evaluateQuery(std::string);
-  std::string display(std::string);
-
-  void set_interface(QPSInterface *);
-  void set_interface(SPInterface *);
+  explicit UI(std::string source_file, std::string query_file);
+  void SetSP(SP* sp);
+  void SetQPS(QPS* qps);
+  void Run();
+  void LoadSource();
+  void ExecuteQuery();
 };

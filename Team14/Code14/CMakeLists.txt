@@ -32,6 +32,15 @@ add_subdirectory(src/autotester)
 #add_subdirectory(src/autotester_gui)
 add_subdirectory(src/unit_testing)
 add_subdirectory(src/integration_testing)
+add_subdirectory(src/runner)
+
+Include(FetchContent)
+FetchContent_Declare(
+        spdlog
+        GIT_REPOSITORY https://github.com/gabime/spdlog.git
+        GIT_TAG v1.10.0
+)
+FetchContent_MakeAvailable(spdlog)
 
 include(FetchContent)
 FetchContent_Declare(

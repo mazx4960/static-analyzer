@@ -6,8 +6,9 @@
 
 SimpleAstNode::SimpleAstNode(SimpleNodeType nodeType)
     : nodeType_(nodeType) {}
-SimpleNodeType SimpleAstNode::GetNodeType() {
-  return this->nodeType_;
+
+SimpleNodeType SimpleAstNode::GetNodeType() const {
+  return nodeType_;
 }
 
 ProgramNode::ProgramNode(std::vector<ProcedureNode*> procedures)

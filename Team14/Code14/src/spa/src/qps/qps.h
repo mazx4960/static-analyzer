@@ -4,9 +4,9 @@
 
 class QPS {
  private:
-  PKB *pkb_interface_ = nullptr;
+  PKB *pkb_;
 
  public:
   QPS() = default;
-  void set_interface(PKB *);
+  void SetPKB(PKB *pkb);
 };
