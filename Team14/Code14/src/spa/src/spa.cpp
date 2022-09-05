@@ -1,16 +1,27 @@
+// Copyright 2022 CS3203 Team14. All rights reserved.
+
 #include "spa.h"
 
-SPA::SPA() {
-  /*
-   * Pass interfaces to other components with dependency only.
-   */
-  // QPS only depends on PKB for retrieval.
-  this->qps_interface_.set_interface(&this->pkb_interface_);
+#include "spdlog/spdlog.h"
+#include <utility>
 
-  // SP only depends on PKB for saving.
-  this->sp_interface_.set_interface(&this->pkb_interface_);
+SPA::SPA(std::string source_file, std::string query_file) {
+  // Setup logging
+  spdlog::set_level(spdlog::level::debug);// Set global log level to debug
+  spdlog::info("Initialising SPA...");
 
-  // UI depends on SP and QPS.
-  this->ui_interface_.set_interface(&this->sp_interface_);
-  this->ui_interface_.set_interface(&this->qps_interface_);
+  // Initialize all components.
+  this->ui_ = new UI(std::move(source_file), std::move(query_file));
+  auto *sp = new SP();
+  auto *qps = new QPS();
+  auto *pkb = new PKB();
+
+  // Set up the component dependencies.
+  this->ui_->SetSP(sp);
+  this->ui_->SetQPS(qps);
+  sp->SetPKB(pkb);
+  qps->SetPKB(pkb);
+}
+void SPA::Run() {
+  this->ui_->Run();
 }

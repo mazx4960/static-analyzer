@@ -31,7 +31,7 @@ class SimpleAstNode {
 
  public:
   explicit SimpleAstNode(SimpleNodeType nodeType);
-  SimpleNodeType GetNodeType();
+  [[nodiscard]] SimpleNodeType GetNodeType() const;
   virtual std::vector<SimpleAstNode*> GetChildren() = 0;
 };
 
@@ -157,7 +157,6 @@ class BinaryCondExprNode : public CondExprNode {
  private:
   CondExprNode* firstConditional_;
   CondExprNode* secondConditional_;
-
  public:
   BinaryCondExprNode(SimpleNodeType nodeType, CondExprNode* firstConditional, CondExprNode* secondConditional);
   std::vector<SimpleAstNode*> GetChildren() override;
