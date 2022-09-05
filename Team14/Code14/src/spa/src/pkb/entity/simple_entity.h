@@ -2,12 +2,13 @@
 
 #pragma once
 
+#include <unordered_set>
 #include <vector>
 #include <map>
 #include <string>
 
 class SimpleEntity {
  public:
-  virtual std::vector<std::string>*
+  virtual std::unordered_set<std::string>*
   populate(std::string entity) = 0;
 };
