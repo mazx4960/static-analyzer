@@ -2,6 +2,8 @@
 
 #include <utility>
 
+#include "commons/entity.h"
+
 SimpleAstNode::SimpleAstNode(SimpleNodeType nodeType)
     : nodeType_(nodeType) {}
 SimpleNodeType SimpleAstNode::GetNodeType() {
@@ -11,53 +13,74 @@ SimpleNodeType SimpleAstNode::GetNodeType() {
 ProgramNode::ProgramNode(std::vector<ProcedureNode*> procedures)
     : SimpleAstNode(SimpleNodeType::kProgram),
       procedures_(std::move(procedures)) {}
+std::vector<ProcedureNode*> ProgramNode::GetProcedures() {
+  return this->procedures_;
+}
 
 ProcedureNode::ProcedureNode(std::string procName, StatementListNode* statementList)
     : SimpleAstNode(SimpleNodeType::kProcedure),
       procName_(std::move(procName)),
       statementList_(statementList) {}
+std::string ProcedureNode::GetProcName() const {
+  return this->procName_;
+}
+StatementListNode* ProcedureNode::GetStatementList() {
+  return this->statementList_;
+}
 
 StatementListNode::StatementListNode(std::vector<StatementNode*> statements)
     : SimpleAstNode(SimpleNodeType::kStatementList),
       statements_(std::move(statements)) {}
+std::vector<StatementNode*> StatementListNode::GetStatements() {
+  return this->statements_;
+}
 
-StatementNode::StatementNode(SimpleStmtNodeType stmtType)
+StatementNode::StatementNode(StmtType stmtType)
     : SimpleAstNode(SimpleNodeType::kStatement),
       stmtNo_(0) {
   this->stmtType_ = stmtType;
 }
-int StatementNode::GetStmtNo() {
+int StatementNode::GetStmtNo() const {
   return this->stmtNo_;
 }
-SimpleStmtNodeType StatementNode::GetStmtType() {
+StmtType StatementNode::GetStmtType() {
   return this->stmtType_;
 }
 
 ReadNode::ReadNode(VariableNode* variable)
-    : StatementNode(SimpleStmtNodeType::kRead),
+    : StatementNode(StmtType::kRead),
       variable_(variable) {}
 
 PrintNode::PrintNode(VariableNode* variable)
-    : StatementNode(SimpleStmtNodeType::kPrint),
+    : StatementNode(StmtType::kPrint),
       variable_(variable) {}
 
 CallNode::CallNode(std::string procedureName)
-    : StatementNode(SimpleStmtNodeType::kCall),
+    : StatementNode(StmtType::kCall),
       procedureName_(std::move(procedureName)) {}
 
 WhileNode::WhileNode(CondExprNode* conditional, StatementListNode* statementList)
-    : StatementNode(SimpleStmtNodeType::kWhile),
+    : StatementNode(StmtType::kWhile),
       conditional_(conditional),
       statementList_(statementList) {}
+StatementListNode* WhileNode::GetStatementList() {
+  return this->statementList_;
+}
 
 IfNode::IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, StatementListNode* elseStatementList)
-    : StatementNode(SimpleStmtNodeType::kIf),
+    : StatementNode(StmtType::kIf),
       conditional_(conditional),
       thenStatementList_(thenStatementList),
       elseStatementList_(elseStatementList) {}
+StatementListNode* IfNode::GetThenStatementList() {
+  return this->thenStatementList_;
+}
+StatementListNode* IfNode::GetElseStatementList() {
+  return this->elseStatementList_;
+}
 
 AssignNode::AssignNode(VariableNode* variable, ExprNode* expression)
-    : StatementNode(SimpleStmtNodeType::kAssign),
+    : StatementNode(StmtType::kAssign),
       variable_(variable),
       expression_(expression) {}
 
@@ -131,7 +154,13 @@ ReferenceNode::ReferenceNode(SimpleNodeType nodeType)
 VariableNode::VariableNode(std::string variableName)
     : ReferenceNode(SimpleNodeType::kVariable),
       variableName_(std::move(variableName)) {}
+std::string VariableNode::GetVariableName() {
+  return this->variableName_;
+}
 
 ConstantNode::ConstantNode(int value)
     : ReferenceNode(SimpleNodeType::kConstant),
       value_(value) {}
+int ConstantNode::GetValue() const {
+  return this->value_;
+}

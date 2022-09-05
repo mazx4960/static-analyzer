@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "commons/entity.h"
 #include "simplenodetype.h"
 
 class SimpleAstNode;
@@ -39,6 +40,7 @@ class ProgramNode : public SimpleAstNode {
 
  public:
   explicit ProgramNode(std::vector<ProcedureNode*> procedures);
+  std::vector<ProcedureNode*> GetProcedures();
 };
 
 class ProcedureNode : public SimpleAstNode {
@@ -48,6 +50,8 @@ class ProcedureNode : public SimpleAstNode {
 
  public:
   ProcedureNode(std::string procName, StatementListNode* statementList);
+  [[nodiscard]] std::string GetProcName() const;
+  StatementListNode* GetStatementList();
 };
 
 class StatementListNode : public SimpleAstNode {
@@ -56,17 +60,18 @@ class StatementListNode : public SimpleAstNode {
 
  public:
   explicit StatementListNode(std::vector<StatementNode*> statements);
+  std::vector<StatementNode*> GetStatements();
 };
 
 class StatementNode : public SimpleAstNode {
  private:
   int stmtNo_;
-  SimpleStmtNodeType stmtType_;
+  StmtType stmtType_;
 
  public:
-  explicit StatementNode(SimpleStmtNodeType stmtType);
-  int GetStmtNo();
-  SimpleStmtNodeType GetStmtType();
+  explicit StatementNode(StmtType stmtType);
+  [[nodiscard]] int GetStmtNo() const;
+  StmtType GetStmtType();
 };
 
 class ReadNode : public StatementNode {
@@ -100,6 +105,7 @@ class WhileNode : public StatementNode {
 
  public:
   WhileNode(CondExprNode* conditional, StatementListNode* statementList);
+  StatementListNode* GetStatementList();
 };
 
 class IfNode : public StatementNode {
@@ -110,6 +116,8 @@ class IfNode : public StatementNode {
 
  public:
   IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, StatementListNode* elseStatementList);
+  StatementListNode* GetThenStatementList();
+  StatementListNode* GetElseStatementList();
 };
 
 class AssignNode : public StatementNode {
@@ -243,6 +251,7 @@ class VariableNode : public ReferenceNode {
 
  public:
   explicit VariableNode(std::string variableName);
+  std::string GetVariableName();
 };
 
 class ConstantNode : public ReferenceNode {
@@ -251,4 +260,5 @@ class ConstantNode : public ReferenceNode {
 
  public:
   explicit ConstantNode(int value);
+  [[nodiscard]] int GetValue() const;
 };
