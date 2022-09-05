@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-#include "pkb/public/pkb.h"
+#include "pkb/pkb.h"
 
 class SP {
  private:

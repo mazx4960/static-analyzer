@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pkb/public/pkb.h"
+#include "pkb/pkb.h"
 
 class QPS {
  private:
