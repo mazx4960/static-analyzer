@@ -15,7 +15,7 @@ Result PKB::get(PKBQuery &query) {
     case EntityType::kProcedure: // fall-through;
     case EntityType::kStatement: // fall-through;
     case EntityType::kConstant: // fall-through;
-    default:throw std::invalid_argument("Entity type not implemented yet!");
+    default: return Result::empty(query_synonym);
   }
 }
 void PKB::save(std::vector<Entity *> &entities) {
