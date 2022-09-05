@@ -4,17 +4,18 @@
 #include <string>
 #include <unordered_set>
 
-#include "commons/relationship.h"
 #include "pkb.h"
+#include "entity_manager.h"
+#include "commons/relationship.h"
 #include "pkb/entity/pkb_query.h"
 #include "pkb/entity/result.h"
-#include "pkb/pkb_populator/pkb_populator.h"
 
 class PKB {
  private:
   EntityManager *entity_manager_;
+
  public:
   PKB();
   Result get(PKBQuery &);
-  void Save(std::vector<Entity *> &entities);
+  void save(std::vector<Entity *> &entities);
 };

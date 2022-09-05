@@ -9,13 +9,13 @@
 #include "commons/entity.h"
 #include "pkb/entity/variable.h"
 #include "pkb/entity/result.h"
-#include "pkb_query.h"
+#include "pkb/entity/pkb_query.h"
 
 class EntityManager {
  private:
   Variable v_;
 
  public:
-  void populate(const std::vector<Entity *> &entities);
+  void populate(std::vector<Entity *> &entities);
   Result getResult(EntityType, QuerySynonym);
 };

@@ -1,9 +1,9 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "query_lexer.h"
-#include "query_lexer_exceptions.h"
+#include "commons/lexer/lexer_exceptions.h"
 
-Token* QueryLexer::next_token() {
+Token *QueryLexer::next_token() {
   this->ignore_whitespace();
   if (this->source_stream_->eof()) {
     return nullptr;

@@ -1,8 +1,9 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "pkb.h"
+
 #include "commons/relationship.h"
-#include "pkb/entity/entity_manager.h"
+#include "entity_manager.h"
 
 PKB::PKB() {
   this->entity_manager_ = new EntityManager();
@@ -17,7 +18,7 @@ Result PKB::get(PKBQuery &query) {
     default:throw std::invalid_argument("Entity type not implemented yet!");
   }
 }
-void PKB::Save(std::vector<Entity *> &entities) {
+void PKB::save(std::vector<Entity *> &entities) {
   this->entity_manager_->populate(entities);
 }
 
