@@ -12,6 +12,7 @@ TEST(PKBSaveTest, VariableTest) {
   std::vector<std::string> entity_names({"a", "b", "c", "d", "e", "f"});
   std::vector<Entity *> entities;
   int length = entity_names.size();
+  entities.reserve(length);
 
   for (int i = 0; i < length; i++) {
     entities.push_back(new VariableEntity(entity_names[i]));
@@ -26,6 +27,7 @@ TEST(PKBSaveTest, ConstTest) {
   std::vector<std::string> entity_names({"a", "b", "c", "d", "e", "f"});
   std::vector<Entity *> entities;
   int length = entity_names.size();
+  entities.reserve(length);
 
   for (int i = 0; i < length; i++) {
     entities.push_back(new ConstantEntity(entity_names[i]));
@@ -41,6 +43,8 @@ TEST(PKBSaveTest, ConstantAndVariableTest) {
   std::vector<std::string> c_entity_names({"ee", "ff", "gg"});
   std::vector<Entity *> v_entities;
   std::vector<Entity *> c_entities;
+  v_entities.reserve(v_entity_names.size());
+  c_entities.reserve(c_entity_names.size());
 
   for (const auto &s : v_entity_names) {
     v_entities.push_back(new VariableEntity(s));
@@ -61,6 +65,7 @@ TEST(PKBSaveTest, MultiSave) {
   std::vector<std::string> entity_names({"a", "b", "c", "d", "e", "f"});
   std::vector<Entity *> entities;
   int length = entity_names.size();
+  entities.reserve(length);
 
   for (int i = 0; i < length; i++) {
     entities.push_back(new VariableEntity(entity_names[i]));
