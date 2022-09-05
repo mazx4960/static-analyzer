@@ -1,18 +1,17 @@
 #pragma once
 
 #include "pkb/pkb.h"
-#include "qps/query_parser/query_lexer.h"
 #include "qps/query_evaluator/query_evaluator.h"
+#include "qps/query_parser/query_lexer.h"
+#include "qps/query_parser/query_parser.h"
 
 class QPS {
  private:
   PKB *pkb_;
 
-  QueryLexer *query_lexer_;
-
-  QueryEvaluator *query_evaluator_;
-
  public:
   QPS() = default;
   void SetPKB(PKB *pkb);
+  static Query parse(std::ifstream *);
+  Result evaluate(Query &query);
 };
