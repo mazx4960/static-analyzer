@@ -10,11 +10,11 @@ Lexer::Lexer(std::ifstream *s) {
 }
 
 char Lexer::peek() {
-  return char(source_stream_->peek());
+  return static_cast<char>(source_stream_->peek());
 }
 char Lexer::advance() {
   column_number_++;
-  return char(source_stream_->get());
+  return static_cast<char>(source_stream_->get());
 }
 /*
  * Skips whitespace characters.
