@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "commons/lexer/token.h"
+#include <algorithm>
 #include "pkb/pkb.h"
 #include "qps/query_evaluator/query_evaluator.h"
 
@@ -23,9 +23,7 @@ TEST(QETest, VariableGetTest) {
 
   QueryEvaluator query_evaluator = QueryEvaluator(pkb, query);
   Result result = query_evaluator.evaluate();
-  std::unordered_set<std::string> result_set = result.get_results_set();
-  std::vector<std::string> result_vector(result_set.begin(), result_set.end());
-  std::sort(result_vector.begin(), result_vector.end());
+  std::vector<std::string> results_vector = result.get_sorted_results_list();
 
-  ASSERT_EQ(result_vector, std::vector<std::string>({"x", "y", "z"}));
+  ASSERT_EQ(results_vector, std::vector<std::string>({"x", "y", "z"}));
 }

@@ -5,9 +5,8 @@
 #include <iostream>
 #include <utility>
 
-#include "commons/reader.h"
-#include "spdlog/spdlog.h"
 #include "qps/query_parser/query_parser.h"
+#include "spdlog/spdlog.h"
 
 UI::UI(std::string source_file, std::string query_file)
     : source_file_(std::move(source_file)),
@@ -51,11 +50,7 @@ void UI::ExecuteQuery() {
                std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
 }
 void UI::DisplayResults() {
-  std::unordered_set<std::string> results_set = this->final_result_->get_results();
-  std::vector<std::string> results_list;
-  results_list.insert(results_list.end(), results_set.begin(), results_set.end());
-  std::sort(results_list.begin(), results_list.end());
-
+  std::vector<std::string> results_list = this->final_result_->get_sorted_results_list();
   std::cout << "BEGIN QUERY RESULTS" << std::endl;
   for (std::string &result_str : results_list) {
     std::cout << result_str << " ";
