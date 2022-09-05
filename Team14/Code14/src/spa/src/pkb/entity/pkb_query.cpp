@@ -1,12 +1,20 @@
 #include "pkb_query.h"
 
 /*
- * Setters
+ * Factory
  */
-void PKBQuery::setEntityType(VariableEntity &entity_type) {
-  this->entity_type_ = &entity_type;
+PKBQuery *PKBQuery::getQuery(Entity &entity) {
+  switch (entity.GetType()) {
+    case EntityType::kProcedure:return new PKBProcedureQuery();
+    case EntityType::kStatement:return new PKBStatementQuery();
+    case EntityType::kVariable:return new PKBVariableQuery();
+    case EntityType::kConstant:return new PKBConstantQuery();
+  }
 }
 
+/*
+ * Setters
+ */
 void PKBQuery::setRelationship(Relationship &rs) {
   this->has_relationship_ = true;
   this->rs_ = &rs;
@@ -31,8 +39,8 @@ bool PKBQuery::hasSynonym() const {
 /*
  * Getters
  */
-VariableEntity PKBQuery::getEntityType() const {
-  return *this->entity_type_;
+EntityType PKBQuery::getEntityType() const {
+  return this->entity_type_;
 }
 
 Relationship PKBQuery::getRelationship() const {

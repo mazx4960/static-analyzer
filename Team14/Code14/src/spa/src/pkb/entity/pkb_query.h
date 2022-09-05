@@ -8,7 +8,7 @@
  */
 class PKBQuery {
  private:
-  VariableEntity *entity_type_;
+  EntityType entity_type_;
 
   bool has_relationship_ = false;
 
@@ -18,27 +18,49 @@ class PKBQuery {
 
   QuerySynonym *syn_;
 
-  // TODO: add fields for pattern
+  // TODO(howtoosee): add fields for pattern
 
+ protected:
+  explicit PKBQuery(Entity &entity) : entity_type_(entity.GetType()) {};
+  explicit PKBQuery(EntityType entity_type) : entity_type_(entity_type) {};
 
  public:
-  PKBQuery() = default;
+  static PKBQuery *getQuery(Entity &);
 
-  void setEntityType(VariableEntity &);
   void setRelationship(Relationship &);
   void setSynonym(QuerySynonym &);
 
-  bool hasRelationship() const;
-  bool hasSynonym() const;
+  [[nodiscard]] bool hasRelationship() const;
+  [[nodiscard]] bool hasSynonym() const;
 
-  VariableEntity getEntityType() const;
-  Relationship getRelationship() const;
-  QuerySynonym getSynonym() const;
-
+  [[nodiscard]] EntityType getEntityType() const;
+  [[nodiscard]] Relationship getRelationship() const;
+  [[nodiscard]] QuerySynonym getSynonym() const;
 
   // TODO(howtoosee): add methods for pattern
 };
 
-class PkbVariableQuery : public PKBQuery {};
+class PKBProcedureQuery : public PKBQuery {
+ public:
+  explicit PKBProcedureQuery() : PKBQuery(EntityType::kProcedure) {};
+  explicit PKBProcedureQuery(Entity &entity) : PKBQuery(entity) {};
+};
 
-class PkbAssignStmtQuery : public PKBQuery {};
+class PKBVariableQuery : public PKBQuery {
+ public:
+  explicit PKBVariableQuery() : PKBQuery(EntityType::kVariable) {};
+  explicit PKBVariableQuery(Entity &entity) : PKBQuery(entity) {};
+};
+
+class PKBStatementQuery : public PKBQuery {
+ public:
+  explicit PKBStatementQuery() : PKBQuery(EntityType::kStatement) {};
+  explicit PKBStatementQuery(Entity &entity) : PKBQuery(entity) {};
+
+};
+
+class PKBConstantQuery : public PKBQuery {
+ public:
+  explicit PKBConstantQuery() : PKBQuery(EntityType::kConstant) {};
+  explicit PKBConstantQuery(Entity &entity) : PKBQuery(entity) {};
+};

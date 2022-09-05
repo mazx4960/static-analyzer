@@ -18,8 +18,7 @@ Result QueryEvaluator::evaluate() {
     QuerySynonym declaration_synonym = declaration.getSynonym();
     VariableEntity variable_entity = declaration.getEntity();
 
-    PKBQuery pkb_query;
-    pkb_query.setEntityType(variable_entity);
+    PKBQuery pkb_query = *PKBQuery::getQuery(variable_entity);
     pkb_query.setSynonym(declaration_synonym);
 
     Result query_result = this->pkb_interface_.get(pkb_query);
