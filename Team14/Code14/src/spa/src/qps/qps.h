@@ -1,12 +1,12 @@
 #pragma once
 
-#include "pkb/public/pkb_interface.h"
+#include "pkb/public/pkb.h"
 
 class QPS {
  private:
-  PKBInterface *pkb_interface_ = nullptr;
+  PKB *pkb_interface_ = nullptr;
 
  public:
   QPS() = default;
-  void set_interface(PKBInterface *);
+  void set_interface(PKB *);
 };

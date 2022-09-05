@@ -2,7 +2,7 @@
 #pragma once
 
 #include "commons/component_interface/interface.h"
-#include "pkb/public/pkb_interface.h"
+#include "pkb/public/pkb.h"
 #include "qps/qps.h"
 
 class QPSInterface : public Interface {
@@ -10,5 +10,5 @@ class QPSInterface : public Interface {
   QPS component_;
 
  public:
-  void set_interface(PKBInterface *);
+  void set_interface(PKB *);
 };

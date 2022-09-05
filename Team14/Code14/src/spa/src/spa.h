@@ -2,8 +2,7 @@
 #pragma once
 
 #include "commons/component_interface/interface.h"
-#include "pkb/pkb.h"
-#include "pkb/public/pkb_interface.h"
+#include "pkb/public/pkb.h"
 #include "qps/qps.h"
 #include "qps/component_interface/qps_interface.h"
 #include "sp/sp.h"
@@ -13,7 +12,7 @@
 
 class SPA {
  private:
-  PKBInterface pkb_interface_ = PKBInterface();
+  PKB pkb_interface_ = PKB();
 
   QPSInterface qps_interface_ = QPSInterface();
 

@@ -1,13 +1,13 @@
 #pragma once
 
-#include "pkb/public/pkb_interface.h"
+#include "pkb/public/pkb.h"
 
 class SP {
  private:
-  PKBInterface *pkb_interface_ = nullptr;
+  PKB *pkb_interface_ = nullptr;
 
  public:
   SP() = default;
-  virtual void set_interface(PKBInterface *);
+  virtual void set_interface(PKB *);
 
 };

@@ -5,15 +5,12 @@
 #include <unordered_set>
 
 #include "commons/component_interface/interface.h"
-#include "pkb/pkb.h"
+#include "pkb/public/pkb.h"
 #include "pkb/entity/result.h"
 #include "pkb/entity/pkb_query.h"
 #include "commons/relationship.h"
 
-class PKBInterface : public Interface {
- private:
-  PKB component_;
-
+class PKB : public Interface {
  public:
   Result get(PKBQuery &);
   bool save(Relationship &);
