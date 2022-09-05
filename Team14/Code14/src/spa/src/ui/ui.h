@@ -18,6 +18,8 @@ class UI {
 
   std::string query_file_;
 
+  Result *final_result_;
+
  public:
   explicit UI(std::string source_file, std::string query_file);
   void SetSP(SP *sp);
@@ -25,5 +27,5 @@ class UI {
   void Run();
   void LoadSource();
   void ExecuteQuery();
-  void PrintResult(Result &);
+  void DisplayResults();
 };

@@ -2,6 +2,7 @@
 
 #include "ui.h"
 
+#include <iostream>
 #include <utility>
 
 #include "commons/reader.h"
@@ -24,7 +25,7 @@ void UI::Run() {
   }
   LoadSource();
   ExecuteQuery();
-  // TODO: print results
+  DisplayResults();
 }
 void UI::LoadSource() {
   spdlog::info("Reading source file...");
@@ -43,16 +44,14 @@ void UI::ExecuteQuery() {
 
   Query parsed_query = QueryParser::parse(&query_stream);
   Result result = this->qps_->evaluate(parsed_query);
-  this->PrintResult(result);
-
+  this->final_result_ = std::move(&result);
   std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
   spdlog::info("Query executed.");
   spdlog::info("Time taken to execute query: {} ms",
                std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
 }
-
-void UI::PrintResult(Result &result) {
-  std::unordered_set<std::string> results_set = result.get_results();
+void UI::DisplayResults() {
+  std::unordered_set<std::string> results_set = this->final_result_->get_results();
   std::vector<std::string> results_list;
   results_list.insert(results_list.end(), results_set.begin(), results_set.end());
   std::sort(results_list.begin(), results_list.end());
