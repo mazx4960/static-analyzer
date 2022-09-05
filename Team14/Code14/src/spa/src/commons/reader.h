@@ -4,7 +4,7 @@
 
 #include <fstream>
 
-class SourceReader {
+class StreamReader {
  public:
-  static std::ifstream get_source_stream(const std::string& filename);
+  static std::ifstream GetStreamFromFile(const std::string& filename);
 };

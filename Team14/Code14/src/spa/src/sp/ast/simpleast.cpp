@@ -4,6 +4,9 @@
 
 SimpleAstNode::SimpleAstNode(SimpleNodeType nodeType)
     : nodeType_(nodeType) {}
+SimpleNodeType SimpleAstNode::GetNodeType() {
+  return this->nodeType_;
+}
 
 ProgramNode::ProgramNode(std::vector<ProcedureNode*> procedures)
     : SimpleAstNode(SimpleNodeType::kProgram),
@@ -18,35 +21,43 @@ StatementListNode::StatementListNode(std::vector<StatementNode*> statements)
     : SimpleAstNode(SimpleNodeType::kStatementList),
       statements_(std::move(statements)) {}
 
-StatementNode::StatementNode(SimpleNodeType nodeType)
-    : SimpleAstNode(nodeType),
-      stmtNo_(0) {}
+StatementNode::StatementNode(SimpleStmtNodeType stmtType)
+    : SimpleAstNode(SimpleNodeType::kStatement),
+      stmtNo_(0) {
+  this->stmtType_ = stmtType;
+}
+int StatementNode::GetStmtNo() {
+  return this->stmtNo_;
+}
+SimpleStmtNodeType StatementNode::GetStmtType() {
+  return this->stmtType_;
+}
 
 ReadNode::ReadNode(VariableNode* variable)
-    : StatementNode(SimpleNodeType::kRead),
+    : StatementNode(SimpleStmtNodeType::kRead),
       variable_(variable) {}
 
 PrintNode::PrintNode(VariableNode* variable)
-    : StatementNode(SimpleNodeType::kPrint),
+    : StatementNode(SimpleStmtNodeType::kPrint),
       variable_(variable) {}
 
 CallNode::CallNode(std::string procedureName)
-    : StatementNode(SimpleNodeType::kCall),
+    : StatementNode(SimpleStmtNodeType::kCall),
       procedureName_(std::move(procedureName)) {}
 
 WhileNode::WhileNode(CondExprNode* conditional, StatementListNode* statementList)
-    : StatementNode(SimpleNodeType::kWhile),
+    : StatementNode(SimpleStmtNodeType::kWhile),
       conditional_(conditional),
       statementList_(statementList) {}
 
 IfNode::IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, StatementListNode* elseStatementList)
-    : StatementNode(SimpleNodeType::kIf),
+    : StatementNode(SimpleStmtNodeType::kIf),
       conditional_(conditional),
       thenStatementList_(thenStatementList),
       elseStatementList_(elseStatementList) {}
 
 AssignNode::AssignNode(VariableNode* variable, ExprNode* expression)
-    : StatementNode(SimpleNodeType::kAssign),
+    : StatementNode(SimpleStmtNodeType::kAssign),
       variable_(variable),
       expression_(expression) {}
 
@@ -57,15 +68,16 @@ NotExprNode::NotExprNode(CondExprNode* negatedConditional)
     : CondExprNode(SimpleNodeType::kNot),
       negatedConditional_(negatedConditional) {}
 
-AndExprNode::AndExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional)
-    : CondExprNode(SimpleNodeType::kAnd),
+BinaryCondExprNode::BinaryCondExprNode(SimpleNodeType nodeType, CondExprNode* firstConditional, CondExprNode* secondConditional)
+    : CondExprNode(nodeType),
       firstConditional_(firstConditional),
       secondConditional_(secondConditional) {}
 
+AndExprNode::AndExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional)
+    : BinaryCondExprNode(SimpleNodeType::kAnd, firstConditional, secondConditional) {}
+
 OrExprNode::OrExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional)
-    : CondExprNode(SimpleNodeType::kOr),
-      firstConditional_(firstConditional),
-      secondConditional_(secondConditional) {}
+    : BinaryCondExprNode(SimpleNodeType::kOr, firstConditional, secondConditional) {}
 
 RelExprNode::RelExprNode(SimpleNodeType nodeType, RelFactorNode* leftFactor, RelFactorNode* rightFactor)
     : CondExprNode(nodeType),

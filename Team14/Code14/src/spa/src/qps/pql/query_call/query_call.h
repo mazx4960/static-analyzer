@@ -19,15 +19,13 @@ class QueryCall {
   QueryDeclaration query_declaration_;
 
   std::vector<QueryClause> clause_vector_;
-
+ public:
   QueryCall(CallType call_type, QueryDeclaration query_declaration, std::vector<QueryClause> clause_vector)
       : type_(call_type), query_declaration_(std::move(query_declaration)), clause_vector_(std::move(clause_vector)) {};
 
- public:
   CallType getType();
   QueryDeclaration getDeclaration();
   std::vector<QueryClause> getClauseVector();
-
 };
 
 class SelectCall : public QueryCall {

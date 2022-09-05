@@ -4,12 +4,8 @@ enum class SimpleNodeType {
   kProgram,
   kProcedure,
   kStatementList,
-  kRead,
-  kPrint,
-  kCall,
-  kWhile,
-  kIf,
-  kAssign,
+  kStatement,
+  // TODO: refactor these start
   kNot,
   kAnd,
   kOr,
@@ -24,6 +20,16 @@ enum class SimpleNodeType {
   kTimes,
   kDiv,
   kMod,
+  // TODO: refactor these end
   kVariable,
   kConstant
+};
+
+enum class SimpleStmtNodeType {
+  kRead,
+  kPrint,
+  kCall,
+  kWhile,
+  kIf,
+  kAssign,
 };

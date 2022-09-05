@@ -30,6 +30,7 @@ class SimpleAstNode {
 
  public:
   explicit SimpleAstNode(SimpleNodeType nodeType);
+  SimpleNodeType GetNodeType();
 };
 
 class ProgramNode : public SimpleAstNode {
@@ -60,9 +61,12 @@ class StatementListNode : public SimpleAstNode {
 class StatementNode : public SimpleAstNode {
  private:
   int stmtNo_;
+  SimpleStmtNodeType stmtType_;
 
  public:
-  explicit StatementNode(SimpleNodeType nodeType);
+  explicit StatementNode(SimpleStmtNodeType stmtType);
+  int GetStmtNo();
+  SimpleStmtNodeType GetStmtType();
 };
 
 class ReadNode : public StatementNode {
@@ -130,20 +134,21 @@ class NotExprNode : public CondExprNode {
   explicit NotExprNode(CondExprNode* negatedConditional);
 };
 
-class AndExprNode : public CondExprNode {
+class BinaryCondExprNode : public CondExprNode {
  private:
   CondExprNode* firstConditional_;
   CondExprNode* secondConditional_;
 
  public:
+  BinaryCondExprNode(SimpleNodeType nodeType, CondExprNode* firstConditional, CondExprNode* secondConditional);
+};
+
+class AndExprNode : public BinaryCondExprNode {
+ public:
   AndExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional);
 };
 
-class OrExprNode : public CondExprNode {
- private:
-  CondExprNode* firstConditional_;
-  CondExprNode* secondConditional_;
-
+class OrExprNode : public BinaryCondExprNode {
  public:
   OrExprNode(CondExprNode* firstConditional, CondExprNode* secondConditional);
 };
