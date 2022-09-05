@@ -4,6 +4,6 @@
 
 EntityManager entity_manager;
 
-void PKBPopulator::populate(const std::vector<Entity> &entities) {
+void PKBPopulator::populate(const std::vector<Entity *> &entities) {
   entity_manager.populate(entities);
 }

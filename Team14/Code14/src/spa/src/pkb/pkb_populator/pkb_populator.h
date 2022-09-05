@@ -10,5 +10,5 @@
 
 class PKBPopulator {
  public:
-  static void populate(const std::vector<Entity> &entities);
+  static void populate(const std::vector<Entity *> &entities);
 };
