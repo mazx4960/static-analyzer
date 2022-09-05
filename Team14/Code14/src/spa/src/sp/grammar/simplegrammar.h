@@ -5,7 +5,7 @@
 #include "latechoicegrammar.h"
 #include "listgrammar.h"
 #include "recursivegrammar.h"
-#include "sp/ast/node/simpleast.h"
+#include "sp/ast/simpleast.h"
 
 class ProgramGrammarRule : public ListGrammarRule {
  private:

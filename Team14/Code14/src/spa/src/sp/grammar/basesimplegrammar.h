@@ -1,7 +1,7 @@
 #pragma once
 
-#include "sp/ast/node/simpleast.h"
 #include "commons/lexer/token.h"
+#include "sp/ast/simpleast.h"
 
 using MergeFunction = SimpleAstNode*(*)(SimpleAstNode*, SimpleAstNode*);
 using TokenIterator = std::vector<Token*>::iterator;
