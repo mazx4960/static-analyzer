@@ -8,11 +8,22 @@
 #include "qps/pql/query_synonym/query_synonym.h"
 
 class QueryDeclaration {
+ private:
+  VariableEntity entity_;
+
+  QuerySynonym synonym_;
+
  public:
   QueryDeclaration(VariableEntity entity,
                    QuerySynonym synonym) : entity_(std::move(entity)), synonym_(std::move(synonym)) {};
-  VariableEntity entity_;
-  QuerySynonym synonym_;
-  VariableEntity getEntity() const;
-  QuerySynonym getSynonym() const;
+
+  [[nodiscard]] VariableEntity getEntity() const;
+  [[nodiscard]] QuerySynonym getSynonym() const;
+
+  bool operator==(const QueryDeclaration &other) const;
+};
+
+class QueryDeclarationHashFunction {
+ public:
+  size_t operator()(const QueryDeclaration &) const;
 };

@@ -10,3 +10,6 @@ QuerySynonym::QuerySynonym(std::string synonym) {
 std::string QuerySynonym::getSynonym() const {
   return this->synonym_;
 }
+bool QuerySynonym::operator==(const QuerySynonym &other) const {
+  return this->synonym_ == other.getSynonym();
+}
