@@ -2,18 +2,18 @@
 
 #include <unordered_set>
 #include "pkb/component_interface/pkb_interface.h"
-#include "qps/pql/query/query.h"
+#include "qps/pql/query_clause/query_clause.h"
 
 class EvaluationStrategy {
  protected:
   PKBInterface pkb_interface_;
 
-  QueryCall query_call_;
+  QueryClause query_call_;
 
-  EvaluationStrategy(PKBInterface &pkb_interface, QueryCall &query_call)
-      : pkb_interface_(pkb_interface), query_call_(query_call) {};
+  EvaluationStrategy(PKBInterface &pkb_interface, QueryClause &query_clause)
+      : pkb_interface_(pkb_interface), query_call_(query_clause) {};
  public:
-  static EvaluationStrategy *getStrategy(PKBInterface &, QueryCall &);
+  static EvaluationStrategy *getStrategy(PKBInterface &, QueryClause &);
   virtual Result evaluate() = 0;
 };
 
@@ -22,7 +22,14 @@ class EvaluationStrategy {
  */
 class SuchThatStrategy : public EvaluationStrategy {
  public:
-  SuchThatStrategy(PKBInterface &pkb_interface, QueryCall &query_call) : EvaluationStrategy(pkb_interface,
-                                                                                            query_call) {};
+  SuchThatStrategy(PKBInterface &pkb_interface, QueryClause &query_clause) : EvaluationStrategy(pkb_interface,
+                                                                                                query_clause) {};
+  Result evaluate() override;
+};
+
+class PatternStrategy : public EvaluationStrategy {
+ public:
+  PatternStrategy(PKBInterface &pkb_interface, QueryClause &query_clause) : EvaluationStrategy(pkb_interface,
+                                                                                               query_clause) {};
   Result evaluate() override;
 };
