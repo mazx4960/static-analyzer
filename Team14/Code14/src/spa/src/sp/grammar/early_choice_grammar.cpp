@@ -1,4 +1,5 @@
-#include "earlychoicegrammar.h"
+#include "early_choice_grammar.h"
+
 #include "commons/parser/parser_exceptions.h"
 
 EarlyChoiceGrammarRule::EarlyChoiceGrammarRule(std::vector<ConditionalRule> conditionalRules)
