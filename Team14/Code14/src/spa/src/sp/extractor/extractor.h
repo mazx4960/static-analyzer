@@ -4,24 +4,18 @@
 
 #include "commons/entity.h"
 #include "commons/relationship.h"
-#include "sp/ast/simpleast.h"
+#include "sp/ast/simple_ast.h"
 
-class Extractor {
+class EntityExtractor {
  public:
-  virtual std::vector<Entity *> ExtractEntity(ProgramNode *program_node){};
-  virtual std::vector<Relationship *> ExtractRelationship(ProgramNode *program_node){};
+  static std::vector<Entity *> Extract(SimpleAstNode *program_node);
 };
 
-class EntityExtractor : public Extractor {
+class RelationshipExtractor {
  public:
-  std::vector<Entity *> ExtractEntity(ProgramNode *program_node) override;
-};
-
-class RelationshipExtractor : public Extractor {
- public:
-  std::vector<Relationship *> ExtractRelationship(ProgramNode *program_node) override;
-  static std::vector<Relationship *> ExtractFollows(StatementListNode *node);
-  static std::vector<Relationship *> ExtractParent(SimpleAstNode *node);
-  static std::vector<Relationship *> ExtractParentHelper(Entity *parent, StatementListNode *node);
+  static std::vector<Relationship *> Extract(SimpleAstNode *program_node);
+  static void ExtractFollows(SimpleAstNode *node, std::vector<Relationship *> &relationships);
+  static void ExtractParent(SimpleAstNode *node, std::vector<Relationship *> &relationships);
+  static void ExtractParentHelper(Entity *parent, StatementListNode *node, std::vector<Relationship *> &relationships);
   static std::vector<Entity *> ExtractChildren(StatementListNode *node);
 };

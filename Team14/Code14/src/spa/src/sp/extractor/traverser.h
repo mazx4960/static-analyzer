@@ -4,7 +4,7 @@
 
 #include <functional>
 
-#include "sp/ast/simpleast.h"
+#include "sp/ast/simple_ast.h"
 
 class Traverser {
  private:

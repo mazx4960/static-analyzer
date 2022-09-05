@@ -1,9 +1,9 @@
-#include "listgrammar.h"
+#include "list_grammar.h"
 
 ListGrammarRule::ListGrammarRule(GrammarRuleProducer* childRuleProducer)
     : child_rule_producer_(childRuleProducer) {}
 
-SimpleAstNode *ListGrammarRule::parseNode(TokenIterator &tokenStream) {
+SimpleAstNode* ListGrammarRule::parseNode(TokenIterator& tokenStream) {
   std::vector<SimpleAstNode*> children{};
   SimpleGrammarRule* child_rule = child_rule_producer_->produce();
   do {

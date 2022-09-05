@@ -1,16 +1,17 @@
 #pragma once
 
-#include "compositegrammar.h"
-#include "earlychoicegrammar.h"
-#include "latechoicegrammar.h"
-#include "listgrammar.h"
-#include "recursivegrammar.h"
-#include "sp/ast/simpleast.h"
+#include "composite_grammar.h"
+#include "early_choice_grammar.h"
+#include "late_choice_grammar.h"
+#include "list_grammar.h"
+#include "recursive_grammar.h"
+#include "sp/ast/simple_ast.h"
 
 class ProgramGrammarRule : public ListGrammarRule {
  private:
   bool shouldStop(TokenIterator token_stream) override;
   ProgramNode* assembleNode(std::vector<SimpleAstNode*> children) override;
+
  public:
   ProgramGrammarRule();
 };
@@ -27,6 +28,7 @@ class StatementListGrammarRule : public ListGrammarRule {
  private:
   bool shouldStop(TokenIterator token_stream) override;
   StatementListNode* assembleNode(std::vector<SimpleAstNode*> children) override;
+
  public:
   StatementListGrammarRule();
 };
@@ -47,6 +49,7 @@ class ReadGrammarRule : public CompositeGrammarRule {
 class PrintGrammarRule : public CompositeGrammarRule {
  private:
   PrintNode* assembleNode(std::vector<SimpleAstNode*>) override;
+
  public:
   PrintGrammarRule();
 };
@@ -54,6 +57,7 @@ class PrintGrammarRule : public CompositeGrammarRule {
 class CallGrammarRule : public CompositeGrammarRule {
  private:
   CallNode* assembleNode(std::vector<SimpleAstNode*>) override;
+
  public:
   CallGrammarRule();
 };
@@ -61,6 +65,7 @@ class CallGrammarRule : public CompositeGrammarRule {
 class WhileGrammarRule : public CompositeGrammarRule {
  private:
   WhileNode* assembleNode(std::vector<SimpleAstNode*>) override;
+
  public:
   WhileGrammarRule();
 };
@@ -68,6 +73,7 @@ class WhileGrammarRule : public CompositeGrammarRule {
 class IfGrammarRule : public CompositeGrammarRule {
  private:
   IfNode* assembleNode(std::vector<SimpleAstNode*>) override;
+
  public:
   IfGrammarRule();
 };
@@ -75,6 +81,7 @@ class IfGrammarRule : public CompositeGrammarRule {
 class AssignGrammarRule : public CompositeGrammarRule {
  private:
   AssignNode* assembleNode(std::vector<SimpleAstNode*>) override;
+
  public:
   AssignGrammarRule();
 };
@@ -87,6 +94,7 @@ class CondExprGrammarRule : public EarlyChoiceGrammarRule {
 class NotExprGrammarRule : public CompositeGrammarRule {
  private:
   NotExprNode* assembleNode(std::vector<SimpleAstNode*>) override;
+
  public:
   NotExprGrammarRule();
 };

@@ -1,7 +1,7 @@
 #pragma once
 
+#include "base_simple_grammar.h"
 #include "commons/lexer/token.h"
-#include "basesimplegrammar.h"
 
 class RuleFragment {
  public:
@@ -31,6 +31,7 @@ class CompositeGrammarRule : public SimpleGrammarRule {
  private:
   std::vector<RuleFragment*> rule_fragments_;
   virtual SimpleAstNode* assembleNode(std::vector<SimpleAstNode*>) = 0;
+
  public:
   explicit CompositeGrammarRule(std::vector<RuleFragment*> ruleFragments);
   SimpleAstNode* parseNode(TokenIterator& tokenStream) override;
@@ -40,6 +41,7 @@ class ParenthesizedGrammarRule : public CompositeGrammarRule {
  private:
   GrammarRuleProducer* parenthesized_node_;
   SimpleAstNode* assembleNode(std::vector<SimpleAstNode*>) override;
+
  public:
   explicit ParenthesizedGrammarRule(GrammarRuleProducer* parenthesizedNode);
 };
@@ -48,6 +50,7 @@ class BracedGrammarRule : public CompositeGrammarRule {
  private:
   GrammarRuleProducer* parenthesized_node_;
   SimpleAstNode* assembleNode(std::vector<SimpleAstNode*>) override;
+
  public:
   explicit BracedGrammarRule(GrammarRuleProducer* parenthesizedNode);
 };

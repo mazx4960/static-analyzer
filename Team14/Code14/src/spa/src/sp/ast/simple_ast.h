@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "commons/entity.h"
-#include "simplenodetype.h"
+#include "simple_node_type.h"
 
 class SimpleAstNode;
 class ProgramNode;
@@ -157,6 +157,7 @@ class BinaryCondExprNode : public CondExprNode {
  private:
   CondExprNode* firstConditional_;
   CondExprNode* secondConditional_;
+
  public:
   BinaryCondExprNode(SimpleNodeType nodeType, CondExprNode* firstConditional, CondExprNode* secondConditional);
   std::vector<SimpleAstNode*> GetChildren() override;

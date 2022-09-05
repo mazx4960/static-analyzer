@@ -1,4 +1,4 @@
-#include "grammarproducer.h"
+#include "grammar_producer.h"
 
 ParenthesizedGrammarProducer::ParenthesizedGrammarProducer(GrammarRuleProducer* producer)
     : parenthesized_rule_(producer) {}
