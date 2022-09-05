@@ -9,6 +9,5 @@ class QueryParser {
   QueryParser() = default;
  public:
   static Query parse(std::ifstream *query_stream);
-
 };
 

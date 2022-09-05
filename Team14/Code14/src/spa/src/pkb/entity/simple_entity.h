@@ -9,6 +9,6 @@
 
 class SimpleEntity {
  public:
-  virtual std::unordered_set<std::string> *populate(std::string) = 0;
+  virtual void populate(std::string) = 0;
   virtual Result getResult(QuerySynonym &) = 0;
 };
