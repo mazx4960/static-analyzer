@@ -5,7 +5,6 @@ enum class SimpleNodeType {
   kProcedure,
   kStatementList,
   kStatement,
-  // TODO: refactor these start
   kNot,
   kAnd,
   kOr,
@@ -20,7 +19,6 @@ enum class SimpleNodeType {
   kTimes,
   kDiv,
   kMod,
-  // TODO: refactor these end
   kVariable,
   kConstant
 };
