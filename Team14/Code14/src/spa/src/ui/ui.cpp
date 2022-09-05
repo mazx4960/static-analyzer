@@ -2,15 +2,40 @@
 
 #include "ui.h"
 
-std::string UI::getSimpleProgramme() { return {}; }
-std::string UI::evaluateSimpleProgramme(std::string) { return {}; }
-std::string UI::evaluateQuery(std::string) { return {}; }
-std::string UI::display(std::string) { return {}; }
+#include <utility>
 
-void UI::set_interface(QPSInterface *qps_interface) {
-  this->qps_interface_ = qps_interface;
+#include "commons/reader.h"
+#include "spdlog/spdlog.h"
+
+UI::UI(std::string source_file, std::string query_file)
+    : source_file_(std::move(source_file)),
+      query_file_(std::move(query_file)) {}
+void UI::SetSP(SP* sp) {
+  this->sp_ = sp;
 }
+void UI::SetQPS(QPS* qps) {
+  this->qps_ = qps;
+}
+void UI::Run() {
+  if (this->sp_ == nullptr || this->qps_ == nullptr) {
+    spdlog::error("SP or QPS not found! Exiting program...");
+    return;
+  }
+  spdlog::info("Reading source file...");
+  std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+  std::ifstream source_stream(this->source_file_);
+  this->sp_->LoadSource(source_stream);
+  std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+  spdlog::info("Source file loaded.");
+  spdlog::info("Time taken to load source file: {} ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
 
-void UI::set_interface(SPInterface *sp_interface) {
-  this->sp_interface_ = sp_interface;
+  spdlog::info("Reading query file...");
+  begin = std::chrono::steady_clock::now();
+  std::ifstream query_stream(this->query_file_);
+  // TODO: execute query
+  end = std::chrono::steady_clock::now();
+  spdlog::info("Query executed.");
+  spdlog::info("Time taken to execute query: {} ms", std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
+
+  // TODO: print results
 }

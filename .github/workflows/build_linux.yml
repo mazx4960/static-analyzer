@@ -30,6 +30,7 @@ jobs:
           sudo apt install lcov
           lcov --capture --directory . --output-file coverage.info
           lcov --list coverage.info
+          lcov --remove coverage.info '/usr/*' 'Team14/Code14/lib/*' 'Team14/Code14/src/unit_testing' --output-file coverage.info
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v3
         with:

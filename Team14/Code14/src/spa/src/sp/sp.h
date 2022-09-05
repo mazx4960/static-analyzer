@@ -1,13 +1,15 @@
 #pragma once
 
+#include <fstream>
+
 #include "pkb/component_interface/pkb_interface.h"
 
 class SP {
  private:
-  PKBInterface *pkb_interface_ = nullptr;
+  PKB* pkb_;
 
  public:
   SP() = default;
-  virtual void set_interface(PKBInterface *);
-
+  void SetPKB(PKB* pkb);
+  void LoadSource(std::ifstream& source_stream);
 };
