@@ -23,7 +23,7 @@ TEST(QETest, VariableGetTest) {
 
   QueryEvaluator query_evaluator = QueryEvaluator(pkb, query);
   Result result = query_evaluator.evaluate();
-  std::unordered_set<std::string> result_set = result.get_results();
+  std::unordered_set<std::string> result_set = result.get_results_set();
   std::vector<std::string> result_vector(result_set.begin(), result_set.end());
   std::sort(result_vector.begin(), result_vector.end());
 

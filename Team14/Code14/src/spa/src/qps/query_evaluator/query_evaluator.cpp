@@ -20,7 +20,7 @@ Result QueryEvaluator::evaluate() {
     pkb_query.setSynonym(declaration_synonym);
 
     Result query_result = this->pkb_->get(pkb_query);
-    this->context_.insert({declaration, query_result.get_results()});
+    this->context_.insert({declaration, query_result.get_results_set()});
   }
 
   if (subquery_clauses.empty()) {

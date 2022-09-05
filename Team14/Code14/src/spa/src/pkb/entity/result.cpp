@@ -13,7 +13,7 @@ QuerySynonym Result::get_synonym() const {
   return this->syn_;
 }
 
-std::unordered_set<std::string> Result::get_results() const {
+std::unordered_set<std::string> Result::get_results_set() const {
   return this->results_;
 }
 
