@@ -4,6 +4,7 @@
 #include "commons/types.h"
 #include "sp/ast/simple_ast.h"
 #include "sp/ast/simple_node_type.h"
+#include "sp/simple_lexer.h"
 #include "sp/simple_parser.h"
 
 TEST(SimpleParserTest, TestBasic) {
@@ -39,4 +40,14 @@ TEST(SimpleParserTest, TestBasic) {
   auto *constant_node = assign_children[1];
   ASSERT_EQ(SimpleNodeType::kConstant, constant_node->GetNodeType());
   ASSERT_EQ(1, static_cast<ConstantNode *>(constant_node)->GetValue());
+}
+
+TEST(SimpleParserTestAssignment, BasicTest) {
+  auto *s = new std::ifstream("Team14/Tests14/simple_code/assignment1.txt");
+  SimpleLexer simple_lexer(s);
+  std::vector<Token *> tokens = simple_lexer.lex();
+  // The main purpose of this test is to see if it can parse complex programs
+  SimpleParser parser(tokens);
+  SimpleAstNode *program_node = parser.Parse();
+  ASSERT_EQ(SimpleNodeType::kProgram, program_node->GetNodeType());
 }
