@@ -13,7 +13,7 @@
 
 class EntityManager {
  private:
-  Variable v_;
+  VariableTable variable_table_;
 
  public:
   void populate(std::vector<Entity *> &entities);

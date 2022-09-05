@@ -9,12 +9,12 @@
 
 #include "pkb/entity/simple_entity.h"
 
-class Variable : public SimpleEntity {
+class VariableTable : public SimpleEntityTable {
  private:
   std::unordered_set<std::string> variable_table_;
 
  public:
-  Variable() = default;
+  VariableTable() = default;
   void populate(std::string) override;
   Result getResult(QuerySynonym &) override;
 };

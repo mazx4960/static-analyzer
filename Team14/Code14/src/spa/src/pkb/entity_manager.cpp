@@ -8,7 +8,7 @@ void EntityManager::populate(std::vector<Entity *> &entities) {
     std::string entity_name = entity->GetName();
 
     switch (entity_type) {
-      case EntityType::kVariable: v_.populate(entity_name);
+      case EntityType::kVariable: variable_table_.populate(entity_name);
       case EntityType::kProcedure: // fall-through;
       case EntityType::kStatement: // fall-through;
       case EntityType::kConstant: // fall-through;
@@ -19,7 +19,7 @@ void EntityManager::populate(std::vector<Entity *> &entities) {
 
 Result EntityManager::getResult(EntityType type, QuerySynonym synonym) {
   switch (type) {
-    case EntityType::kVariable: return v_.getResult(synonym);
+    case EntityType::kVariable: return variable_table_.getResult(synonym);
     case EntityType::kProcedure: // fall-through;
     case EntityType::kStatement: // fall-through;
     case EntityType::kConstant: // fall-through;

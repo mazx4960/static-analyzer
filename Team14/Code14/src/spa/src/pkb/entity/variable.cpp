@@ -5,11 +5,11 @@
 #include <unordered_set>
 #include "pkb/entity/simple_entity.h"
 
-void Variable::populate(std::string variable) {
+void VariableTable::populate(std::string variable) {
   this->variable_table_.insert(variable);
   //return &this->variable_table_;
 }
 
-Result Variable::getResult(QuerySynonym &syn) {
+Result VariableTable::getResult(QuerySynonym &syn) {
   return Result(syn, this->variable_table_);
 }

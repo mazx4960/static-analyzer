@@ -7,7 +7,7 @@
 
 #include "pkb/entity/result.h"
 
-class SimpleEntity {
+class SimpleEntityTable {
  public:
   virtual void populate(std::string) = 0;
   virtual Result getResult(QuerySynonym &) = 0;
