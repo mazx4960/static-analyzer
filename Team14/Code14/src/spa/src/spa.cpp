@@ -2,9 +2,14 @@
 
 #include "spa.h"
 
+#include "spdlog/spdlog.h"
 #include <utility>
 
 SPA::SPA(std::string source_file, std::string query_file) {
+  // Setup logging
+  spdlog::set_level(spdlog::level::debug);// Set global log level to debug
+  spdlog::info("Initialising SPA...");
+
   // Initialize all components.
   this->ui_ = new UI(std::move(source_file), std::move(query_file));
   auto *sp = new SP();

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "ui/ui.h"
+
 class SPA {
  private:
   UI* ui_;
