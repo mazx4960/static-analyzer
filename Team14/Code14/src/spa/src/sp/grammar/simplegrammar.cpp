@@ -23,7 +23,7 @@ bool ProgramGrammarRule::shouldStop(TokenIterator token_stream) {
 
 ProcedureGrammarRule::ProcedureGrammarRule()
     : CompositeGrammarRule(std::vector<RuleFragment*>{
-        new TokenRuleFragment(new LiteralToken("procedure")),
+        new TokenRuleFragment(new KeywordToken("procedure")),
         new NodeRuleFragment(new VariableGrammarProducer()),
         new NodeRuleFragment(new BracedGrammarProducer(new StatementListGrammarProducer()))}) {}
 
@@ -46,7 +46,7 @@ StatementListNode* StatementListGrammarRule::assembleNode(std::vector<SimpleAstN
 }
 
 bool StatementListGrammarRule::shouldStop(TokenIterator token_stream) {
-  return **token_stream == EndOfFileToken() && !(
+  return **token_stream == EndOfFileToken() || !(
                **token_stream == KeywordToken("read")
                || **token_stream == KeywordToken("print")
                || **token_stream == KeywordToken("call")
@@ -79,7 +79,7 @@ StatementGrammarRule::StatementGrammarRule()
 
 ReadGrammarRule::ReadGrammarRule()
     : CompositeGrammarRule(std::vector<RuleFragment*>{
-        new TokenRuleFragment(new LiteralToken("read")),
+        new TokenRuleFragment(new KeywordToken("read")),
         new NodeRuleFragment(new VariableGrammarProducer()),
         new TokenRuleFragment(new SemicolonToken())}) {}
 
@@ -89,7 +89,7 @@ ReadNode* ReadGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNodes) 
 
 PrintGrammarRule::PrintGrammarRule()
     : CompositeGrammarRule(std::vector<RuleFragment*>{
-        new TokenRuleFragment(new LiteralToken("print")),
+        new TokenRuleFragment(new KeywordToken("print")),
         new NodeRuleFragment(new VariableGrammarProducer()),
         new TokenRuleFragment(new SemicolonToken())}) {}
 
@@ -99,7 +99,7 @@ PrintNode* PrintGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNodes
 
 CallGrammarRule::CallGrammarRule()
     : CompositeGrammarRule(std::vector<RuleFragment*>{
-        new TokenRuleFragment(new LiteralToken("call")),
+        new TokenRuleFragment(new KeywordToken("call")),
         new NodeRuleFragment(new VariableGrammarProducer()),
         new TokenRuleFragment(new SemicolonToken())}) {}
 
@@ -109,7 +109,7 @@ CallNode* CallGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNodes) 
 
 WhileGrammarRule::WhileGrammarRule()
     : CompositeGrammarRule(std::vector<RuleFragment*>{
-        new TokenRuleFragment(new LiteralToken("while")),
+        new TokenRuleFragment(new KeywordToken("while")),
         new NodeRuleFragment(new ParenthesizedGrammarProducer(new CondExprGrammarProducer())),
         new NodeRuleFragment(new BracedGrammarProducer(new StatementListGrammarProducer()))}) {}
 
@@ -121,11 +121,11 @@ WhileNode* WhileGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNodes
 
 IfGrammarRule::IfGrammarRule()
     : CompositeGrammarRule(std::vector<RuleFragment*>{
-        new TokenRuleFragment(new LiteralToken("if")),
+        new TokenRuleFragment(new KeywordToken("if")),
         new NodeRuleFragment(new ParenthesizedGrammarProducer(new CondExprGrammarProducer())),
-        new TokenRuleFragment(new LiteralToken("then")),
+        new TokenRuleFragment(new KeywordToken("then")),
         new NodeRuleFragment(new BracedGrammarProducer(new StatementListGrammarProducer())),
-        new TokenRuleFragment(new LiteralToken("else")),
+        new TokenRuleFragment(new KeywordToken("else")),
         new NodeRuleFragment(new BracedGrammarProducer(new StatementListGrammarProducer()))}) {}
 
 IfNode* IfGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNodes) {
@@ -168,7 +168,7 @@ NotExprGrammarRule::NotExprGrammarRule()
     }) {}
 
 NotExprNode* NotExprGrammarRule::assembleNode(std::vector<SimpleAstNode*> children) {
-  return static_cast<NotExprNode*>(children[0]);
+  return new NotExprNode(static_cast<CondExprNode*>(children[0]));
 }
 
 BinaryCondGrammarRule::BinaryCondGrammarRule()
@@ -242,7 +242,7 @@ TermGrammarRule::TermGrammarRule()
               return new DivNode(static_cast<ExprNode*>(base), static_cast<ExprNode*>(next));
             }),
             std::make_pair(new OperatorToken("%"), [](SimpleAstNode* base, SimpleAstNode* next) -> SimpleAstNode* {
-              return new MinusNode(static_cast<ExprNode*>(base), static_cast<ExprNode*>(next));
+              return new ModNode(static_cast<ExprNode*>(base), static_cast<ExprNode*>(next));
             })}) {}
 
 FactorGrammarRule::FactorGrammarRule()
