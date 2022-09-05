@@ -25,7 +25,7 @@ std::unordered_set<std::string> *EntityManager::populate(const std::vector<Entit
   return table_pointer;
 }
 
-Result EntityManager::getResult(EntityType type, QuerySynonym &synonym) {
+Result EntityManager::getResult(EntityType type, QuerySynonym synonym) {
   switch (type) {
     case EntityType::kVariable: return v_.getResult(synonym);
   }

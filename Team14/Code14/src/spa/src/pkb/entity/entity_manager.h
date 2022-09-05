@@ -18,5 +18,5 @@ class EntityManager {
 
  public:
   std::unordered_set<std::string> *populate(const std::vector<Entity> &entities);
-  Result getResult(EntityType, QuerySynonym&);
+  Result getResult(EntityType, QuerySynonym);
 };
