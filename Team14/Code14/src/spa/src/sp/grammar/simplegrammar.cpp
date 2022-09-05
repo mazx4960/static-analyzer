@@ -29,7 +29,7 @@ ProcedureGrammarRule::ProcedureGrammarRule()
 
 ProcedureNode* ProcedureGrammarRule::assembleNode(std::vector<SimpleAstNode*> child_nodes) {
   return new ProcedureNode(
-      static_cast<VariableNode*>(child_nodes[0])->getName(),
+      static_cast<VariableNode*>(child_nodes[0])->GetVariableName(),
       static_cast<StatementListNode*>(child_nodes[1]));
 }
 
@@ -104,7 +104,7 @@ CallGrammarRule::CallGrammarRule()
         new TokenRuleFragment(new SemicolonToken())}) {}
 
 CallNode* CallGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNodes) {
-  return new CallNode(static_cast<VariableNode*>(childNodes[0])->getName());
+  return new CallNode(static_cast<VariableNode*>(childNodes[0])->GetVariableName());
 }
 
 WhileGrammarRule::WhileGrammarRule()

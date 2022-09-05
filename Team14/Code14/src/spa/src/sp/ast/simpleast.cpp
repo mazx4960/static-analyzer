@@ -7,7 +7,7 @@
 SimpleAstNode::SimpleAstNode(SimpleNodeType nodeType)
     : nodeType_(nodeType) {}
 
-SimpleNodeType SimpleAstNode::getNodeType() const {
+SimpleNodeType SimpleAstNode::GetNodeType() const {
   return nodeType_;
 }
 

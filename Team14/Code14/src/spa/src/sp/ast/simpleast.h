@@ -31,7 +31,7 @@ class SimpleAstNode {
 
  public:
   explicit SimpleAstNode(SimpleNodeType nodeType);
-  SimpleNodeType GetNodeType();
+  [[nodiscard]] SimpleNodeType GetNodeType() const;
   virtual std::vector<SimpleAstNode*> GetChildren() = 0;
 };
 

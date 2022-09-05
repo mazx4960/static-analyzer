@@ -14,5 +14,5 @@ TEST(SimpleParserTest, TestBasic) {
       new EndOfFileToken()};
   auto iter = input_tokens.begin();
   SimpleAstNode* program_node = (new ProgramGrammarRule())->parseNode(iter);
-  ASSERT_EQ(program_node->getNodeType(),SimpleNodeType::kProgram);
+  ASSERT_EQ(program_node->GetNodeType(),SimpleNodeType::kProgram);
 }
