@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 
 #include <iostream>
+#include <unordered_set>
 #include <list>
 #include <map>
 #include <string>
@@ -14,7 +15,7 @@
 
 TEST(PKBPopulatorTest, TestBasic) {
     PKBPopulator p;
-    std::vector<std::string>* ptr;
+    std::unordered_set<std::string>* ptr;
 
     Entity x(EntityType::kVariable, "x");
     Entity y(EntityType::kVariable, "y"); 
@@ -22,9 +23,9 @@ TEST(PKBPopulatorTest, TestBasic) {
 
     ptr = PKBPopulator::populate(entities); 
 
-    std::vector<std::string> expected_table{"x", "y"};
+    std::unordered_set<std::string> expected_table{"x", "y"};
 
-    std::vector<std::string> result_table = *ptr;
+    std::unordered_set<std::string> result_table = *ptr;
     std::cout << result_table.size() << "\n";
 
     ASSERT_EQ(result_table.size(), expected_table.size()); 

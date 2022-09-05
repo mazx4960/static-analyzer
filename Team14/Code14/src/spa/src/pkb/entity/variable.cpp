@@ -2,13 +2,13 @@
 
 #include "pkb/entity/variable.h"
 
-#include <vector>
+#include <unordered_set>
 #include <map>
 #include <string>
 
 #include "pkb/entity/simple_entity.h"
 
-std::vector<std::string>* Variable::populate(std::string variable) {
-  variableTable_.push_back(variable);
+std::unordered_set<std::string>* Variable::populate(std::string variable) {
+  variableTable_.insert(variable);
   return &variableTable_;
 } 
