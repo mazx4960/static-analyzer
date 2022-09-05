@@ -15,6 +15,6 @@ class PKB {
   EntityManager *entity_manager_;
  public:
   PKB();
-  static Result get(PKBQuery &);
+  Result get(PKBQuery &);
   void Save(std::vector<Entity *> &entities);
 };

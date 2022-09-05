@@ -9,10 +9,8 @@ PKB::PKB() {
 }
 Result PKB::get(PKBQuery &query) {
   QuerySynonym query_synonym = query.getSynonym();
-  EntityManager manager;
-
   switch (query.getEntityType()) {
-    case EntityType::kVariable:return manager.getResult(EntityType::kVariable, query_synonym);
+    case EntityType::kVariable:return this->entity_manager_->getResult(EntityType::kVariable, query_synonym);
     case EntityType::kProcedure: // fall-through;
     case EntityType::kStatement: // fall-through;
     case EntityType::kConstant: // fall-through;
