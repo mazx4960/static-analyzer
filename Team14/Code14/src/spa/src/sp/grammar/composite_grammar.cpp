@@ -1,11 +1,12 @@
-#include "compositegrammar.h"
-#include "commons/parser/parser_exceptions.h"
+#include "composite_grammar.h"
 
 #include <utility>
 
+#include "commons/parser/parser_exceptions.h"
+
 TokenRuleFragment::TokenRuleFragment(Token* token) : token_to_match_(std::move(token)) {}
 
-void TokenRuleFragment::parseStream(TokenIterator& stream, std::vector<SimpleAstNode*>&  /*childNodes*/) {
+void TokenRuleFragment::parseStream(TokenIterator& stream, std::vector<SimpleAstNode*>& /*childNodes*/) {
   if (!(**stream == *token_to_match_)) {
     throw ParseSyntaxError("Expected " + token_to_match_->value + ", got " + (*stream)->value);
   }
@@ -23,7 +24,7 @@ CompositeGrammarRule::CompositeGrammarRule(std::vector<RuleFragment*> ruleFragme
 
 SimpleAstNode* CompositeGrammarRule::parseNode(TokenIterator& tokenStream) {
   std::vector<SimpleAstNode*> child_nodes{};
-  for (auto *rule_fragment : rule_fragments_) {
+  for (auto* rule_fragment : rule_fragments_) {
     rule_fragment->parseStream(tokenStream, child_nodes);
   }
   return assembleNode(child_nodes);

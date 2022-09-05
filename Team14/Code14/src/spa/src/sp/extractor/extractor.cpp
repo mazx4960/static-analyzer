@@ -2,12 +2,16 @@
 
 #include "extractor.h"
 
+#include <spdlog/spdlog.h>
+
+#include <iostream>
+
 #include "traverser.h"
 
 /**
  * Extracts all entities from a given AST of a program.
  */
-std::vector<Entity *> EntityExtractor::ExtractEntity(ProgramNode *program_node) {
+std::vector<Entity *> EntityExtractor::Extract(SimpleAstNode *program_node) {
   std::vector<Entity *> entities;
   auto const op = [&entities](SimpleAstNode *node) {
     if (node->GetNodeType() == SimpleNodeType::kProcedure) {
@@ -38,18 +42,11 @@ std::vector<Entity *> EntityExtractor::ExtractEntity(ProgramNode *program_node) 
  * Extracts all relationships from a given AST of a program.
  * Currently only support follows and parent relationships
  */
-std::vector<Relationship *> RelationshipExtractor::ExtractRelationship(ProgramNode *program_node) {
+std::vector<Relationship *> RelationshipExtractor::Extract(SimpleAstNode *program_node) {
   std::vector<Relationship *> relationships;
   auto const op = [&relationships](SimpleAstNode *node) {
-    // Extract follows relationships
-    if (node->GetNodeType() == SimpleNodeType::kStatementList) {
-      auto *stmt_list = static_cast<StatementListNode *>(node);
-      std::vector<Relationship *> follows = ExtractFollows(stmt_list);
-      relationships.insert(relationships.end(), follows.begin(), follows.end());
-    }
-    // Extract parent relationships
-    std::vector<Relationship *> parent = ExtractParent(node);
-    relationships.insert(relationships.end(), parent.begin(), parent.end());
+    ExtractFollows(node, relationships);
+    ExtractParent(node, relationships);
   };
   Traverser::TraverseNode(program_node, op);
   return relationships;
@@ -60,10 +57,12 @@ std::vector<Relationship *> RelationshipExtractor::ExtractRelationship(ProgramNo
  * @param node
  * @return vector of follows relationships
  */
-std::vector<Relationship *> RelationshipExtractor::ExtractFollows(StatementListNode *node) {
-  std::vector<Relationship *> relationships;
+void RelationshipExtractor::ExtractFollows(SimpleAstNode *node, std::vector<Relationship *> &relationships) {
+  if (node->GetNodeType() != SimpleNodeType::kStatementList) {
+    return;
+  }
   Entity *prev_entity = nullptr;
-  for (auto *stmt : node->GetStatements()) {
+  for (auto *stmt : static_cast<StatementListNode *>(node)->GetStatements()) {
     auto stmt_type = stmt->GetStmtType();
     auto stmt_no = stmt->GetStmtNo();
     Entity *cur_entity = new StatementEntity(stmt_type, stmt_no);
@@ -73,7 +72,6 @@ std::vector<Relationship *> RelationshipExtractor::ExtractFollows(StatementListN
     }
     prev_entity = cur_entity;
   }
-  return relationships;
 }
 /**
  * Extracts all immediate parent relationships from a given AST node.
@@ -81,13 +79,13 @@ std::vector<Relationship *> RelationshipExtractor::ExtractFollows(StatementListN
  * @param node
  * @return vector of parent relationships
  */
-std::vector<Relationship *> RelationshipExtractor::ExtractParent(SimpleAstNode *node) {
+void RelationshipExtractor::ExtractParent(SimpleAstNode *node, std::vector<Relationship *> &relationships) {
   if (node->GetNodeType() == SimpleNodeType::kProcedure) {
     auto *proc = static_cast<ProcedureNode *>(node);
     auto *stmt_list = proc->GetStatementList();
     auto proc_name = proc->GetProcName();
     Entity *parent = new ProcedureEntity(proc_name);
-    return ExtractParentHelper(parent, stmt_list);
+    ExtractParentHelper(parent, stmt_list, relationships);
   }
   if (node->GetNodeType() == SimpleNodeType::kStatement) {
     auto *stmt = static_cast<StatementNode *>(node);
@@ -96,20 +94,17 @@ std::vector<Relationship *> RelationshipExtractor::ExtractParent(SimpleAstNode *
       auto *while_stmt = static_cast<WhileNode *>(stmt);
       auto *stmt_list = while_stmt->GetStatementList();
       Entity *parent = new WhileEntity(while_stmt->GetStmtNo());
-      return ExtractParentHelper(parent, stmt_list);
+      ExtractParentHelper(parent, stmt_list, relationships);
     }
     if (stmt_type == StmtType::kIf) {
       auto *if_stmt = static_cast<IfNode *>(stmt);
       Entity *parent = new WhileEntity(if_stmt->GetStmtNo());
       auto *then_stmt_list = if_stmt->GetThenStatementList();
       auto *else_stmt_list = if_stmt->GetElseStatementList();
-      auto relationships = ExtractParentHelper(parent, then_stmt_list);
-      auto then_relationships = ExtractParentHelper(parent, else_stmt_list);
-      relationships.insert(relationships.end(), then_relationships.begin(), then_relationships.end());
-      return relationships;
+      ExtractParentHelper(parent, then_stmt_list, relationships);
+      ExtractParentHelper(parent, else_stmt_list, relationships);
     }
   }
-  return std::vector<Relationship *>();
 }
 /**
  * Extracts all parent relationships from a given parent entity and statement list.
@@ -119,14 +114,12 @@ std::vector<Relationship *> RelationshipExtractor::ExtractParent(SimpleAstNode *
  * @param node
  * @return vector of parent relationships
  */
-std::vector<Relationship *> RelationshipExtractor::ExtractParentHelper(Entity *parent, StatementListNode *node) {
+void RelationshipExtractor::ExtractParentHelper(Entity *parent, StatementListNode *node, std::vector<Relationship *> &relationships) {
   std::vector<Entity *> children = ExtractChildren(node);
-  std::vector<Relationship *> relationships;
   for (auto *child : children) {
     Relationship *parent_relationship = new ParentRelationship(parent, child);
     relationships.push_back(parent_relationship);
   }
-  return relationships;
 }
 /**
  * Extracts all children entities from a given statement list.

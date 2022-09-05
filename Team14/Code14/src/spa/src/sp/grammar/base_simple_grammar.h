@@ -1,9 +1,9 @@
 #pragma once
 
 #include "commons/lexer/token.h"
-#include "sp/ast/simpleast.h"
+#include "sp/ast/simple_ast.h"
 
-using MergeFunction = SimpleAstNode*(*)(SimpleAstNode*, SimpleAstNode*);
+using MergeFunction = SimpleAstNode* (*) (SimpleAstNode*, SimpleAstNode*);
 using TokenIterator = std::vector<Token*>::iterator;
 
 // Defines a rule that creates an AST node from a token stream

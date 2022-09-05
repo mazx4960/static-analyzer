@@ -1,4 +1,4 @@
-#include "recursivegrammar.h"
+#include "recursive_grammar.h"
 
 #include <utility>
 
@@ -6,7 +6,7 @@ RecursiveGrammarRule::RecursiveGrammarRule(GrammarRuleProducer* baseRuleProducer
     : base_rule_producer_(baseRuleProducer),
       merge_rules_(std::move(mergeRules)) {}
 
-SimpleAstNode* RecursiveGrammarRule::parseNode(TokenIterator &tokenStream) {
+SimpleAstNode* RecursiveGrammarRule::parseNode(TokenIterator& tokenStream) {
   SimpleGrammarRule* base_rule = base_rule_producer_->produce();
   SimpleAstNode* node = base_rule->parseNode(tokenStream);
   while (true) {
