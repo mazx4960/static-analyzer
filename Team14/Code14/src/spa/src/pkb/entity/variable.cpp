@@ -8,17 +8,11 @@
 
 #include "pkb/entity/simple_entity.h"
 
-std::unordered_set<std::string> Variable::variableTable_;
-
-Variable::Variable() {
-  
+std::unordered_set<std::string> *Variable::populate(std::string variable) {
+  variable_table_.insert(variable);
+  return &variable_table_;
 }
 
-std::unordered_set<std::string> *Variable::populate(std::string variable) {
-  variableTable_.insert(variable);
-  return &variableTable_;
-} 
-
-Result Variable::getResult(QuerySynonym &syn_) {
-  return Result(syn_, variableTable_);
+Result Variable::getResult(QuerySynonym &syn) {
+  return Result(syn, variable_table_);
 }

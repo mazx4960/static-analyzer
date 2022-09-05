@@ -12,6 +12,6 @@
 class PKB {
  public:
   PKB() = default;
-  Result get(PKBQuery &);
-  bool save(Relationship &);
+  static Result get(PKBQuery &);
+  static bool save(Relationship &);
 };

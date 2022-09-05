@@ -1,10 +1,9 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
-
 #pragma once
-#include<unordered_set>
-#include <vector>
-#include <map>
+
 #include <string>
+#include <vector>
+#include <unordered_set>
 
 #include "commons/types.h"
 #include "commons/entity.h"
@@ -17,6 +16,6 @@ class EntityManager {
   Variable v_;
 
  public:
-  std::unordered_set<std::string> *populate(const std::vector<Entity> &entities);
+  void populate(const std::vector<Entity> &entities);
   Result getResult(EntityType, QuerySynonym);
 };

@@ -11,10 +11,10 @@
 
 class Variable : public SimpleEntity {
  private:
-  static std::unordered_set<std::string> variableTable_;
+  static std::unordered_set<std::string> variable_table_;
 
  public:
   std::unordered_set<std::string> *populate(std::string) override;
-  Result getResult(QuerySynonym &);
-  Variable();
+  Result getResult(QuerySynonym &) override;
+  Variable() = default;
 };
