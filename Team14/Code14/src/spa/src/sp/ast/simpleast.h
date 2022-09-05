@@ -30,6 +30,7 @@ class SimpleAstNode {
 
  public:
   explicit SimpleAstNode(SimpleNodeType nodeType);
+  [[nodiscard]] SimpleNodeType getNodeType() const;
 };
 
 class ProgramNode : public SimpleAstNode {

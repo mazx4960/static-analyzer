@@ -5,6 +5,10 @@
 SimpleAstNode::SimpleAstNode(SimpleNodeType nodeType)
     : nodeType_(nodeType) {}
 
+SimpleNodeType SimpleAstNode::getNodeType() const {
+  return nodeType_;
+}
+
 ProgramNode::ProgramNode(std::vector<ProcedureNode*> procedures)
     : SimpleAstNode(SimpleNodeType::kProgram),
       procedures_(std::move(procedures)) {}
