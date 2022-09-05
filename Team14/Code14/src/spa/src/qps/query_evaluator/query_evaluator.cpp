@@ -31,7 +31,7 @@ Result QueryEvaluator::evaluate() {
   }
 
 
-  // TODO: implement projection and aggregation
+  // TODO(howtoosee): implement projection and aggregation
   return Result::empty(query_synonym);
 
 }

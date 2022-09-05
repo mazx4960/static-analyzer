@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_set>
 #include "qps/pql/query_synonym/query_synonym.h"
+
 class Result {
  private:
   bool is_empty_ = true;
@@ -21,7 +22,7 @@ class Result {
 
   static Result empty(QuerySynonym &);
 
-  bool is_empty();
-  QuerySynonym get_synonym();
-  std::unordered_set<std::string> get_results();
+  [[nodiscard]] bool is_empty() const;
+  [[nodiscard]] QuerySynonym get_synonym() const;
+  [[nodiscard]] std::unordered_set<std::string> get_results() const;
 };

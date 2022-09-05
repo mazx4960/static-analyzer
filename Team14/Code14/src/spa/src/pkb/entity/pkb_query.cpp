@@ -20,25 +20,25 @@ void PKBQuery::setSynonym(QuerySynonym &syn) {
 /*
  * Boolean checkers
  */
-bool PKBQuery::hasRelationship() {
+bool PKBQuery::hasRelationship() const {
   return this->has_relationship_;
 }
 
-bool PKBQuery::hasSynonym() {
+bool PKBQuery::hasSynonym() const {
   return this->has_synonym_;
 }
 
 /*
  * Getters
  */
-VariableEntity PKBQuery::getEntityType() {
+VariableEntity PKBQuery::getEntityType() const {
   return *this->entity_type_;
 }
 
-Relationship PKBQuery::getRelationship() {
+Relationship PKBQuery::getRelationship() const {
   return *this->rs_;
 }
 
-QuerySynonym PKBQuery::getSynonym() {
+QuerySynonym PKBQuery::getSynonym() const {
   return *this->syn_;
 }

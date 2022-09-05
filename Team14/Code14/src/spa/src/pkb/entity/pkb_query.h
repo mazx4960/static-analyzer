@@ -25,17 +25,18 @@ class PKBQuery {
   PKBQuery() = default;
 
   void setEntityType(VariableEntity &);
-  VariableEntity getEntityType();
-
   void setRelationship(Relationship &);
-  bool hasRelationship();
-  Relationship getRelationship();
-
   void setSynonym(QuerySynonym &);
-  bool hasSynonym();
-  QuerySynonym getSynonym();
 
-  // TODO: add methods for pattern
+  bool hasRelationship() const;
+  bool hasSynonym() const;
+
+  VariableEntity getEntityType() const;
+  Relationship getRelationship() const;
+  QuerySynonym getSynonym() const;
+
+
+  // TODO(howtoosee): add methods for pattern
 };
 
 class PkbVariableQuery : public PKBQuery {};
