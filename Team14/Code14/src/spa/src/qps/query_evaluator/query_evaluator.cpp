@@ -3,17 +3,35 @@
 #include "query_evaluator.h"
 
 Result QueryEvaluator::evaluate() {
-  for (QueryCall &query_call : this->query_.getQueryCall()) {
-    SubQueryEvaluator sub_query_evaluator = SubQueryEvaluator(this->pkb_interface_, query_call);
+  // Query declaration for whose results are to be returned.
+  QueryDeclaration called_declaration = this->query_.getQueryCall().getDeclaration();
+  QuerySynonym query_synonym = called_declaration.getSynonym();
 
-    Result partial_result = sub_query_evaluator.evaluate();
-    this->partial_results_list_.push_back(partial_result);
+  // Declarations in the query.
+  std::vector<QueryDeclaration> query_declarations = this->query_.getDeclarations();
+
+  // Sub-queries that need to be processed.
+  std::vector<QueryClause> subquery_clauses = this->query_.getQueryCall().getClauseVector();
+
+  for (QueryDeclaration &declaration : query_declarations) {
+
+    QuerySynonym declaration_synonym = declaration.getSynonym();
+    VariableEntity variable_entity = declaration.getEntity();
+
+    PKBQuery pkb_query;
+    pkb_query.setEntityType(variable_entity);
+    pkb_query.setSynonym(declaration_synonym);
+
+    Result query_result = this->pkb_interface_.get(pkb_query);
+    this->context_.insert({declaration, query_result.get_results()});
   }
 
-  if (this->partial_results_list_.size() == 1) {
-    return this->partial_results_list_[0];
+  if (subquery_clauses.empty()) {
+    return Result(query_synonym, this->context_.at(called_declaration));
   }
+
 
   // TODO: implement projection and aggregation
-  return this->partial_results_list_[0];
+
 }
+
