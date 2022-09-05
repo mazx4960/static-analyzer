@@ -3,14 +3,14 @@
 #include "pkb/entity/simple_entity.h"
 SimpleEntityTable *SimpleEntityTable::getTable(EntityType type) {
   switch (type) {
+    case EntityType::kProcedure: return new ProcedureTable();
+    case EntityType::kStatement: return new StatementTable();
     case EntityType::kVariable: return new VariableTable();
     case EntityType::kConstant: return new ConstantTable();
-    case EntityType::kProcedure: // fall-through;
-    case EntityType::kStatement: // fall-through;
-    default:throw std::invalid_argument("Entity type not implemented yet!");
+    default: throw std::invalid_argument("EntityType is invalid!");
   }
 }
-void SimpleEntityTable::populate(std::string entity_name) {
+void SimpleEntityTable::populate(const std::string &entity_name) {
   this->table_.insert(entity_name);
 }
 

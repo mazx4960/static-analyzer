@@ -15,7 +15,7 @@ class SimpleEntityTable {
  public:
   static SimpleEntityTable *getTable(EntityType);
 
-  void populate(std::string);
+  void populate(const std::string &);
   Result getResult(QuerySynonym &);
   int getCount();
 };
@@ -28,4 +28,14 @@ class VariableTable : public SimpleEntityTable {
 class ConstantTable : public SimpleEntityTable {
  public:
   ConstantTable() = default;
+};
+
+class ProcedureTable : public SimpleEntityTable {
+ public:
+  ProcedureTable() = default;
+};
+
+class StatementTable : public SimpleEntityTable {
+ public:
+  StatementTable() = default;
 };
