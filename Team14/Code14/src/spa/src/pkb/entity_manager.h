@@ -14,9 +14,9 @@
 
 class EntityManager {
  private:
+  std::unordered_map<EntityType, SimpleEntityTable *> entity_table_map_;
 
  public:
-  std::unordered_map<EntityType, SimpleEntityTable *> entity_table_map_;
 
   void populate(std::vector<Entity *> &entities);
   Result getResult(EntityType, QuerySynonym);
