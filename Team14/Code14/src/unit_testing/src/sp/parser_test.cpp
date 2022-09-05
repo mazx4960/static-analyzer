@@ -5,6 +5,7 @@
 #include "sp/ast/simpleast.h"
 #include "sp/ast/simplenodetype.h"
 #include "sp/grammar/simplegrammar.h"
+#include "sp/simple_lexer.h"
 
 TEST(SimpleParserTest, TestBasic) {
   std::vector<Token*> input_tokens = {
@@ -38,4 +39,14 @@ TEST(SimpleParserTest, TestBasic) {
   auto *constant_node = assign_children[1];
   ASSERT_EQ(SimpleNodeType::kConstant, constant_node->GetNodeType());
   ASSERT_EQ(1, static_cast<ConstantNode*>(constant_node)->GetValue());
+}
+
+TEST(SimpleParserTestAssignment, BasicTest) {
+  auto* s = new std::ifstream("Team14/Tests14/simple_code/assignment1.txt");
+  SimpleLexer simple_lexer(s);
+  std::vector<Token*> tokens = simple_lexer.lex();
+  auto iter = tokens.begin();
+  // The main purpose of this test is to see if it can parse complex programs
+  SimpleAstNode* program_node = (new ProgramGrammarRule())->parseNode(iter);
+  ASSERT_EQ(SimpleNodeType::kProgram, program_node->GetNodeType());
 }
