@@ -13,5 +13,5 @@ class PKBPopulator {
   EntityManager entityManager_;
 
  public:
-  static std::unordered_set<std::string>* populate(const std::vector<Entity>& entities);
+  static void populate(const std::vector<Entity> &entities);
 };
