@@ -3,8 +3,8 @@
 #include "spa.h"
 
 int main(int argc, char *argv[]) {
-  if (argc != 2) {
-    std::cout << "Usage: {} <source file> <query file>" << argv[0];
+  if (argc != 3) {
+    std::cout << "Usage: " << argv[0] << " <source file> <query file> ";
     return 1;
   }
 
