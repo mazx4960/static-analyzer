@@ -6,8 +6,8 @@
 
 #include "commons/component_interface/interface.h"
 #include "pkb/pkb.h"
-#include "commons/evaluator/result.h"
-#include "commons/evaluator/pkb_query.h"
+#include "pkb/entity/result.h"
+#include "pkb/entity/pkb_query.h"
 #include "commons/relationship.h"
 
 class PKBInterface : public Interface {
