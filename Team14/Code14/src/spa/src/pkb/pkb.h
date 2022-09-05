@@ -8,10 +8,13 @@
 #include "pkb.h"
 #include "pkb/entity/pkb_query.h"
 #include "pkb/entity/result.h"
+#include "pkb/pkb_populator/pkb_populator.h"
 
 class PKB {
+ private:
+  EntityManager *entity_manager_;
  public:
-  PKB() = default;
+  PKB();
   static Result get(PKBQuery &);
-  static bool save(Relationship &);
+  void Save(std::vector<Entity *> &entities);
 };

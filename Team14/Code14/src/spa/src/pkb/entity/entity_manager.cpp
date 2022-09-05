@@ -2,10 +2,10 @@
 
 #include "entity_manager.h"
 
-void EntityManager::populate(const std::vector<Entity> &entities) {
-  for (auto entity : entities) {
-    EntityType entity_type = entity.GetType();
-    std::string entity_name = entity.GetName();
+void EntityManager::populate(const std::vector<Entity *> &entities) {
+  for (auto *entity : entities) {
+    EntityType entity_type = entity->GetType();
+    std::string entity_name = entity->GetName();
 
     switch (entity_type) {
       case EntityType::kVariable: v_.populate(entity_name);

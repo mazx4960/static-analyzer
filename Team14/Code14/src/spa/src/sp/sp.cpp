@@ -15,5 +15,5 @@ void SP::LoadSource(std::ifstream &source_stream) {
 
   std::vector<Entity *> entities = EntityExtractor::Extract(program_node);
   std::vector<Relationship *> relationships = RelationshipExtractor::Extract(program_node);
-//  this->pkb_->Populate(entities);
+  this->pkb_->Save(entities);
 }

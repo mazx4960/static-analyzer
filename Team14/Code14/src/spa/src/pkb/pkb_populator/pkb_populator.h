@@ -9,9 +9,6 @@
 #include "pkb/entity/entity_manager.h"
 
 class PKBPopulator {
- private:
-  EntityManager entityManager_;
-
  public:
   static void populate(const std::vector<Entity> &entities);
 };

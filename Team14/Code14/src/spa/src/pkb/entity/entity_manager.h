@@ -16,6 +16,6 @@ class EntityManager {
   Variable v_;
 
  public:
-  void populate(const std::vector<Entity> &entities);
+  void populate(const std::vector<Entity *> &entities);
   Result getResult(EntityType, QuerySynonym);
 };
