@@ -1,3 +1,4 @@
+#include "spa.h"
 #include "spdlog/spdlog.h"
 #include "ui/ui.h"
 
@@ -11,18 +12,7 @@ int main(int argc, char *argv[]) {
   spdlog::set_level(spdlog::level::debug);// Set global log level to debug
   spdlog::info("Initialising SPA...");
 
-  // Initialize all components.
-  auto *ui = new UI(argv[1], argv[2]);
-  auto *sp = new SP();
-  auto *qps = new QPS();
-  auto *pkb = new PKB();
-
-  // Set up the component dependencies.
-  ui->SetSP(sp);
-  ui->SetQPS(qps);
-  sp->SetPKB(pkb);
-  qps->SetPKB(pkb);
-
-  // Lets go!
-  ui->Run();
+  // Initialize and run SPA
+  auto *spa = new SPA(argv[1], argv[2]);
+  spa->Run();
 }
