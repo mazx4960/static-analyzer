@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pkb/component_interface/pkb_interface.h"
+#include "pkb/public/pkb_interface.h"
 
 class SP {
  private:

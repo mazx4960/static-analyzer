@@ -5,10 +5,14 @@
 #include <string>
 
 class QuerySynonym {
+ private:
+  std::string synonym_;
+
  public:
   explicit QuerySynonym(std::string synonym);
-  std::string synonym_;
+
   [[nodiscard]] std::string getSynonym() const;
+  bool operator==(const QuerySynonym &other) const;
 };
 
 

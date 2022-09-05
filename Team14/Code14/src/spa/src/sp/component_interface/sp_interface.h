@@ -2,7 +2,7 @@
 #pragma once
 
 #include "commons/component_interface/interface.h"
-#include "pkb/component_interface/pkb_interface.h"
+#include "pkb/public/pkb_interface.h"
 #include "sp/sp.h"
 
 class SPInterface : public Interface {

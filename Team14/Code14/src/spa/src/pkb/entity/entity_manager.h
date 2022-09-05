@@ -9,11 +9,14 @@
 #include "commons/types.h"
 #include "commons/entity.h"
 #include "pkb/entity/variable.h"
+#include "pkb/entity/result.h"
+#include "pkb_query.h"
 
 class EntityManager {
  private:
   Variable v_;
 
  public:
-  std::unordered_set<std::string>* populate(const std::vector<Entity>& entities);
+  std::unordered_set<std::string> *populate(const std::vector<Entity> &entities);
+  Result getResult(EntityType, QuerySynonym &);
 };

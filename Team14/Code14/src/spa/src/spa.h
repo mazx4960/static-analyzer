@@ -3,7 +3,7 @@
 
 #include "commons/component_interface/interface.h"
 #include "pkb/pkb.h"
-#include "pkb/component_interface/pkb_interface.h"
+#include "pkb/public/pkb_interface.h"
 #include "qps/qps.h"
 #include "qps/component_interface/qps_interface.h"
 #include "sp/sp.h"

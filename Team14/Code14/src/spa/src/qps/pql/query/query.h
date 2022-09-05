@@ -9,12 +9,16 @@
 #include "qps/pql/query_call/query_call.h"
 
 class Query {
+ private:
+  std::vector<QueryDeclaration> query_declarations_;
+
+  QueryCall query_call_;
+
  public:
   Query(std::vector<QueryDeclaration> query_declarations, QueryCall query_call)
-  : query_declarations_(std::move(query_declarations)), query_call_(std::move(query_call)) {}
-  std::vector<QueryDeclaration> query_declarations_;
-  QueryCall query_call_;
-  std::vector<QueryDeclaration> getDeclarations() const;
-  QueryCall getQueryCall() const;
+      : query_declarations_(std::move(query_declarations)), query_call_(std::move(query_call)) {}
+
+  [[nodiscard]] std::vector<QueryDeclaration> getDeclarations() const;
+  [[nodiscard]] QueryCall getQueryCall() const;
 };
 
