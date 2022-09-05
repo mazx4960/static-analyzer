@@ -1,10 +1,11 @@
 #pragma once
 
-#include "simplegrammar.h"
+#include "simple_grammar.h"
 
 class ParenthesizedGrammarProducer : public GrammarRuleProducer {
  private:
   GrammarRuleProducer* parenthesized_rule_;
+
  public:
   explicit ParenthesizedGrammarProducer(GrammarRuleProducer* producer);
   ParenthesizedGrammarRule* produce() override;
@@ -13,6 +14,7 @@ class ParenthesizedGrammarProducer : public GrammarRuleProducer {
 class BracedGrammarProducer : public GrammarRuleProducer {
  private:
   GrammarRuleProducer* braced_rule_;
+
  public:
   explicit BracedGrammarProducer(GrammarRuleProducer* producer);
   BracedGrammarRule* produce() override;

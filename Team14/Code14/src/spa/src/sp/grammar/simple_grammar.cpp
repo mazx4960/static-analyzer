@@ -1,12 +1,11 @@
-#include "simplegrammar.h"
-#include "commons/parser/parser_exceptions.h"
+#include "simple_grammar.h"
+
 #include "commons/lexer/token.h"
-#include "grammarproducer.h"
+#include "commons/parser/parser_exceptions.h"
+#include "grammar_producer.h"
 
 ProgramGrammarRule::ProgramGrammarRule()
     : ListGrammarRule(new ProcedureGrammarProducer()) {}
-
-
 
 ProgramNode* ProgramGrammarRule::assembleNode(std::vector<SimpleAstNode*> children) {
   std::vector<ProcedureNode*> procedures{};
@@ -46,36 +45,36 @@ StatementListNode* StatementListGrammarRule::assembleNode(std::vector<SimpleAstN
 }
 
 bool StatementListGrammarRule::shouldStop(TokenIterator token_stream) {
-  return **token_stream == EndOfFileToken() || !(
-               **token_stream == KeywordToken("read")
-               || **token_stream == KeywordToken("print")
-               || **token_stream == KeywordToken("call")
-               || **token_stream == KeywordToken("while")
-               || **token_stream == KeywordToken("print")
-               || **(token_stream + 1) == OperatorToken("=")
-               );
+  return **token_stream == EndOfFileToken() || !(**token_stream == KeywordToken("read") || **token_stream == KeywordToken("print") || **token_stream == KeywordToken("call") || **token_stream == KeywordToken("while") || **token_stream == KeywordToken("print") || **(token_stream + 1) == OperatorToken("="));
 }
 
 StatementGrammarRule::StatementGrammarRule()
     : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
         std::make_pair([](TokenIterator tokenStream) -> bool {
           return !(**tokenStream == EndOfFileToken()) && **(tokenStream + 1) == OperatorToken("=");
-        }, new AssignGrammarProducer()),
+        },
+                       new AssignGrammarProducer()),
         std::make_pair([](TokenIterator tokenStream) -> bool {
           return **tokenStream == KeywordToken("read");
-        }, new ReadGrammarProducer()),
+        },
+                       new ReadGrammarProducer()),
         std::make_pair([](TokenIterator tokenStream) -> bool {
           return **tokenStream == KeywordToken("print");
-        }, new PrintGrammarProducer()),
+        },
+                       new PrintGrammarProducer()),
         std::make_pair([](TokenIterator tokenStream) -> bool {
           return **tokenStream == KeywordToken("call");
-        }, new CallGrammarProducer()),
+        },
+                       new CallGrammarProducer()),
         std::make_pair([](TokenIterator tokenStream) -> bool {
           return **tokenStream == KeywordToken("while");
-        }, new WhileGrammarProducer()),
+        },
+                       new WhileGrammarProducer()),
         std::make_pair([](TokenIterator tokenStream) -> bool {
           return **tokenStream == KeywordToken("if");
-        }, new IfGrammarProducer()), }) {}
+        },
+                       new IfGrammarProducer()),
+    }) {}
 
 ReadGrammarRule::ReadGrammarRule()
     : CompositeGrammarRule(std::vector<RuleFragment*>{
@@ -150,22 +149,24 @@ AssignNode* AssignGrammarRule::assembleNode(std::vector<SimpleAstNode*> childNod
 
 CondExprGrammarRule::CondExprGrammarRule()
     : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
-        std::make_pair([](TokenIterator tokenStream)-> bool {
+        std::make_pair([](TokenIterator tokenStream) -> bool {
           return (**tokenStream).type == TokenType::kSymbol;
-        }, new RelExprGrammarProducer()),
-        std::make_pair([](TokenIterator tokenStream)-> bool {
+        },
+                       new RelExprGrammarProducer()),
+        std::make_pair([](TokenIterator tokenStream) -> bool {
           return **tokenStream == OperatorToken("!");
-        }, new NotExprGrammarProducer()),
-        std::make_pair([](TokenIterator tokenStream)-> bool {
+        },
+                       new NotExprGrammarProducer()),
+        std::make_pair([](TokenIterator tokenStream) -> bool {
           return **tokenStream == RoundOpenBracketToken();
-        }, new BinaryCondGrammarProducer()),
+        },
+                       new BinaryCondGrammarProducer()),
     }) {}
 
 NotExprGrammarRule::NotExprGrammarRule()
     : CompositeGrammarRule(std::vector<RuleFragment*>{
         new TokenRuleFragment(new OperatorToken("!")),
-        new NodeRuleFragment(new ParenthesizedGrammarProducer(new CondExprGrammarProducer()))
-    }) {}
+        new NodeRuleFragment(new ParenthesizedGrammarProducer(new CondExprGrammarProducer()))}) {}
 
 NotExprNode* NotExprGrammarRule::assembleNode(std::vector<SimpleAstNode*> children) {
   return new NotExprNode(static_cast<CondExprNode*>(children[0]));
@@ -177,10 +178,10 @@ BinaryCondGrammarRule::BinaryCondGrammarRule()
         std::vector<std::pair<Token*, MergeFunction>>{
             std::make_pair(new OperatorToken("&&"), [](SimpleAstNode* first, SimpleAstNode* second) -> SimpleAstNode* {
               return new AndExprNode(static_cast<CondExprNode*>(first), static_cast<CondExprNode*>(second));
-            }), std::make_pair(new OperatorToken("||"), [](SimpleAstNode* first, SimpleAstNode* second) -> SimpleAstNode* {
+            }),
+            std::make_pair(new OperatorToken("||"), [](SimpleAstNode* first, SimpleAstNode* second) -> SimpleAstNode* {
               return new OrExprNode(static_cast<CondExprNode*>(first), static_cast<CondExprNode*>(second));
-            })
-        }) {}
+            })}) {}
 
 RelExprGrammarRule::RelExprGrammarRule()
     : LateChoiceGrammarRule(
@@ -208,7 +209,7 @@ RelExprGrammarRule::RelExprGrammarRule()
 
 RelFactorGrammarRule::RelFactorGrammarRule()
     : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
-        std::make_pair([](TokenIterator tokenStream)-> bool {
+        std::make_pair([](TokenIterator tokenStream) -> bool {
           if (**tokenStream == RoundOpenBracketToken()) return true;
           if (**tokenStream == EndOfFileToken()) return false;
           return **(tokenStream) == OperatorToken("+")
@@ -216,10 +217,12 @@ RelFactorGrammarRule::RelFactorGrammarRule()
               || **(tokenStream) == OperatorToken("*")
               || **(tokenStream) == OperatorToken("/")
               || **(tokenStream) == OperatorToken("%");
-        }, new ExprGrammarProducer()),
-        std::make_pair([](TokenIterator  /*tokenStream*/)-> bool {
+        },
+                       new ExprGrammarProducer()),
+        std::make_pair([](TokenIterator /*tokenStream*/) -> bool {
           return true;
-        }, new ReferenceGrammarProducer()),
+        },
+                       new ReferenceGrammarProducer()),
     }) {}
 
 ExprGrammarRule::ExprGrammarRule()
@@ -228,7 +231,8 @@ ExprGrammarRule::ExprGrammarRule()
         std::vector<std::pair<Token*, MergeFunction>>{
             std::make_pair(new OperatorToken("+"), [](SimpleAstNode* base, SimpleAstNode* next) -> SimpleAstNode* {
               return new PlusNode(static_cast<ExprNode*>(base), static_cast<ExprNode*>(next));
-            }), std::make_pair(new OperatorToken("-"), [](SimpleAstNode* base, SimpleAstNode* next) -> SimpleAstNode* {
+            }),
+            std::make_pair(new OperatorToken("-"), [](SimpleAstNode* base, SimpleAstNode* next) -> SimpleAstNode* {
               return new MinusNode(static_cast<ExprNode*>(base), static_cast<ExprNode*>(next));
             })}) {}
 
@@ -238,7 +242,8 @@ TermGrammarRule::TermGrammarRule()
         std::vector<std::pair<Token*, MergeFunction>>{
             std::make_pair(new OperatorToken("*"), [](SimpleAstNode* base, SimpleAstNode* next) -> SimpleAstNode* {
               return new TimesNode(static_cast<ExprNode*>(base), static_cast<ExprNode*>(next));
-            }),std::make_pair(new OperatorToken("/"), [](SimpleAstNode* base, SimpleAstNode* next) -> SimpleAstNode* {
+            }),
+            std::make_pair(new OperatorToken("/"), [](SimpleAstNode* base, SimpleAstNode* next) -> SimpleAstNode* {
               return new DivNode(static_cast<ExprNode*>(base), static_cast<ExprNode*>(next));
             }),
             std::make_pair(new OperatorToken("%"), [](SimpleAstNode* base, SimpleAstNode* next) -> SimpleAstNode* {
@@ -247,22 +252,26 @@ TermGrammarRule::TermGrammarRule()
 
 FactorGrammarRule::FactorGrammarRule()
     : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
-        std::make_pair([](TokenIterator tokenStream)-> bool {
+        std::make_pair([](TokenIterator tokenStream) -> bool {
           return **tokenStream == RoundOpenBracketToken();
-        }, new ParenthesizedGrammarProducer(new ExprGrammarProducer())),
-        std::make_pair([](TokenIterator  /*tokenStream*/)-> bool {
+        },
+                       new ParenthesizedGrammarProducer(new ExprGrammarProducer())),
+        std::make_pair([](TokenIterator /*tokenStream*/) -> bool {
           return true;
-        }, new ReferenceGrammarProducer()),
+        },
+                       new ReferenceGrammarProducer()),
     }) {}
 
 ReferenceGrammarRule::ReferenceGrammarRule()
     : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
-        std::make_pair([](TokenIterator tokenStream)-> bool {
+        std::make_pair([](TokenIterator tokenStream) -> bool {
           return (*tokenStream)->type == TokenType::kSymbol;
-        }, new VariableGrammarProducer()),
-        std::make_pair([](TokenIterator tokenStream)-> bool {
+        },
+                       new VariableGrammarProducer()),
+        std::make_pair([](TokenIterator tokenStream) -> bool {
           return (*tokenStream)->type == TokenType::kLiteral;
-        }, new ConstantGrammarProducer()),
+        },
+                       new ConstantGrammarProducer()),
     }) {}
 
 VariableNode* VariableGrammarRule::parseNode(TokenIterator& tokenStream) {

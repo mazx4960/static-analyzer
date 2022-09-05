@@ -2,10 +2,11 @@
 // Created by gabri on 4/9/2022.
 //
 
-#include "latechoicegrammar.h"
-#include "commons/parser/parser_exceptions.h"
+#include "late_choice_grammar.h"
 
 #include <utility>
+
+#include "commons/parser/parser_exceptions.h"
 LateChoiceGrammarRule::LateChoiceGrammarRule(GrammarRuleProducer* halfGrammarRuleProducer, std::vector<std::pair<Token*, MergeFunction>> mergeRules)
     : half_grammar_rule_producer_(halfGrammarRuleProducer),
       merge_rules_(std::move(mergeRules)) {}
