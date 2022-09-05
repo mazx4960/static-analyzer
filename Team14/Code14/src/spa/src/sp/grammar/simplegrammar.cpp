@@ -51,7 +51,7 @@ bool StatementListGrammarRule::shouldStop(TokenIterator token_stream) {
                || **token_stream == KeywordToken("print")
                || **token_stream == KeywordToken("call")
                || **token_stream == KeywordToken("while")
-               || **token_stream == KeywordToken("print")
+               || **token_stream == KeywordToken("if")
                || **(token_stream + 1) == OperatorToken("=")
                );
 }
@@ -211,11 +211,11 @@ RelFactorGrammarRule::RelFactorGrammarRule()
         std::make_pair([](TokenIterator tokenStream)-> bool {
           if (**tokenStream == RoundOpenBracketToken()) return true;
           if (**tokenStream == EndOfFileToken()) return false;
-          return **(tokenStream) == OperatorToken("+")
-              || **(tokenStream) == OperatorToken("-")
-              || **(tokenStream) == OperatorToken("*")
-              || **(tokenStream) == OperatorToken("/")
-              || **(tokenStream) == OperatorToken("%");
+          return **(tokenStream + 1) == OperatorToken("+")
+              || **(tokenStream + 1) == OperatorToken("-")
+              || **(tokenStream + 1) == OperatorToken("*")
+              || **(tokenStream + 1) == OperatorToken("/")
+              || **(tokenStream + 1) == OperatorToken("%");
         }, new ExprGrammarProducer()),
         std::make_pair([](TokenIterator  /*tokenStream*/)-> bool {
           return true;
