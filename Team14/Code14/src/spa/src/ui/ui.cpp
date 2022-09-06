@@ -54,8 +54,10 @@ void UI::DisplayResults(const Result &result) {
   std::vector<std::string> results_list = result.get_sorted_results_list();
 
   spdlog::info("====================BEGIN QUERY RESULTS====================");
-  for (std::string &result_str : results_list) {
-    spdlog::info(result_str);
+  std::string result_string = result.get_synonym().getSynonym() + ": ";
+  for (const std::string &s : results_list) {
+    result_string += s + " ";
   }
+  spdlog::info("{}", result_string);
   spdlog::info("====================END QUERY RESULTS====================");
 }
