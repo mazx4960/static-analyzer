@@ -16,6 +16,7 @@ void EntityManager::populate(std::vector<Entity *> &entities) {
 }
 
 Result EntityManager::getResult(EntityType type, QuerySynonym synonym) {
+  // Table not initialised, return empty Result
   if (this->entity_table_map_.find(type) == this->entity_table_map_.end()) {
     return Result::empty(synonym);
   }
