@@ -13,7 +13,8 @@ Query QueryBuilder::build() {
 
   while (!outOfTokens()) {
     if (declaration_keywords_.count(peekToken().value)) {
-      query_declarations_.push_back(buildDeclaration());
+      QueryDeclaration query_declaration = buildDeclaration();
+      query_declarations_.push_back(query_declaration);
     } else if (peekToken() == KeywordToken("Select")){
       query_call = buildQueryCall();
     } else {
@@ -38,11 +39,13 @@ bool QueryBuilder::outOfTokens() {
 
 
 QueryDeclaration QueryBuilder::buildDeclaration() {
-  QueryDeclaration query_declaration = QueryDeclaration(buildEntity(), buildSynonym());
+  Entity entity = buildEntity();
+  QuerySynonym synonym = buildSynonym();
+  QueryDeclaration query_declaration = QueryDeclaration(entity, synonym);
   if (nextToken() == SemicolonToken()) {
     return query_declaration;
   }
-  throw ParseSyntaxError("no ; after declaration");
+  throw ParseSyntaxError("No ; after declaration");
 }
 
 Entity QueryBuilder::buildEntity() {
@@ -194,9 +197,7 @@ QueryCall QueryBuilder::buildQueryCall() {
   if (nextToken() == KeywordToken("Select")) {
     QueryDeclaration synonym_declaration = findDeclaration(buildSynonym());
     std::vector<QueryClause> clause_vector;
-    while (!outOfTokens()) {
-      clause_vector.push_back(buildClause());
-    }
+    clause_vector.push_back(buildClause());
     return SelectCall(synonym_declaration, clause_vector);
   }
   throw ParseSyntaxError("no ; after declaration");
