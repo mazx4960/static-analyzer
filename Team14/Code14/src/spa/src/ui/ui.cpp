@@ -50,13 +50,12 @@ Result UI::ExecuteQuery() {
   return result;
 }
 void UI::DisplayResults(const Result &result) {
-  spdlog::info("Displaying results...");
-
+  spdlog::info("Sorting results...");
   std::vector<std::string> results_list = result.get_sorted_results_list();
-  std::cout << "BEGIN QUERY RESULTS" << std::endl;
+
+  spdlog::info("====================BEGIN QUERY RESULTS====================");
   for (std::string &result_str : results_list) {
-    std::cout << result_str << " ";
+    spdlog::info(result_str);
   }
-  std::cout << std::endl;
-  std::cout << "END QUERY RESULTS" << std::endl;
+  spdlog::info("====================END QUERY RESULTS====================");
 }
