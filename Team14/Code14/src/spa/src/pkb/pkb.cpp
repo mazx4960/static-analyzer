@@ -2,26 +2,35 @@
 
 #include "pkb.h"
 
-#include "commons/relationship.h"
-#include "entity_manager.h"
+void PKB::save(std::vector<Entity *> &entities) {
+  for (auto *entity : entities) {
+    EntityType entity_type = entity->GetType();
+    std::string entity_name = entity->GetName();
 
-PKB::PKB() {
-  this->entity_manager_ = new EntityManager();
-}
-Result PKB::get(PKBQuery &query) {
-  QuerySynonym query_synonym = query.getSynonym();
-  switch (query.getEntityType()) {
-    case EntityType::kVariable:return this->entity_manager_->getResult(EntityType::kVariable, query_synonym);
-    case EntityType::kProcedure: // fall-through;
-    case EntityType::kStatement: // fall-through;
-    case EntityType::kConstant: // fall-through;
-    default: return Result::empty(query_synonym);
+    if (this->entity_table_map_.find(entity_type) == this->entity_table_map_.end()) {
+      this->entity_table_map_[entity_type] = SimpleEntityTable::getTable(entity_type);
+    }
+
+    this->entity_table_map_[entity_type]->populate(entity_name);
   }
 }
-void PKB::save(std::vector<Entity *> &entities) {
-  this->entity_manager_->populate(entities);
-}
-int PKB::getCount() {
-  return this->entity_manager_->getCount();
+
+Result PKB::getResult(PKBQuery &query) {
+  return this->getResult(query.getEntityType(), query.getSynonym());
 }
 
+Result PKB::getResult(EntityType type, QuerySynonym synonym) {
+  // Table not initialised, return empty Result
+  if (this->entity_table_map_.find(type) == this->entity_table_map_.end()) {
+    return Result::empty(synonym);
+  }
+  return this->entity_table_map_[type]->getResult(synonym);
+}
+
+int PKB::getCount() {
+  int count = 0;
+  for (auto &entity_table : this->entity_table_map_) {
+    count += entity_table.second->getCount();
+  }
+  return count;
+}
