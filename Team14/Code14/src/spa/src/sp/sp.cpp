@@ -1,3 +1,4 @@
+#include <spdlog/spdlog.h>
 #include "sp.h"
 
 #include "simple_lexer.h"
@@ -14,6 +15,16 @@ void SP::LoadSource(std::ifstream &source_stream) {
   auto *program_node = parser.Parse();
 
   std::vector<Entity *> entities = EntityExtractor::Extract(program_node);
-  std::vector<Relationship *> relationships = RelationshipExtractor::Extract(program_node);
+  spdlog::info("Extracted {} entities", entities.size());
+  for (auto *entity : entities) {
+    spdlog::debug("{}", entity->ToString());
+  }
   this->pkb_->save(entities);
+
+  std::vector<Relationship *> relationships = RelationshipExtractor::Extract(program_node);
+  spdlog::info("Extracted {} relationships", relationships.size());
+  for (auto *relationship : relationships) {
+    spdlog::debug("{}", relationship->ToString());
+  }
+//  this->pkb_->save(relationships);
 }

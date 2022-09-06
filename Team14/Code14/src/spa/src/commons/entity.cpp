@@ -12,8 +12,24 @@ EntityType Entity::GetType() {
 std::string Entity::GetName() {
   return this->name_;
 }
-bool Entity::operator==(const Entity& other) const {
+bool Entity::operator==(const Entity &other) const {
   return this->type_ == other.type_ && this->name_ == other.name_;
+}
+std::string Entity::ToString() {
+  std::string type_string;
+  switch (this->type_) {
+    case EntityType::kProcedure:type_string = "procedure";
+      break;
+    case EntityType::kVariable:type_string = "variable";
+      break;
+    case EntityType::kConstant:type_string = "constant";
+      break;
+    case EntityType::kStatement:type_string = "statement";
+      break;
+    default:type_string = "unknown";
+      break;
+  }
+  return type_string + ": " + this->name_;
 }
 
 StatementEntity::StatementEntity(StmtType stmt_type, int stmt_no)
@@ -27,6 +43,6 @@ StmtType StatementEntity::GetStmtType() {
 int StatementEntity::GetStmtNo() const {
   return this->stmt_no_;
 }
-bool StatementEntity::operator==(const StatementEntity& other) const {
+bool StatementEntity::operator==(const StatementEntity &other) const {
   return this->stmt_type_ == other.stmt_type_ && this->stmt_no_ == other.stmt_no_;
 }
