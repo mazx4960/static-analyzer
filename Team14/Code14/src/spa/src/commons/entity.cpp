@@ -24,10 +24,23 @@ std::string Entity::ToString() {
       break;
     case EntityType::kConstant:type_string = "constant";
       break;
-    case EntityType::kStatement:type_string = "statement";
-      break;
-    default:type_string = "unknown";
-      break;
+    case EntityType::kStatement:auto *statement_entity = static_cast<StatementEntity *>(this);
+      switch (statement_entity->GetStmtType()) {
+        case StmtType::kAssign:type_string = "assign";
+          break;
+        case StmtType::kCall:type_string = "call";
+          break;
+        case StmtType::kIf:type_string = "if";
+          break;
+        case StmtType::kPrint:type_string = "print";
+          break;
+        case StmtType::kRead:type_string = "read";
+          break;
+        case StmtType::kWhile:type_string = "while";
+          break;
+        default:type_string = "unknown";
+          break;
+      }
   }
   return type_string + ": " + this->name_;
 }
@@ -37,7 +50,7 @@ StatementEntity::StatementEntity(StmtType stmt_type, int stmt_no)
   this->stmt_type_ = stmt_type;
   this->stmt_no_ = stmt_no;
 }
-StmtType StatementEntity::GetStmtType() {
+StmtType StatementEntity::GetStmtType() const {
   return this->stmt_type_;
 }
 int StatementEntity::GetStmtNo() const {
