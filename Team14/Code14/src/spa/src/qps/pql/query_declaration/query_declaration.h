@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <string>
+#include <unordered_set>
 #include <utility>
 
 #include "commons/entity.h"
@@ -10,16 +12,28 @@
 class QueryDeclaration {
  private:
   Entity entity_;
+
   QuerySynonym synonym_;
 
+  std::unordered_set<std::string> context_;
+
  public:
-  QueryDeclaration(Entity entity,
-                   QuerySynonym synonym) : entity_(std::move(entity)), synonym_(std::move(synonym)) {};
+  static QueryDeclaration empty();
+  static QueryDeclaration *emptyPtr();
+
+  QueryDeclaration(Entity &entity, QuerySynonym &synonym)
+      : entity_(std::move(entity)), synonym_(std::move(synonym)) {};
+
+  QueryDeclaration(Entity &entity, QuerySynonym &synonym, std::unordered_set<std::string> &context)
+      : entity_(std::move(entity)), synonym_(std::move(synonym)), context_(std::move(context)) {};
 
   [[nodiscard]] Entity getEntity() const;
   [[nodiscard]] QuerySynonym getSynonym() const;
+  [[nodiscard]] std::unordered_set<std::string> getContext() const;
 
-  bool operator==(const QueryDeclaration &other) const;
+  void setContext(std::unordered_set<std::string> &);
+
+  bool operator==(const QueryDeclaration &) const;
 };
 
 class QueryDeclarationHashFunction {
