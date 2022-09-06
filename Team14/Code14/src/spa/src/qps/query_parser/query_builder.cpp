@@ -12,7 +12,7 @@ Query QueryBuilder::build() {
   QueryCall query_call = empty_call_;
 
   while (!outOfTokens()) {
-    if (declaration_keywords_.count(peekToken().value)) {
+    if (declaration_keywords_.count(peekToken().value) != 0u) {
       query_declarations_.push_back(buildDeclaration());
     } else if (peekToken() == KeywordToken("Select")){
       query_call = buildQueryCall();
