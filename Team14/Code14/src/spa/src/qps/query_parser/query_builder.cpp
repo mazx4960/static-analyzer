@@ -197,7 +197,10 @@ QueryCall QueryBuilder::buildQueryCall() {
   if (nextToken() == KeywordToken("Select")) {
     QueryDeclaration synonym_declaration = findDeclaration(buildSynonym());
     std::vector<QueryClause> clause_vector;
-    clause_vector.push_back(buildClause());
+
+    if (!(peekToken() == EndOfFileToken())) {
+      clause_vector.push_back(buildClause());
+    }
     return SelectCall(synonym_declaration, clause_vector);
   }
   throw ParseSyntaxError("no ; after declaration");
