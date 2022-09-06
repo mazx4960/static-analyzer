@@ -5,9 +5,13 @@
 #include "spdlog/spdlog.h"
 #include <utility>
 
-SPA::SPA(std::string source_file, std::string query_file) {
+SPA::SPA(std::string source_file, std::string query_file, bool debug_mode) {
   // Setup logging
-  spdlog::set_level(spdlog::level::debug);// Set global log level to debug
+  if (debug_mode) {
+    spdlog::set_level(spdlog::level::debug);
+  } else {
+    spdlog::set_level(spdlog::level::info);
+  }
   spdlog::info("Initialising SPA...");
 
   // Initialize all components.
