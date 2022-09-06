@@ -10,4 +10,5 @@ Query QueryParser::parse(std::ifstream* query_stream) {
   QueryBuilder builder = QueryBuilder(lexer.lex());
   return builder.build();
 }
+
 QueryParser::QueryParser() = default;
