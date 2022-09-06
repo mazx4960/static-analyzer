@@ -15,6 +15,7 @@ Query QueryBuilder::build() {
     if (declaration_keywords_.count(peekToken().value)) {
       QueryDeclaration query_declaration = buildDeclaration();
       query_declarations_.push_back(query_declaration);
+
     } else if (peekToken() == KeywordToken("Select")){
       query_call = buildQueryCall();
     } else {
