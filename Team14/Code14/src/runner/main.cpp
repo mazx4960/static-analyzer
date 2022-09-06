@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <cstring>
 #include "spa.h"
 
 int main(int argc, char *argv[]) {
