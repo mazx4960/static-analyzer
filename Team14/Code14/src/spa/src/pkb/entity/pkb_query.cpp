@@ -9,7 +9,9 @@ PKBQuery *PKBQuery::getQuery(Entity &entity) {
     case EntityType::kStatement:return new PKBStatementQuery();
     case EntityType::kVariable:return new PKBVariableQuery();
     case EntityType::kConstant:return new PKBConstantQuery();
+    default: return nullptr;
   }
+
 }
 
 /*

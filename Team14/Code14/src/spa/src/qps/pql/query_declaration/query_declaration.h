@@ -9,15 +9,14 @@
 
 class QueryDeclaration {
  private:
-  VariableEntity entity_;
-
+  Entity entity_;
   QuerySynonym synonym_;
 
  public:
-  QueryDeclaration(VariableEntity entity,
+  QueryDeclaration(Entity entity,
                    QuerySynonym synonym) : entity_(std::move(entity)), synonym_(std::move(synonym)) {};
 
-  [[nodiscard]] VariableEntity getEntity() const;
+  [[nodiscard]] Entity getEntity() const;
   [[nodiscard]] QuerySynonym getSynonym() const;
 
   bool operator==(const QueryDeclaration &other) const;

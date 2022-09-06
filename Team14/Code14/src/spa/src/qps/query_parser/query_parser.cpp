@@ -8,5 +8,5 @@
 Query QueryParser::parse(std::ifstream *query_stream) {
   QueryLexer lexer = QueryLexer(query_stream);
   QueryBuilder builder = QueryBuilder(lexer.lex());
-  return QueryBuilder::build();
+  return builder.build();
 }

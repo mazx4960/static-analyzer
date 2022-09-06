@@ -7,6 +7,7 @@ SimpleEntityTable *SimpleEntityTable::getTable(EntityType type) {
     case EntityType::kStatement: return new StatementTable();
     case EntityType::kVariable: return new VariableTable();
     case EntityType::kConstant: return new ConstantTable();
+    default: return nullptr;
   }
 }
 void SimpleEntityTable::populate(const std::string &entity_name) {
