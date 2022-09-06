@@ -15,15 +15,13 @@ Query QueryBuilder::build() {
     if (declaration_keywords_.count(peekToken().value)) {
       QueryDeclaration query_declaration = buildDeclaration();
       query_declarations_.push_back(query_declaration);
-
     } else if (peekToken() == KeywordToken("Select")){
       query_call = buildQueryCall();
-    } else {
+    } else if (peekToken() == EndOfFileToken()){
       return Query(query_declarations_, query_call);
     }
   }
-
-  return Query(query_declarations_, query_call);
+  throw ParseSyntaxError("Unknown keyword: " + peekToken().value);
 }
 
 Token QueryBuilder::nextToken() {
@@ -46,7 +44,7 @@ QueryDeclaration QueryBuilder::buildDeclaration() {
   if (nextToken() == SemicolonToken()) {
     return query_declaration;
   }
-  throw ParseSyntaxError("No ; after declaration");
+  throw ParseSyntaxError("Missing ; after declaration");
 }
 
 Entity QueryBuilder::buildEntity() {
@@ -78,7 +76,7 @@ Entity QueryBuilder::buildEntity() {
   if (token == KeywordToken("assign")) {
     return AssignEntity(-1);
   }
-  throw ParseSyntaxError("Invalid query");
+  throw ParseSyntaxError("Invalid entity: "+ token.value);
 }
 
 
@@ -86,14 +84,13 @@ QuerySynonym QueryBuilder::buildSynonym() {
   return QuerySynonym(nextToken().value);
 }
 
-
 QueryDeclaration QueryBuilder::findDeclaration(const QuerySynonym& synonym) {
   for (QueryDeclaration declaration: query_declarations_) {
     if (declaration.getSynonym() == synonym) {
       return declaration;
     }
   }
-  throw ParseSyntaxError("no such declaration: " + synonym.getSynonym());
+  throw ParseSyntaxError("No such declaration: " + synonym.getSynonym());
 }
 
 QueryClause QueryBuilder::buildClause() {
@@ -104,7 +101,7 @@ QueryClause QueryBuilder::buildClause() {
   if (token == KeywordToken("pattern")) {
     return PatternClause(buildPattern());
   }
-  throw ParseSyntaxError("Invalid clause");
+  throw ParseSyntaxError("Invalid clause: " + token.value);
 }
 
 Pattern QueryBuilder::buildPattern() {
@@ -181,16 +178,14 @@ Relationship QueryBuilder::buildRelationship() {
   }
   if (token == KeywordToken("Parent")) {
     return buildParent();
-
   }
   if (token == KeywordToken("Uses")) {
     return buildUses();
-
   }
   if (token == KeywordToken("Modifies")) {
     return buildModifies();
   }
-  throw ParseSyntaxError("Unknown relationship");
+  throw ParseSyntaxError("Unknown such that relationship: " + token.value);
 }
 
 
@@ -204,5 +199,5 @@ QueryCall QueryBuilder::buildQueryCall() {
     }
     return SelectCall(synonym_declaration, clause_vector);
   }
-  throw ParseSyntaxError("no ; after declaration");
+  throw ParseSyntaxError("Missing ; after declaration");
 }
