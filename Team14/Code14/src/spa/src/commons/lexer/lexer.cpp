@@ -2,10 +2,7 @@
 
 #include "lexer.h"
 
-#include "lexer_exceptions.h"
-#include "token.h"
-
-Lexer::Lexer(std::ifstream* s) {
+Lexer::Lexer(std::ifstream *s) {
   line_number_ = 0;
   column_number_ = 0;
   source_stream_ = s;
@@ -13,11 +10,11 @@ Lexer::Lexer(std::ifstream* s) {
 }
 
 char Lexer::peek() {
-  return char(source_stream_->peek());
+  return static_cast<char>(source_stream_->peek());
 }
 char Lexer::advance() {
   column_number_++;
-  return char(source_stream_->get());
+  return static_cast<char>(source_stream_->get());
 }
 /*
  * Skips whitespace characters.
@@ -59,7 +56,7 @@ void Lexer::read_alphanumeric() {
   }
 }
 
-Token* Lexer::next_token() {
+Token *Lexer::next_token() {
   ignore_whitespace();
   if (source_stream_->eof()) {
     return nullptr;
@@ -77,9 +74,9 @@ Token* Lexer::next_token() {
   throw LexSyntaxError(line_number_, column_number_, "Unexpected character: " + tmp_);
 }
 
-std::vector<Token*> Lexer::lex() {
-  std::vector<Token*> tokens;
-  Token* token = this->next_token();
+std::vector<Token *> Lexer::lex() {
+  std::vector<Token *> tokens;
+  Token *token = this->next_token();
   while (token) {
     tokens.push_back(token);
     token = next_token();

@@ -6,7 +6,6 @@
 #include <utility>
 QueryBuilder::QueryBuilder(std::vector<Token *> tokens) {
   this->tokens_ = std::move(tokens);
-
 }
 
 Query QueryBuilder::build() {

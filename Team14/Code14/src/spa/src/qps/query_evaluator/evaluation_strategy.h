@@ -23,12 +23,12 @@ class EvaluationStrategy {
  */
 class SuchThatStrategy : public EvaluationStrategy {
  public:
-  SuchThatStrategy(PKB *pkb_interface, QueryClause &query_clause) : EvaluationStrategy(pkb_interface, query_clause) {};
+  SuchThatStrategy(PKB *pkb, QueryClause &query_clause) : EvaluationStrategy(pkb, query_clause) {};
   Result evaluate() override;
 };
 
 class PatternStrategy : public EvaluationStrategy {
  public:
-  PatternStrategy(PKB *pkb_interface, QueryClause &query_clause) : EvaluationStrategy(pkb_interface, query_clause) {};
+  PatternStrategy(PKB *pkb, QueryClause &query_clause) : EvaluationStrategy(pkb, query_clause) {};
   Result evaluate() override;
 };

@@ -5,6 +5,7 @@
 #include "qps/pql/query/query.h"
 
 class QueryParser {
-  static Query parse(std::ifstream* query_stream);
+ public:
+  static Query parse(std::ifstream *query_stream);
 };
 
