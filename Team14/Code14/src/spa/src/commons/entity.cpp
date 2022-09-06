@@ -17,6 +17,7 @@ bool Entity::operator==(const Entity &other) const {
 }
 std::string Entity::ToString() {
   std::string type_string;
+  std::string name_string = this->name_;
   switch (this->type_) {
     case EntityType::kProcedure:type_string = "procedure";
       break;
@@ -25,6 +26,7 @@ std::string Entity::ToString() {
     case EntityType::kConstant:type_string = "constant";
       break;
     case EntityType::kStatement:auto *statement_entity = static_cast<StatementEntity *>(this);
+      name_string = std::to_string(statement_entity->GetStmtNo());
       switch (statement_entity->GetStmtType()) {
         case StmtType::kAssign:type_string = "assign";
           break;
@@ -38,11 +40,11 @@ std::string Entity::ToString() {
           break;
         case StmtType::kWhile:type_string = "while";
           break;
-        default:type_string = "unknown";
+        default:type_string = "unknown statement";
           break;
       }
   }
-  return type_string + ": " + this->name_;
+  return type_string + ": " + name_string;
 }
 
 StatementEntity::StatementEntity(StmtType stmt_type, int stmt_no)
