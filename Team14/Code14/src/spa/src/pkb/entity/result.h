@@ -2,8 +2,10 @@
 
 #pragma once
 
+#include <algorithm>
 #include <string>
 #include <unordered_set>
+#include <vector>
 #include "qps/pql/query_synonym/query_synonym.h"
 
 class Result {
@@ -26,5 +28,6 @@ class Result {
 
   [[nodiscard]] bool is_empty() const;
   [[nodiscard]] QuerySynonym get_synonym() const;
-  [[nodiscard]] std::unordered_set<std::string> get_results() const;
+  [[nodiscard]] std::unordered_set<std::string> get_results_set() const;
+  [[nodiscard]] std::vector<std::string> get_sorted_results_list() const;
 };

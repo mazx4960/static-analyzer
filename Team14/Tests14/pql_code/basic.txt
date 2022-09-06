@@ -1,2 +1,2 @@
-assign a;
+variable a;
 Select a

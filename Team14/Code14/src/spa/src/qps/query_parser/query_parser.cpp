@@ -5,7 +5,7 @@
 #include "query_builder.h"
 #include "query_lexer.h"
 
-Query QueryParser::parse(std::ifstream* query_stream) {
+Query QueryParser::parse(std::ifstream *query_stream) {
   QueryLexer lexer = QueryLexer(query_stream);
   QueryBuilder builder = QueryBuilder(lexer.lex());
   return builder.build();

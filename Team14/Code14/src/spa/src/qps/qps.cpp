@@ -2,4 +2,11 @@
 #include "qps.h"
 
 void QPS::SetPKB(PKB *pkb) {
+  this->pkb_ = pkb;
+}
+Query QPS::parse(std::ifstream *query) {
+  return QueryParser::parse(query);
+}
+Result QPS::evaluate(Query &query) {
+  return (new QueryEvaluator(this->pkb_, query))->evaluate();
 }
