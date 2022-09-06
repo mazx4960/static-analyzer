@@ -17,6 +17,7 @@ class Entity {
   EntityType GetType();
   std::string GetName();
   bool operator==(const Entity &other) const;
+  std::string ToString();
 };
 
 class ProcedureEntity : public Entity {

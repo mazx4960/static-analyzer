@@ -6,10 +6,10 @@
 
 class SPA {
  private:
-  UI* ui_;
+  UI *ui_;
 
  public:
-  SPA(std::string source_file, std::string query_file);
+  SPA(std::string source_file, std::string query_file, bool debug_mode);
   ~SPA() = default;
   void Run();
 };
