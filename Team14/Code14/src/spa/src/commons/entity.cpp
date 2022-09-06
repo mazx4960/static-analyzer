@@ -50,7 +50,7 @@ StatementEntity::StatementEntity(StmtType stmt_type, int stmt_no)
   this->stmt_type_ = stmt_type;
   this->stmt_no_ = stmt_no;
 }
-StmtType StatementEntity::GetStmtType() const {
+StmtType StatementEntity::GetStmtType() {
   return this->stmt_type_;
 }
 int StatementEntity::GetStmtNo() const {

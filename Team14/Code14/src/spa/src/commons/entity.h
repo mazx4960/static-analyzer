@@ -45,7 +45,7 @@ class StatementEntity : public Entity {
 
  public:
   explicit StatementEntity(StmtType stmt_type, int stmt_no);
-  StmtType GetStmtType() const;
+  StmtType GetStmtType();
   [[nodiscard]] int GetStmtNo() const;
   bool operator==(const StatementEntity &other) const;
 };
