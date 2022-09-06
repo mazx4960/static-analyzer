@@ -11,14 +11,9 @@
 class UI {
  private:
   SP *sp_;
-
   QPS *qps_;
-
   std::string source_file_;
-
   std::string query_file_;
-
-  Result *final_result_;
 
  public:
   explicit UI(std::string source_file, std::string query_file);
@@ -26,6 +21,6 @@ class UI {
   void SetQPS(QPS *qps);
   void Run();
   void LoadSource();
-  void ExecuteQuery();
-  void DisplayResults();
+  Result ExecuteQuery();
+  static void DisplayResults(const Result &result);
 };

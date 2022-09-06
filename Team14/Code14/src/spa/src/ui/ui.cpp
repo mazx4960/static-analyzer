@@ -23,8 +23,8 @@ void UI::Run() {
     return;
   }
   LoadSource();
-  ExecuteQuery();
-  DisplayResults();
+  Result result = ExecuteQuery();
+  DisplayResults(result);
 }
 void UI::LoadSource() {
   spdlog::info("Reading source file...");
@@ -36,21 +36,23 @@ void UI::LoadSource() {
   spdlog::info("Time taken to load source file: {} ms",
                std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
 }
-void UI::ExecuteQuery() {
+Result UI::ExecuteQuery() {
   spdlog::info("Reading query file...");
   std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
   std::ifstream query_stream(this->query_file_);
 
   Query parsed_query = QueryParser::parse(&query_stream);
   Result result = this->qps_->evaluate(parsed_query);
-  this->final_result_ = std::move(&result);
   std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
   spdlog::info("Query executed.");
-  spdlog::info("Time taken to execute query: {} ms",
+  spdlog::info("Time taken to execute query:  {} ms",
                std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
+  return result;
 }
-void UI::DisplayResults() {
-  std::vector<std::string> results_list = this->final_result_->get_sorted_results_list();
+void UI::DisplayResults(const Result &result) {
+  spdlog::info("Displaying results...");
+
+  std::vector<std::string> results_list = result.get_sorted_results_list();
   std::cout << "BEGIN QUERY RESULTS" << std::endl;
   for (std::string &result_str : results_list) {
     std::cout << result_str << " ";

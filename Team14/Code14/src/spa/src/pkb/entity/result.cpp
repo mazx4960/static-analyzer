@@ -1,3 +1,4 @@
+#include <spdlog/spdlog.h>
 #include "result.h"
 
 Result Result::empty(QuerySynonym &syn) {
