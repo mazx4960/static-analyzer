@@ -1,40 +1,79 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
-#include "pkb/pkb_populator/pkb_populator.h"
 
 #include <gtest/gtest.h>
 
-#include <iostream>
-#include <unordered_set>
-#include <list>
-#include <map>
-#include <string>
+#include <vector>
 
-#include "commons/types.h"
 #include "commons/entity.h"
+#include "pkb/pkb.h"
 
-TEST(PKBPopulatorTest, TestBasic) {
-    PKBPopulator p;
-    std::unordered_set<std::string>* ptr;
+TEST(PKBSaveTest, VariableTest) {
+  std::vector<std::string> entity_names({"a", "b", "c", "d", "e", "f"});
+  std::vector<Entity *> entities;
+  int length = entity_names.size();
+  entities.reserve(length);
 
-    Entity x(EntityType::kVariable, "x");
-    Entity y(EntityType::kVariable, "y"); 
-    std::vector<Entity> entities({x, y});
+  for (int i = 0; i < length; i++) {
+    entities.push_back(new VariableEntity(entity_names[i]));
+  }
 
-    ptr = PKBPopulator::populate(entities); 
+  PKB pkb;
+  pkb.save(entities);
+  ASSERT_EQ(pkb.getCount(), length);
+}
 
-    std::unordered_set<std::string> expected_table{"x", "y"};
+TEST(PKBSaveTest, ConstTest) {
+  std::vector<std::string> entity_names({"a", "b", "c", "d", "e", "f"});
+  std::vector<Entity *> entities;
+  int length = entity_names.size();
+  entities.reserve(length);
 
-    std::unordered_set<std::string> result_table = *ptr;
-    std::cout << result_table.size() << "\n";
+  for (int i = 0; i < length; i++) {
+    entities.push_back(new ConstantEntity(entity_names[i]));
+  }
 
-    ASSERT_EQ(result_table.size(), expected_table.size()); 
+  PKB pkb;
+  pkb.save(entities);
+  ASSERT_EQ(pkb.getCount(), length);
+}
 
-    auto result = result_table.begin();
-    auto expected = expected_table.begin();
+TEST(PKBSaveTest, ConstantAndVariableTest) {
+  std::vector<std::string> v_entity_names({"a", "b", "c", "d"});
+  std::vector<std::string> c_entity_names({"ee", "ff", "gg"});
+  std::vector<Entity *> v_entities;
+  std::vector<Entity *> c_entities;
+  v_entities.reserve(v_entity_names.size());
+  c_entities.reserve(c_entity_names.size());
 
-    for (; result != result_table.end() && expected != expected_table.end();
-        ++result, ++expected) {
-      EXPECT_EQ(*result, *expected) << "Variables " << *result << " and " << *expected << " are not the same."; 
-    } 
+  for (const auto &s : v_entity_names) {
+    v_entities.push_back(new VariableEntity(s));
+  }
+
+  for (const auto &s : c_entity_names) {
+    c_entities.push_back(new ConstantEntity(s));
+  }
+
+  PKB pkb;
+  pkb.save(v_entities);
+  pkb.save(c_entities);
+
+  ASSERT_EQ(pkb.getCount(), c_entity_names.size() + v_entity_names.size());
+}
+
+TEST(PKBSaveTest, MultiSave) {
+  std::vector<std::string> entity_names({"a", "b", "c", "d", "e", "f"});
+  std::vector<Entity *> entities;
+  int length = entity_names.size();
+  entities.reserve(length);
+
+  for (int i = 0; i < length; i++) {
+    entities.push_back(new VariableEntity(entity_names[i]));
+  }
+
+  PKB pkb;
+  for (int i = 0; i < 100; i++) {
+    pkb.save(entities);
+  }
+  ASSERT_EQ(pkb.getCount(), length);
 }

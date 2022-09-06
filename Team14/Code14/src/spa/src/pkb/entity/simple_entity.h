@@ -2,13 +2,40 @@
 
 #pragma once
 
-#include <unordered_set>
-#include <vector>
-#include <map>
 #include <string>
+#include <unordered_set>
 
-class SimpleEntity {
+#include "commons/types.h"
+#include "pkb/entity/result.h"
+
+class SimpleEntityTable {
+ protected:
+  std::unordered_set<std::string> table_;
+
  public:
-  virtual std::unordered_set<std::string>*
-  populate(std::string entity) = 0;
+  static SimpleEntityTable *getTable(EntityType);
+
+  void populate(const std::string &);
+  Result getResult(QuerySynonym &);
+  int getCount();
+};
+
+class VariableTable : public SimpleEntityTable {
+ public:
+  VariableTable() = default;
+};
+
+class ConstantTable : public SimpleEntityTable {
+ public:
+  ConstantTable() = default;
+};
+
+class ProcedureTable : public SimpleEntityTable {
+ public:
+  ProcedureTable() = default;
+};
+
+class StatementTable : public SimpleEntityTable {
+ public:
+  StatementTable() = default;
 };

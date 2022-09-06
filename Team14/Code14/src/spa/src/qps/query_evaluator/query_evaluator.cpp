@@ -14,13 +14,13 @@ Result QueryEvaluator::evaluate() {
   for (QueryDeclaration &declaration : query_declarations) {
 
     QuerySynonym declaration_synonym = declaration.getSynonym();
-    VariableEntity variable_entity = declaration.getEntity();
+    Entity variable_entity = declaration.getEntity();
 
     PKBQuery pkb_query = *PKBQuery::getQuery(variable_entity);
     pkb_query.setSynonym(declaration_synonym);
 
     Result query_result = this->pkb_->get(pkb_query);
-    this->context_.insert({declaration, query_result.get_results()});
+    this->context_.insert({declaration, query_result.get_results_set()});
   }
 
   if (subquery_clauses.empty()) {
