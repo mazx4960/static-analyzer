@@ -5,7 +5,6 @@
 void PKB::save(std::vector<Entity *> &entities) {
   for (auto *entity : entities) {
     EntityType entity_type = entity->GetType();
-    std::string entity_name = entity->GetName();
 
     // If table hasn't been created, create it first.
     if (this->entity_storage_map_.find(entity_type) == this->entity_storage_map_.end()) {
