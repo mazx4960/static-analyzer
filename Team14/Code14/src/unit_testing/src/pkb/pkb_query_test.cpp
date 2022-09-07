@@ -9,7 +9,7 @@
 TEST(VarQueryTest, EmptyResult) {
   PKB pkb;
   QuerySynonym placeholder = QuerySynonym("placeholder");
-  Result result = pkb.getResult(EntityType::kConstant, placeholder);
+  Result result = pkb.get(EntityType::kConstant, placeholder);
 
   std::unordered_set<std::string> v_result = result.get_results_set();
   std::unordered_set<std::string> empty_result = Result::empty(placeholder).get_results_set();

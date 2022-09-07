@@ -2,7 +2,7 @@
 
 #include "pkb.h"
 
-void PKB::saveEntities(std::vector<Entity *> &entities) {
+void PKB::save(std::vector<Entity *> &entities) {
   for (auto *entity : entities) {
     EntityType entity_type = entity->GetType();
     std::string entity_name = entity->GetName();
@@ -13,20 +13,20 @@ void PKB::saveEntities(std::vector<Entity *> &entities) {
     }
 
     // Populate table here
-    this->entity_storage_map_[entity_type]->saveEntities(entity_name);
+    this->entity_storage_map_[entity_type]->save(*entity);
   }
 }
 
-Result PKB::getResult(PKBQuery &query) {
-  return this->getResult(query.getEntityType(), query.getSynonym());
+Result PKB::get(PKBQuery &query) {
+  return this->get(query.getEntityType(), query.getSynonym());
 }
 
-Result PKB::getResult(EntityType type, QuerySynonym synonym) {
+Result PKB::get(EntityType type, QuerySynonym synonym) {
   // Table not initialised, return empty Result
   if (this->entity_storage_map_.find(type) == this->entity_storage_map_.end()) {
     return Result::empty(synonym);
   }
-  return this->entity_storage_map_[type]->getResult(synonym);
+  return this->entity_storage_map_[type]->get(synonym);
 }
 
 int PKB::getCount() {

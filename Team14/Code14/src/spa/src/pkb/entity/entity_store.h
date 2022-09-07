@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_set>
 
+#include "commons/entity.h"
 #include "commons/types.h"
 #include "pkb/entity/result.h"
 
@@ -14,9 +15,8 @@ class EntityStore {
 
  public:
   static EntityStore *getStore(EntityType);
-
-  void saveEntities(const std::string &);
-  Result getResult(QuerySynonym &);
+  void save(Entity &entity);
+  Result get(QuerySynonym &synonym);
 
   // Currently only used for debugging and testing
   int getCount();
