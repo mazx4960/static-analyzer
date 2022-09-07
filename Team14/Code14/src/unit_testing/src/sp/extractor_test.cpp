@@ -21,16 +21,20 @@ TEST(ExtractorTest, TestEntity) {
   // DFS traversal should yield the following result
   std::vector<Entity *> expected = {
       new ProcedureEntity("main"),
-      new AssignEntity(0),
+      new AssignEntity(1),
       new VariableEntity("v1"),
       new ConstantEntity("1"),
-      new AssignEntity(0),
+      new AssignEntity(2),
       new VariableEntity("v2"),
       new ConstantEntity("1"),
   };
   ASSERT_EQ(entities.size(), expected.size());
   for (int i = 0; i < entities.size(); ++i) {
     ASSERT_EQ(entities[i]->GetType(), expected[i]->GetType());
+    if (entities[i]->GetType() == EntityType::kStatement) {
+      ASSERT_EQ(static_cast<StatementEntity*>(entities[i])->GetStmtNo(),
+                static_cast<StatementEntity*>(expected[i])->GetStmtNo());
+    }
     ASSERT_EQ(entities[i]->GetName(), expected[i]->GetName());
   }
 }
