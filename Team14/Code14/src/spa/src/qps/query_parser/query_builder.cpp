@@ -1,9 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "query_builder.h"
-#include "commons/parser/parser_exceptions.h"
 
-#include <utility>
 QueryBuilder::QueryBuilder(std::vector<Token *> tokens) {
   this->tokens_ = std::move(tokens);
 }
@@ -12,16 +10,15 @@ Query QueryBuilder::build() {
   QueryCall query_call = empty_call_;
 
   while (!outOfTokens()) {
-    if (declaration_keywords_.count(peekToken().value)) {
+    if (declaration_keywords_.find(peekToken().value) != declaration_keywords_.end()) {
       QueryDeclaration query_declaration = buildDeclaration();
       query_declarations_.push_back(query_declaration);
-    } else if (peekToken() == KeywordToken("Select")){
+    } else if (peekToken() == KeywordToken("Select")) {
       query_call = buildQueryCall();
-    } else if (peekToken() == EndOfFileToken()){
+    } else if (peekToken() == EndOfFileToken()) {
       return Query(query_declarations_, query_call);
-    } else {
-      throw ParseSyntaxError("Unknown keyword " + peekToken().value);
     }
+    throw ParseSyntaxError("Unknown keyword " + peekToken().value);
   }
   throw ParseSyntaxError("Unknown keyword " + peekToken().value);
 }
@@ -38,7 +35,6 @@ bool QueryBuilder::outOfTokens() {
   return this->tokens_.size() == this->token_index_;
 }
 
-
 QueryDeclaration QueryBuilder::buildDeclaration() {
   Entity entity = buildEntity();
   QuerySynonym synonym = buildSynonym();
@@ -46,48 +42,47 @@ QueryDeclaration QueryBuilder::buildDeclaration() {
   if (nextToken() == SemicolonToken()) {
     return query_declaration;
   }
-  throw ParseSyntaxError("Missing ; after declaration");
+  throw ParseSyntaxError("Missing `;` after declaration");
 }
 
 Entity QueryBuilder::buildEntity() {
   Token token = nextToken();
-  if (token == KeywordToken("variable")){
+  if (token == KeywordToken("variable")) {
     return VariableEntity(peekToken().value);
   }
-  if (token == KeywordToken("constant")){
+  if (token == KeywordToken("constant")) {
     return ConstantEntity(peekToken().value);
   }
-  if (token == KeywordToken("procedure")){
+  if (token == KeywordToken("procedure")) {
     return ProcedureEntity(peekToken().value);
   }
-  if (token == KeywordToken("read")){
+  if (token == KeywordToken("read")) {
     return ReadEntity(-1);
   }
-  if (token == KeywordToken("print")){
+  if (token == KeywordToken("print")) {
     return PrintEntity(-1);
   }
-  if (token == KeywordToken("call")){
+  if (token == KeywordToken("call")) {
     return CallEntity(-1);
   }
-  if (token == KeywordToken("while")){
+  if (token == KeywordToken("while")) {
     return WhileEntity(-1);
   }
-  if (token == KeywordToken("if")){
+  if (token == KeywordToken("if")) {
     return IfEntity(-1);
   }
   if (token == KeywordToken("assign")) {
     return AssignEntity(-1);
   }
-  throw ParseSyntaxError("Unknown entity: "+ token.value);
+  throw ParseSyntaxError("Unknown entity: " + token.value);
 }
-
 
 QuerySynonym QueryBuilder::buildSynonym() {
   return QuerySynonym(nextToken().value);
 }
 
-QueryDeclaration QueryBuilder::findDeclaration(const QuerySynonym& synonym) {
-  for (QueryDeclaration declaration: query_declarations_) {
+QueryDeclaration QueryBuilder::findDeclaration(const QuerySynonym &synonym) {
+  for (QueryDeclaration declaration : query_declarations_) {
     if (declaration.getSynonym() == synonym) {
       return declaration;
     }
@@ -116,9 +111,8 @@ Pattern QueryBuilder::buildPattern() {
       }
     }
   }
-  throw ParseSyntaxError("Invalid pattern");
+  throw ParseSyntaxError("Invalid pattern clause");
 }
-
 
 FollowsRelationship QueryBuilder::buildFollows() {
   if (nextToken() == RoundOpenBracketToken()) {
@@ -130,7 +124,7 @@ FollowsRelationship QueryBuilder::buildFollows() {
       }
     }
   }
-  throw ParseSemanticError("Invalid Follows");
+  throw ParseSemanticError("Invalid Follows relationship");
 }
 
 ParentRelationship QueryBuilder::buildParent() {
@@ -143,7 +137,7 @@ ParentRelationship QueryBuilder::buildParent() {
       }
     }
   }
-  throw ParseSemanticError("Invalid Parent");
+  throw ParseSemanticError("Invalid Parent relationship");
 }
 
 UsesRelationship QueryBuilder::buildUses() {
@@ -156,7 +150,7 @@ UsesRelationship QueryBuilder::buildUses() {
       }
     }
   }
-  throw ParseSemanticError("Invalid Uses");
+  throw ParseSemanticError("Invalid Uses relationship");
 }
 
 ModifiesRelationship QueryBuilder::buildModifies() {
@@ -169,9 +163,8 @@ ModifiesRelationship QueryBuilder::buildModifies() {
       }
     }
   }
-  throw ParseSemanticError("Invalid Modifies");
+  throw ParseSemanticError("Invalid Modifies relationship");
 }
-
 
 Relationship QueryBuilder::buildRelationship() {
   Token token = nextToken();
@@ -187,9 +180,8 @@ Relationship QueryBuilder::buildRelationship() {
   if (token == KeywordToken("Modifies")) {
     return buildModifies();
   }
-  throw ParseSyntaxError("Unknown such that relationship: " + token.value);
+  throw ParseSyntaxError("Unknown such-that relationship: " + token.value);
 }
-
 
 QueryCall QueryBuilder::buildQueryCall() {
   if (nextToken() == KeywordToken("Select")) {
@@ -201,5 +193,5 @@ QueryCall QueryBuilder::buildQueryCall() {
     }
     return SelectCall(synonym_declaration, clause_vector);
   }
-  throw ParseSyntaxError("Missing ; after declaration");
+  throw ParseSyntaxError("Missing `;` after declaration");
 }
