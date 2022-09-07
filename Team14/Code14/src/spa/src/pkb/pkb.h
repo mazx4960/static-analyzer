@@ -39,7 +39,7 @@ class PKB : public IPKBSaver, public IPKBGetter {
   std::unordered_map<EntityType, EntityStore *> entity_storage_map_;
 
  public:
-  PKB() : IPKBGetter(), IPKBSaver() {};
+  PKB() = default;
 
   Result getResult(PKBQuery &) override;
   Result getResult(EntityType, QuerySynonym) override;
