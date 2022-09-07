@@ -13,7 +13,12 @@ SimpleNodeType SimpleAstNode::GetNodeType() const {
 
 ProgramNode::ProgramNode(std::vector<ProcedureNode*> procedures)
     : SimpleAstNode(SimpleNodeType::kProgram),
-      procedures_(std::move(procedures)) {}
+      procedures_(std::move(procedures)) {
+  int stmt_no = 1;
+  for (auto *procedure : procedures_) {
+    stmt_no = procedure->GetStatementList()->SetStatementNos(stmt_no);
+  }
+}
 std::vector<ProcedureNode*> ProgramNode::GetProcedures() {
   return this->procedures_;
 }
@@ -46,6 +51,14 @@ std::vector<StatementNode*> StatementListNode::GetStatements() {
   return this->statements_;
 }
 
+int StatementListNode::SetStatementNos(int first_stmt_no) {
+  int stmt_no = first_stmt_no;
+  for (auto *statement : statements_) {
+    stmt_no = statement->SetStatementNo(stmt_no);
+  }
+  return stmt_no;
+}
+
 std::vector<SimpleAstNode*> StatementListNode::GetChildren() {
   return std::vector<SimpleAstNode*>(statements_.begin(), statements_.end());
 }
@@ -60,6 +73,10 @@ int StatementNode::GetStmtNo() const {
 }
 StmtType StatementNode::GetStmtType() {
   return this->stmtType_;
+}
+int StatementNode::SetStatementNo(int next_stmt_no) {
+  this->stmtNo_ = next_stmt_no;
+  return next_stmt_no + 1;
 }
 
 ReadNode::ReadNode(VariableNode* variable)
@@ -98,6 +115,11 @@ std::vector<SimpleAstNode*> WhileNode::GetChildren() {
   return std::vector<SimpleAstNode*>{conditional_, statementList_};
 }
 
+int WhileNode::SetStatementNo(int next_stmt_no) {
+  int stmt_no = StatementNode::SetStatementNo(next_stmt_no);
+  return statementList_->SetStatementNos(stmt_no);
+}
+
 IfNode::IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, StatementListNode* elseStatementList)
     : StatementNode(StmtType::kIf),
       conditional_(conditional),
@@ -108,6 +130,12 @@ StatementListNode* IfNode::GetThenStatementList() {
 }
 StatementListNode* IfNode::GetElseStatementList() {
   return this->elseStatementList_;
+}
+
+int IfNode::SetStatementNo(int next_stmt_no) {
+  int then_stmt_no = StatementNode::SetStatementNo(next_stmt_no);
+  int else_stmt_no = thenStatementList_->SetStatementNos(then_stmt_no);
+  return elseStatementList_->SetStatementNos(else_stmt_no);
 }
 
 std::vector<SimpleAstNode*> IfNode::GetChildren() {
