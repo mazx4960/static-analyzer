@@ -23,4 +23,4 @@ std::string VariableNode::ToString() { return this->variableName_; }
 
 ConstantNode::ConstantNode(int value) : ReferenceNode(NodeType::kConstant), value_(value) {}
 int ConstantNode::GetValue() const { return this->value_; }
-std::string ConstantNode::ToString() { return ""; }
+std::string ConstantNode::ToString() { return std::to_string(this->value_); }
