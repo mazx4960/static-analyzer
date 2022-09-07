@@ -5,7 +5,7 @@
 #include "simple_parser.h"
 #include "extractor/extractor.h"
 
-void SP::SetPKB(PKB *pkb) {
+void SP::SetPKB(IPKBSaver *pkb) {
   this->pkb_ = pkb;
 }
 void SP::LoadSource(std::ifstream &source_stream) {
@@ -26,5 +26,4 @@ void SP::LoadSource(std::ifstream &source_stream) {
   for (auto *relationship : relationships) {
     spdlog::debug("{}", relationship->ToString());
   }
-//  this->pkb_->save(relationships);
 }

@@ -6,10 +6,10 @@
 
 class SP {
  private:
-  PKB *pkb_;
+  IPKBSaver *pkb_;
 
  public:
   SP() = default;
-  void SetPKB(PKB *pkb);
+  void SetPKB(IPKBSaver *pkb);
   void LoadSource(std::ifstream &source_stream);
 };

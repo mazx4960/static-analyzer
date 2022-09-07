@@ -11,16 +11,41 @@
 #include "pkb/entity/result.h"
 #include "pkb/entity/simple_entity.h"
 
-class PKB {
+/*
+ * Interface for PKB Saver
+ */
+class IPKBSaver {
+ protected:
+  IPKBSaver() = default;
+ public:
+  ~IPKBSaver() = default;
+  virtual void save(std::vector<Entity *> &) = 0;
+};
+
+/*
+ * Interface for PKB Getter
+ */
+class IPKBGetter {
+ protected:
+  IPKBGetter() = default;
+ public:
+  ~IPKBGetter() = default;
+  virtual Result getResult(PKBQuery &) = 0;
+  virtual Result getResult(EntityType, QuerySynonym) = 0;
+};
+
+class PKB : public IPKBSaver, public IPKBGetter {
  private:
   std::unordered_map<EntityType, SimpleEntityTable *> entity_table_map_;
 
  public:
-  PKB() = default;
+  PKB() : IPKBGetter(), IPKBSaver() {};
 
-  Result getResult(PKBQuery &);
-  Result getResult(EntityType, QuerySynonym);
+  Result getResult(PKBQuery &) override;
+  Result getResult(EntityType, QuerySynonym) override;
 
-  void save(std::vector<Entity *> &entities);
+  void save(std::vector<Entity *> &entities) override;
+
+  // Currently only used for debugging and testing
   int getCount();
 };
