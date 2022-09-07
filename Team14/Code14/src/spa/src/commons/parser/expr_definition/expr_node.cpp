@@ -19,6 +19,8 @@ VariableNode::VariableNode(std::string variableName)
     : ReferenceNode(NodeType::kVariable),
       variableName_(std::move(variableName)) {}
 std::string VariableNode::GetVariableName() { return this->variableName_; }
+std::string VariableNode::ToString() { return this->variableName_; }
 
 ConstantNode::ConstantNode(int value) : ReferenceNode(NodeType::kConstant), value_(value) {}
 int ConstantNode::GetValue() const { return this->value_; }
+std::string ConstantNode::ToString() { return ""; }

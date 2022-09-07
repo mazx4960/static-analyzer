@@ -8,9 +8,9 @@
 ProgramNode::ProgramNode(std::vector<ProcedureNode*> procedures)
     : Node(NodeType::kProgram),
       procedures_(std::move(procedures)) {}
-std::vector<ProcedureNode*> ProgramNode::GetProcedures() { return this->procedures_; }
 
 std::vector<Node*> ProgramNode::GetChildren() { return std::vector<Node*>(procedures_.begin(), procedures_.end()); }
+std::string ProgramNode::ToString() { return "program"; }
 
 ProcedureNode::ProcedureNode(std::string procName, StatementListNode* statementList)
     : Node(NodeType::kProcedure),
@@ -22,6 +22,7 @@ std::string ProcedureNode::GetProcName() const { return this->procName_; }
 StatementListNode* ProcedureNode::GetStatementList() { return this->statementList_; }
 
 std::vector<Node*> ProcedureNode::GetChildren() { return std::vector<Node*>{statementList_}; }
+std::string ProcedureNode::ToString() { return "procedure"; }
 
 StatementListNode::StatementListNode(std::vector<StatementNode*> statements)
     : Node(NodeType::kStatementList),
@@ -31,6 +32,7 @@ std::vector<StatementNode*> StatementListNode::GetStatements() { return this->st
 std::vector<Node*> StatementListNode::GetChildren() {
   return std::vector<Node*>(statements_.begin(), statements_.end());
 }
+std::string StatementListNode::ToString() { return std::string(); }
 
 StatementNode::StatementNode(StmtType stmtType) : Node(NodeType::kStatement), stmtNo_(0) { this->stmtType_ = stmtType; }
 int StatementNode::GetStmtNo() const { return this->stmtNo_; }
@@ -39,16 +41,19 @@ StmtType StatementNode::GetStmtType() { return this->stmtType_; }
 ReadNode::ReadNode(VariableNode* variable) : StatementNode(StmtType::kRead), variable_(variable) {}
 
 std::vector<Node*> ReadNode::GetChildren() { return std::vector<Node*>{variable_}; }
+std::string ReadNode::ToString() { return "read"; }
 
 PrintNode::PrintNode(VariableNode* variable) : StatementNode(StmtType::kPrint), variable_(variable) {}
 
 std::vector<Node*> PrintNode::GetChildren() { return std::vector<Node*>{variable_}; }
+std::string PrintNode::ToString() { return "print"; }
 
 CallNode::CallNode(std::string procedureName)
     : StatementNode(StmtType::kCall),
       procedureName_(std::move(procedureName)) {}
 
 std::vector<Node*> CallNode::GetChildren() { return std::vector<Node*>{}; }
+std::string CallNode::ToString() { return "call"; }
 
 WhileNode::WhileNode(CondExprNode* conditional, StatementListNode* statementList)
     : StatementNode(StmtType::kWhile),
@@ -57,6 +62,7 @@ WhileNode::WhileNode(CondExprNode* conditional, StatementListNode* statementList
 StatementListNode* WhileNode::GetStatementList() { return this->statementList_; }
 
 std::vector<Node*> WhileNode::GetChildren() { return std::vector<Node*>{conditional_, statementList_}; }
+std::string WhileNode::ToString() { return "while"; }
 
 IfNode::IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, StatementListNode* elseStatementList)
     : StatementNode(StmtType::kIf),
@@ -69,6 +75,7 @@ StatementListNode* IfNode::GetElseStatementList() { return this->elseStatementLi
 std::vector<Node*> IfNode::GetChildren() {
   return std::vector<Node*>{conditional_, thenStatementList_, elseStatementList_};
 }
+std::string IfNode::ToString() { return "if"; }
 
 AssignNode::AssignNode(VariableNode* variable, RelFactorNode* expression)
     : StatementNode(StmtType::kAssign),
@@ -76,10 +83,12 @@ AssignNode::AssignNode(VariableNode* variable, RelFactorNode* expression)
       expression_(expression) {}
 
 std::vector<Node*> AssignNode::GetChildren() { return std::vector<Node*>{variable_, expression_}; }
+std::string AssignNode::ToString() { return "assign"; }
 
 CondExprNode::CondExprNode(CondExprType cond_expr_type) : Node(NodeType::kCondExpr) {
   this->cond_expr_type_ = cond_expr_type;
 }
+std::string CondExprNode::ToString() { return ""; }
 
 NotExprNode::NotExprNode(CondExprNode* negatedConditional)
     : CondExprNode(CondExprType::kNot),
@@ -109,6 +118,7 @@ RelExprNode::RelExprNode(CondExprType cond_expr_type, RelFactorNode* leftFactor,
       rightFactor_(rightFactor) {}
 
 std::vector<Node*> RelExprNode::GetChildren() { return std::vector<Node*>{leftFactor_, rightFactor_}; }
+std::string RelExprNode::ToString() { return std::string(); }
 
 GreaterThanNode::GreaterThanNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor)
     : RelExprNode(CondExprType::kGt, leftFactor, rightFactor) {}

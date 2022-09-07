@@ -74,6 +74,7 @@ class VariableNode : public ReferenceNode {
  public:
   explicit VariableNode(std::string variableName);
   std::string GetVariableName();
+  std::string ToString() override;
 };
 
 class ConstantNode : public ReferenceNode {
@@ -83,4 +84,5 @@ class ConstantNode : public ReferenceNode {
  public:
   explicit ConstantNode(int value);
   [[nodiscard]] int GetValue() const;
+  std::string ToString() override;
 };
