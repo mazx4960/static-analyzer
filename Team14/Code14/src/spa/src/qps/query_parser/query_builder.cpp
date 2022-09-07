@@ -19,9 +19,11 @@ Query QueryBuilder::build() {
       query_call = buildQueryCall();
     } else if (peekToken() == EndOfFileToken()){
       return Query(query_declarations_, query_call);
+    } else {
+      throw ParseSyntaxError("Unknown keyword " + peekToken().value);
     }
   }
-  throw ParseSyntaxError("Unknown keyword: " + peekToken().value);
+  throw ParseSyntaxError("Unknown keyword " + peekToken().value);
 }
 
 Token QueryBuilder::nextToken() {
@@ -76,7 +78,7 @@ Entity QueryBuilder::buildEntity() {
   if (token == KeywordToken("assign")) {
     return AssignEntity(-1);
   }
-  throw ParseSyntaxError("Invalid entity: "+ token.value);
+  throw ParseSyntaxError("Unknown entity: "+ token.value);
 }
 
 
@@ -90,7 +92,7 @@ QueryDeclaration QueryBuilder::findDeclaration(const QuerySynonym& synonym) {
       return declaration;
     }
   }
-  throw ParseSyntaxError("No such declaration: " + synonym.getSynonym());
+  throw ParseSemanticError("Missing declaration: " + synonym.getSynonym());
 }
 
 QueryClause QueryBuilder::buildClause() {
@@ -128,7 +130,7 @@ FollowsRelationship QueryBuilder::buildFollows() {
       }
     }
   }
-  throw ParseSyntaxError("Invalid Follows");
+  throw ParseSemanticError("Invalid Follows");
 }
 
 ParentRelationship QueryBuilder::buildParent() {
@@ -141,7 +143,7 @@ ParentRelationship QueryBuilder::buildParent() {
       }
     }
   }
-  throw ParseSyntaxError("Invalid Parent");
+  throw ParseSemanticError("Invalid Parent");
 }
 
 UsesRelationship QueryBuilder::buildUses() {
@@ -154,7 +156,7 @@ UsesRelationship QueryBuilder::buildUses() {
       }
     }
   }
-  throw ParseSyntaxError("Invalid Uses");
+  throw ParseSemanticError("Invalid Uses");
 }
 
 ModifiesRelationship QueryBuilder::buildModifies() {
@@ -167,7 +169,7 @@ ModifiesRelationship QueryBuilder::buildModifies() {
       }
     }
   }
-  throw ParseSyntaxError("Invalid Modifies");
+  throw ParseSemanticError("Invalid Modifies");
 }
 
 
