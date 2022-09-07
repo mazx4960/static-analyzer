@@ -7,11 +7,11 @@
 
 class QPS {
  private:
-  PKB *pkb_;
+  IPKBGetter *pkb_;
 
  public:
   QPS() = default;
-  void SetPKB(PKB *pkb);
+  void SetPKB(IPKBGetter *pkb);
   static Query parse(std::ifstream *);
   Result evaluate(Query &query);
 };
