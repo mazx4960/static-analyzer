@@ -15,8 +15,10 @@ class EntityStore {
  public:
   static EntityStore *getStore(EntityType);
 
-  void populate(const std::string &);
+  void saveEntities(const std::string &);
   Result getResult(QuerySynonym &);
+
+  // Currently only used for debugging and testing
   int getCount();
 };
 

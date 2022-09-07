@@ -2,7 +2,7 @@
 
 #include "pkb.h"
 
-void PKB::save(std::vector<Entity *> &entities) {
+void PKB::saveEntities(std::vector<Entity *> &entities) {
   for (auto *entity : entities) {
     EntityType entity_type = entity->GetType();
     std::string entity_name = entity->GetName();
@@ -13,7 +13,7 @@ void PKB::save(std::vector<Entity *> &entities) {
     }
 
     // Populate table here
-    this->entity_storage_map_[entity_type]->populate(entity_name);
+    this->entity_storage_map_[entity_type]->saveEntities(entity_name);
   }
 }
 

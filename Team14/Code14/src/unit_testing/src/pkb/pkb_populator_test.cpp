@@ -19,7 +19,7 @@ TEST(PKBSaveTest, VariableTest) {
   }
 
   PKB pkb;
-  pkb.save(entities);
+  pkb.saveEntities(entities);
   ASSERT_EQ(pkb.getCount(), length);
 }
 
@@ -34,7 +34,7 @@ TEST(PKBSaveTest, ConstTest) {
   }
 
   PKB pkb;
-  pkb.save(entities);
+  pkb.saveEntities(entities);
   ASSERT_EQ(pkb.getCount(), length);
 }
 
@@ -55,8 +55,8 @@ TEST(PKBSaveTest, ConstantAndVariableTest) {
   }
 
   PKB pkb;
-  pkb.save(v_entities);
-  pkb.save(c_entities);
+  pkb.saveEntities(v_entities);
+  pkb.saveEntities(c_entities);
 
   ASSERT_EQ(pkb.getCount(), c_entity_names.size() + v_entity_names.size());
 }
@@ -73,7 +73,7 @@ TEST(PKBSaveTest, MultiSave) {
 
   PKB pkb;
   for (int i = 0; i < 100; i++) {
-    pkb.save(entities);
+    pkb.saveEntities(entities);
   }
   ASSERT_EQ(pkb.getCount(), length);
 }

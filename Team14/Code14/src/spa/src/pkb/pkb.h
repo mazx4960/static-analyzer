@@ -19,7 +19,7 @@ class IPKBSaver {
   IPKBSaver() = default;
  public:
   ~IPKBSaver() = default;
-  virtual void save(std::vector<Entity *> &) = 0;
+  virtual void saveEntities(std::vector<Entity *> &) = 0;
 };
 
 /*
@@ -44,7 +44,7 @@ class PKB : public IPKBSaver, public IPKBGetter {
   Result getResult(PKBQuery &) override;
   Result getResult(EntityType, QuerySynonym) override;
 
-  void save(std::vector<Entity *> &entities) override;
+  void saveEntities(std::vector<Entity *> &entities) override;
 
   // Currently only used for debugging and testing
   int getCount();

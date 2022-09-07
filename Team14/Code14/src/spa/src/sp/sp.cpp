@@ -19,7 +19,7 @@ void SP::LoadSource(std::ifstream &source_stream) {
   for (auto *entity : entities) {
     spdlog::debug("{}", entity->ToString());
   }
-  this->pkb_->save(entities);
+  this->pkb_->saveEntities(entities);
 
   std::vector<Relationship *> relationships = RelationshipExtractor::Extract(program_node);
   spdlog::info("Extracted {} relationships", relationships.size());

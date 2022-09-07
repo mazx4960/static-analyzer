@@ -10,7 +10,7 @@ EntityStore *EntityStore::getStore(EntityType type) {
     default: return nullptr;
   }
 }
-void EntityStore::populate(const std::string &entity_name) {
+void EntityStore::saveEntities(const std::string &entity_name) {
   this->table_.insert(entity_name);
 }
 
