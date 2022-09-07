@@ -27,7 +27,7 @@ class ExprNode : public RelFactorNode {
  public:
   ExprNode(ExprType expr_type, RelFactorNode* leftExpression, RelFactorNode* rightExpression);
   std::vector<Node*> GetChildren() override;
-  std::string ToString();
+  std::string ToString() override;
 };
 
 class PlusNode : public ExprNode {

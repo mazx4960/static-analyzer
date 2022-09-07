@@ -2,12 +2,9 @@
 
 #include "extractor.h"
 
-#include <spdlog/spdlog.h>
-
 #include <iostream>
 
 #include "sp/simple_definition/simple_ast.h"
-#include "traverser.h"
 
 /**
  * Extracts all entities from a given AST of a program.
@@ -35,7 +32,7 @@ std::vector<Entity *> EntityExtractor::Extract(Node *program_node) {
       entities.push_back(entity);
     }
   };
-  Traverser::TraverseNode(program_node, op);
+  program_node->VisitAll(op);
   return entities;
 }
 
@@ -49,7 +46,7 @@ std::vector<Relationship *> RelationshipExtractor::Extract(Node *program_node) {
     ExtractFollows(node, relationships);
     ExtractParent(node, relationships);
   };
-  Traverser::TraverseNode(program_node, op);
+  program_node->VisitAll(op);
   return relationships;
 }
 /**
