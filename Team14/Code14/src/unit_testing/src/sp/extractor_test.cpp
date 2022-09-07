@@ -3,7 +3,7 @@
 #include "sp/extractor/extractor.h"
 
 #include "gtest/gtest.h"
-#include "sp/ast/simple_ast.h"
+#include "sp/simple_definition/simple_ast.h"
 
 TEST(ExtractorTest, TestEntity) {
   auto *v1 = new VariableNode("v1");
@@ -20,13 +20,8 @@ TEST(ExtractorTest, TestEntity) {
   std::vector<Entity *> entities = EntityExtractor::Extract(program);
   // DFS traversal should yield the following result
   std::vector<Entity *> expected = {
-      new ProcedureEntity("main"),
-      new AssignEntity(0),
-      new VariableEntity("v1"),
-      new ConstantEntity("1"),
-      new AssignEntity(0),
-      new VariableEntity("v2"),
-      new ConstantEntity("1"),
+      new ProcedureEntity("main"), new AssignEntity(0),      new VariableEntity("v1"), new ConstantEntity("1"),
+      new AssignEntity(0),         new VariableEntity("v2"), new ConstantEntity("1"),
   };
   ASSERT_EQ(entities.size(), expected.size());
   for (int i = 0; i < entities.size(); ++i) {
@@ -55,7 +50,5 @@ TEST(ExtractorTest, TestRelationship) {
       new FollowsRelationship(new AssignEntity(0), new AssignEntity(0)),
   };
   ASSERT_EQ(relationships.size(), expected.size());
-  for (int i = 0; i < relationships.size(); ++i) {
-    ASSERT_EQ(relationships[i]->GetType(), expected[i]->GetType());
-  }
+  for (int i = 0; i < relationships.size(); ++i) { ASSERT_EQ(relationships[i]->GetType(), expected[i]->GetType()); }
 }

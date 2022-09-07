@@ -4,12 +4,8 @@
 
 #include <utility>
 
-#include "sp/grammar/simple_grammar.h"
+#include "sp/simple_definition/simple_grammar.h"
 
-SimpleParser::SimpleParser(std::vector<Token*> tokens) {
-  this->tokens_ = std::move(tokens);
-}
-SimpleAstNode* SimpleParser::Parse() {
-  auto token_stream = this->tokens_.begin();
-  return (new ProgramGrammarRule())->parseNode(token_stream);
+Node* SimpleParser::ParseProgram(const std::vector<Token*>& tokens) {
+  return Parser::Parse(new ProgramGrammarRule(), std::move(tokens));
 }

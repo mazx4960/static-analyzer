@@ -3,13 +3,9 @@
 #pragma once
 
 #include "commons/lexer/token.h"
-#include "sp/ast/simple_ast.h"
+#include "commons/parser/parser.h"
 
-class SimpleParser {
- private:
-  std::vector<Token*> tokens_;
-
+class SimpleParser : public Parser {
  public:
-  explicit SimpleParser(std::vector<Token*> tokens);
-  SimpleAstNode* Parse();
+  static Node* ParseProgram(const std::vector<Token*>& tokens);
 };
