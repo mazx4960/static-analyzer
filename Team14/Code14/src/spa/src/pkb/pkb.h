@@ -36,7 +36,7 @@ class IPKBGetter {
 
 class PKB : public IPKBSaver, public IPKBGetter {
  private:
-  std::unordered_map<EntityType, EntityStorage *> entity_table_map_;
+  std::unordered_map<EntityType, EntityStorage *> entity_storage_map_;
 
  public:
   PKB() : IPKBGetter(), IPKBSaver() {};

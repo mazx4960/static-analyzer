@@ -13,7 +13,7 @@ class EntityStorage {
   std::unordered_set<std::string> table_;
 
  public:
-  static EntityStorage *getTable(EntityType);
+  static EntityStorage *getStore(EntityType);
 
   void populate(const std::string &);
   Result getResult(QuerySynonym &);

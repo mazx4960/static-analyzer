@@ -1,7 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "pkb/entity/entity_storage.h"
-EntityStorage *EntityStorage::getTable(EntityType type) {
+EntityStorage *EntityStorage::getStore(EntityType type) {
   switch (type) {
     case EntityType::kProcedure: return new ProcedureTable();
     case EntityType::kStatement: return new StatementTable();
