@@ -9,7 +9,7 @@ void PKB::save(std::vector<Entity *> &entities) {
 
     // If table hasn't been created, create it first.
     if (this->entity_storage_map_.find(entity_type) == this->entity_storage_map_.end()) {
-      this->entity_storage_map_[entity_type] = EntityStorage::getStore(entity_type);
+      this->entity_storage_map_[entity_type] = EntityStore::getStore(entity_type);
     }
 
     // Populate table here
