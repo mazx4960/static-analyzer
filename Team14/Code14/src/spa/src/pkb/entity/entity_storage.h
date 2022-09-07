@@ -8,34 +8,34 @@
 #include "commons/types.h"
 #include "pkb/entity/result.h"
 
-class SimpleEntityTable {
+class EntityStorage {
  protected:
   std::unordered_set<std::string> table_;
 
  public:
-  static SimpleEntityTable *getTable(EntityType);
+  static EntityStorage *getTable(EntityType);
 
   void populate(const std::string &);
   Result getResult(QuerySynonym &);
   int getCount();
 };
 
-class VariableTable : public SimpleEntityTable {
+class VariableTable : public EntityStorage {
  public:
   VariableTable() = default;
 };
 
-class ConstantTable : public SimpleEntityTable {
+class ConstantTable : public EntityStorage {
  public:
   ConstantTable() = default;
 };
 
-class ProcedureTable : public SimpleEntityTable {
+class ProcedureTable : public EntityStorage {
  public:
   ProcedureTable() = default;
 };
 
-class StatementTable : public SimpleEntityTable {
+class StatementTable : public EntityStorage {
  public:
   StatementTable() = default;
 };

@@ -1,7 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
-#include "pkb/entity/simple_entity.h"
-SimpleEntityTable *SimpleEntityTable::getTable(EntityType type) {
+#include "pkb/entity/entity_storage.h"
+EntityStorage *EntityStorage::getTable(EntityType type) {
   switch (type) {
     case EntityType::kProcedure: return new ProcedureTable();
     case EntityType::kStatement: return new StatementTable();
@@ -10,14 +10,14 @@ SimpleEntityTable *SimpleEntityTable::getTable(EntityType type) {
     default: return nullptr;
   }
 }
-void SimpleEntityTable::populate(const std::string &entity_name) {
+void EntityStorage::populate(const std::string &entity_name) {
   this->table_.insert(entity_name);
 }
 
-Result SimpleEntityTable::getResult(QuerySynonym &synonym) {
+Result EntityStorage::getResult(QuerySynonym &synonym) {
   return Result(synonym, this->table_);
 }
 
-int SimpleEntityTable::getCount() {
+int EntityStorage::getCount() {
   return this->table_.size();
 }

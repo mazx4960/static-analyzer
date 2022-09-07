@@ -9,7 +9,7 @@
 #include "commons/relationship.h"
 #include "pkb/entity/pkb_query.h"
 #include "pkb/entity/result.h"
-#include "pkb/entity/simple_entity.h"
+#include "pkb/entity/entity_storage.h"
 
 /*
  * Interface for PKB Saver
@@ -36,7 +36,7 @@ class IPKBGetter {
 
 class PKB : public IPKBSaver, public IPKBGetter {
  private:
-  std::unordered_map<EntityType, SimpleEntityTable *> entity_table_map_;
+  std::unordered_map<EntityType, EntityStorage *> entity_table_map_;
 
  public:
   PKB() : IPKBGetter(), IPKBSaver() {};
