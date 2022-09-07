@@ -1,13 +1,13 @@
 #pragma once
 
-#include "base_simple_grammar.h"
+#include "commons/parser/grammar/grammar.h"
 
-class RecursiveGrammarRule : public SimpleGrammarRule {
+class RecursiveGrammarRule : public GrammarRule {
  private:
   GrammarRuleProducer* base_rule_producer_;
   std::vector<std::pair<Token*, MergeFunction>> merge_rules_;
 
  public:
   RecursiveGrammarRule(GrammarRuleProducer* baseRuleProducer, std::vector<std::pair<Token*, MergeFunction>> mergeRules);
-  SimpleAstNode* parseNode(TokenIterator& tokenStream) override;
+  Node* parseNode(TokenIterator& tokenStream) override;
 };

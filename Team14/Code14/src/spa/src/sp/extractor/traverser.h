@@ -4,10 +4,10 @@
 
 #include <functional>
 
-#include "sp/ast/simple_ast.h"
+#include "commons/parser/node/node.h"
 
 class Traverser {
  private:
  public:
-  static void TraverseNode(SimpleAstNode *, const std::function<void(SimpleAstNode *)> &op);
+  static void TraverseNode(Node *, const std::function<void(Node *)> &op);
 };
