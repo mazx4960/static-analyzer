@@ -10,16 +10,15 @@
 
 class Query {
  private:
+  std::vector<QueryDeclaration> query_declarations_;
 
   QueryCall query_call_;
 
-  std::vector<QueryDeclaration *> query_declarations_;
-
  public:
-  Query(std::vector<QueryDeclaration *> &query_declarations, QueryCall query_call)
+  Query(std::vector<QueryDeclaration> query_declarations, QueryCall query_call)
       : query_declarations_(std::move(query_declarations)), query_call_(std::move(query_call)) {}
 
-  [[nodiscard]] std::vector<QueryDeclaration *> getDeclarations() const;
+  [[nodiscard]] std::vector<QueryDeclaration> getDeclarations() const;
   [[nodiscard]] QueryCall getQueryCall() const;
 };
 
