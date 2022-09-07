@@ -9,7 +9,7 @@
 #include "commons/relationship.h"
 #include "pkb/entity/pkb_query.h"
 #include "pkb/entity/result.h"
-#include "pkb/entity/entity_storage.h"
+#include "pkb/entity/entity_store.h"
 
 /*
  * Interface for PKB Saver

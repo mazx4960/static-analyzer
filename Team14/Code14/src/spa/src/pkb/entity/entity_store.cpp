@@ -1,6 +1,6 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
-#include "pkb/entity/entity_storage.h"
+#include "pkb/entity/entity_store.h"
 EntityStore *EntityStore::getStore(EntityType type) {
   switch (type) {
     case EntityType::kProcedure: return new ProcedureTable();
