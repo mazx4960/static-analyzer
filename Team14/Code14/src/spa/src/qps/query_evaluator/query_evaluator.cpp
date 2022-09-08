@@ -21,7 +21,7 @@ Result QueryEvaluator::evaluate() {
     PKBQuery pkb_query = *PKBQuery::getQuery(*variable_entity);
     pkb_query.setSynonym(declaration_synonym);
 
-    Result query_result = this->pkb_->get(pkb_query);
+    Result query_result = this->pkb_->getResults(pkb_query);
     this->context_.insert({*declaration, query_result.get_results_set()});
   }
 

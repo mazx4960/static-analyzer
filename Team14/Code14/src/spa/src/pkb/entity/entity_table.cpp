@@ -1,7 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
-#include "entity_store.h"
-EntityStore *EntityStore::getStore(EntityType type) {
+#include "entity_table.h"
+EntityTable *EntityTable::getTable(EntityType type) {
   switch (type) {
     case EntityType::kProcedure: return new ProcedureTable();
     case EntityType::kStatement: return new StatementTable();
@@ -10,14 +10,15 @@ EntityStore *EntityStore::getStore(EntityType type) {
     default: return nullptr;
   }
 }
-void EntityStore::save(Entity &entity) {
+
+void EntityTable::save(Entity &entity) {
   this->table_.insert(entity.GetName());
 }
 
-Result EntityStore::get(QuerySynonym &synonym) {
+Result EntityTable::get(QuerySynonym &synonym) {
   return Result(synonym, this->table_);
 }
 
-int EntityStore::getCount() {
+int EntityTable::getCount() {
   return this->table_.size();
 }

@@ -7,30 +7,30 @@ void PKB::save(std::vector<Entity *> &entities) {
     EntityType entity_type = entity->GetType();
 
     // If table hasn't been created, create it first.
-    if (this->entity_storage_map_.find(entity_type) == this->entity_storage_map_.end()) {
-      this->entity_storage_map_[entity_type] = EntityStore::getStore(entity_type);
+    if (this->entity_map_.find(entity_type) == this->entity_map_.end()) {
+      this->entity_map_[entity_type] = EntityTable::getTable(entity_type);
     }
 
     // Populate table here
-    this->entity_storage_map_[entity_type]->save(*entity);
+    this->entity_map_[entity_type]->save(*entity);
   }
 }
 
-Result PKB::get(PKBQuery &query) {
-  return this->get(query.getEntityType(), query.getSynonym());
+Result PKB::getResults(PKBQuery &query) {
+  return this->getResults(query.getEntityType(), query.getSynonym());
 }
 
-Result PKB::get(EntityType type, QuerySynonym synonym) {
+Result PKB::getResults(EntityType type, QuerySynonym synonym) {
   // Table not initialised, return empty Result
-  if (this->entity_storage_map_.find(type) == this->entity_storage_map_.end()) {
+  if (this->entity_map_.find(type) == this->entity_map_.end()) {
     return Result::empty(synonym);
   }
-  return this->entity_storage_map_[type]->get(synonym);
+  return this->entity_map_[type]->get(synonym);
 }
 
 int PKB::getCount() {
   int count = 0;
-  for (auto &entity_table : this->entity_storage_map_) {
+  for (auto &entity_table : this->entity_map_) {
     count += entity_table.second->getCount();
   }
   return count;
