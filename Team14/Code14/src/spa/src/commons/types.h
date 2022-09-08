@@ -24,3 +24,23 @@ enum class RsType {
   kUses,
   kModifies,
 };
+
+class TypeError : public std::runtime_error {
+ protected:
+  explicit TypeError(const std::string &message) : std::runtime_error(message) {}
+};
+
+class EntityTypeError : public TypeError {
+ public:
+  explicit EntityTypeError(const std::string &message) : TypeError(message) {}
+};
+
+class StmtTypeError : public TypeError {
+ public:
+  explicit StmtTypeError(const std::string &message) : TypeError(message) {}
+};
+
+class RsTypeError : public TypeError {
+ public:
+  explicit RsTypeError(const std::string &message) : TypeError(message) {}
+};
