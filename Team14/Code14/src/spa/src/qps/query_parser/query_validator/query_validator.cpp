@@ -1,6 +1,7 @@
 #include "query_validator.h"
 
 #include <utility>
+#include <algorithm>
 
 QueryValidator::QueryValidator(std::vector<Token *> tokens) {
   this->tokens_ = std::move(tokens);
@@ -11,12 +12,12 @@ void QueryValidator::validate() {
     Token* tmp = peekToken();
     if (this->declaration_keywords_.count(tmp->value)) {
       validateDeclarations();
-    }
-    if (this->call_keywords_.count(tmp->value)) {
+    }else if (this->call_keywords_.count(tmp->value)) {
       ValidateQueryCalls();
-    }
-    if (*tmp == EndOfFileToken()) {
+    }else if (*tmp == EndOfFileToken()) {
       break;
+    } else {
+      throw ParseSyntaxError("Unexpected token: " + tmp->value);
     }
   }
 }
@@ -45,12 +46,15 @@ void QueryValidator::validateDeclarations() {
 QueryDeclaration* QueryValidator::validateDeclaration() {
   Entity* entity = validateEntity();
   QuerySynonym synonym = validateSynonym();
+  if (isDeclared(synonym.getSynonym())) {
+    throw ParseSemanticError("Duplicate synonym: " + synonym.getSynonym());
+  }
   if (*nextToken() == SemicolonToken()) {
     return new QueryDeclaration(entity, synonym);
   }
   throw ParseSyntaxError("Missing `;` after declaration");
 }
-QueryDeclaration* QueryValidator::findDeclaration(const QuerySynonym &synonym) {
+QueryDeclaration* QueryValidator::getDeclaration(const QuerySynonym &synonym) {
   for (QueryDeclaration* declaration : query_declarations_) {
     if (declaration->getSynonym() == synonym) {
       return declaration;
@@ -58,6 +62,13 @@ QueryDeclaration* QueryValidator::findDeclaration(const QuerySynonym &synonym) {
   }
   throw ParseSemanticError("Missing declaration: " + synonym.getSynonym());
 }
+
+bool QueryValidator::isDeclared(const std::string &synonym) {
+  return std::any_of(query_declarations_.begin(),
+                     query_declarations_.end(),
+                     [&synonym](QueryDeclaration *d) { return d->getSynonym().getSynonym() == synonym;});
+}
+
 Entity* QueryValidator::validateEntity() {
   Token* token = nextToken();
   if (*token == KeywordToken("variable")) {
@@ -98,7 +109,7 @@ QuerySynonym QueryValidator::validateSynonym() {
 void QueryValidator::ValidateQueryCalls() {
   Token* token = nextToken();
   if (*token == KeywordToken("Select")) {
-    QueryDeclaration* synonym_declaration = findDeclaration(validateSynonym());
+    QueryDeclaration* synonym_declaration = getDeclaration(validateSynonym());
     std::vector<QueryClause> clause_vector;
     while (!(*peekToken() == EndOfFileToken())) {
       clause_vector.push_back(validateClause());
@@ -122,11 +133,11 @@ Pattern QueryValidator::validatePattern() {
   if (!(*nextToken() == RoundOpenBracketToken())) {
     throw ParseSyntaxError("Missing '(' before parameters");
   }
-  Entity* first = findDeclaration(validateSynonym())->getEntity();
+  Entity* first = getDeclaration(validateSynonym())->getEntity();
   if (!(*nextToken() == CommaToken())) {
     throw ParseSyntaxError("Missing ',' between parameters");
   }
-  Entity* second = findDeclaration(validateSynonym())->getEntity();
+  Entity* second = getDeclaration(validateSynonym())->getEntity();
   if (!(*nextToken() == RoundCloseBracketToken())) {
     throw ParseSyntaxError("Missing ')' after parameters");
   }
@@ -152,11 +163,11 @@ FollowsRelationship QueryValidator::validateFollows() {
   if (!(*nextToken() == RoundOpenBracketToken())) {
     throw ParseSyntaxError("Missing '(' before parameters");
   }
-  Entity* first = findDeclaration(validateSynonym())->getEntity();
+  Entity* first = getDeclaration(validateSynonym())->getEntity();
   if (!(*nextToken() == CommaToken())) {
     throw ParseSyntaxError("Missing ',' between parameters");
   }
-  Entity* second = findDeclaration(validateSynonym())->getEntity();
+  Entity* second = getDeclaration(validateSynonym())->getEntity();
   if (!(*nextToken() == RoundCloseBracketToken())) {
     throw ParseSyntaxError("Missing ')' after parameters");
   }
@@ -166,11 +177,11 @@ ParentRelationship QueryValidator::validateParent() {
   if (!(*nextToken() == RoundOpenBracketToken())) {
     throw ParseSyntaxError("Missing '(' before parameters");
   }
-  Entity* first = findDeclaration(validateSynonym())->getEntity();
+  Entity* first = getDeclaration(validateSynonym())->getEntity();
   if (!(*nextToken() == CommaToken())) {
     throw ParseSyntaxError("Missing ',' between parameters");
   }
-  Entity* second = findDeclaration(validateSynonym())->getEntity();
+  Entity* second = getDeclaration(validateSynonym())->getEntity();
   if (!(*nextToken() == RoundCloseBracketToken())) {
     throw ParseSyntaxError("Missing ')' after parameters");
   }
@@ -180,11 +191,11 @@ UsesRelationship QueryValidator::validateUses() {
   if (!(*nextToken() == RoundOpenBracketToken())) {
     throw ParseSyntaxError("Missing '(' before parameters");
   }
-  Entity* first = findDeclaration(validateSynonym())->getEntity();
+  Entity* first = getDeclaration(validateSynonym())->getEntity();
   if (!(*nextToken() == CommaToken())) {
     throw ParseSyntaxError("Missing ',' between parameters");
   }
-  Entity* second = findDeclaration(validateSynonym())->getEntity();
+  Entity* second = getDeclaration(validateSynonym())->getEntity();
   if (!(*nextToken() == RoundCloseBracketToken())) {
     throw ParseSyntaxError("Missing ')' after parameters");
   }
@@ -194,11 +205,11 @@ ModifiesRelationship QueryValidator::validateModifies() {
   if (!(*nextToken() == RoundOpenBracketToken())) {
     throw ParseSyntaxError("Missing '(' before parameters");
   }
-  Entity* first = findDeclaration(validateSynonym())->getEntity();
+  Entity* first = getDeclaration(validateSynonym())->getEntity();
   if (!(*nextToken() == CommaToken())) {
     throw ParseSyntaxError("Missing ',' between parameters");
   }
-  Entity* second = findDeclaration(validateSynonym())->getEntity();
+  Entity* second = getDeclaration(validateSynonym())->getEntity();
   if (!(*nextToken() == RoundCloseBracketToken())) {
     throw ParseSyntaxError("Missing ')' after parameters");
   }

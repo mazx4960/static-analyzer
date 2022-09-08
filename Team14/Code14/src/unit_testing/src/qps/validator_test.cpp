@@ -12,9 +12,7 @@ TEST(ValidatorTest, QueryValidatorTest) {
       new EndOfFileToken()};
   QueryValidator short_validator = QueryValidator(input_tokens_short);
   short_validator.validate();
-
-
-
+  
   ASSERT_EQ(short_validator.getDeclarations()[0]->getSynonym(), QuerySynonym("v1"));
   ASSERT_EQ(short_validator.getDeclarations()[1]->getSynonym(), QuerySynonym("v2"));
 
@@ -32,4 +30,32 @@ TEST(ValidatorTest, QueryValidatorTest) {
 
   ASSERT_EQ(long_validator.getDeclarations()[0]->getSynonym(), QuerySynonym("v1"));
   ASSERT_EQ(long_validator.getDeclarations()[1]->getSynonym(), QuerySynonym("v2"));
+}
+
+TEST(ValidatorTest, InvalidTokenTest1) {
+  std::vector<Token *> invalid_tokens = {
+      new KeywordToken("var"), new SymbolToken("v1"), new SemicolonToken(),
+      new KeywordToken("assign"), new SymbolToken("v2"), new SemicolonToken(),
+      new KeywordToken("Select"), new SymbolToken("v1"),
+      new EndOfFileToken()};
+  QueryValidator validator = QueryValidator(invalid_tokens);
+  try {
+    validator.validate();
+    FAIL();
+  }
+  catch(const ParseSyntaxError& expected) {}
+}
+
+TEST(ValidatorTest, InvalidTokenTest2) {
+  std::vector<Token *> invalid_tokens = {
+      new KeywordToken("assign"), new SymbolToken("v1"), new SemicolonToken(),
+      new KeywordToken("assign"), new SymbolToken("v1"), new SemicolonToken(),
+      new KeywordToken("Select"), new SymbolToken("v1"),
+      new EndOfFileToken()};
+  QueryValidator validator = QueryValidator(invalid_tokens);
+  try {
+    validator.validate();
+    FAIL();
+  }
+  catch(const ParseSemanticError& expected) {}
 }
