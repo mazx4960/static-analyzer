@@ -16,7 +16,7 @@ class RelationshipExtractor {
   static void ExtractParent(std::vector<Relationship *> &relationships, Node *node);
   static void ExtractParentHelper(std::vector<Relationship *> &relationships, Entity *parent, Node *node);
   static void ExtractUses(std::vector<Relationship *> &relationships, Node *node);
-  static void ExtractUsesRecursive(std::vector<Relationship *> &relationships, Entity *parent, Node *node);
+  static void ExtractUsesHelper(std::vector<Relationship *> &relationships, Entity *parent, Node *node);
   static void ExtractModifies(std::vector<Relationship *> &relationships, Node *node);
-  static void ExtractModifiesRecursive(std::vector<Relationship *> &relationships, Entity *parent, Node *node);
+  static void ExtractModifiesHelper(std::vector<Relationship *> &relationships, Entity *parent, Node *node);
 };

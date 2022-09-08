@@ -115,48 +115,37 @@ void RelationshipExtractor::ExtractUses(std::vector<Relationship *> &relationshi
     auto *proc = static_cast<ProcedureNode *>(node);
     Entity *parent = new ProcedureEntity(proc->GetProcName());
     auto *stmt_list = proc->GetStatementList();
-    ExtractUsesRecursive(relationships, parent, stmt_list);
+    ExtractUsesHelper(relationships, parent, stmt_list);
   }
   if (node->GetNodeType() == NodeType::kStatement) {
     auto *stmt = static_cast<StatementNode *>(node);
     auto stmt_type = stmt->GetStmtType();
     if (stmt_type == StmtType::kAssign) {
-      std::vector<Entity *> children =
-          EntityExtractor::ExtractVariables(static_cast<AssignNode *>(node)->GetExpression());
       Entity *parent = new AssignEntity(stmt->GetStmtNo());
-      Match(relationships, RsType::kUses, parent, children);
+      ExtractUsesHelper(relationships, parent, stmt);
     } else if (stmt_type == StmtType::kPrint) {
       Entity *parent = new PrintEntity(stmt->GetStmtNo());
-      Node *variable = static_cast<PrintNode *>(node)->GetVariable();
-      Entity *child = new VariableEntity(static_cast<VariableNode *>(variable)->GetVariableName());
-      relationships.push_back(new Relationship(RsType::kUses, parent, child));
+      ExtractUsesHelper(relationships, parent, stmt);
     } else if (stmt_type == StmtType::kIf) {
       auto *if_node = static_cast<IfNode *>(node);
       Entity *parent = new IfEntity(stmt->GetStmtNo());
-      std::vector<Entity *> children = EntityExtractor::ExtractVariables(if_node->GetConditional());
-      Match(relationships, RsType::kUses, parent, children);
-      ExtractUsesRecursive(relationships, parent, if_node->GetThenStatementList());
-      ExtractUsesRecursive(relationships, parent, if_node->GetElseStatementList());
+      ExtractUsesHelper(relationships, parent, if_node->GetConditional());
+      ExtractUsesHelper(relationships, parent, if_node->GetThenStatementList());
+      ExtractUsesHelper(relationships, parent, if_node->GetElseStatementList());
     } else if (stmt_type == StmtType::kWhile) {
       auto *while_node = static_cast<WhileNode *>(node);
       Entity *parent = new WhileEntity(stmt->GetStmtNo());
-      std::vector<Entity *> children = EntityExtractor::ExtractVariables(while_node->GetConditional());
-      Match(relationships, RsType::kUses, parent, children);
-      ExtractUsesRecursive(relationships, parent, while_node->GetStatementList());
+      ExtractUsesHelper(relationships, parent, while_node->GetConditional());
+      ExtractUsesHelper(relationships, parent, while_node->GetStatementList());
     } else if (stmt_type == StmtType::kCall) {
       // TODO: implement recursive uses for statements in call
     }
   }
 }
-void RelationshipExtractor::ExtractUsesRecursive(std::vector<Relationship *> &relationships, Entity *parent,
-                                                 Node *node) {
-  if (node->GetNodeType() == NodeType::kProcedure) {
-    auto *proc = static_cast<ProcedureNode *>(node);
-    auto *stmt_list = proc->GetStatementList();
-    ExtractUsesRecursive(relationships, parent, stmt_list);
-  } else if (node->GetNodeType() == NodeType::kStatementList) {
+void RelationshipExtractor::ExtractUsesHelper(std::vector<Relationship *> &relationships, Entity *parent, Node *node) {
+  if (node->GetNodeType() == NodeType::kStatementList) {
     auto *stmt_list = static_cast<StatementListNode *>(node);
-    for (auto *stmt : stmt_list->GetStatements()) { ExtractUsesRecursive(relationships, parent, stmt); }
+    for (auto *stmt : stmt_list->GetStatements()) { ExtractUsesHelper(relationships, parent, stmt); }
   } else if (node->GetNodeType() == NodeType::kStatement) {
     auto *stmt = static_cast<StatementNode *>(node);
     auto stmt_type = stmt->GetStmtType();
@@ -172,13 +161,13 @@ void RelationshipExtractor::ExtractUsesRecursive(std::vector<Relationship *> &re
       auto *if_node = static_cast<IfNode *>(node);
       std::vector<Entity *> children = EntityExtractor::ExtractVariables(if_node->GetConditional());
       Match(relationships, RsType::kUses, parent, children);
-      ExtractUsesRecursive(relationships, parent, if_node->GetThenStatementList());
-      ExtractUsesRecursive(relationships, parent, if_node->GetElseStatementList());
+      ExtractUsesHelper(relationships, parent, if_node->GetThenStatementList());
+      ExtractUsesHelper(relationships, parent, if_node->GetElseStatementList());
     } else if (stmt_type == StmtType::kWhile) {
       auto *while_node = static_cast<WhileNode *>(node);
       std::vector<Entity *> children = EntityExtractor::ExtractVariables(while_node->GetConditional());
       Match(relationships, RsType::kUses, parent, children);
-      ExtractUsesRecursive(relationships, parent, while_node->GetStatementList());
+      ExtractUsesHelper(relationships, parent, while_node->GetStatementList());
     } else if (stmt_type == StmtType::kCall) {
       // TODO: implement recursive uses for statements in call
     }
@@ -189,44 +178,36 @@ void RelationshipExtractor::ExtractModifies(std::vector<Relationship *> &relatio
     auto *proc = static_cast<ProcedureNode *>(node);
     Entity *parent = new ProcedureEntity(proc->GetProcName());
     auto *stmt_list = proc->GetStatementList();
-    ExtractModifiesRecursive(relationships, parent, stmt_list);
+    ExtractModifiesHelper(relationships, parent, stmt_list);
   }
   if (node->GetNodeType() == NodeType::kStatement) {
     auto *stmt = static_cast<StatementNode *>(node);
     auto stmt_type = stmt->GetStmtType();
     if (stmt_type == StmtType::kAssign) {
       Entity *parent = new AssignEntity(stmt->GetStmtNo());
-      VariableNode *variable = static_cast<AssignNode *>(node)->GetVariable();
-      Entity *child = new VariableEntity(variable->GetVariableName());
-      relationships.push_back(new Relationship(RsType::kModifies, parent, child));
+      ExtractModifiesHelper(relationships, parent, stmt);
     } else if (stmt_type == StmtType::kRead) {
       Entity *parent = new ReadEntity(stmt->GetStmtNo());
-      VariableNode *variable = static_cast<ReadNode *>(node)->GetVariable();
-      Entity *child = new VariableEntity(variable->GetVariableName());
-      relationships.push_back(new Relationship(RsType::kModifies, parent, child));
+      ExtractModifiesHelper(relationships, parent, stmt);
     } else if (stmt_type == StmtType::kIf) {
       auto *if_node = static_cast<IfNode *>(node);
       Entity *parent = new IfEntity(stmt->GetStmtNo());
-      ExtractModifiesRecursive(relationships, parent, if_node->GetThenStatementList());
-      ExtractModifiesRecursive(relationships, parent, if_node->GetElseStatementList());
+      ExtractModifiesHelper(relationships, parent, if_node->GetThenStatementList());
+      ExtractModifiesHelper(relationships, parent, if_node->GetElseStatementList());
     } else if (stmt_type == StmtType::kWhile) {
       auto *while_node = static_cast<WhileNode *>(node);
       Entity *parent = new WhileEntity(stmt->GetStmtNo());
-      ExtractModifiesRecursive(relationships, parent, while_node->GetStatementList());
+      ExtractModifiesHelper(relationships, parent, while_node->GetStatementList());
     } else if (stmt_type == StmtType::kCall) {
       // TODO: implement recursive uses for statements in call
     }
   }
 }
-void RelationshipExtractor::ExtractModifiesRecursive(std::vector<Relationship *> &relationships, Entity *parent,
-                                                     Node *node) {
-  if (node->GetNodeType() == NodeType::kProcedure) {
-    auto *proc = static_cast<ProcedureNode *>(node);
-    auto *stmt_list = proc->GetStatementList();
-    ExtractModifiesRecursive(relationships, parent, stmt_list);
-  } else if (node->GetNodeType() == NodeType::kStatementList) {
+void RelationshipExtractor::ExtractModifiesHelper(std::vector<Relationship *> &relationships, Entity *parent,
+                                                  Node *node) {
+  if (node->GetNodeType() == NodeType::kStatementList) {
     auto *stmt_list = static_cast<StatementListNode *>(node);
-    for (auto *stmt : stmt_list->GetStatements()) { ExtractModifiesRecursive(relationships, parent, stmt); }
+    for (auto *stmt : stmt_list->GetStatements()) { ExtractModifiesHelper(relationships, parent, stmt); }
   } else if (node->GetNodeType() == NodeType::kStatement) {
     auto *stmt = static_cast<StatementNode *>(node);
     auto stmt_type = stmt->GetStmtType();
@@ -240,11 +221,11 @@ void RelationshipExtractor::ExtractModifiesRecursive(std::vector<Relationship *>
       relationships.push_back(new Relationship(RsType::kModifies, parent, child));
     } else if (stmt_type == StmtType::kIf) {
       auto *if_node = static_cast<IfNode *>(node);
-      ExtractModifiesRecursive(relationships, parent, if_node->GetThenStatementList());
-      ExtractModifiesRecursive(relationships, parent, if_node->GetElseStatementList());
+      ExtractModifiesHelper(relationships, parent, if_node->GetThenStatementList());
+      ExtractModifiesHelper(relationships, parent, if_node->GetElseStatementList());
     } else if (stmt_type == StmtType::kWhile) {
       auto *while_node = static_cast<WhileNode *>(node);
-      ExtractModifiesRecursive(relationships, parent, while_node->GetStatementList());
+      ExtractModifiesHelper(relationships, parent, while_node->GetStatementList());
     } else if (stmt_type == StmtType::kCall) {
       // TODO: implement recursive uses for statements in call
     }
