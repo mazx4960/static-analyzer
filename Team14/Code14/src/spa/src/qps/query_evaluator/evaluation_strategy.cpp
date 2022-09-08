@@ -3,10 +3,11 @@
 /*
  * Factory method
  */
-EvaluationStrategy *EvaluationStrategy::getStrategy(PKB *pkb, QueryClause &query_clause) {
+EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBGetter *pkb, QueryClause &query_clause) {
   switch (query_clause.getClauseType()) {
     case (ClauseType::kSuchThat): return new SuchThatStrategy(pkb, query_clause);
     case (ClauseType::kPattern): return new PatternStrategy(pkb, query_clause);
+    default: throw std::runtime_error("Invalid clause type");
   }
 }
 
