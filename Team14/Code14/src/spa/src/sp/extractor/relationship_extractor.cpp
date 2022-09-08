@@ -127,16 +127,11 @@ void RelationshipExtractor::ExtractUses(std::vector<Relationship *> &relationshi
       Entity *parent = new PrintEntity(stmt->GetStmtNo());
       ExtractUsesHelper(relationships, parent, stmt);
     } else if (stmt_type == StmtType::kIf) {
-      auto *if_node = static_cast<IfNode *>(node);
       Entity *parent = new IfEntity(stmt->GetStmtNo());
-      ExtractUsesHelper(relationships, parent, if_node->GetConditional());
-      ExtractUsesHelper(relationships, parent, if_node->GetThenStatementList());
-      ExtractUsesHelper(relationships, parent, if_node->GetElseStatementList());
+      ExtractUsesHelper(relationships, parent, stmt);
     } else if (stmt_type == StmtType::kWhile) {
-      auto *while_node = static_cast<WhileNode *>(node);
       Entity *parent = new WhileEntity(stmt->GetStmtNo());
-      ExtractUsesHelper(relationships, parent, while_node->GetConditional());
-      ExtractUsesHelper(relationships, parent, while_node->GetStatementList());
+      ExtractUsesHelper(relationships, parent, stmt);
     } else if (stmt_type == StmtType::kCall) {
       // TODO: implement recursive uses for statements in call
     }
@@ -190,14 +185,11 @@ void RelationshipExtractor::ExtractModifies(std::vector<Relationship *> &relatio
       Entity *parent = new ReadEntity(stmt->GetStmtNo());
       ExtractModifiesHelper(relationships, parent, stmt);
     } else if (stmt_type == StmtType::kIf) {
-      auto *if_node = static_cast<IfNode *>(node);
       Entity *parent = new IfEntity(stmt->GetStmtNo());
-      ExtractModifiesHelper(relationships, parent, if_node->GetThenStatementList());
-      ExtractModifiesHelper(relationships, parent, if_node->GetElseStatementList());
+      ExtractModifiesHelper(relationships, parent, stmt);
     } else if (stmt_type == StmtType::kWhile) {
-      auto *while_node = static_cast<WhileNode *>(node);
       Entity *parent = new WhileEntity(stmt->GetStmtNo());
-      ExtractModifiesHelper(relationships, parent, while_node->GetStatementList());
+      ExtractModifiesHelper(relationships, parent, stmt);
     } else if (stmt_type == StmtType::kCall) {
       // TODO: implement recursive uses for statements in call
     }
