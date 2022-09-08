@@ -19,6 +19,8 @@ class QueryEvaluator {
 
   std::unordered_map<QueryDeclaration, std::unordered_set<std::string>, QueryDeclarationHashFunction> context_;
 
+  void fetchContext();
+
  public:
   QueryEvaluator(IPKBGetter *pkb, Query &query) : pkb_(pkb), query_(query) {};
 
