@@ -36,8 +36,8 @@ void RelationshipExtractor::Match(std::vector<Relationship *> &relationships, Rs
 /**
  * Extracts all follows relationships from a given statement list.
  *
+ * @param relationships vector to populate
  * @param node
- * @return vector of follows relationships
  */
 void RelationshipExtractor::ExtractFollows(std::vector<Relationship *> &relationships, Node *node) {
   if (node->GetNodeType() != NodeType::kStatementList) { return; }
@@ -154,8 +154,10 @@ void RelationshipExtractor::ExtractUsesRecursive(std::vector<Relationship *> &re
     auto *proc = static_cast<ProcedureNode *>(node);
     auto *stmt_list = proc->GetStatementList();
     ExtractUsesRecursive(relationships, parent, stmt_list);
-  }
-  if (node->GetNodeType() == NodeType::kStatement) {
+  } else if (node->GetNodeType() == NodeType::kStatementList) {
+    auto *stmt_list = static_cast<StatementListNode *>(node);
+    for (auto *stmt : stmt_list->GetStatements()) { ExtractUsesRecursive(relationships, parent, stmt); }
+  } else if (node->GetNodeType() == NodeType::kStatement) {
     auto *stmt = static_cast<StatementNode *>(node);
     auto stmt_type = stmt->GetStmtType();
     if (stmt_type == StmtType::kAssign) {
@@ -222,8 +224,10 @@ void RelationshipExtractor::ExtractModifiesRecursive(std::vector<Relationship *>
     auto *proc = static_cast<ProcedureNode *>(node);
     auto *stmt_list = proc->GetStatementList();
     ExtractModifiesRecursive(relationships, parent, stmt_list);
-  }
-  if (node->GetNodeType() == NodeType::kStatement) {
+  } else if (node->GetNodeType() == NodeType::kStatementList) {
+    auto *stmt_list = static_cast<StatementListNode *>(node);
+    for (auto *stmt : stmt_list->GetStatements()) { ExtractModifiesRecursive(relationships, parent, stmt); }
+  } else if (node->GetNodeType() == NodeType::kStatement) {
     auto *stmt = static_cast<StatementNode *>(node);
     auto stmt_type = stmt->GetStmtType();
     if (stmt_type == StmtType::kAssign) {
