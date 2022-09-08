@@ -16,11 +16,12 @@ class QueryCall {
  protected:
   CallType type_;
 
-  QueryDeclaration* query_declaration_;
+  QueryDeclaration *query_declaration_;
 
   std::vector<QueryClause> clause_vector_;
+
  public:
-  QueryCall(CallType call_type, QueryDeclaration* query_declaration, std::vector<QueryClause> clause_vector)
+  QueryCall(CallType call_type, QueryDeclaration *query_declaration, std::vector<QueryClause> clause_vector)
       : type_(call_type), query_declaration_(std::move(query_declaration)), clause_vector_(std::move(clause_vector)) {};
 
   CallType getType() const;
@@ -31,6 +32,6 @@ class QueryCall {
 
 class SelectCall : public QueryCall {
  public:
-  SelectCall(QueryDeclaration* query_declaration, std::vector<QueryClause> clause_vector)
+  SelectCall(QueryDeclaration *query_declaration, std::vector<QueryClause> clause_vector)
       : QueryCall(CallType::kSelect, std::move(query_declaration), std::move(clause_vector)) {};
 };
