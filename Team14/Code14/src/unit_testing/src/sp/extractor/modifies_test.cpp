@@ -24,7 +24,7 @@ TEST(ExtractorTest, TestModifies) {
       new ModifiesRelationship(new ProcedureEntity("main"), new VariableEntity("v1")),
       new ModifiesRelationship(new AssignEntity(0), new VariableEntity("v1")),
   };
-
+  
   ASSERT_EQ(relationships.size(), expected.size());
   for (int i = 0; i < relationships.size(); ++i) {
     ASSERT_EQ(relationships[i]->GetType(), expected[i]->GetType());

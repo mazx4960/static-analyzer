@@ -120,20 +120,17 @@ void RelationshipExtractor::ExtractUses(std::vector<Relationship *> &relationshi
   if (node->GetNodeType() == NodeType::kStatement) {
     auto *stmt = static_cast<StatementNode *>(node);
     auto stmt_type = stmt->GetStmtType();
-    if (stmt_type == StmtType::kAssign) {
-      Entity *parent = new AssignEntity(stmt->GetStmtNo());
-      ExtractUsesHelper(relationships, parent, stmt);
-    } else if (stmt_type == StmtType::kPrint) {
-      Entity *parent = new PrintEntity(stmt->GetStmtNo());
-      ExtractUsesHelper(relationships, parent, stmt);
-    } else if (stmt_type == StmtType::kIf) {
-      Entity *parent = new IfEntity(stmt->GetStmtNo());
-      ExtractUsesHelper(relationships, parent, stmt);
-    } else if (stmt_type == StmtType::kWhile) {
-      Entity *parent = new WhileEntity(stmt->GetStmtNo());
-      ExtractUsesHelper(relationships, parent, stmt);
-    } else if (stmt_type == StmtType::kCall) {
-      // TODO: implement recursive uses for statements in call
+    switch (stmt_type) {
+      case StmtType::kAssign:// fallthrough
+      case StmtType::kPrint: // fallthrough
+      case StmtType::kIf:    // fallthrough
+      case StmtType::kWhile: // fallthrough
+      case StmtType::kCall: {
+        Entity *parent = new StatementEntity(stmt_type, stmt->GetStmtNo());
+        ExtractUsesHelper(relationships, parent, stmt);
+        break;
+      }
+      case StmtType::kRead: break;
     }
   }
 }
@@ -168,6 +165,12 @@ void RelationshipExtractor::ExtractUsesHelper(std::vector<Relationship *> &relat
     }
   }
 }
+/**
+ * Extracts all immediate modifies relationships from a given AST node.
+ *
+ * @param relationships vector to populate
+ * @param node
+ */
 void RelationshipExtractor::ExtractModifies(std::vector<Relationship *> &relationships, Node *node) {
   if (node->GetNodeType() == NodeType::kProcedure) {
     auto *proc = static_cast<ProcedureNode *>(node);
@@ -178,20 +181,17 @@ void RelationshipExtractor::ExtractModifies(std::vector<Relationship *> &relatio
   if (node->GetNodeType() == NodeType::kStatement) {
     auto *stmt = static_cast<StatementNode *>(node);
     auto stmt_type = stmt->GetStmtType();
-    if (stmt_type == StmtType::kAssign) {
-      Entity *parent = new AssignEntity(stmt->GetStmtNo());
-      ExtractModifiesHelper(relationships, parent, stmt);
-    } else if (stmt_type == StmtType::kRead) {
-      Entity *parent = new ReadEntity(stmt->GetStmtNo());
-      ExtractModifiesHelper(relationships, parent, stmt);
-    } else if (stmt_type == StmtType::kIf) {
-      Entity *parent = new IfEntity(stmt->GetStmtNo());
-      ExtractModifiesHelper(relationships, parent, stmt);
-    } else if (stmt_type == StmtType::kWhile) {
-      Entity *parent = new WhileEntity(stmt->GetStmtNo());
-      ExtractModifiesHelper(relationships, parent, stmt);
-    } else if (stmt_type == StmtType::kCall) {
-      // TODO: implement recursive uses for statements in call
+    switch (stmt_type) {
+      case StmtType::kAssign:// fallthrough
+      case StmtType::kRead:  // fallthrough
+      case StmtType::kIf:    // fallthrough
+      case StmtType::kWhile: // fallthrough
+      case StmtType::kCall: {
+        Entity *parent = new StatementEntity(stmt_type, stmt->GetStmtNo());
+        ExtractModifiesHelper(relationships, parent, stmt);
+        break;
+      }
+      case StmtType::kPrint: break;
     }
   }
 }
