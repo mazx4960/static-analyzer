@@ -36,7 +36,7 @@ class QueryValidator {
   void validateDeclarations();
   void ValidateQueryCalls();
   QueryDeclaration* validateDeclaration();
-  QueryDeclaration* findDeclaration(const QuerySynonym &synonym);
+  QueryDeclaration* getDeclaration(const QuerySynonym &synonym);
   Entity * validateEntity();
   QuerySynonym validateSynonym();
   QueryClause validateClause();
@@ -46,5 +46,6 @@ class QueryValidator {
   ParentRelationship validateParent();
   UsesRelationship validateUses();
   ModifiesRelationship validateModifies();
+  bool isDeclared(const std::string &synonym);
 };
 

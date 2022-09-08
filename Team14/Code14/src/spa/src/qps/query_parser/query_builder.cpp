@@ -2,18 +2,19 @@
 
 #include "query_builder.h"
 
-QueryBuilder::QueryBuilder() {
-}
+#include <utility>
+
+QueryBuilder::QueryBuilder() = default;
 
 Query QueryBuilder::build() {
   return Query(query_declarations_, *query_calls_[0]);
 }
 
 void QueryBuilder::withDeclarations(std::vector<QueryDeclaration *> query_declarations) {
-  this->query_declarations_ = query_declarations;
+  this->query_declarations_ = std::move(query_declarations);
 
 }
 void QueryBuilder::withQueryCalls(std::vector<QueryCall *> query_calls) {
-  this->query_calls_ = query_calls;
+  this->query_calls_ = std::move(query_calls);
 
 }
