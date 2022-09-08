@@ -23,10 +23,10 @@ class QueryCall {
   QueryCall(CallType call_type, QueryDeclaration* query_declaration, std::vector<QueryClause> clause_vector)
       : type_(call_type), query_declaration_(std::move(query_declaration)), clause_vector_(std::move(clause_vector)) {};
 
-  CallType getType();
-  QueryDeclaration* getDeclaration();
-  std::vector<QueryClause> getClauseVector();
+  CallType getType() const;
+  QueryDeclaration *getDeclaration() const;
   bool hasSubClauses() const;
+  std::vector<QueryClause> getClauseVector() const;
 };
 
 class SelectCall : public QueryCall {

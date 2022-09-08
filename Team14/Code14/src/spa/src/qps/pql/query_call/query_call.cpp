@@ -2,13 +2,13 @@
 
 #include "query_call.h"
 
-CallType QueryCall::getType() {
+CallType QueryCall::getType() const {
   return this->type_;
 }
-QueryDeclaration* QueryCall::getDeclaration() {
+QueryDeclaration *QueryCall::getDeclaration() const {
   return this->query_declaration_;
 }
-std::vector<QueryClause> QueryCall::getClauseVector() {
+std::vector<QueryClause> QueryCall::getClauseVector() const {
   return this->clause_vector_;
 }
 bool QueryCall::hasSubClauses() const {
