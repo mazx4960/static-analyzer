@@ -11,3 +11,6 @@ QueryDeclaration* QueryCall::getDeclaration() {
 std::vector<QueryClause> QueryCall::getClauseVector() {
   return this->clause_vector_;
 }
+bool QueryCall::hasSubClauses() const {
+  return !this->getClauseVector().empty();
+}

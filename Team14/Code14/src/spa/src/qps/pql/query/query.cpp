@@ -7,3 +7,6 @@ std::vector<QueryDeclaration*> Query::getDeclarations() const {
 QueryCall Query::getQueryCall() const {
   return this->query_call_;
 }
+bool Query::hasSubClauses() const {
+  return this->query_call_.hasSubClauses();
+}

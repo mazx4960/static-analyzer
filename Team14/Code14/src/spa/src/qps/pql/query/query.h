@@ -20,5 +20,6 @@ class Query {
 
   [[nodiscard]] std::vector<QueryDeclaration*> getDeclarations() const;
   [[nodiscard]] QueryCall getQueryCall() const;
+  [[nodiscard]] bool hasSubClauses() const;
 };
 
