@@ -36,7 +36,7 @@ void EntityExtractor::ExtractProcedure(std::vector<Entity *> &entities, Node *no
   entities.push_back(entity);
 }
 void EntityExtractor::ExtractStatement(std::vector<Entity *> &entities, Node *node) {
-  if (node->GetNodeType() == NodeType::kStatement) { return; }
+  if (node->GetNodeType() != NodeType::kStatement) { return; }
   auto *stmt = static_cast<StatementNode *>(node);
   auto stmt_type = stmt->GetStmtType();
   auto stmt_no = stmt->GetStmtNo();
@@ -44,13 +44,13 @@ void EntityExtractor::ExtractStatement(std::vector<Entity *> &entities, Node *no
   entities.push_back(entity);
 }
 void EntityExtractor::ExtractVariable(std::vector<Entity *> &entities, Node *node) {
-  if (node->GetNodeType() == NodeType::kVariable) { return; }
+  if (node->GetNodeType() != NodeType::kVariable) { return; }
   auto var_name = static_cast<VariableNode *>(node)->GetVariableName();
   Entity *entity = new VariableEntity(var_name);
   entities.push_back(entity);
 }
 void EntityExtractor::ExtractConstant(std::vector<Entity *> &entities, Node *node) {
-  if (node->GetNodeType() == NodeType::kConstant) { return; }
+  if (node->GetNodeType() != NodeType::kConstant) { return; }
   auto const_name = static_cast<ConstantNode *>(node)->GetValue();
   Entity *entity = new ConstantEntity(std::to_string(const_name));
   entities.push_back(entity);

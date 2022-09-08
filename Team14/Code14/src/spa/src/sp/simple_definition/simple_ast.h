@@ -84,7 +84,7 @@ class PrintNode : public StatementNode {
  public:
   explicit PrintNode(VariableNode* variable);
   std::vector<Node*> GetChildren() override;
-  Node* GetVariable();
+  VariableNode* GetVariable();
   std::string ToString() override;
 };
 

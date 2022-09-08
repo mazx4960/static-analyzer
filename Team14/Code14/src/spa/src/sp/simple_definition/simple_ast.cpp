@@ -45,9 +45,8 @@ std::string ReadNode::ToString() { return "read"; }
 VariableNode* ReadNode::GetVariable() { return this->variable_; }
 
 PrintNode::PrintNode(VariableNode* variable) : StatementNode(StmtType::kPrint), variable_(variable) {}
-
 std::vector<Node*> PrintNode::GetChildren() { return std::vector<Node*>{variable_}; }
-Node* PrintNode::GetVariable() { return this->variable_; }
+VariableNode* PrintNode::GetVariable() { return this->variable_; }
 std::string PrintNode::ToString() { return "print"; }
 
 CallNode::CallNode(std::string procedureName)
