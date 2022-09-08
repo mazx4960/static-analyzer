@@ -14,7 +14,7 @@ TEST(QETest, VariableGetTest) {
   pkb->save(entities);
   auto *test_entity =  new VariableEntity("x");
   QuerySynonym query_synonym = QuerySynonym("v");
-  QueryDeclaration* query_declaration = new QueryDeclaration(test_entity, query_synonym);
+  auto* query_declaration = new QueryDeclaration(test_entity, query_synonym);
   std::vector<QueryDeclaration*> query_declarations = {query_declaration};
 
   Query query = Query(
