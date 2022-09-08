@@ -150,6 +150,11 @@ void RelationshipExtractor::ExtractUses(std::vector<Relationship *> &relationshi
 }
 void RelationshipExtractor::ExtractUsesRecursive(std::vector<Relationship *> &relationships, Entity *parent,
                                                  Node *node) {
+  if (node->GetNodeType() == NodeType::kProcedure) {
+    auto *proc = static_cast<ProcedureNode *>(node);
+    auto *stmt_list = proc->GetStatementList();
+    ExtractUsesRecursive(relationships, parent, stmt_list);
+  }
   if (node->GetNodeType() == NodeType::kStatement) {
     auto *stmt = static_cast<StatementNode *>(node);
     auto stmt_type = stmt->GetStmtType();
