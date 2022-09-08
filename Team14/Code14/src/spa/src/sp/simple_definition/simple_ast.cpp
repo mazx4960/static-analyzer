@@ -42,10 +42,12 @@ ReadNode::ReadNode(VariableNode* variable) : StatementNode(StmtType::kRead), var
 
 std::vector<Node*> ReadNode::GetChildren() { return std::vector<Node*>{variable_}; }
 std::string ReadNode::ToString() { return "read"; }
+VariableNode* ReadNode::GetVariable() { return this->variable_; }
 
 PrintNode::PrintNode(VariableNode* variable) : StatementNode(StmtType::kPrint), variable_(variable) {}
 
 std::vector<Node*> PrintNode::GetChildren() { return std::vector<Node*>{variable_}; }
+Node* PrintNode::GetVariable() { return this->variable_; }
 std::string PrintNode::ToString() { return "print"; }
 
 CallNode::CallNode(std::string procedureName)
@@ -59,8 +61,8 @@ WhileNode::WhileNode(CondExprNode* conditional, StatementListNode* statementList
     : StatementNode(StmtType::kWhile),
       conditional_(conditional),
       statementList_(statementList) {}
+CondExprNode* WhileNode::GetConditional() { return this->conditional_; }
 StatementListNode* WhileNode::GetStatementList() { return this->statementList_; }
-
 std::vector<Node*> WhileNode::GetChildren() { return std::vector<Node*>{conditional_, statementList_}; }
 std::string WhileNode::ToString() { return "while"; }
 
@@ -69,9 +71,9 @@ IfNode::IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, 
       conditional_(conditional),
       thenStatementList_(thenStatementList),
       elseStatementList_(elseStatementList) {}
+CondExprNode* IfNode::GetConditional() { return this->conditional_; }
 StatementListNode* IfNode::GetThenStatementList() { return this->thenStatementList_; }
 StatementListNode* IfNode::GetElseStatementList() { return this->elseStatementList_; }
-
 std::vector<Node*> IfNode::GetChildren() {
   return std::vector<Node*>{conditional_, thenStatementList_, elseStatementList_};
 }
@@ -81,8 +83,9 @@ AssignNode::AssignNode(VariableNode* variable, RelFactorNode* expression)
     : StatementNode(StmtType::kAssign),
       variable_(variable),
       expression_(expression) {}
-
 std::vector<Node*> AssignNode::GetChildren() { return std::vector<Node*>{variable_, expression_}; }
+VariableNode* AssignNode::GetVariable() { return this->variable_; }
+RelFactorNode* AssignNode::GetExpression() { return this->expression_; }
 std::string AssignNode::ToString() { return "assign"; }
 
 CondExprNode::CondExprNode(CondExprType cond_expr_type) : Node(NodeType::kCondExpr) {

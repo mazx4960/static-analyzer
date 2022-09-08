@@ -1,8 +1,8 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
-#include "sp/extractor/extractor.h"
-
 #include "gtest/gtest.h"
+#include "sp/extractor/entity_extractor.h"
+#include "sp/extractor/relationship_extractor.h"
 #include "sp/simple_definition/simple_ast.h"
 
 TEST(ExtractorTest, TestEntity) {
@@ -17,7 +17,7 @@ TEST(ExtractorTest, TestEntity) {
   std::vector<ProcedureNode *> procs = {p1};
   auto *program = new ProgramNode(procs);
 
-  std::vector<Entity *> entities = EntityExtractor::Extract(program);
+  std::vector<Entity *> entities = EntityExtractor::ExtractAll(program);
   // DFS traversal should yield the following result
   std::vector<Entity *> expected = {
       new ProcedureEntity("main"), new AssignEntity(0),      new VariableEntity("v1"), new ConstantEntity("1"),
@@ -42,7 +42,7 @@ TEST(ExtractorTest, TestRelationship) {
   std::vector<ProcedureNode *> procs = {p1};
   auto *program = new ProgramNode(procs);
 
-  std::vector<Relationship *> relationships = RelationshipExtractor::Extract(program);
+  std::vector<Relationship *> relationships = RelationshipExtractor::ExtractAll(program);
   // DFS traversal should yield the following result
   std::vector<Relationship *> expected = {
       new ParentRelationship(new ProcedureEntity("main"), new AssignEntity(0)),
