@@ -5,14 +5,14 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "pkb.h"
 #include "commons/relationship.h"
+#include "pkb.h"
+#include "pkb/entity/entity_table.h"
 #include "pkb/entity/pkb_query.h"
 #include "pkb/entity/result.h"
-#include "pkb/entity/entity_store.h"
 
 /*
- * Interface for PKB Saver
+ * Interface for SP -> PKB
  */
 class IPKBSaver {
  protected:
@@ -23,26 +23,26 @@ class IPKBSaver {
 };
 
 /*
- * Interface for PKB Getter
+ * Interface for QPS -> PKB
  */
-class IPKBGetter {
+class IPKBQuery {
  protected:
-  IPKBGetter() = default;
+  IPKBQuery() = default;
  public:
-  ~IPKBGetter() = default;
-  virtual Result get(PKBQuery &) = 0;
-  virtual Result get(EntityType, QuerySynonym) = 0;
+  ~IPKBQuery() = default;
+  virtual Result getResults(PKBQuery &) = 0;
+  virtual Result getResults(EntityType, QuerySynonym) = 0;
 };
 
-class PKB : public IPKBSaver, public IPKBGetter {
+class PKB : public IPKBSaver, public IPKBQuery {
  private:
-  std::unordered_map<EntityType, EntityStore *> entity_storage_map_;
+  std::unordered_map<EntityType, EntityTable *> entity_map_;
 
  public:
   PKB() = default;
 
-  Result get(PKBQuery &query) override;
-  Result get(EntityType type, QuerySynonym synonym) override;
+  Result getResults(PKBQuery &query) override;
+  Result getResults(EntityType type, QuerySynonym synonym) override;
 
   void save(std::vector<Entity *> &entities) override;
 

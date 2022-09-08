@@ -9,12 +9,13 @@
 #include "commons/types.h"
 #include "pkb/entity/result.h"
 
-class EntityStore {
+class EntityTable {
  protected:
   std::unordered_set<std::string> table_;
+  EntityTable() = default;
 
  public:
-  static EntityStore *getStore(EntityType);
+  static EntityTable *getTable(EntityType);
   void save(Entity &entity);
   Result get(QuerySynonym &synonym);
 
@@ -22,22 +23,22 @@ class EntityStore {
   int getCount();
 };
 
-class VariableTable : public EntityStore {
+class VariableTable : public EntityTable {
  public:
   VariableTable() = default;
 };
 
-class ConstantTable : public EntityStore {
+class ConstantTable : public EntityTable {
  public:
   ConstantTable() = default;
 };
 
-class ProcedureTable : public EntityStore {
+class ProcedureTable : public EntityTable {
  public:
   ProcedureTable() = default;
 };
 
-class StatementTable : public EntityStore {
+class StatementTable : public EntityTable {
  public:
   StatementTable() = default;
 };
