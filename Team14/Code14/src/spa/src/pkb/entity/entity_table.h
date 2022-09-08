@@ -16,7 +16,7 @@ class EntityTable {
 
  public:
   static EntityTable *getTable(EntityType);
-  void save(Entity &entity);
+  void populate(Entity &entity);
   Result get(QuerySynonym &synonym);
 
   // Currently only used for debugging and testing
