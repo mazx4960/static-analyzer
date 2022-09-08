@@ -2,8 +2,10 @@
 
 Result QueryEvaluator::evaluate() {
   // Query declaration for whose results are to be returned.
-  QueryDeclaration* called_declaration = this->query_.getQueryCall().getDeclaration();
-  QuerySynonym query_synonym = called_declaration->getSynonym();
+
+  QueryDeclaration *selected_declaration = this->query_.getQueryCall().getDeclaration();
+  QuerySynonym query_synonym = selected_declaration->getSynonym();
+
 
   // Declarations in the query.
   std::vector<QueryDeclaration*> query_declarations = this->query_.getDeclarations();
@@ -19,14 +21,18 @@ Result QueryEvaluator::evaluate() {
     PKBQuery pkb_query = *PKBQuery::getQuery(*variable_entity);
     pkb_query.setSynonym(declaration_synonym);
 
-    Result query_result = this->pkb_->getResult(pkb_query);
+    Result query_result = this->pkb_->get(pkb_query);
     this->context_.insert({*declaration, query_result.get_results_set()});
   }
 
   if (subquery_clauses.empty()) {
-    return Result(query_synonym, this->context_.at(*called_declaration));
-  }
+    // Selected QueryDeclaration is not in initialised.
+    if (this->context_.find(*selected_declaration) == this->context_.end()) {
+      return Result::empty(query_synonym);
+    }
+    return Result(query_synonym, this->context_.at(*selected_declaration));
 
+  }
 
   // TODO(howtoosee): implement projection and aggregation
   return Result::empty(query_synonym);

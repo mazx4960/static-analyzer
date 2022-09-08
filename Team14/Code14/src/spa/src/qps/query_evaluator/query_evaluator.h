@@ -13,14 +13,14 @@ class QueryEvaluator {
  private:
   Query query_;
 
-  PKB *pkb_;
+  IPKBGetter *pkb_;
 
   std::vector<Result> partial_results_list_;
 
   std::unordered_map<QueryDeclaration, std::unordered_set<std::string>, QueryDeclarationHashFunction> context_;
 
  public:
-  QueryEvaluator(PKB *pkb, Query &query) : pkb_(pkb), query_(query) {};
+  QueryEvaluator(IPKBGetter *pkb, Query &query) : pkb_(pkb), query_(query) {};
 
   Result evaluate();
 };

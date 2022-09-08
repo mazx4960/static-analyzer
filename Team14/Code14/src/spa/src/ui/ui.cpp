@@ -2,9 +2,7 @@
 
 #include "ui.h"
 
-#include <iostream>
 #include <utility>
-
 #include "qps/query_parser/query_parser.h"
 #include "spdlog/spdlog.h"
 
