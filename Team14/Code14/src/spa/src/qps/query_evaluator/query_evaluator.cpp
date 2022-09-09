@@ -6,33 +6,33 @@ Result QueryEvaluator::evaluate() {
   QueryDeclaration *selected_declaration = this->query_.getQueryCall().getDeclaration();
   QuerySynonym query_synonym = selected_declaration->getSynonym();
 
-
   // Declarations in the query.
-  std::vector<QueryDeclaration*> query_declarations = this->query_.getDeclarations();
+  declarations_ = this->query_.getDeclarations();
 
   // Sub-queries that need to be processed.
   std::vector<QueryClause> subquery_clauses = this->query_.getQueryCall().getClauseVector();
 
-  for (QueryDeclaration* declaration : query_declarations) {
-
-    QuerySynonym declaration_synonym = declaration->getSynonym();
-    Entity* variable_entity = declaration->getEntity();
-
-    PKBQuery pkb_query = *PKBQuery::getQuery(*variable_entity);
-    pkb_query.setSynonym(declaration_synonym);
-
-    Result query_result = this->pkb_->getResults(pkb_query);
-    this->context_.insert({*declaration, query_result.get_results_set()});
-  }
-
-  if (subquery_clauses.empty()) {
-    // Selected QueryDeclaration is not in initialised.
-    if (this->context_.find(*selected_declaration) == this->context_.end()) {
-      return Result::empty(query_synonym);
-    }
-    return Result(query_synonym, this->context_.at(*selected_declaration));
+  // Update context for each declaration
+  for (QueryDeclaration* declaration : declarations_) {
+    // TODO(howtoosee): update initial context_ in declaration
+    // Something like: declaration->context_ = PKB.getAll(declaration->getType())
+    // context_ is a unordered_set<Entity*>
 
   }
+
+  // Set intersection for each clause
+  for (QueryClause subquery_clause: subquery_clauses) {
+    // TODO(howtoosee): create PKBQuery from subquery_clause in SIMPLE format Relationship(Entity, Entity)
+    // Something like: PKB.setQuery(Relationship) or PKB.setQueries(vector<Relationship>)
+
+    // TODO(howtoosee): get result from PKB as unordered_set<Entity*>
+
+    // TODO(howtoosee): update context_ in declaration using set intersection of RESULT and context_
+
+  }
+
+  // TODO(howtoosee): unpack context_ of v from declarations_eg. Select "v"
+  // Return the result
 
   // TODO(howtoosee): implement projection and aggregation
   return Result::empty(query_synonym);
