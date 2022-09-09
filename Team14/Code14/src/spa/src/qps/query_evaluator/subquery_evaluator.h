@@ -10,5 +10,6 @@ class SubQueryEvaluator {
 
  public:
   SubQueryEvaluator(IPKBGetter *pkb, QueryClause &query_clause_);
+
   Result evaluate();
 };

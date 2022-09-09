@@ -9,12 +9,9 @@ void QueryEvaluator::fetchContext() {
   std::vector<QueryDeclaration *> query_declarations = this->query_.getDeclarations();
 
   for (QueryDeclaration *declaration : query_declarations) {
-
     QuerySynonym declaration_synonym = declaration->getSynonym();
-    Entity *variable_entity = declaration->getEntity();
-
-    PKBQuery pkb_query = *PKBQuery::getQuery(*variable_entity);
-    pkb_query.setSynonym(declaration_synonym);
+    Entity *declaration_var_entity = declaration->getEntity();
+    PKBEntityQuery pkb_query = *PKBEntityQuery::getQuery(*declaration_var_entity, declaration_synonym);
 
     Result query_declaration_context = this->pkb_->get(pkb_query);
     this->context_.insert({*declaration, query_declaration_context.get_results_set()});
