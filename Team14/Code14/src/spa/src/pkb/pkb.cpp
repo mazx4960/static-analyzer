@@ -16,7 +16,7 @@ void PKB::save(std::vector<Entity *> &entities) {
   }
 }
 
-Result PKB::get(PKBQuery &query) {
+Result PKB::get(PKBEntityQuery &query) {
   return this->get(query.getEntityType(), query.getSynonym());
 }
 

@@ -30,7 +30,7 @@ class IPKBGetter {
   IPKBGetter() = default;
  public:
   ~IPKBGetter() = default;
-  virtual Result get(PKBQuery &) = 0;
+  virtual Result get(PKBEntityQuery &) = 0;
   virtual Result get(EntityType, QuerySynonym) = 0;
 };
 
@@ -41,7 +41,7 @@ class PKB : public IPKBSaver, public IPKBGetter {
  public:
   PKB() = default;
 
-  Result get(PKBQuery &query) override;
+  Result get(PKBEntityQuery &query) override;
   Result get(EntityType type, QuerySynonym synonym) override;
 
   void save(std::vector<Entity *> &entities) override;

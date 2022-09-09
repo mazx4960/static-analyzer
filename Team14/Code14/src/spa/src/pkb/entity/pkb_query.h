@@ -2,66 +2,117 @@
 #pragma once
 
 #include "commons/relationship.h"
+#include "qps/pql/query_clause/pattern.h"
+#include "qps/pql/query_clause/query_clause.h"
 #include "qps/pql/query_synonym/query_synonym.h"
 
 /*
  * Object to be sent to PKB for query.
  */
 class PKBQuery {
+ protected:
+  PKBQuery() = default;
+};
+
+/*
+ * Class for entity query.
+ */
+class PKBEntityQuery : public PKBQuery {
  private:
   EntityType entity_type_;
 
-  bool has_relationship_ = false;
+ protected:
+  explicit PKBEntityQuery(Entity &entity) : entity_type_(entity.GetType()) {};
+  explicit PKBEntityQuery(EntityType entity_type) : entity_type_(entity_type) {};
+
+ public:
+  static PKBEntityQuery *getQuery(Entity &);
+
+  [[nodiscard]] EntityType getEntityType() const;
+};
+
+/*
+ * Subclasses for entity queries.
+ */
+class PKBProcedureQuery : public PKBEntityQuery {
+ public:
+  explicit PKBProcedureQuery() : PKBEntityQuery(EntityType::kProcedure) {};
+  explicit PKBProcedureQuery(Entity &entity) : PKBEntityQuery(entity) {};
+};
+
+class PKBVariableQuery : public PKBEntityQuery {
+ public:
+  explicit PKBVariableQuery() : PKBEntityQuery(EntityType::kVariable) {};
+  explicit PKBVariableQuery(Entity &entity) : PKBEntityQuery(entity) {};
+};
+
+class PKBStatementQuery : public PKBEntityQuery {
+ public:
+  explicit PKBStatementQuery() : PKBEntityQuery(EntityType::kStatement) {};
+  explicit PKBStatementQuery(Entity &entity) : PKBEntityQuery(entity) {};
+
+};
+
+class PKBConstantQuery : public PKBEntityQuery {
+ public:
+  explicit PKBConstantQuery() : PKBEntityQuery(EntityType::kConstant) {};
+  explicit PKBConstantQuery(Entity &entity) : PKBEntityQuery(entity) {};
+};
+
+/*
+ * Class for clause query.
+ */
+class PKBClauseQuery : public PKBQuery {
+  class PKBSuchThatQuery;
+  class PKBPatternQuery;
+
+ private:
+
+  ClauseType clause_type_;
+
+ protected:
+  explicit PKBClauseQuery(ClauseType clause_type) : clause_type_(clause_type) {};
+ public:
+  [[nodiscard]] ClauseType getClauseType() const;
+};
+
+/*
+ * Subclasses for clause queries.
+ */
+class PKBSuchThatQuery : public PKBClauseQuery {
+ private:
 
   Relationship *rs_;
 
-  bool has_synonym_ = false;
-
-  QuerySynonym *syn_;
-
-  // TODO(howtoosee): add fields for pattern
-
- protected:
-  explicit PKBQuery(Entity &entity) : entity_type_(entity.GetType()) {};
-  explicit PKBQuery(EntityType entity_type) : entity_type_(entity_type) {};
+  explicit PKBSuchThatQuery(Relationship &rs) : PKBClauseQuery(ClauseType::kSuchThat), rs_(&rs) {};
 
  public:
-  static PKBQuery *getQuery(Entity &);
-
+  static PKBSuchThatQuery *getQuery(Relationship &);
   void setRelationship(Relationship &);
-  void setSynonym(QuerySynonym &);
-
-  [[nodiscard]] bool hasRelationship() const;
-  [[nodiscard]] bool hasSynonym() const;
-
-  [[nodiscard]] EntityType getEntityType() const;
-  [[nodiscard]] Relationship getRelationship() const;
-  [[nodiscard]] QuerySynonym getSynonym() const;
-
-  // TODO(howtoosee): add methods for pattern
+  [[nodiscard]] Relationship *getRelationship() const;
 };
 
-class PKBProcedureQuery : public PKBQuery {
+class PKBPatternQuery : public PKBClauseQuery {
+ private:
+  Pattern *pattern_;
+
+  explicit PKBPatternQuery(Pattern &pattern) : PKBClauseQuery(ClauseType::kPattern), pattern_(&pattern) {};
+
  public:
-  explicit PKBProcedureQuery() : PKBQuery(EntityType::kProcedure) {};
-  explicit PKBProcedureQuery(Entity &entity) : PKBQuery(entity) {};
+  static PKBPatternQuery *getQuery(Pattern &);
+  void setPattern(Pattern &);
+  [[nodiscard]] Pattern *getPattern() const;
 };
 
-class PKBVariableQuery : public PKBQuery {
+/*
+ * PKBEntityQuery exceptions.
+ */
+class PKBQueryBuildingError : public std::runtime_error {
  public:
-  explicit PKBVariableQuery() : PKBQuery(EntityType::kVariable) {};
-  explicit PKBVariableQuery(Entity &entity) : PKBQuery(entity) {};
+  explicit PKBQueryBuildingError(const std::string &message) : std::runtime_error(message) {};
 };
 
-class PKBStatementQuery : public PKBQuery {
+class PKBQueryFetchError : public std::runtime_error {
  public:
-  explicit PKBStatementQuery() : PKBQuery(EntityType::kStatement) {};
-  explicit PKBStatementQuery(Entity &entity) : PKBQuery(entity) {};
-
-};
-
-class PKBConstantQuery : public PKBQuery {
- public:
-  explicit PKBConstantQuery() : PKBQuery(EntityType::kConstant) {};
-  explicit PKBConstantQuery(Entity &entity) : PKBQuery(entity) {};
+  explicit PKBQueryFetchError(const std::string &message) : std::runtime_error(message) {};
 };
