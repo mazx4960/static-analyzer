@@ -41,7 +41,7 @@ BracedGrammarRule::BracedGrammarRule(GrammarRuleProducer* parenthesizedNode)
     : CompositeGrammarRule(std::vector<RuleFragment*>{
         new TokenRuleFragment(new CurlyOpenBracketToken()),
         new NodeRuleFragment(parenthesizedNode),
-        new TokenRuleFragment(new CurlyCloseBracket()),
+        new TokenRuleFragment(new CurlyCloseBracketToken()),
     }) {}
 
 Node* BracedGrammarRule::assembleNode(std::vector<Node*> children) { return children[0]; }
