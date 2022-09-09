@@ -13,3 +13,6 @@ std::string QuerySynonym::getSynonym() const {
 bool QuerySynonym::operator==(const QuerySynonym &other) const {
   return this->synonym_ == other.getSynonym();
 }
+size_t QuerySynonymHashFunction::operator()(const QuerySynonym &synonym) const {
+  return std::hash<std::string>()(synonym.getSynonym());
+}

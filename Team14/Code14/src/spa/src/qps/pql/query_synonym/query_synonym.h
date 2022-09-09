@@ -9,10 +9,15 @@ class QuerySynonym {
   std::string synonym_;
 
  public:
-  explicit QuerySynonym(std::string synonym);
+  explicit QuerySynonym(std::string);
 
   [[nodiscard]] std::string getSynonym() const;
-  bool operator==(const QuerySynonym &other) const;
+  bool operator==(const QuerySynonym &) const;
+};
+
+class QuerySynonymHashFunction {
+ public:
+  size_t operator()(const QuerySynonym &) const;
 };
 
 

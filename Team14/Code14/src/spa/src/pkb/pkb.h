@@ -5,22 +5,47 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "pkb.h"
 #include "commons/relationship.h"
+#include "pkb.h"
+#include "pkb/entity/entity_table.h"
 #include "pkb/entity/pkb_query.h"
 #include "pkb/entity/result.h"
-#include "pkb/entity/simple_entity.h"
 
-class PKB {
+/*
+ * Interface for SP -> PKB
+ */
+class IPKBPopulator {
+ protected:
+  IPKBPopulator() = default;
+ public:
+  ~IPKBPopulator() = default;
+  virtual void populate(std::vector<Entity *> &) = 0;
+};
+
+/*
+ * Interface for QPS -> PKB
+ */
+class IPKBQuery {
+ protected:
+  IPKBQuery() = default;
+ public:
+  ~IPKBQuery() = default;
+  virtual Result getResults(PKBQuery &) = 0;
+  virtual Result getResults(EntityType, QuerySynonym) = 0;
+};
+
+class PKB : public IPKBPopulator, public IPKBQuery {
  private:
-  std::unordered_map<EntityType, SimpleEntityTable *> entity_table_map_;
+  std::unordered_map<EntityType, EntityTable *> entity_map_;
 
  public:
   PKB() = default;
 
-  Result getResult(PKBQuery &);
-  Result getResult(EntityType, QuerySynonym);
+  Result getResults(PKBQuery &query) override;
+  Result getResults(EntityType type, QuerySynonym synonym) override;
 
-  void save(std::vector<Entity *> &entities);
+  void populate(std::vector<Entity *> &entities) override;
+
+  // Currently only used for debugging and testing
   int getCount();
 };

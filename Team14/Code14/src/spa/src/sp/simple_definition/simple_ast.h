@@ -4,9 +4,10 @@
 #include <vector>
 
 #include "commons/entity.h"
-#include "simple_node_type.h"
+#include "commons/parser/expr_definition/expr_node.h"
+#include "commons/parser/node/node.h"
 
-class SimpleAstNode;
+class Node;
 class ProgramNode;
 class ProcedureNode;
 class StatementListNode;
@@ -19,33 +20,18 @@ class IfNode;
 class AssignNode;
 class CondExprNode;
 class RelExprNode;
-class RelFactorNode;
-class ExprNode;
-class ReferenceNode;
-class VariableNode;
-class ConstantNode;
 
-class SimpleAstNode {
- private:
-  SimpleNodeType nodeType_;
-
- public:
-  explicit SimpleAstNode(SimpleNodeType nodeType);
-  [[nodiscard]] SimpleNodeType GetNodeType() const;
-  virtual std::vector<SimpleAstNode*> GetChildren() = 0;
-};
-
-class ProgramNode : public SimpleAstNode {
+class ProgramNode : public Node {
  private:
   std::vector<ProcedureNode*> procedures_;
 
  public:
   explicit ProgramNode(std::vector<ProcedureNode*> procedures);
-  std::vector<ProcedureNode*> GetProcedures();
-  std::vector<SimpleAstNode*> GetChildren() override;
+  std::vector<Node*> GetChildren() override;
+  std::string ToString() override;
 };
 
-class ProcedureNode : public SimpleAstNode {
+class ProcedureNode : public Node {
  private:
   std::string procName_;
   StatementListNode* statementList_;
@@ -54,21 +40,23 @@ class ProcedureNode : public SimpleAstNode {
   ProcedureNode(std::string procName, StatementListNode* statementList);
   [[nodiscard]] std::string GetProcName() const;
   StatementListNode* GetStatementList();
-  std::vector<SimpleAstNode*> GetChildren() override;
+  std::vector<Node*> GetChildren() override;
+  std::string ToString() override;
 };
 
-class StatementListNode : public SimpleAstNode {
+class StatementListNode : public Node {
  private:
   std::vector<StatementNode*> statements_;
 
  public:
   explicit StatementListNode(std::vector<StatementNode*> statements);
   std::vector<StatementNode*> GetStatements();
-  std::vector<SimpleAstNode*> GetChildren() override;
+  std::vector<Node*> GetChildren() override;
+  std::string ToString() override;
   int SetStatementNos(int first_stmt_no);
 };
 
-class StatementNode : public SimpleAstNode {
+class StatementNode : public Node {
  private:
   int stmtNo_;
   StmtType stmtType_;
@@ -86,7 +74,8 @@ class ReadNode : public StatementNode {
 
  public:
   explicit ReadNode(VariableNode* variable);
-  std::vector<SimpleAstNode*> GetChildren() override;
+  std::vector<Node*> GetChildren() override;
+  std::string ToString() override;
 };
 
 class PrintNode : public StatementNode {
@@ -95,7 +84,8 @@ class PrintNode : public StatementNode {
 
  public:
   explicit PrintNode(VariableNode* variable);
-  std::vector<SimpleAstNode*> GetChildren() override;
+  std::vector<Node*> GetChildren() override;
+  std::string ToString() override;
 };
 
 class CallNode : public StatementNode {
@@ -104,7 +94,8 @@ class CallNode : public StatementNode {
 
  public:
   explicit CallNode(std::string procedureName);
-  std::vector<SimpleAstNode*> GetChildren() override;
+  std::vector<Node*> GetChildren() override;
+  std::string ToString() override;
 };
 
 class WhileNode : public StatementNode {
@@ -115,8 +106,9 @@ class WhileNode : public StatementNode {
  public:
   WhileNode(CondExprNode* conditional, StatementListNode* statementList);
   StatementListNode* GetStatementList();
-  std::vector<SimpleAstNode*> GetChildren() override;
   int SetStatementNo(int next_stmt_no) override;
+  std::vector<Node*> GetChildren() override;
+  std::string ToString() override;
 };
 
 class IfNode : public StatementNode {
@@ -129,7 +121,8 @@ class IfNode : public StatementNode {
   IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, StatementListNode* elseStatementList);
   StatementListNode* GetThenStatementList();
   StatementListNode* GetElseStatementList();
-  std::vector<SimpleAstNode*> GetChildren() override;
+  std::vector<Node*> GetChildren() override;
+  std::string ToString() override;
   int SetStatementNo(int next_stmt_no) override;
 };
 
@@ -140,12 +133,17 @@ class AssignNode : public StatementNode {
 
  public:
   AssignNode(VariableNode* variable, RelFactorNode* expression);
-  std::vector<SimpleAstNode*> GetChildren() override;
+  std::vector<Node*> GetChildren() override;
+  std::string ToString() override;
 };
 
-class CondExprNode : public SimpleAstNode {
+class CondExprNode : public Node {
+ private:
+  CondExprType cond_expr_type_;
+
  public:
-  explicit CondExprNode(SimpleNodeType nodeType);
+  explicit CondExprNode(CondExprType cond_expr_type);
+  std::string ToString() override;
 };
 
 class NotExprNode : public CondExprNode {
@@ -154,7 +152,7 @@ class NotExprNode : public CondExprNode {
 
  public:
   explicit NotExprNode(CondExprNode* negatedConditional);
-  std::vector<SimpleAstNode*> GetChildren() override;
+  std::vector<Node*> GetChildren() override;
 };
 
 class BinaryCondExprNode : public CondExprNode {
@@ -163,8 +161,8 @@ class BinaryCondExprNode : public CondExprNode {
   CondExprNode* secondConditional_;
 
  public:
-  BinaryCondExprNode(SimpleNodeType nodeType, CondExprNode* firstConditional, CondExprNode* secondConditional);
-  std::vector<SimpleAstNode*> GetChildren() override;
+  BinaryCondExprNode(CondExprType cond_expr_type, CondExprNode* firstConditional, CondExprNode* secondConditional);
+  std::vector<Node*> GetChildren() override;
 };
 
 class AndExprNode : public BinaryCondExprNode {
@@ -183,8 +181,9 @@ class RelExprNode : public CondExprNode {
   RelFactorNode* rightFactor_;
 
  public:
-  RelExprNode(SimpleNodeType nodeType, RelFactorNode* leftFactor, RelFactorNode* rightFactor);
-  std::vector<SimpleAstNode*> GetChildren() override;
+  RelExprNode(CondExprType cond_expr_type, RelFactorNode* leftFactor, RelFactorNode* rightFactor);
+  std::vector<Node*> GetChildren() override;
+  std::string ToString() override;
 };
 
 class GreaterThanNode : public RelExprNode {
@@ -215,69 +214,4 @@ class EqualNode : public RelExprNode {
 class NotEqualNode : public RelExprNode {
  public:
   NotEqualNode(RelFactorNode* leftFactor, RelFactorNode* rightFactor);
-};
-
-class RelFactorNode : public SimpleAstNode {
- public:
-  explicit RelFactorNode(SimpleNodeType nodeType);
-};
-
-class ExprNode : public RelFactorNode {
- private:
-  RelFactorNode* leftExpression_;
-  RelFactorNode* rightExpression_;
-
- public:
-  ExprNode(SimpleNodeType nodeType, RelFactorNode* leftExpression, RelFactorNode* rightExpression);
-  std::vector<SimpleAstNode*> GetChildren() override;
-};
-
-class PlusNode : public ExprNode {
-
- public:
-  PlusNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
-};
-
-class MinusNode : public ExprNode {
- public:
-  MinusNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
-};
-
-class TimesNode : public ExprNode {
- public:
-  TimesNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
-};
-
-class DivNode : public ExprNode {
- public:
-  DivNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
-};
-
-class ModNode : public ExprNode {
- public:
-  ModNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression);
-};
-
-class ReferenceNode : public RelFactorNode {
- public:
-  explicit ReferenceNode(SimpleNodeType nodeType);
-  std::vector<SimpleAstNode*> GetChildren() override;
-};
-
-class VariableNode : public ReferenceNode {
- private:
-  std::string variableName_;
-
- public:
-  explicit VariableNode(std::string variableName);
-  std::string GetVariableName();
-};
-
-class ConstantNode : public ReferenceNode {
- private:
-  int value_;
-
- public:
-  explicit ConstantNode(int value);
-  [[nodiscard]] int GetValue() const;
 };
