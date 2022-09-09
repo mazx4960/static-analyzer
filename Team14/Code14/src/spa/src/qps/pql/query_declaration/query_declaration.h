@@ -5,8 +5,8 @@
 #include <utility>
 #include <unordered_set>
 
-#include "commons/entity.h"
 #include "qps/pql/query_synonym/query_synonym.h"
+#include "commons/entity.h"
 
 enum class DeclarationType {
   kStatement,
@@ -31,7 +31,6 @@ class QueryDeclaration {
   QuerySynonym query_synonym_ = QuerySynonym("");
   std::string string_;
   int number_;
-  std::unordered_set<Entity*> result_assignments_;
 
  public:
   explicit QueryDeclaration(DeclarationType type) : type_(std::move(type)) {};
@@ -41,10 +40,12 @@ class QueryDeclaration {
   : type_(std::move(type)), string_(std::move(string)) {};
   QueryDeclaration(DeclarationType type, int number)
   : type_(std::move(type)), number_(std::move(number)) {};
+  std::unordered_set<Entity*> context_;
   [[nodiscard]] DeclarationType getType() const;
   [[nodiscard]] QuerySynonym getSynonym() const;
   [[nodiscard]] std::string getString() const;
   [[nodiscard]] int getNumber() const;
+  [[nodiscard]] std::unordered_set<Entity*> getContext() ;
   bool operator==(const QueryDeclaration &other) const;
 };
 

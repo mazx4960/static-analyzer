@@ -2,6 +2,7 @@
 
 #include "query_declaration.h"
 
+
 QuerySynonym QueryDeclaration::getSynonym() const {
   return this->query_synonym_;
 }
@@ -17,4 +18,7 @@ std::string QueryDeclaration::getString() const {
 }
 int QueryDeclaration::getNumber() const {
   return this->number_;
+}
+std::unordered_set<Entity *> QueryDeclaration::getContext() {
+  return this->context_;
 }
