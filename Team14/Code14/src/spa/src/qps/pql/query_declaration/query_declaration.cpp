@@ -2,7 +2,7 @@
 
 #include "query_declaration.h"
 
-Entity QueryDeclaration::getEntity() const {
+Entity* QueryDeclaration::getEntity() const {
   return this->entity_;
 }
 QuerySynonym QueryDeclaration::getSynonym() const {

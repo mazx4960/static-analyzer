@@ -7,7 +7,7 @@
 #include "sp/extractor/entity_extractor.h"
 #include "sp/extractor/relationship_extractor.h"
 
-void SP::SetPKB(IPKBSaver *pkb) { this->pkb_ = pkb; }
+void SP::SetPKB(IPKBPopulator *pkb) { this->pkb_ = pkb; }
 void SP::LoadSource(std::ifstream &source_stream) {
   SimpleLexer lexer(&source_stream);
   auto tokens = lexer.lex();
@@ -18,7 +18,7 @@ void SP::LoadSource(std::ifstream &source_stream) {
   std::vector<Entity *> entities = EntityExtractor::ExtractAll(program_node);
   spdlog::info("Extracted {} entities", entities.size());
   for (auto *entity : entities) { spdlog::debug("{}", entity->ToString()); }
-  this->pkb_->save(entities);
+  this->pkb_->populate(entities);
 
   std::vector<Relationship *> relationships = RelationshipExtractor::ExtractAll(program_node);
   spdlog::info("Extracted {} relationships", relationships.size());

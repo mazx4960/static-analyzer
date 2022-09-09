@@ -27,9 +27,9 @@ TEST(ExtractorTest, TestParent) {
 
   // DFS traversal should yield the following result
   std::vector<Relationship *> expected = {
-      new ParentRelationship(new ProcedureEntity("main"), new WhileEntity(0)),
-      new ParentRelationship(new WhileEntity(0), new AssignEntity(0)),
-      new ParentRelationship(new WhileEntity(0), new AssignEntity(0)),
+      new ParentRelationship(new ProcedureEntity("main"), new WhileEntity(1)),
+      new ParentRelationship(new WhileEntity(1), new AssignEntity(2)),
+      new ParentRelationship(new WhileEntity(1), new AssignEntity(3)),
   };
 
   ASSERT_EQ(relationships.size(), expected.size());

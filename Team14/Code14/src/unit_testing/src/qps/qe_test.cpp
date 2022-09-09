@@ -11,14 +11,14 @@ TEST(QETest, VariableGetTest) {
       new VariableEntity("y"),
       new VariableEntity("z")
   };
-  pkb->save(entities);
-  VariableEntity test_entity = VariableEntity("x");
+  pkb->populate(entities);
+  auto *test_entity =  new VariableEntity("x");
   QuerySynonym query_synonym = QuerySynonym("v");
-  QueryDeclaration query_declaration = QueryDeclaration(test_entity, query_synonym);
-  std::vector<QueryDeclaration> query_declarations = {query_declaration};
+  auto* query_declaration = new QueryDeclaration(test_entity, query_synonym);
+  std::vector<QueryDeclaration*> query_declarations = {query_declaration};
 
   Query query = Query(
-      query_declarations, QueryCall(CallType::kSelect, QueryDeclaration(test_entity, query_synonym), {})
+      query_declarations, QueryCall(CallType::kSelect, new QueryDeclaration(test_entity, query_synonym), {})
   );
 
   QueryEvaluator query_evaluator = QueryEvaluator(pkb, query);

@@ -6,38 +6,39 @@
 #include <unordered_set>
 
 #include "commons/entity.h"
+#include "commons/result.h"
 #include "commons/types.h"
-#include "pkb/entity/result.h"
 
-class EntityStore {
+class EntityTable {
  protected:
   std::unordered_set<std::string> table_;
+  EntityTable() = default;
 
  public:
-  static EntityStore *getStore(EntityType);
-  void save(Entity &entity);
+  static EntityTable *getTable(EntityType);
+  void populate(Entity &entity);
   Result get(QuerySynonym &synonym);
 
   // Currently only used for debugging and testing
   int getCount();
 };
 
-class VariableTable : public EntityStore {
+class VariableTable : public EntityTable {
  public:
   VariableTable() = default;
 };
 
-class ConstantTable : public EntityStore {
+class ConstantTable : public EntityTable {
  public:
   ConstantTable() = default;
 };
 
-class ProcedureTable : public EntityStore {
+class ProcedureTable : public EntityTable {
  public:
   ProcedureTable() = default;
 };
 
-class StatementTable : public EntityStore {
+class StatementTable : public EntityTable {
  public:
   StatementTable() = default;
 };

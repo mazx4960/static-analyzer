@@ -23,7 +23,7 @@ TEST(ExtractorTest, TestFollows) {
 
   // DFS traversal should yield the following result
   std::vector<Relationship *> expected = {
-      new FollowsRelationship(new AssignEntity(0), new AssignEntity(0)),
+      new FollowsRelationship(new AssignEntity(1), new AssignEntity(2)),
   };
 
   ASSERT_EQ(relationships.size(), expected.size());
