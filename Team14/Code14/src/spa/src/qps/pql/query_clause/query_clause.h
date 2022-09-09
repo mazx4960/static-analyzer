@@ -24,20 +24,22 @@ class QueryClause {
 };
 
 class SuchThatClause : public QueryClause {
+ private:
+  Relationship relationship_;
+
  public:
   explicit SuchThatClause(Relationship relationship) : QueryClause(ClauseType::kSuchThat, std::move(relationship)),
                                                        relationship_(relationship) {}
-
-  Relationship relationship_;
 
   [[nodiscard]] Relationship getRelationship() const;
 };
 
 class PatternClause : public QueryClause {
+ private:
+  Pattern pattern_;
+
  public:
   explicit PatternClause(Pattern pattern) : QueryClause(ClauseType::kPattern, std::move(pattern)), pattern_(pattern) {}
-
-  Pattern pattern_;
 
   [[nodiscard]] Pattern getPattern() const;
 };
