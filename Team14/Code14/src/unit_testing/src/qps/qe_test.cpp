@@ -11,7 +11,7 @@ TEST(QETest, VariableGetTest) {
       new VariableEntity("y"),
       new VariableEntity("z")
   };
-  pkb->save(entities);
+  pkb->populate(entities);
   auto *test_entity =  new VariableEntity("x");
   QuerySynonym query_synonym = QuerySynonym("v");
   auto* query_declaration = new QueryDeclaration(test_entity, query_synonym);

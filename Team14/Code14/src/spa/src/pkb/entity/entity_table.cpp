@@ -11,7 +11,7 @@ EntityTable *EntityTable::getTable(EntityType type) {
   }
 }
 
-void EntityTable::save(Entity &entity) {
+void EntityTable::populate(Entity &entity) {
   this->table_.insert(entity.GetName());
 }
 

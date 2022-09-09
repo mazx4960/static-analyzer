@@ -14,12 +14,12 @@
 /*
  * Interface for SP -> PKB
  */
-class IPKBSaver {
+class IPKBPopulator {
  protected:
-  IPKBSaver() = default;
+  IPKBPopulator() = default;
  public:
-  ~IPKBSaver() = default;
-  virtual void save(std::vector<Entity *> &) = 0;
+  ~IPKBPopulator() = default;
+  virtual void populate(std::vector<Entity *> &) = 0;
 };
 
 /*
@@ -34,7 +34,7 @@ class IPKBQuery {
   virtual Result getResults(EntityType, QuerySynonym) = 0;
 };
 
-class PKB : public IPKBSaver, public IPKBQuery {
+class PKB : public IPKBPopulator, public IPKBQuery {
  private:
   std::unordered_map<EntityType, EntityTable *> entity_map_;
 
@@ -44,7 +44,7 @@ class PKB : public IPKBSaver, public IPKBQuery {
   Result getResults(PKBQuery &query) override;
   Result getResults(EntityType type, QuerySynonym synonym) override;
 
-  void save(std::vector<Entity *> &entities) override;
+  void populate(std::vector<Entity *> &entities) override;
 
   // Currently only used for debugging and testing
   int getCount();
