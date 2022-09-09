@@ -38,8 +38,8 @@ class SuchThatClause : public QueryClause {
   explicit SuchThatClause(SuchThatType type, QueryDeclaration* first, QueryDeclaration* second)
   : QueryClause(ClauseType::kSuchThat), type_(type), first_(std::move(first)), second_(std::move(second)) {};
   SuchThatType type_;
-  QueryDeclaration first_;
-  QueryDeclaration second_;
+  QueryDeclaration* first_;
+  QueryDeclaration* second_;
   SuchThatType getType();
   QueryDeclaration* getFirst();
   QueryDeclaration* getSecond();
