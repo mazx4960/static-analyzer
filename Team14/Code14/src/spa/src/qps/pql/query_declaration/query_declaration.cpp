@@ -2,16 +2,19 @@
 
 #include "query_declaration.h"
 
-Entity* QueryDeclaration::getEntity() const {
-  return this->entity_;
-}
 QuerySynonym QueryDeclaration::getSynonym() const {
-  return this->synonym_;
+  return this->query_synonym_;
 }
 bool QueryDeclaration::operator==(const QueryDeclaration &other) const {
-  return this->getSynonym() == other.getSynonym();
+  return this->query_synonym_ == other.getSynonym() && this->type_ == other.getType()
+  && this->string_ == other.getString() && this->number_ == other.getNumber();
 }
-
-size_t QueryDeclarationHashFunction::operator()(const QueryDeclaration &query_declaration) const {
-  return std::hash<std::string>()(query_declaration.getSynonym().getSynonym());
+DeclarationType QueryDeclaration::getType() const {
+  return this->type_;
+}
+std::string QueryDeclaration::getString() const {
+  return this->string_;
+}
+int QueryDeclaration::getNumber() const {
+  return this->number_;
 }

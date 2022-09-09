@@ -31,6 +31,7 @@ class QueryDeclaration {
   QuerySynonym query_synonym_ = QuerySynonym("");
   std::string string_;
   int number_;
+  std::unordered_set<Entity*> result_assignments_;
 
  public:
   explicit QueryDeclaration(DeclarationType type) : type_(std::move(type)) {};
