@@ -1,0 +1,17 @@
+// Copyright 2022 CS3203 Team14. All rights reserved.
+
+#pragma once
+
+#include "commons/entity.h"
+#include "commons/parser/node/node.h"
+#include "commons/relationship.h"
+
+class EntityExtractor {
+ public:
+  static std::vector<Entity *> ExtractAll(Node *node);
+  static std::vector<Entity *> ExtractVariables(Node *node);
+  static void ExtractProcedure(std::vector<Entity *> &entities, Node *node);
+  static void ExtractStatement(std::vector<Entity *> &entities, Node *node);
+  static void ExtractVariable(std::vector<Entity *> &entities, Node *node);
+  static void ExtractConstant(std::vector<Entity *> &entities, Node *node);
+};
