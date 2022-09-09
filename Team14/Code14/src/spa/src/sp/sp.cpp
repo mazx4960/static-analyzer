@@ -12,6 +12,10 @@ void SP::LoadSource(std::ifstream &source_stream) {
   SimpleLexer lexer(&source_stream);
   auto tokens = lexer.lex();
   spdlog::info("Generated source tokens");
+  std::string token_string = "Tokens: ";
+  for (auto *token : tokens) { token_string += token->ToString() + " "; }
+  spdlog::debug(token_string);
+
   auto *program_node = SimpleParser::ParseProgram(tokens);
   spdlog::info("Converted tokens to abstract syntax tree");
 
