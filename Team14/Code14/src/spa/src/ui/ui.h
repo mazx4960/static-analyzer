@@ -4,9 +4,9 @@
 #include <fstream>
 #include <string>
 
+#include "commons/result.h"
 #include "qps/qps.h"
 #include "sp/sp.h"
-#include "pkb/entity/result.h"
 
 class UI {
  private:

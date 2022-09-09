@@ -76,6 +76,7 @@ class ReadNode : public StatementNode {
   explicit ReadNode(VariableNode* variable);
   std::vector<Node*> GetChildren() override;
   std::string ToString() override;
+  VariableNode* GetVariable();
 };
 
 class PrintNode : public StatementNode {
@@ -85,6 +86,7 @@ class PrintNode : public StatementNode {
  public:
   explicit PrintNode(VariableNode* variable);
   std::vector<Node*> GetChildren() override;
+  VariableNode* GetVariable();
   std::string ToString() override;
 };
 
@@ -105,6 +107,7 @@ class WhileNode : public StatementNode {
 
  public:
   WhileNode(CondExprNode* conditional, StatementListNode* statementList);
+  CondExprNode* GetConditional();
   StatementListNode* GetStatementList();
   int SetStatementNo(int next_stmt_no) override;
   std::vector<Node*> GetChildren() override;
@@ -119,6 +122,7 @@ class IfNode : public StatementNode {
 
  public:
   IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, StatementListNode* elseStatementList);
+  CondExprNode* GetConditional();
   StatementListNode* GetThenStatementList();
   StatementListNode* GetElseStatementList();
   std::vector<Node*> GetChildren() override;
@@ -134,6 +138,8 @@ class AssignNode : public StatementNode {
  public:
   AssignNode(VariableNode* variable, RelFactorNode* expression);
   std::vector<Node*> GetChildren() override;
+  VariableNode* GetVariable();
+  RelFactorNode* GetExpression();
   std::string ToString() override;
 };
 

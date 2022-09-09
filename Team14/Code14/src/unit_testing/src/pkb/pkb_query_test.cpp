@@ -1,8 +1,8 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
-#include "pkb/entity/pkb_query.h"
-#include "pkb/entity/result.h"
+#include "commons/pkb_query.h"
 
+#include "commons/result.h"
 #include "gtest/gtest.h"
 #include "pkb/pkb.h"
 
