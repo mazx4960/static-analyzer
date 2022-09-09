@@ -23,6 +23,9 @@ std::string ExprNode::ToString() {
   if (this->expr_type_ == ExprType::kDiv) {
     return "(" + leftExpression_->ToString() + "/" + rightExpression_->ToString() +")";
   }
+  if (this->expr_type_ == ExprType::kMod) {
+    return "(" + leftExpression_->ToString() + "%" + rightExpression_->ToString() +")";
+  }
   return "";
 }
 ReferenceNode::ReferenceNode(NodeType nodeType) : RelFactorNode(nodeType) {}
