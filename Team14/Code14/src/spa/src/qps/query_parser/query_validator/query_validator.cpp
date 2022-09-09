@@ -44,72 +44,127 @@ void QueryValidator::validateDeclarations() {
   }
 }
 QueryDeclaration* QueryValidator::validateDeclaration() {
-  Entity* entity = validateEntity();
-  QuerySynonym synonym = validateSynonym();
-  if (isDeclared(synonym.getSynonym())) {
-    throw ParseSemanticError("Duplicate synonym: " + synonym.getSynonym());
+  Token* token = nextToken();
+  QueryDeclaration* declaration = nullptr;
+  if (*token == KeywordToken("stmt")) {
+    declaration = new StatementDeclaration(validateSynonym());
   }
-  if (*nextToken() == SemicolonToken()) {
-    return new QueryDeclaration(entity, synonym);
+  if (*token == KeywordToken("variable")) {
+    declaration = new VariableDeclaration(validateSynonym());
   }
-  throw ParseSyntaxError("Missing `;` after declaration");
+  if (*token == KeywordToken("constant")) {
+    declaration = new ConstantDeclaration(validateSynonym());
+  }
+  if (*token == KeywordToken("procedure")) {
+    declaration = new ProcedureDeclaration(validateSynonym());
+  }
+  if (*token == KeywordToken("read")) {
+    declaration = new ReadDeclaration(validateSynonym());
+  }
+  if (*token == KeywordToken("print")) {
+    declaration = new PrintDeclaration(validateSynonym());
+  }
+  if (*token == KeywordToken("call")) {
+    declaration = new CallDeclaration(validateSynonym());
+  }
+  if (*token == KeywordToken("while")) {
+    declaration = new WhileDeclaration(validateSynonym());
+  }
+  if (*token == KeywordToken("if")) {
+    declaration = new IfDeclaration(validateSynonym());
+  }
+  if (*token == KeywordToken("assign")) {
+    declaration = new AssignDeclaration(validateSynonym());
+  }
+  if (declaration == nullptr) {
+    throw ParseSyntaxError("Unknown declaration type: " + token->value);
+  }
+  if (!(*nextToken() == SemicolonToken())) {
+    throw ParseSyntaxError("Missing `;` after declaration");
+  }
+  return declaration;
 }
-QueryDeclaration* QueryValidator::getDeclaration(const QuerySynonym &synonym) {
+
+QueryDeclaration* QueryValidator::validateStmtRefDeclaration(bool allowWild) {
+  if (peekToken()->type == TokenType::kLiteral) {
+    return validateLiteralDeclaration();
+  }
+  if (peekToken()->type == TokenType::kSymbol) {
+    return getDeclaration(nextToken()->value);
+  }
+  if (peekToken()->type == TokenType::kWildCard) {
+    if (allowWild) {
+      return new WildCardDeclaration();
+    }
+    throw ParseSemanticError("Wildcard '_' is not allowed here");
+  }
+  throw ParseSyntaxError("Unknown StmtRef: " + peekToken()->value);
+}
+
+QueryDeclaration* QueryValidator::validateEntRefDeclaration(bool allowWild) {
+  if (peekToken()->type == TokenType::kQuote) {
+    return validateQuotedDeclaration();
+  }
+  if (peekToken()->type == TokenType::kSymbol) {
+    return getDeclaration(nextToken()->value);
+  }
+  if (peekToken()->type == TokenType::kWildCard) {
+    if (allowWild) {
+      return new WildCardDeclaration();
+    }
+    throw ParseSemanticError("Wildcard '_' is not allowed here");
+  }
+  throw ParseSyntaxError("Unknown EntRef: " + peekToken()->value);
+}
+
+
+IntegerDeclaration *QueryValidator::validateLiteralDeclaration() {
+  return new IntegerDeclaration(std::stoi(nextToken()->value));
+}
+
+StringDeclaration *QueryValidator::validateStringDeclaration() {
+  return new StringDeclaration(nextToken()->value);
+}
+
+StringDeclaration *QueryValidator::validateQuotedDeclaration() {
+  if (nextToken()->type != TokenType::kQuote) {
+    throw ParseSyntaxError("Missing '\"' before declaration");
+  }
+  StringDeclaration* declaration = validateStringDeclaration();
+  if (nextToken()->type != TokenType::kQuote) {
+    throw ParseSyntaxError("Missing '\"' after declaration");
+  }
+  return declaration;
+}
+
+QueryDeclaration* QueryValidator::getDeclaration(const std::string& synonym) {
   for (QueryDeclaration* declaration : query_declarations_) {
-    if (declaration->getSynonym() == synonym) {
+    if (declaration->getSynonym() == QuerySynonym(synonym)) {
       return declaration;
     }
   }
-  throw ParseSemanticError("Missing declaration: " + synonym.getSynonym());
+  throw ParseSemanticError("Missing declaration: " + synonym);
 }
 
 bool QueryValidator::isDeclared(const std::string &synonym) {
-  return std::any_of(query_declarations_.begin(),
-                     query_declarations_.end(),
-                     [&synonym](QueryDeclaration *d) { return d->getSynonym().getSynonym() == synonym;});
+  return this->synonyms_.count(synonym) != 0U;
 }
 
-Entity* QueryValidator::validateEntity() {
-  Token* token = nextToken();
-  if (*token == KeywordToken("variable")) {
-    return new VariableEntity(peekToken()->value);
-  }
-  if (*token == KeywordToken("constant")) {
-    return new ConstantEntity(peekToken()->value);
-  }
-  if (*token == KeywordToken("procedure")) {
-    return new ProcedureEntity(peekToken()->value);
-  }
-  if (*token == KeywordToken("read")) {
-    return new ReadEntity(-1);
-  }
-  if (*token == KeywordToken("print")) {
-    return new PrintEntity(-1);
-  }
-  if (*token == KeywordToken("call")) {
-    return new CallEntity(-1);
-  }
-  if (*token == KeywordToken("while")) {
-    return new WhileEntity(-1);
-  }
-  if (*token == KeywordToken("if")) {
-    return new IfEntity(-1);
-  }
-  if (*token == KeywordToken("assign")) {
-    return new AssignEntity(-1);
-  }
-  throw ParseSyntaxError("Unknown entity: " + token->value);
-}
 QuerySynonym QueryValidator::validateSynonym() {
-  if (peekToken()->type == TokenType::kSymbol) {
-    return QuerySynonym(nextToken()->value);
+  if (peekToken()->type != TokenType::kSymbol) {
+    throw ParseSyntaxError("Invalid synonym name: " + peekToken()->value);
   }
-  throw ParseSyntaxError("Invalid synonym name: " + peekToken()->value);
+  if (isDeclared(peekToken()->value)) {
+    throw ParseSyntaxError("Synonym already declared: " + peekToken()->value);
+  }
+  this->synonyms_.insert(peekToken()->value);
+  return QuerySynonym(nextToken()->value);
 }
+
 void QueryValidator::ValidateQueryCalls() {
   Token* token = nextToken();
   if (*token == KeywordToken("Select")) {
-    QueryDeclaration* synonym_declaration = getDeclaration(validateSynonym());
+    QueryDeclaration* synonym_declaration = getDeclaration(nextToken()->value);
     std::vector<QueryClause> clause_vector;
     while (!(*peekToken() == EndOfFileToken())) {
       clause_vector.push_back(validateClause());
@@ -122,28 +177,32 @@ void QueryValidator::ValidateQueryCalls() {
 QueryClause QueryValidator::validateClause() {
   Token* token = nextToken();
   if (*token == KeywordToken("such") && *nextToken() == KeywordToken("that")) {
-    return SuchThatClause(validateRelationship());
+    return validateSuchThat();
   }
   if (*token == KeywordToken("pattern")) {
-    return PatternClause(validatePattern());
+    return validatePattern();
   }
   throw ParseSyntaxError("Unknown clause: " + token->value);
 }
-Pattern QueryValidator::validatePattern() {
+PatternClause QueryValidator::validatePattern() {
+  if (peekToken()->type != TokenType::kSymbol) {
+    throw ParseSyntaxError("Missing synonym");
+  }
+  QueryDeclaration* first = getDeclaration(nextToken()->value);
   if (!(*nextToken() == RoundOpenBracketToken())) {
     throw ParseSyntaxError("Missing '(' before parameters");
   }
-  Entity* first = getDeclaration(validateSynonym())->getEntity();
+  QueryDeclaration* second = validateEntRefDeclaration(true);
   if (!(*nextToken() == CommaToken())) {
     throw ParseSyntaxError("Missing ',' between parameters");
   }
-  Entity* second = getDeclaration(validateSynonym())->getEntity();
+  QueryDeclaration* third = validateExpression();
   if (!(*nextToken() == RoundCloseBracketToken())) {
     throw ParseSyntaxError("Missing ')' after parameters");
   }
-  return Pattern(first, second);
+  return AssignPatternClause(first, second, third);
 }
-Relationship QueryValidator::validateRelationship() {
+SuchThatClause QueryValidator::validateSuchThat() {
   Token* token = nextToken();
   if (*token == KeywordToken("Follows")) {
     return validateFollows();
@@ -159,62 +218,101 @@ Relationship QueryValidator::validateRelationship() {
   }
   throw ParseSyntaxError("Unknown such-that relationship: " + token->value);
 }
-FollowsRelationship QueryValidator::validateFollows() {
+FollowsClause QueryValidator::validateFollows() {
   if (!(*nextToken() == RoundOpenBracketToken())) {
     throw ParseSyntaxError("Missing '(' before parameters");
   }
-  Entity* first = getDeclaration(validateSynonym())->getEntity();
+  QueryDeclaration* first = validateStmtRefDeclaration(true);
   if (!(*nextToken() == CommaToken())) {
     throw ParseSyntaxError("Missing ',' between parameters");
   }
-  Entity* second = getDeclaration(validateSynonym())->getEntity();
+  QueryDeclaration* second = validateStmtRefDeclaration(true);;
   if (!(*nextToken() == RoundCloseBracketToken())) {
     throw ParseSyntaxError("Missing ')' after parameters");
   }
-  return FollowsRelationship(first, second);
+  return FollowsClause(first, second);
 }
-ParentRelationship QueryValidator::validateParent() {
+ParentClause QueryValidator::validateParent() {
   if (!(*nextToken() == RoundOpenBracketToken())) {
     throw ParseSyntaxError("Missing '(' before parameters");
   }
-  Entity* first = getDeclaration(validateSynonym())->getEntity();
+  QueryDeclaration* first = validateStmtRefDeclaration(true);
   if (!(*nextToken() == CommaToken())) {
     throw ParseSyntaxError("Missing ',' between parameters");
   }
-  Entity* second = getDeclaration(validateSynonym())->getEntity();
+  QueryDeclaration* second = validateStmtRefDeclaration(true);;
   if (!(*nextToken() == RoundCloseBracketToken())) {
     throw ParseSyntaxError("Missing ')' after parameters");
   }
-  return ParentRelationship(first, second);
+  return ParentClause(first, second);
 }
-UsesRelationship QueryValidator::validateUses() {
+UsesClause QueryValidator::validateUses() {
   if (!(*nextToken() == RoundOpenBracketToken())) {
     throw ParseSyntaxError("Missing '(' before parameters");
   }
-  Entity* first = getDeclaration(validateSynonym())->getEntity();
+  QueryDeclaration* first;
+  if (*peekToken() == QuoteToken()) {
+    first = validateStmtRefDeclaration(false);
+  } else {
+    first = validateEntRefDeclaration(false);
+  }
   if (!(*nextToken() == CommaToken())) {
     throw ParseSyntaxError("Missing ',' between parameters");
   }
-  Entity* second = getDeclaration(validateSynonym())->getEntity();
+  QueryDeclaration* second  = validateEntRefDeclaration(false);
   if (!(*nextToken() == RoundCloseBracketToken())) {
     throw ParseSyntaxError("Missing ')' after parameters");
   }
-  return UsesRelationship(first, second);
+  return UsesClause(first, second);
 }
-ModifiesRelationship QueryValidator::validateModifies() {
+ModifiesClause QueryValidator::validateModifies() {
   if (!(*nextToken() == RoundOpenBracketToken())) {
     throw ParseSyntaxError("Missing '(' before parameters");
   }
-  Entity* first = getDeclaration(validateSynonym())->getEntity();
+  QueryDeclaration* first;
+  if (*peekToken() == QuoteToken()) {
+    first = validateStmtRefDeclaration(false);
+  } else {
+    first = validateEntRefDeclaration(false);
+  }
   if (!(*nextToken() == CommaToken())) {
     throw ParseSyntaxError("Missing ',' between parameters");
   }
-  Entity* second = getDeclaration(validateSynonym())->getEntity();
+  QueryDeclaration* second = validateEntRefDeclaration(false);;
   if (!(*nextToken() == RoundCloseBracketToken())) {
     throw ParseSyntaxError("Missing ')' after parameters");
   }
-  return ModifiesRelationship(first, second);
+  return ModifiesClause(first, second);
 }
-
-
-
+ExpressionDeclaration *QueryValidator::validateExpression() {
+  std::string expression;
+  if (peekToken()->type == TokenType::kWildCard) {
+    expression.append(nextToken()->value);
+  }
+  if (peekToken()->type == TokenType::kQuote) {
+    Token* tmp = nextToken();
+    bool toggle = true;
+    while (peekToken()->type != TokenType::kQuote) {
+      tmp = nextToken();
+      if (toggle) {
+        if (tmp->type == TokenType::kSymbol) {
+          expression.append(tmp->value);
+        } else {
+          throw ParseSyntaxError("Unexpected symbol in expression" + tmp->value);
+        }
+        toggle = false;
+      } else {
+        if (tmp->type == TokenType::kOperator) {
+          expression.append(tmp->value);
+        } else {
+          throw ParseSyntaxError("Unexpected operator in expression" + tmp->value);
+        }
+        toggle = true;
+      }
+    }
+  }
+  if (peekToken()->type == TokenType::kWildCard) {
+    expression.append(nextToken()->value);
+  }
+  return new ExpressionDeclaration(expression);
+}
