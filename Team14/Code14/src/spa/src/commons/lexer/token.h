@@ -16,6 +16,7 @@ enum class TokenType {
   kRoundCloseBracket,
   kCurlyOpenBracket,
   kCurlyCloseBracket,
+  kWildCard,
   kEndOfFile
 };
 
@@ -89,10 +90,16 @@ class CurlyOpenBracketToken : public Token {
       : Token(TokenType::kCurlyOpenBracket, "{") {}
 };
 
-class CurlyCloseBracket : public Token {
+class CurlyCloseBracketToken : public Token {
  public:
-  explicit CurlyCloseBracket()
+  explicit CurlyCloseBracketToken()
       : Token(TokenType::kCurlyCloseBracket, "}") {}
+};
+
+class WildCardToken : public Token {
+ public:
+  explicit WildCardToken()
+      : Token(TokenType::kWildCard, "_") {}
 };
 
 class EndOfFileToken : public Token {

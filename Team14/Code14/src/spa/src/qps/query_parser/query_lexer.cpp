@@ -37,6 +37,9 @@ Token *QueryLexer::next_token() {
   } else if (c == this->quote_) {
     // Quote
     return new QuoteToken();
+  } else if (c == this->wild_card_) {
+    // Wild Card
+    return new WildCardToken();
   } else if (this->valid_assign_operators_.find(this->tmp_) != this->valid_whitespace_.end()) {
     // Assign Operators
     return new OperatorToken(this->tmp_);
