@@ -3,7 +3,7 @@
 /*
  * Factory method
  */
-EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuery *pkb, QueryClause &query_clause) {
+EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClause &query_clause) {
   switch (query_clause.getClauseType()) {
     case ClauseType::kSuchThat: return new SuchThatStrategy(pkb, static_cast<SuchThatClause &> (query_clause));
     case ClauseType::kPattern:return new PatternStrategy(pkb, static_cast<PatternClause &> (query_clause));

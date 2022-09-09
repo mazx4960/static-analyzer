@@ -1,17 +1,18 @@
 #pragma once
 
 #include <unordered_set>
+
+#include "commons/result.h"
 #include "pkb/pkb.h"
-#include "pkb/entity/result.h"
 #include "qps/pql/query_clause/query_clause.h"
 
 class EvaluationStrategy {
  protected:
-  IPKBQuery *pkb_;
+  IPKBQuerier *pkb_;
 
-  explicit EvaluationStrategy(IPKBQuery *pkb) : pkb_(pkb) {};
+  explicit EvaluationStrategy(IPKBQuerier *pkb) : pkb_(pkb) {};
  public:
-  static EvaluationStrategy *getStrategy(IPKBQuery *, QueryClause &);
+  static EvaluationStrategy *getStrategy(IPKBQuerier *, QueryClause &);
   virtual Result evaluate() = 0;
 };
 
@@ -23,7 +24,7 @@ class SuchThatStrategy : public EvaluationStrategy {
   SuchThatClause clause_;
 
  public:
-  SuchThatStrategy(IPKBQuery *pkb, SuchThatClause &query_clause)
+  SuchThatStrategy(IPKBQuerier *pkb, SuchThatClause &query_clause)
       : EvaluationStrategy(pkb), clause_(query_clause) {};
 
   Result evaluate() override;
@@ -33,7 +34,7 @@ class PatternStrategy : public EvaluationStrategy {
   PatternClause clause_;
 
  public:
-  PatternStrategy(IPKBQuery *pkb, PatternClause &query_clause)
+  PatternStrategy(IPKBQuerier *pkb, PatternClause &query_clause)
       : EvaluationStrategy(pkb), clause_(query_clause) {};
 
   Result evaluate() override;

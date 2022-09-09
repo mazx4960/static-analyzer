@@ -1,6 +1,6 @@
 #include "subquery_evaluator.h"
 
-SubQueryEvaluator::SubQueryEvaluator(IPKBQuery *pkb, QueryClause &query_clause) : pkb_(pkb) {
+SubQueryEvaluator::SubQueryEvaluator(IPKBQuerier *pkb, QueryClause &query_clause) : pkb_(pkb) {
   switch (query_clause.getClauseType()) {
     case ClauseType::kSuchThat:this->strategy_ = EvaluationStrategy::getStrategy(pkb, query_clause);
       break;

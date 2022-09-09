@@ -4,12 +4,12 @@
 
 class SubQueryEvaluator {
  private:
-  IPKBQuery *pkb_;
+  IPKBQuerier *pkb_;
 
   EvaluationStrategy *strategy_;
 
  public:
-  SubQueryEvaluator(IPKBQuery *pkb, QueryClause &query_clause_);
+  SubQueryEvaluator(IPKBQuerier *pkb, QueryClause &query_clause_);
 
   Result evaluate();
 };
