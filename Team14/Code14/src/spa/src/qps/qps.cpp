@@ -1,7 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 #include "qps.h"
 
-void QPS::SetPKB(IPKBQuery *pkb) {
+void QPS::SetPKB(IPKBQuerier *pkb) {
   this->pkb_ = pkb;
 }
 Query QPS::parse(std::ifstream *query) {

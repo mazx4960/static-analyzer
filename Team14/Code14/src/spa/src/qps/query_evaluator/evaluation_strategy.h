@@ -1,8 +1,9 @@
 #pragma once
 
 #include <unordered_set>
+
+#include "commons/result.h"
 #include "pkb/pkb.h"
-#include "pkb/entity/result.h"
 #include "qps/pql/query_clause/query_clause.h"
 
 class EvaluationStrategy {

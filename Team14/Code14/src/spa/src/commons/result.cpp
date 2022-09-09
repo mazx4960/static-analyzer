@@ -1,5 +1,6 @@
-#include <spdlog/spdlog.h>
 #include "result.h"
+
+#include "spdlog/spdlog.h"
 
 Result Result::empty(QuerySynonym &syn) {
   std::unordered_set<std::string> empty;
