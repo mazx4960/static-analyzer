@@ -25,7 +25,6 @@ std::string ExprNode::ToString() {
   }
   return "";
 }
-// TODO: Flatten expression and add brackets
 ReferenceNode::ReferenceNode(NodeType nodeType) : RelFactorNode(nodeType) {}
 std::vector<Node*> ReferenceNode::GetChildren() { return std::vector<Node*>{}; }
 
