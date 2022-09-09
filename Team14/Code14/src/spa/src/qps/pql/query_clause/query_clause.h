@@ -40,9 +40,9 @@ class SuchThatClause : public QueryClause {
   SuchThatType type_;
   QueryDeclaration* first_;
   QueryDeclaration* second_;
-  SuchThatType getType();
-  QueryDeclaration* getFirst();
-  QueryDeclaration* getSecond();
+  [[nodiscard]] SuchThatType getSuchThatType() const;
+  [[nodiscard]] QueryDeclaration* getFirst() const;
+  [[nodiscard]] QueryDeclaration* getSecond() const;
 
 };
 
@@ -50,15 +50,15 @@ class PatternClause : public QueryClause {
  public:
   explicit PatternClause(PatternType type, QueryDeclaration* first, QueryDeclaration* second, QueryDeclaration* third)
       : QueryClause(ClauseType::kSuchThat),
-      type_(type), first_(std::move(first)), second_(std::move(second)), third_(std::move(third)) {};
+        type_(type), first_(std::move(first)), second_(std::move(second)), third_(std::move(third)) {};
   PatternType type_;
   QueryDeclaration* first_;
   QueryDeclaration* second_;
   QueryDeclaration* third_;
-  PatternType getType();
-  QueryDeclaration* getFirst();
-  QueryDeclaration* getSecond();
-  QueryDeclaration* getThird();
+  [[nodiscard]] PatternType getPatternType() const;
+  [[nodiscard]] QueryDeclaration* getFirst() const;
+  [[nodiscard]] QueryDeclaration* getSecond() const;
+  [[nodiscard]] QueryDeclaration* getThird() const;
 
 };
 
