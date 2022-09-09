@@ -28,77 +28,78 @@ enum class DeclarationType {
 class QueryDeclaration {
  private:
   DeclarationType type_;
+  QuerySynonym query_synonym_ = QuerySynonym("");
+  std::string string_;
+  int number_ = 0;
 
  public:
-  QueryDeclaration(DeclarationType type) : type_(std::move(type)) {};
-
-  [[nodiscard]] DeclarationType * getType() const;
+  explicit QueryDeclaration(DeclarationType type) : type_(std::move(type)) {};
+  QueryDeclaration(DeclarationType type, QuerySynonym query_synonym)
+  : type_(std::move(type)), query_synonym_(std::move(query_synonym)) {};
+  QueryDeclaration(DeclarationType type, std::string string)
+  : type_(std::move(type)), string_(std::move(string)) {};
+  QueryDeclaration(DeclarationType type, int number)
+  : type_(std::move(type)), number_(std::move(number)) {};
+  [[nodiscard]] DeclarationType getType() const;
+  [[nodiscard]] QuerySynonym getSynonym() const;
+  [[nodiscard]] std::string getString() const;
+  [[nodiscard]] int getNumber() const;
   bool operator==(const QueryDeclaration &other) const;
 };
 
 class StatementDeclaration : public QueryDeclaration {
  public:
-  QuerySynonym query_synonym_;
   explicit StatementDeclaration(QuerySynonym query_synonym)
-      : QueryDeclaration(DeclarationType::kStatement), query_synonym_(std::move(query_synonym)) {}
+      : QueryDeclaration(DeclarationType::kStatement, std::move(query_synonym)){}
 };
 
 class ReadDeclaration : public QueryDeclaration {
  public:
-  QuerySynonym query_synonym_;
   explicit ReadDeclaration(QuerySynonym query_synonym)
-      : QueryDeclaration(DeclarationType::kRead), query_synonym_(std::move(query_synonym)) {}
+      : QueryDeclaration(DeclarationType::kRead, std::move(query_synonym)) {}
 };
 
 class PrintDeclaration : public QueryDeclaration {
  public:
-  QuerySynonym query_synonym_;
   explicit PrintDeclaration(QuerySynonym query_synonym)
-      : QueryDeclaration(DeclarationType::kPrint), query_synonym_(std::move(query_synonym)) {}
+      : QueryDeclaration(DeclarationType::kPrint, std::move(query_synonym)) {}
 };
 
 class CallDeclaration : public QueryDeclaration {
  public:
-  QuerySynonym query_synonym_;
   explicit CallDeclaration(QuerySynonym query_synonym)
-      : QueryDeclaration(DeclarationType::kCall), query_synonym_(std::move(query_synonym)) {}
+      : QueryDeclaration(DeclarationType::kCall, std::move(query_synonym)) {}
 };
 
 class WhileDeclaration : public QueryDeclaration {
  public:
-  QuerySynonym query_synonym_;
   explicit WhileDeclaration(QuerySynonym query_synonym)
-      : QueryDeclaration(DeclarationType::kWhile), query_synonym_(std::move(query_synonym)) {}
+      : QueryDeclaration(DeclarationType::kWhile, std::move(query_synonym)) {}
 };
 class IfDeclaration : public QueryDeclaration {
  public:
-  QuerySynonym query_synonym_;
   explicit IfDeclaration(QuerySynonym query_synonym)
-      : QueryDeclaration(DeclarationType::kIf), query_synonym_(std::move(query_synonym)) {}
+      : QueryDeclaration(DeclarationType::kIf, std::move(query_synonym)) {}
 };
 class AssignDeclaration : public QueryDeclaration {
  public:
-  QuerySynonym query_synonym_;
   explicit AssignDeclaration(QuerySynonym query_synonym)
-      : QueryDeclaration(DeclarationType::kAssign), query_synonym_(std::move(query_synonym)) {}
+      : QueryDeclaration(DeclarationType::kAssign, std::move(query_synonym)) {}
 };
 class VariableDeclaration : public QueryDeclaration {
  public:
-  QuerySynonym query_synonym_;
   explicit VariableDeclaration(QuerySynonym query_synonym)
-      : QueryDeclaration(DeclarationType::kVariable), query_synonym_(std::move(query_synonym)) {}
+      : QueryDeclaration(DeclarationType::kVariable, std::move(query_synonym)) {}
 };
 class ConstantDeclaration : public QueryDeclaration {
  public:
-  QuerySynonym query_synonym_;
   explicit ConstantDeclaration(QuerySynonym query_synonym)
-      : QueryDeclaration(DeclarationType::kConstant), query_synonym_(std::move(query_synonym)) {}
+      : QueryDeclaration(DeclarationType::kConstant, std::move(query_synonym)) {}
 };
 class ProcedureDeclaration : public QueryDeclaration {
  public:
-  QuerySynonym query_synonym_;
   explicit ProcedureDeclaration(QuerySynonym query_synonym)
-      : QueryDeclaration(DeclarationType::kProcedure), query_synonym_(std::move(query_synonym)) {}
+      : QueryDeclaration(DeclarationType::kProcedure, std::move(query_synonym)) {}
 };
 class WildCardDeclaration : public QueryDeclaration {
  public:
@@ -107,13 +108,11 @@ class WildCardDeclaration : public QueryDeclaration {
 };
 class StringDeclaration : public QueryDeclaration {
  public:
-  std::string string_;
   explicit StringDeclaration(std::string string)
-      : QueryDeclaration(DeclarationType::kString), string_(std::move(string)) {}
+      : QueryDeclaration(DeclarationType::kString , std::move(string)) {}
 };
 class IntegerDeclaration : public QueryDeclaration {
  public:
-  int number_;
   explicit IntegerDeclaration(int number)
-      : QueryDeclaration(DeclarationType::kInteger), number_(number) {}
+      : QueryDeclaration(DeclarationType::kInteger, number) {}
 };
