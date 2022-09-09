@@ -6,8 +6,8 @@
 #include <unordered_set>
 
 #include "commons/entity.h"
+#include "commons/result.h"
 #include "commons/types.h"
-#include "pkb/entity/result.h"
 
 class EntityTable {
  protected:
