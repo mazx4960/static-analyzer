@@ -3,18 +3,21 @@
 /*
  * Entity query factory
  */
-PKBEntityQuery *PKBEntityQuery::getQuery(Entity &entity) {
+PKBEntityQuery *PKBEntityQuery::getQuery(Entity &entity, QuerySynonym &synonym) {
   switch (entity.GetType()) {
-    case EntityType::kProcedure:return new PKBProcedureQuery();
-    case EntityType::kStatement:return new PKBStatementQuery();
-    case EntityType::kVariable:return new PKBVariableQuery();
-    case EntityType::kConstant:return new PKBConstantQuery();
+    case EntityType::kProcedure:return new PKBProcedureQuery(synonym);
+    case EntityType::kStatement:return new PKBStatementQuery(synonym);
+    case EntityType::kVariable:return new PKBVariableQuery(synonym);
+    case EntityType::kConstant:return new PKBConstantQuery(synonym);
     default: return nullptr;
   }
 }
 
 EntityType PKBEntityQuery::getEntityType() const {
   return this->entity_type_;
+}
+QuerySynonym PKBEntityQuery::getSynonym() const {
+  return this->synonym_;
 }
 
 ClauseType PKBClauseQuery::getClauseType() const {

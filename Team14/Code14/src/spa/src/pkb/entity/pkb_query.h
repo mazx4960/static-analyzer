@@ -21,14 +21,17 @@ class PKBEntityQuery : public PKBQuery {
  private:
   EntityType entity_type_;
 
+  QuerySynonym synonym_;
+
  protected:
-  explicit PKBEntityQuery(Entity &entity) : entity_type_(entity.GetType()) {};
-  explicit PKBEntityQuery(EntityType entity_type) : entity_type_(entity_type) {};
+  explicit PKBEntityQuery(EntityType entity_type, QuerySynonym &synonym)
+      : entity_type_(entity_type), synonym_(synonym) {};
 
  public:
-  static PKBEntityQuery *getQuery(Entity &);
+  static PKBEntityQuery *getQuery(Entity &, QuerySynonym &);
 
   [[nodiscard]] EntityType getEntityType() const;
+  [[nodiscard]] QuerySynonym getSynonym() const;
 };
 
 /*
@@ -36,27 +39,23 @@ class PKBEntityQuery : public PKBQuery {
  */
 class PKBProcedureQuery : public PKBEntityQuery {
  public:
-  explicit PKBProcedureQuery() : PKBEntityQuery(EntityType::kProcedure) {};
-  explicit PKBProcedureQuery(Entity &entity) : PKBEntityQuery(entity) {};
+  explicit PKBProcedureQuery(QuerySynonym &synonym) : PKBEntityQuery(EntityType::kProcedure, synonym) {};
 };
 
 class PKBVariableQuery : public PKBEntityQuery {
  public:
-  explicit PKBVariableQuery() : PKBEntityQuery(EntityType::kVariable) {};
-  explicit PKBVariableQuery(Entity &entity) : PKBEntityQuery(entity) {};
+  explicit PKBVariableQuery(QuerySynonym &synonym) : PKBEntityQuery(EntityType::kVariable, synonym) {};
 };
 
 class PKBStatementQuery : public PKBEntityQuery {
  public:
-  explicit PKBStatementQuery() : PKBEntityQuery(EntityType::kStatement) {};
-  explicit PKBStatementQuery(Entity &entity) : PKBEntityQuery(entity) {};
+  explicit PKBStatementQuery(QuerySynonym &synonym) : PKBEntityQuery(EntityType::kStatement, synonym) {};
 
 };
 
 class PKBConstantQuery : public PKBEntityQuery {
  public:
-  explicit PKBConstantQuery() : PKBEntityQuery(EntityType::kConstant) {};
-  explicit PKBConstantQuery(Entity &entity) : PKBEntityQuery(entity) {};
+  explicit PKBConstantQuery(QuerySynonym &synonym) : PKBEntityQuery(EntityType::kConstant, synonym) {};
 };
 
 /*
