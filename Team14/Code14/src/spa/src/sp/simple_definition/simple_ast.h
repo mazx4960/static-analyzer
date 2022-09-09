@@ -53,6 +53,7 @@ class StatementListNode : public Node {
   std::vector<StatementNode*> GetStatements();
   std::vector<Node*> GetChildren() override;
   std::string ToString() override;
+  int SetStatementNos(int first_stmt_no);
 };
 
 class StatementNode : public Node {
@@ -64,6 +65,7 @@ class StatementNode : public Node {
   explicit StatementNode(StmtType stmtType);
   [[nodiscard]] int GetStmtNo() const;
   StmtType GetStmtType();
+  virtual int SetStatementNo(int next_stmt_no);
 };
 
 class ReadNode : public StatementNode {
@@ -104,6 +106,7 @@ class WhileNode : public StatementNode {
  public:
   WhileNode(CondExprNode* conditional, StatementListNode* statementList);
   StatementListNode* GetStatementList();
+  int SetStatementNo(int next_stmt_no) override;
   std::vector<Node*> GetChildren() override;
   std::string ToString() override;
 };
@@ -120,6 +123,7 @@ class IfNode : public StatementNode {
   StatementListNode* GetElseStatementList();
   std::vector<Node*> GetChildren() override;
   std::string ToString() override;
+  int SetStatementNo(int next_stmt_no) override;
 };
 
 class AssignNode : public StatementNode {

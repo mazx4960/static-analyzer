@@ -7,7 +7,10 @@
 
 ProgramNode::ProgramNode(std::vector<ProcedureNode*> procedures)
     : Node(NodeType::kProgram),
-      procedures_(std::move(procedures)) {}
+      procedures_(std::move(procedures)) {
+  int stmt_no = 1;
+  for (auto* procedure : procedures_) { stmt_no = procedure->GetStatementList()->SetStatementNos(stmt_no); }
+}
 
 std::vector<Node*> ProgramNode::GetChildren() { return std::vector<Node*>(procedures_.begin(), procedures_.end()); }
 std::string ProgramNode::ToString() { return "program"; }
@@ -29,6 +32,12 @@ StatementListNode::StatementListNode(std::vector<StatementNode*> statements)
       statements_(std::move(statements)) {}
 std::vector<StatementNode*> StatementListNode::GetStatements() { return this->statements_; }
 
+int StatementListNode::SetStatementNos(int first_stmt_no) {
+  int stmt_no = first_stmt_no;
+  for (auto *statement : statements_) {stmt_no = statement->SetStatementNo(stmt_no);}
+  return stmt_no;
+}
+
 std::vector<Node*> StatementListNode::GetChildren() {
   return std::vector<Node*>(statements_.begin(), statements_.end());
 }
@@ -36,6 +45,10 @@ std::string StatementListNode::ToString() { return std::string(); }
 
 StatementNode::StatementNode(StmtType stmtType) : Node(NodeType::kStatement), stmtNo_(0) { this->stmtType_ = stmtType; }
 int StatementNode::GetStmtNo() const { return this->stmtNo_; }
+int StatementNode::SetStatementNo(int next_stmt_no) {
+  this->stmtNo_ = next_stmt_no;
+  return next_stmt_no + 1;
+}
 StmtType StatementNode::GetStmtType() { return this->stmtType_; }
 
 ReadNode::ReadNode(VariableNode* variable) : StatementNode(StmtType::kRead), variable_(variable) {}
@@ -61,6 +74,11 @@ WhileNode::WhileNode(CondExprNode* conditional, StatementListNode* statementList
       statementList_(statementList) {}
 StatementListNode* WhileNode::GetStatementList() { return this->statementList_; }
 
+int WhileNode::SetStatementNo(int next_stmt_no) {
+  int stmt_no = StatementNode::SetStatementNo(next_stmt_no);
+  return statementList_->SetStatementNos(stmt_no);
+}
+
 std::vector<Node*> WhileNode::GetChildren() { return std::vector<Node*>{conditional_, statementList_}; }
 std::string WhileNode::ToString() { return "while"; }
 
@@ -71,6 +89,11 @@ IfNode::IfNode(CondExprNode* conditional, StatementListNode* thenStatementList, 
       elseStatementList_(elseStatementList) {}
 StatementListNode* IfNode::GetThenStatementList() { return this->thenStatementList_; }
 StatementListNode* IfNode::GetElseStatementList() { return this->elseStatementList_; }
+int IfNode::SetStatementNo(int next_stmt_no) {
+  int then_stmt_no = StatementNode::SetStatementNo(next_stmt_no);
+  int else_stmt_no = thenStatementList_->SetStatementNos(then_stmt_no);
+  return elseStatementList_->SetStatementNos(else_stmt_no);
+}
 
 std::vector<Node*> IfNode::GetChildren() {
   return std::vector<Node*>{conditional_, thenStatementList_, elseStatementList_};
