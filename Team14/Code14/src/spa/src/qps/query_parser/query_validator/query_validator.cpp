@@ -152,10 +152,10 @@ bool QueryValidator::isDeclared(const std::string &synonym) {
 
 QuerySynonym QueryValidator::validateSynonym() {
   if (peekToken()->type != TokenType::kSymbol) {
-    throw ParseSyntaxError("Invalid synonym name: " + peekToken()->value);
+    throw ParseSemanticError("Invalid synonym name: " + peekToken()->value);
   }
   if (isDeclared(peekToken()->value)) {
-    throw ParseSyntaxError("Synonym already declared: " + peekToken()->value);
+    throw ParseSemanticError("Synonym already declared: " + peekToken()->value);
   }
   this->synonyms_.insert(peekToken()->value);
   return QuerySynonym(nextToken()->value);
