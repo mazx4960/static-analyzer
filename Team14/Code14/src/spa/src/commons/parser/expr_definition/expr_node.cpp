@@ -10,8 +10,24 @@ ExprNode::ExprNode(ExprType expr_type, RelFactorNode* leftExpression, RelFactorN
       leftExpression_(leftExpression),
       rightExpression_(rightExpression) {}
 std::vector<Node*> ExprNode::GetChildren() { return std::vector<Node*>{leftExpression_, rightExpression_}; }
-std::string ExprNode::ToString() { return ""; }// TODO: Flatten expression and add brackets
-
+std::string ExprNode::ToString() {
+  if (this->expr_type_ == ExprType::kPlus) {
+    return "(" + leftExpression_->ToString() + "+" + rightExpression_->ToString() +")";
+  }
+  if (this->expr_type_ == ExprType::kMinus) {
+    return "(" + leftExpression_->ToString() + "-" + rightExpression_->ToString() +")";
+  }
+  if (this->expr_type_ == ExprType::kTimes) {
+    return "(" + leftExpression_->ToString() + "*" + rightExpression_->ToString() +")";
+  }
+  if (this->expr_type_ == ExprType::kDiv) {
+    return "(" + leftExpression_->ToString() + "/" + rightExpression_->ToString() +")";
+  }
+  if (this->expr_type_ == ExprType::kMod) {
+    return "(" + leftExpression_->ToString() + "%" + rightExpression_->ToString() +")";
+  }
+  return "";
+}
 ReferenceNode::ReferenceNode(NodeType nodeType) : RelFactorNode(nodeType) {}
 std::vector<Node*> ReferenceNode::GetChildren() { return std::vector<Node*>{}; }
 
