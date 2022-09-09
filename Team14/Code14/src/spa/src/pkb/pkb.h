@@ -6,45 +6,45 @@
 #include <unordered_set>
 
 #include "pkb.h"
+#include "pkb/entity/entity_table.h"
 #include "commons/relationship.h"
 #include "pkb/entity/pkb_query.h"
 #include "pkb/entity/result.h"
-#include "pkb/entity/entity_store.h"
 
 /*
- * Interface for PKB Saver
+ * Interface for SP -> PKB
  */
-class IPKBSaver {
+class IPKBPopulator {
  protected:
-  IPKBSaver() = default;
+  IPKBPopulator() = default;
  public:
-  ~IPKBSaver() = default;
-  virtual void save(std::vector<Entity *> &) = 0;
+  ~IPKBPopulator() = default;
+  virtual void populate(std::vector<Entity *> &) = 0;
 };
 
 /*
- * Interface for PKB Getter
+ * Interface for QPS -> PKB
  */
-class IPKBGetter {
+class IPKBQuery {
  protected:
-  IPKBGetter() = default;
+  IPKBQuery() = default;
  public:
-  ~IPKBGetter() = default;
-  virtual Result get(PKBEntityQuery &) = 0;
-  virtual Result get(EntityType, QuerySynonym) = 0;
+  ~IPKBQuery() = default;
+  virtual Result getResults(PKBEntityQuery &) = 0;
+  virtual Result getResults(EntityType, QuerySynonym) = 0;
 };
 
-class PKB : public IPKBSaver, public IPKBGetter {
+class PKB : public IPKBPopulator, public IPKBQuery {
  private:
-  std::unordered_map<EntityType, EntityStore *> entity_storage_map_;
+  std::unordered_map<EntityType, EntityTable *> entity_map_;
 
  public:
   PKB() = default;
 
-  Result get(PKBEntityQuery &query) override;
-  Result get(EntityType type, QuerySynonym synonym) override;
+  Result getResults(PKBEntityQuery &query) override;
+  Result getResults(EntityType type, QuerySynonym synonym) override;
 
-  void save(std::vector<Entity *> &entities) override;
+  void populate(std::vector<Entity *> &entities) override;
 
   // Currently only used for debugging and testing
   int getCount();

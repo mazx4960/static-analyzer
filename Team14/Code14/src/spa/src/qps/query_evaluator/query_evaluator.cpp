@@ -13,7 +13,7 @@ void QueryEvaluator::fetchContext() {
     Entity *declaration_var_entity = declaration->getEntity();
     PKBEntityQuery pkb_query = *PKBEntityQuery::getQuery(*declaration_var_entity, declaration_synonym);
 
-    Result query_declaration_context = this->pkb_->get(pkb_query);
+    Result query_declaration_context = this->pkb_->getResults(pkb_query);
     this->context_.insert({*declaration, query_declaration_context.get_results_set()});
   }
 }

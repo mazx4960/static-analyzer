@@ -26,6 +26,10 @@ TEST(ExtractorTest, TestEntity) {
   ASSERT_EQ(entities.size(), expected.size());
   for (int i = 0; i < entities.size(); ++i) {
     ASSERT_EQ(entities[i]->GetType(), expected[i]->GetType());
+    if (entities[i]->GetType() == EntityType::kStatement) {
+      ASSERT_EQ(static_cast<StatementEntity*>(entities[i])->GetStmtNo(),
+                static_cast<StatementEntity*>(expected[i])->GetStmtNo());
+    }
     ASSERT_EQ(entities[i]->GetName(), expected[i]->GetName());
   }
 }

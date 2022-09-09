@@ -7,11 +7,11 @@
 
 class EvaluationStrategy {
  protected:
-  IPKBGetter *pkb_;
+  IPKBQuery *pkb_;
 
-  explicit EvaluationStrategy(IPKBGetter *pkb) : pkb_(pkb) {};
+  explicit EvaluationStrategy(IPKBQuery *pkb) : pkb_(pkb) {};
  public:
-  static EvaluationStrategy *getStrategy(IPKBGetter *, QueryClause &);
+  static EvaluationStrategy *getStrategy(IPKBQuery *, QueryClause &);
   virtual Result evaluate() = 0;
 };
 
@@ -23,7 +23,7 @@ class SuchThatStrategy : public EvaluationStrategy {
   SuchThatClause clause_;
 
  public:
-  SuchThatStrategy(IPKBGetter *pkb, SuchThatClause &query_clause)
+  SuchThatStrategy(IPKBQuery *pkb, SuchThatClause &query_clause)
       : EvaluationStrategy(pkb), clause_(query_clause) {};
 
   Result evaluate() override;
@@ -33,7 +33,7 @@ class PatternStrategy : public EvaluationStrategy {
   PatternClause clause_;
 
  public:
-  PatternStrategy(IPKBGetter *pkb, PatternClause &query_clause)
+  PatternStrategy(IPKBQuery *pkb, PatternClause &query_clause)
       : EvaluationStrategy(pkb), clause_(query_clause) {};
 
   Result evaluate() override;
