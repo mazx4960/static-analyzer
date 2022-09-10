@@ -11,5 +11,5 @@ Node* Parser::Parse(GrammarRule* grammar_rule, std::vector<Token*> tokens) {
   return grammar_rule->parseNode(token_stream);
 }
 Node* Parser::ParseExpression(const std::vector<Token*>& tokens) {
-  return Parse(new ExprGrammarRule(), std::move(tokens));
+  return Parse(new RelFactorGrammarRule(), std::move(tokens));
 }
