@@ -10,6 +10,7 @@
 #include "commons/result.h"
 #include "pkb.h"
 #include "pkb/entity/entity_table.h"
+#include "pkb/relationship//relationship_table.h"
 
 /*
  * Interface for SP -> PKB
@@ -30,19 +31,26 @@ class IPKBQuerier {
   IPKBQuerier() = default;
  public:
   ~IPKBQuerier() = default;
-  virtual Result getResults(PKBQuery &) = 0;
+  virtual Result getResults(PKBEntityQuery &) = 0;
   virtual Result getResults(EntityType, QuerySynonym) = 0;
+
+  virtual Result getResults(PKBSuchThatQuery &) = 0;
+  virtual Result getResults(Relationship) = 0;
 };
 
 class PKB : public IPKBPopulator, public IPKBQuerier {
  private:
   std::unordered_map<EntityType, EntityTable *> entity_map_;
+  std::unordered_map<RsType, RelationshipTable *> relationship_map_;
 
  public:
   PKB() = default;
 
-  Result getResults(PKBQuery &query) override;
+  Result getResults(PKBEntityQuery &query) override;
   Result getResults(EntityType type, QuerySynonym synonym) override;
+
+  Result getResults(PKBSuchThatQuery &query) override;
+  Result getResults(Relationship relationship) override;
 
   void populate(std::vector<Entity *> &entities) override;
 

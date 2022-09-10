@@ -16,7 +16,7 @@ void PKB::populate(std::vector<Entity *> &entities) {
   }
 }
 
-Result PKB::getResults(PKBQuery &query) {
+Result PKB::getResults(PKBEntityQuery &query) {
   return this->getResults(query.getEntityType(), query.getSynonym());
 }
 
@@ -26,6 +26,20 @@ Result PKB::getResults(EntityType type, QuerySynonym synonym) {
     return Result::empty(synonym);
   }
   return this->entity_map_[type]->get(synonym);
+}
+
+Result PKB::getResults(PKBSuchThatQuery &query) {
+  return this->getResults(*query.getRelationship());
+}
+
+Result PKB::getResults(Relationship relationship) {
+  auto type = relationship.GetType();
+
+  if (this->relationship_map_.find(type) == this->relationship_map_.end()) {
+    auto synonym = QuerySynonym("placeholder");
+    return Result::empty(synonym);
+  }
+  return this->relationship_map_[type]->get(type, relationship.GetFirst(), relationship.GetSecond());
 }
 
 int PKB::getCount() {

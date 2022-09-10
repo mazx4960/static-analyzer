@@ -25,3 +25,6 @@ std::vector<std::string> Result::get_sorted_results_list() const {
   return result_vector;
 }
 
+std::unordered_map<QuerySynonym, std::unordered_set<Entity *>, QuerySynonymHashFunction> Result::get_result_map() {
+  return this->map_result_;
+}
