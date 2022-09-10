@@ -16,8 +16,7 @@ class RelationshipTable {
 
  public:
   static RelationshipTable *getTable(RsType);
-  Result get(RsType, Entity*, Entity*);
-  Result getStatements(QuerySynonym &, Entity*, Entity*);
+  Result get(Entity*, Entity*);
 };
 
 class ModifiesTable : public RelationshipTable {

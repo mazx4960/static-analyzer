@@ -16,6 +16,7 @@ void PKB::populate(std::vector<Entity *> &entities) {
   }
 }
 
+// Return a set of names of a specific entity
 Result PKB::getResults(PKBEntityQuery &query) {
   return this->getResults(query.getEntityType(), query.getSynonym());
 }
@@ -28,8 +29,20 @@ Result PKB::getResults(EntityType type, QuerySynonym synonym) {
   return this->entity_map_[type]->get(synonym);
 }
 
+// Return a set of Entity given a relationship
 Result PKB::getResults(PKBSuchThatQuery &query) {
   return this->getResults(*query.getRelationship());
+}
+
+Result PKB::getResults(std::vector<PKBSuchThatQuery> &query) {
+  std::unordered_set<Entity*> set_entity = {};
+  auto synonym = QuerySynonym("placeholder");
+
+  for (auto itr = query.begin(); itr != query.end(); ++itr) {
+    Result result = this->getResults(*itr);
+    set_entity.insert(result.get_results_entity_set().begin(), result.get_results_entity_set().end());
+  }
+  return Result(synonym, set_entity);
 }
 
 Result PKB::getResults(Relationship relationship) {
@@ -39,7 +52,7 @@ Result PKB::getResults(Relationship relationship) {
     auto synonym = QuerySynonym("placeholder");
     return Result::empty(synonym);
   }
-  return this->relationship_map_[type]->get(type, relationship.GetFirst(), relationship.GetSecond());
+  return this->relationship_map_[type]->get(relationship.GetFirst(), relationship.GetSecond());
 }
 
 int PKB::getCount() {

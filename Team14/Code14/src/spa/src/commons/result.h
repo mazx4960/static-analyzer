@@ -17,7 +17,7 @@ class Result {
   QuerySynonym syn_;
 
   std::unordered_set<std::string> results_;
-  std::unordered_map<QuerySynonym, std::unordered_set<Entity*>, QuerySynonymHashFunction> map_result_;
+  std::unordered_set<Entity*> entity_set_results_;
 
  protected:
   explicit Result(QuerySynonym &syn, std::unordered_set<std::string> &results, bool is_empty)
@@ -27,8 +27,8 @@ class Result {
   explicit Result(QuerySynonym &syn, std::unordered_set<std::string> &results)
       : syn_(syn), results_(results), is_empty_(false) {};
 
-  explicit Result(QuerySynonym &syn, std::unordered_map<QuerySynonym, std::unordered_set<Entity*>, QuerySynonymHashFunction> &map_result)
-      : syn_(syn), map_result_(map_result) {};
+  explicit Result(QuerySynonym &syn, std::unordered_set<Entity*> &results)
+      : syn_(syn), entity_set_results_(results) {};
 
   static Result empty(QuerySynonym &);
 
@@ -36,5 +36,5 @@ class Result {
   [[nodiscard]] QuerySynonym get_synonym() const;
   [[nodiscard]] std::unordered_set<std::string> get_results_set() const;
   [[nodiscard]] std::vector<std::string> get_sorted_results_list() const;
-  [[nodiscard]] std::unordered_map<QuerySynonym, std::unordered_set<Entity*>, QuerySynonymHashFunction> get_result_map();
+  [[nodiscard]] std::unordered_set<Entity*> get_results_entity_set();
 };
