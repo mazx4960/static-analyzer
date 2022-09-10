@@ -31,6 +31,8 @@ class IPKBQuerier {
  public:
   ~IPKBQuerier() = default;
   virtual Result getResults(PKBEntityQuery &) = 0;
+  virtual Result getResults(PKBPatternQuery &) = 0;
+  virtual Result getResults(PKBSuchThatQuery &) = 0;
   virtual Result getResults(EntityType, QuerySynonym) = 0;
 };
 
@@ -42,6 +44,8 @@ class PKB : public IPKBPopulator, public IPKBQuerier {
   PKB() = default;
 
   Result getResults(PKBEntityQuery &query) override;
+  Result getResults(PKBPatternQuery &) override;
+  Result getResults(PKBSuchThatQuery &) override;
   Result getResults(EntityType type, QuerySynonym synonym) override;
 
   void populate(std::vector<Entity *> &entities) override;
