@@ -25,8 +25,7 @@ Result PatternStrategy::evaluate() {
   PKBPatternQuery pkb_query = *PKBPatternQuery::getQuery(pattern);
 
   // TODO(howtoosee, leeenen) waiting for PKB get() method
-  //Result result = this->pkb_->get(pkb_query);
-  Result result = Result::empty(placeholder_syn);
+  Result result = this->pkb_->getResults(pkb_query);
 
   return result;
 }
