@@ -1,5 +1,4 @@
-#ifndef TESTWRAPPER_H
-#define TESTWRAPPER_H
+#pragma once
 
 #include <iostream>
 #include <list>
@@ -7,20 +6,22 @@
 
 // include your other headers here
 #include "AbstractWrapper.h"
+#include "ui/ui.h"
 
 class TestWrapper : public AbstractWrapper {
+ private:
+  UI* ui_;
+
  public:
   // default constructor
   TestWrapper();
 
   // destructor
-  ~TestWrapper();
+  ~TestWrapper() = default;
 
   // method for parsing the SIMPLE source
-  virtual void parse(std::string filename);
+  void parse(std::string filename) override;
 
   // method for evaluating a query
-  virtual void evaluate(std::string query, std::list<std::string>& results);
+  void evaluate(std::string query, std::list<std::string>& results) override;
 };
-
-#endif
