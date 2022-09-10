@@ -10,13 +10,15 @@
 
 class RelationshipTable {
  protected:
-  std::unordered_set<std::pair<Entity*, Entity*>> table_;
+  std::unordered_set<std::pair<StatementEntity*, StatementEntity*>> table_;
 
   RelationshipTable() = default;
 
  public:
   static RelationshipTable *getTable(RsType);
-  Result get(Entity*, Entity*);
+  Result get(RsType, StatementEntity*, StatementEntity*);
+  Result getTraversalResult(StatementEntity*, StatementEntity*);
+  Result getResult(StatementEntity*, StatementEntity*);
 };
 
 class ModifiesTable : public RelationshipTable {

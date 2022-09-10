@@ -52,7 +52,7 @@ Result PKB::getResults(Relationship relationship) {
     auto synonym = QuerySynonym("placeholder");
     return Result::empty(synonym);
   }
-  return this->relationship_map_[type]->get(relationship.GetFirst(), relationship.GetSecond());
+  return this->relationship_map_[type]->get(type, relationship.GetFirst(), relationship.GetSecond());
 }
 
 int PKB::getCount() {

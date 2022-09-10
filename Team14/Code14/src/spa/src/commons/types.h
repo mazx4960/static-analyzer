@@ -20,7 +20,9 @@ enum class StmtType {
 
 enum class RsType {
   kFollows,
+  kFollowsT,
   kParent,
+  kParentT,
   kUses,
   kModifies,
 };
