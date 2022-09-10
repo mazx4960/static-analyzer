@@ -10,7 +10,7 @@
 #include "commons/result.h"
 #include "pkb.h"
 #include "pkb/entity/entity_table.h"
-#include "pkb/relationship//relationship_table.h"
+#include "pkb/relationship/relationship_table.h"
 
 /*
  * Interface for SP -> PKB
