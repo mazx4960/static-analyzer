@@ -44,7 +44,7 @@ Token* SimpleLexer::next_token() {
     return new CurlyOpenBracketToken();
   } else if (c == this->curly_close_bracket_) {
     // Curly Close Bracket
-    return new CurlyCloseBracket();
+    return new CurlyCloseBracketToken();
   } else if (valid_single_operators_.find(tmp_) != valid_single_operators_.end()) {
     // Operator
     read_operators();

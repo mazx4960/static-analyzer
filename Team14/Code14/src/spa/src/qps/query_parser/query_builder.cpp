@@ -7,6 +7,9 @@
 QueryBuilder::QueryBuilder() = default;
 
 Query QueryBuilder::build() {
+  if (query_declarations_.empty() || query_calls_.empty()) {
+    throw "Builder Error"; // Placeholder
+  }
   return Query(query_declarations_, *query_calls_[0]);
 }
 

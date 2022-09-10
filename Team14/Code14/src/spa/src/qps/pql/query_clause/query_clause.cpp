@@ -5,9 +5,25 @@
 ClauseType QueryClause::getClauseType() {
   return this->clause_type_;
 }
-Relationship SuchThatClause::getRelationship() const {
-  return this->relationship_;
+SuchThatType SuchThatClause::getSuchThatType() const {
+  return this->type_;
 }
-Pattern PatternClause::getPattern() const {
-  return this->pattern_;
+QueryDeclaration *SuchThatClause::getFirst() const {
+  return this->first_;
+}
+QueryDeclaration *SuchThatClause::getSecond() const {
+  return this->second_;
+}
+
+PatternType PatternClause::getPatternType() const {
+  return this->type_;
+}
+QueryDeclaration *PatternClause::getFirst() const {
+  return this->first_;
+}
+QueryDeclaration *PatternClause::getSecond() const {
+  return this->second_;
+}
+QueryDeclaration *PatternClause::getThird() const {
+  return this->third_;
 }

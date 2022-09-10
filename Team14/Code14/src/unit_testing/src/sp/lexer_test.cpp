@@ -12,7 +12,7 @@ TEST(LexerTest, TestBasic) {
       new KeywordToken("procedure"), new SymbolToken("main"),
       new CurlyOpenBracketToken(), new SymbolToken("x"),
       new OperatorToken("="), new LiteralToken("1"),
-      new SemicolonToken(), new CurlyCloseBracket(),
+      new SemicolonToken(), new CurlyCloseBracketToken(),
       new EndOfFileToken()};
   ASSERT_EQ(tokens.size(), expected.size());
   for (int i = 0; i < tokens.size(); ++i) {

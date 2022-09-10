@@ -10,8 +10,8 @@
 TEST(SimpleParserTest, TestBasic) {
   std::vector<Token *> input_tokens = {
       new KeywordToken("procedure"), new SymbolToken("main"), new CurlyOpenBracketToken(),
-      new SymbolToken("x"),          new OperatorToken("="),  new LiteralToken("1"),
-      new SemicolonToken(),          new CurlyCloseBracket(), new EndOfFileToken()};
+      new SymbolToken("x"), new OperatorToken("="), new LiteralToken("1"),
+      new SemicolonToken(), new CurlyCloseBracketToken(), new EndOfFileToken()};
   Node *program_node = SimpleParser::ParseProgram(input_tokens);
 
   ASSERT_EQ(NodeType::kProgram, program_node->GetNodeType());
