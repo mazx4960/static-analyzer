@@ -4,7 +4,6 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "commons/pkb_query.h"
 #include "evaluation_strategy.h"
 #include "qps/pql/query/query.h"
 #include "subquery_evaluator.h"
@@ -16,12 +15,13 @@ class QueryEvaluator {
   IPKBQuerier *pkb_;
 
   std::vector<Result> partial_results_list_;
-  void fetchContext();
-  std::vector<Result> evaluateSubQueries();
-  Result projectResults(std::vector<Result> &partial_results_list);
 
+  std::unordered_map<QuerySynonym, QueryDeclaration *, QuerySynonymHashFunction> declarations_;
 
-  std::vector<QueryDeclaration*> declarations_;
+  std::unordered_set<QueryDeclaration *> copyDeclarations();
+  std::unordered_set<QueryDeclaration *> fetchContext();
+  std::unordered_set<QueryDeclaration *> evaluateSubQueries();
+  std::unordered_set<QueryDeclaration *> getDeclarationAsSet();
 
  public:
   QueryEvaluator(IPKBQuerier *pkb, Query &query) : pkb_(pkb), query_(query) {};

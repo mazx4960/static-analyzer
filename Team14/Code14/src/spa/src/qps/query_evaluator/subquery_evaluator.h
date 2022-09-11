@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_set>
+#include "commons/entity.h"
 #include "evaluation_strategy.h"
 
 class SubQueryEvaluator {
@@ -11,5 +13,5 @@ class SubQueryEvaluator {
  public:
   SubQueryEvaluator(IPKBQuerier *pkb, QueryClause &query_clause_);
 
-  Result evaluate();
+  std::unordered_set<Entity *> evaluate();
 };
