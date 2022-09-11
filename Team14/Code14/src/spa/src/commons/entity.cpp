@@ -15,6 +15,10 @@ std::string Entity::GetName() {
 bool Entity::operator==(const Entity &other) const {
   return this->type_ == other.type_ && this->name_ == other.name_;
 }
+bool Entity::operator==(const Entity *other) const {
+  return this->type_ == other->type_ && this->name_ == other->name_;
+}
+
 std::string Entity::ToString() {
   std::string type_string;
   std::string name_string = this->name_;

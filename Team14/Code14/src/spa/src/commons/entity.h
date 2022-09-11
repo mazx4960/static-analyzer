@@ -10,6 +10,7 @@
 class Entity {
  private:
   EntityType type_;
+
   std::string name_;
 
  public:
@@ -17,6 +18,7 @@ class Entity {
   EntityType GetType();
   std::string GetName();
   bool operator==(const Entity &other) const;
+  bool operator==(const Entity *other) const;
   std::string ToString();
 };
 
@@ -41,6 +43,7 @@ class ConstantEntity : public Entity {
 class StatementEntity : public Entity {
  private:
   int stmt_no_;
+
   StmtType stmt_type_;
 
  public:
