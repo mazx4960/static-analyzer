@@ -38,7 +38,7 @@ std::unordered_set<QueryDeclaration *> QueryEvaluator::evaluateSubQueries() {
 
   for (QueryClause subquery_clause : subquery_clauses) {
     SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, subquery_clause);
-    std::unordered_set<Entity *> subquery_results_set = subquery_evaluator.evaluate();
+    std::unordered_set<QueryDeclaration *> subquery_results_set = subquery_evaluator.evaluate();
   }
 
   return this->getDeclarationAsSet();
