@@ -11,8 +11,6 @@
 
 class Result {
  private:
-  static Result empty_result_;
-
   QuerySynonym synonym_;
 
   std::unordered_set<Entity *> results_;
@@ -21,7 +19,7 @@ class Result {
   explicit Result(QuerySynonym &synonym, std::unordered_set<Entity *> &results_set)
       : synonym_(synonym), results_(results_set) {};
 
-  static Result empty();
+  static Result empty(QuerySynonym &synonym);
 
   bool is_empty() const;
   QuerySynonym get_synonym() const;
