@@ -6,7 +6,8 @@
 class Pattern {
  private:
   std::string var_name_;
+  int stmt_no_;
   std::string expr_;
  public:
-  Pattern(std::string var_name, std::string expr_);
+  Pattern(std::string var_name, int stmt_no, std::string expr_);
 };
