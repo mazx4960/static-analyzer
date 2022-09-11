@@ -6,8 +6,6 @@
 
 class SubQueryEvaluator {
  private:
-  IPKBQuerier *pkb_;
-
   EvaluationStrategy *strategy_;
 
  public:
