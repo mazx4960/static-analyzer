@@ -1,5 +1,4 @@
-#ifndef ABSTRACTWRAPPER_H
-#define ABSTRACTWRAPPER_H
+#pragma once
 
 #include <iostream>
 #include <list>
@@ -21,12 +20,10 @@ class WrapperFactory {
 
  private:
   // the following three will prevent the creation of WrapperFactory objects
-  WrapperFactory();
+  WrapperFactory() = default;
   WrapperFactory(const WrapperFactory&);
   WrapperFactory& operator=(const WrapperFactory&);
 
   // the Wrapper object
   static AbstractWrapper* wrapper;
 };
-
-#endif

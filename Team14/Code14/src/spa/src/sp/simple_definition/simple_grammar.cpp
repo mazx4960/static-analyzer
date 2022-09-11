@@ -2,7 +2,6 @@
 
 #include "commons/lexer/token.h"
 #include "commons/parser/expr_definition/expr_grammar_producer.h"
-#include "commons/parser/parser_exceptions.h"
 #include "simple_grammar_producer.h"
 
 ProgramGrammarRule::ProgramGrammarRule() : ListGrammarRule(new ProcedureGrammarProducer()) {}
