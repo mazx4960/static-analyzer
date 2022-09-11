@@ -1,6 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "query_builder.h"
+#include "builder_exception.h"
 
 #include <utility>
 
@@ -8,7 +9,7 @@ QueryBuilder::QueryBuilder() = default;
 
 Query QueryBuilder::build() {
   if (query_declarations_.empty() || query_calls_.empty()) {
-    throw "Builder Error"; // Placeholder
+    throw BuilderError("failed to build query");
   }
   return Query(query_declarations_, *query_calls_[0]);
 }
