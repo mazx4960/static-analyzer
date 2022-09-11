@@ -16,7 +16,7 @@ class QueryEvaluator {
 
   std::vector<Result> partial_results_list_;
 
-  std::unordered_map<QuerySynonym, QueryDeclaration *, QuerySynonymHashFunction> declarations_;
+  std::unordered_set<QueryDeclaration *> declarations_;
 
   std::unordered_set<QueryDeclaration *> copyDeclarations();
   std::unordered_set<QueryDeclaration *> fetchContext();

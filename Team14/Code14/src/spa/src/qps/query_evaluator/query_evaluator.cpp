@@ -1,19 +1,16 @@
 #include "query_evaluator.h"
 
 std::unordered_set<QueryDeclaration *> QueryEvaluator::copyDeclarations() {
-  for (auto *declaration : query_.getDeclarations()) {
-    this->declarations_.insert({declaration->getSynonym(), declaration});
-  }
+  std::copy(this->query_.getDeclarations().begin(), this->query_.getDeclarations().end(),
+            std::inserter(this->declarations_, this->declarations_.begin()));
   return this->getDeclarationAsSet();
 }
 
 std::unordered_set<QueryDeclaration *> QueryEvaluator::fetchContext() {
   this->copyDeclarations();
 
-  for (auto &it : this->declarations_) {
+  for (auto *declaration : this->declarations_) {
     std::unordered_set<Entity *> query_declaration_context_set;
-    
-    QueryDeclaration *declaration = it.second;
 
     DeclarationType declaration_type = declaration->getType();
     if (DeclarationTypeAdaptor::canConvertToEntityType(declaration_type)) {
@@ -38,7 +35,7 @@ std::unordered_set<QueryDeclaration *> QueryEvaluator::evaluateSubQueries() {
 
   for (QueryClause subquery_clause : subquery_clauses) {
     SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, subquery_clause);
-    std::unordered_set<QueryDeclaration *> subquery_results_set = subquery_evaluator.evaluate();
+    subquery_evaluator.evaluate();
   }
 
   return this->getDeclarationAsSet();
@@ -65,10 +62,8 @@ Result QueryEvaluator::evaluate() {
 std::unordered_set<QueryDeclaration *> QueryEvaluator::getDeclarationAsSet() {
   std::unordered_set<QueryDeclaration *> declaration_set;
 
-  for (auto &it : this->declarations_) {
-    QueryDeclaration *declaration = it.second;
-    declaration_set.insert(declaration);
-  }
+  std::copy(this->declarations_.begin(), this->declarations_.end(),
+            std::inserter(declaration_set, declaration_set.begin()));
 
   return declaration_set;
 }

@@ -4,6 +4,6 @@ SubQueryEvaluator::SubQueryEvaluator(IPKBQuerier *pkb, QueryClause &query_clause
   this->strategy_ = EvaluationStrategy::getStrategy(pkb, query_clause);
 }
 
-std::unordered_set<QueryDeclaration *> SubQueryEvaluator::evaluate() {
-  return this->strategy_->evaluate();
+void SubQueryEvaluator::evaluate() {
+  this->strategy_->evaluate();
 }

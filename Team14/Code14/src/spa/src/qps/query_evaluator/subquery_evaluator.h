@@ -13,5 +13,5 @@ class SubQueryEvaluator {
  public:
   SubQueryEvaluator(IPKBQuerier *pkb, QueryClause &query_clause_);
 
-  std::unordered_set<QueryDeclaration *> evaluate();
+  void evaluate();
 };
