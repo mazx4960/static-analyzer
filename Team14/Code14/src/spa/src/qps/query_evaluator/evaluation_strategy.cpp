@@ -13,6 +13,8 @@ EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClaus
 
 // TODO(howtoosee) implement SuchThat strategy
 void SuchThatStrategy::evaluate() {
+  RsType rs_type; // TODO (howtoosee) translate clause type to rs_type
+
   QueryDeclaration *first_param = this->clause_.getFirst();
   QueryDeclaration *second_param = this->clause_.getSecond();
 
@@ -35,6 +37,7 @@ void SuchThatStrategy::intersectContext(QueryDeclaration *param_to_send,
                                         RsType rs_type,
                                         bool invert_search) {
   std::unordered_set<Entity *> valid_entities_for_other_param;
+
   for (auto *context_entity : param_to_send->getContext()) {
     std::unordered_set<Entity *> valid_entities = this->pkb_->getByRelationship(rs_type, context_entity, invert_search);
     if (valid_entities.empty()) {
