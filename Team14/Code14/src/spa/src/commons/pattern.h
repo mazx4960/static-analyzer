@@ -6,7 +6,7 @@
 class Pattern {
  private:
   std::string var_name_;
-  RelFactorNode* expr_;
+  std::string expr_;
  public:
-  Pattern(std::string var_name, RelFactorNode* expr_);
+  Pattern(std::string var_name, std::string expr_);
 };
