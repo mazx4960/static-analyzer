@@ -5,6 +5,7 @@
 #include "simple_lexer.h"
 #include "simple_parser.h"
 #include "sp/extractor/entity_extractor.h"
+#include "sp/extractor/pattern_extractor.h"
 #include "sp/extractor/relationship_extractor.h"
 
 void SP::SetPKB(IPKBPopulator *pkb) { this->pkb_ = pkb; }
@@ -27,4 +28,8 @@ void SP::LoadSource(std::ifstream &source_stream) {
   std::vector<Relationship *> relationships = RelationshipExtractor::ExtractAll(program_node);
   spdlog::info("Extracted {} relationships", relationships.size());
   for (auto *relationship : relationships) { spdlog::debug("{}", relationship->ToString()); }
+
+  std::vector<Pattern *> patterns = PatternExtractor::ExtractAll(program_node);
+  spdlog::info("Extracted {} patterns", patterns.size());
+
 }
