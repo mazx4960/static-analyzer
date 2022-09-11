@@ -12,14 +12,14 @@ EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClaus
 }
 
 // TODO(howtoosee) implement SuchThat strategy
-std::unordered_set<Entity *> SuchThatStrategy::evaluate() {
+std::unordered_set<QueryDeclaration *> SuchThatStrategy::evaluate() {
   QuerySynonym placeholder_syn("placeholder");
 
-  return std::unordered_set<Entity *>();
+  return std::unordered_set<QueryDeclaration *>();
 }
 
-std::unordered_set<Entity *> PatternStrategy::evaluate() {
+std::unordered_set<QueryDeclaration *> PatternStrategy::evaluate() {
   QuerySynonym placeholder_syn("placeholder");
 
-  return std::unordered_set<Entity *>();
+  return std::unordered_set<QueryDeclaration *>();
 }

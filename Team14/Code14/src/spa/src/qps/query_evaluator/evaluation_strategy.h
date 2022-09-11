@@ -13,7 +13,7 @@ class EvaluationStrategy {
   explicit EvaluationStrategy(IPKBQuerier *pkb) : pkb_(pkb) {};
  public:
   static EvaluationStrategy *getStrategy(IPKBQuerier *, QueryClause &);
-  virtual std::unordered_set<Entity *> evaluate() = 0;
+  virtual std::unordered_set<QueryDeclaration *> evaluate() = 0;
 };
 
 /*
@@ -27,7 +27,7 @@ class SuchThatStrategy : public EvaluationStrategy {
   SuchThatStrategy(IPKBQuerier *pkb, SuchThatClause &query_clause)
       : EvaluationStrategy(pkb), clause_(query_clause) {};
 
-  std::unordered_set<Entity *> evaluate() override;
+  std::unordered_set<QueryDeclaration *> evaluate() override;
 };
 
 class PatternStrategy : public EvaluationStrategy {
@@ -37,7 +37,7 @@ class PatternStrategy : public EvaluationStrategy {
   PatternStrategy(IPKBQuerier *pkb, PatternClause &query_clause)
       : EvaluationStrategy(pkb), clause_(query_clause) {};
 
-  std::unordered_set<Entity *> evaluate() override;
+  std::unordered_set<QueryDeclaration *> evaluate() override;
 };
 
 class EvaluationStrategyCreationError : public std::runtime_error {
