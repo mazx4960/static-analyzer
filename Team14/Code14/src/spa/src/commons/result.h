@@ -21,8 +21,8 @@ class Result {
 
   static Result empty(QuerySynonym &synonym);
 
-  bool is_empty() const;
-  QuerySynonym get_synonym() const;
-  std::unordered_set<Entity *> get_results_set() const;
-  std::vector<Entity *> get_sorted_results_list() const;
+  [[nodiscard]] bool is_empty() const;
+  [[nodiscard]] QuerySynonym get_synonym() const;
+  [[nodiscard]] std::unordered_set<Entity *> get_results_set() const;
+  [[nodiscard]] std::vector<Entity *> get_sorted_results_list() const;
 };
