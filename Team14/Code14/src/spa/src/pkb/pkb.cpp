@@ -28,8 +28,7 @@ std::unordered_set<Entity *> PKB::getByRelationship(RsType rs_type, Entity *enti
   return std::unordered_set<Entity *>();
 }
 
-std::unordered_set<Entity *> PKB::getByPattern(std::string &left_pattern, std::string &right_pattern,
-                                               EntityType entity_type, bool is_inverse) {
+std::unordered_set<Entity *> PKB::getByPattern(std::string &left_pattern, std::string &right_pattern) {
   return std::unordered_set<Entity *>();
 }
 

@@ -50,6 +50,8 @@ void SuchThatStrategy::intersectContext(QueryDeclaration *param_to_send, QueryDe
   std::set_intersection(valid_entities_for_other_param.begin(), valid_entities_for_other_param.end(),
                         param_to_be_intersected->getContext().begin(), param_to_be_intersected->getContext().end(),
                         std::inserter(intersected_results, intersected_results.begin()));
+
+  param_to_be_intersected->setContext(intersected_results);
 }
 
 
@@ -65,9 +67,16 @@ void PatternStrategy::evaluate() {
 void PatternStrategy::intersectContext(QueryDeclaration *assign_param,
                                        QueryDeclaration *left_param,
                                        QueryDeclaration *right_param) {
-  std::unordered_set<Entity *> valid_assign_entities = this->pkb_->getByPattern(left_param->getString(), right_param->getString(), EntityType::kStatement,
-                                                                                     false);
+  std::string left_string = left_param->getString();
+  std::string pattern_substring = right_param->getString();
+  std::unordered_set<Entity *> valid_assign_entities = this->pkb_->getByPattern(left_string, pattern_substring);
 
 
+
+  std::unordered_set<Entity *> intersected_results;
+  std::set_intersection(valid_assign_entities.begin(), valid_assign_entities.end(),
+                        assign_param->getContext().begin(), assign_param->getContext().end(),
+                        std::inserter(intersected_results, intersected_results.begin()));
+  assign_param->setContext(intersected_results);
 }
 
