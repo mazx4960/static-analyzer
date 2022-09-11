@@ -6,28 +6,25 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
+#include "commons/entity.h"
 #include "qps/pql/query_synonym/query_synonym.h"
 
 class Result {
  private:
-  bool is_empty_ = true;
+  static Result empty_result_;
 
-  QuerySynonym syn_;
+  QuerySynonym synonym_;
 
-  std::unordered_set<std::string> results_;
-
- protected:
-  explicit Result(QuerySynonym &syn, std::unordered_set<std::string> &results, bool is_empty)
-      : syn_(syn), results_(results), is_empty_(is_empty) {};
+  std::unordered_set<Entity *> results_;
 
  public:
-  explicit Result(QuerySynonym &syn, std::unordered_set<std::string> &results)
-      : syn_(syn), results_(results), is_empty_(false) {};
+  explicit Result(QuerySynonym &synonym, std::unordered_set<Entity *> &results_set)
+      : synonym_(synonym), results_(results_set) {};
 
-  static Result empty(QuerySynonym &);
+  static Result empty();
 
-  [[nodiscard]] bool is_empty() const;
-  [[nodiscard]] QuerySynonym get_synonym() const;
-  [[nodiscard]] std::unordered_set<std::string> get_results_set() const;
-  [[nodiscard]] std::vector<std::string> get_sorted_results_list() const;
+  bool is_empty() const;
+  QuerySynonym get_synonym() const;
+  std::unordered_set<Entity *> get_results_set() const;
+  std::vector<Entity *> get_sorted_results_list() const;
 };
