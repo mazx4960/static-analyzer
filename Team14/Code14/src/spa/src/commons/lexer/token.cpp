@@ -56,6 +56,11 @@ std::string Token::ToString() const {
       type_string = "EndOfFile";
       break;
     }
+    case TokenType::kWildCard:
+      // TODO(mazx4960): VERY THIS IS VALID
+      type_string = "WildCard";
+      break;
+    default:break;
   }
   return type_string + "(\"" + this->value + "\")";
 }
