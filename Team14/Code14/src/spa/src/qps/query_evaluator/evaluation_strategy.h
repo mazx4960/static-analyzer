@@ -37,5 +37,10 @@ class PatternStrategy : public EvaluationStrategy {
   PatternStrategy(IPKBQuerier *pkb, PatternClause &query_clause)
       : EvaluationStrategy(pkb), clause_(query_clause) {};
 
-  Result evaluate() override;
+  std::unordered_set<Entity *> evaluate() override;
+};
+
+class EvaluationStrategyCreationError : public std::runtime_error {
+ public:
+  explicit EvaluationStrategyCreationError(const std::string &message) : std::runtime_error(message) {};
 };
