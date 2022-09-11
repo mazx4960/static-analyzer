@@ -10,9 +10,9 @@ std::unordered_set<QueryDeclaration *> QueryEvaluator::copyDeclarations() {
 std::unordered_set<QueryDeclaration *> QueryEvaluator::fetchContext() {
   this->copyDeclarations();
 
-  std::unordered_set<Entity *> query_declaration_context_set;
-
   for (auto &it : this->declarations_) {
+    std::unordered_set<Entity *> query_declaration_context_set;
+    
     QueryDeclaration *declaration = it.second;
 
     DeclarationType declaration_type = declaration->getType();
