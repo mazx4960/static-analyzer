@@ -3,13 +3,13 @@
 #include "commons/parser/parser.h"
 
 TEST(ExprParserTest, Variable) {
-  std::vector<Token *> tokens = {new SymbolToken("x")};
+  std::vector<Token *> tokens = {new SymbolToken("x"), new EndOfFileToken()};
   Node *expr = Parser::ParseExpression(tokens);
   std::string actual = expr->ToString();
   std::string expected = "(x)";
   ASSERT_EQ(actual, expected);
 
-  tokens = {new LiteralToken("11")};
+  tokens = {new LiteralToken("11"), new EndOfFileToken()};
   expr = Parser::ParseExpression(tokens);
   actual = expr->ToString();
   expected = "(11)";
