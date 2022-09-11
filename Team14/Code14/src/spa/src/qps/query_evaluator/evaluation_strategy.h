@@ -28,6 +28,7 @@ class SuchThatStrategy : public EvaluationStrategy {
       : EvaluationStrategy(pkb), clause_(query_clause) {};
 
   void evaluate() override;
+  void intersectContext(QueryDeclaration* param_to_send, QueryDeclaration* param_to_be_intersected, RsType rs_type, bool invert_search);
 };
 
 class PatternStrategy : public EvaluationStrategy {
@@ -38,6 +39,7 @@ class PatternStrategy : public EvaluationStrategy {
       : EvaluationStrategy(pkb), clause_(query_clause) {};
 
   void evaluate() override;
+  void intersectContext(QueryDeclaration *assign_param, QueryDeclaration *left_param, QueryDeclaration *right_param);
 };
 
 class EvaluationStrategyCreationError : public std::runtime_error {

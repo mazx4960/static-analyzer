@@ -13,38 +13,61 @@ EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClaus
 
 // TODO(howtoosee) implement SuchThat strategy
 void SuchThatStrategy::evaluate() {
-  // TODO(howtoosee, KelvinSoo) split strategy into 3 types: first is synonym, second is synonym, both are synonyms.
-
   SuchThatType query_type = this->clause_.getSuchThatType();
   RsType rs_type; // TODO(howtoosee) convert SuchThatType query_type to RsType rs_type
 
   QueryDeclaration *first_param = this->clause_.getFirst();
   QueryDeclaration *second_param = this->clause_.getSecond();
 
-  QueryDeclaration *first_to_evaluate;
-  QueryDeclaration *second_to_evaluate;
 
   if (first_param->getContext().size() <= second_param->getContext().size()) {
-    first_to_evaluate = first_param;
-    second_to_evaluate = second_param;
+    // Intersect 2nd set first
+    intersectContext(first_param, second_param, rs_type, false);
+    // Then intersect 1st set
+    intersectContext(second_param, first_param, rs_type, true);
+
   } else {
-    first_to_evaluate = second_param;
-    second_to_evaluate = first_param;
-  }
-
-  for (auto *context_entity : first_to_evaluate->getContext()) {
-    std::unordered_set<Entity *> second_results = this->pkb_->getByRelationship(rs_type, context_entity, false);
-    if (second_results.empty()) {
-      first_to_evaluate->getContext().erase(context_entity);
-    }
-    std::unordered_set<Entity *> results;
-
-    std::set_intersection(second_results.begin(), second_results.end(),
-                          second_to_evaluate->getContext().begin(), second_to_evaluate->getContext().end(),
-                          std::inserter(results, results.begin()));
+    // Intersect 1st set first
+    intersectContext(second_param, first_param, rs_type, true);
+    // Then intersect 2nd set
+    intersectContext(first_param, second_param, rs_type, false);
   }
 }
+
+void SuchThatStrategy::intersectContext(QueryDeclaration *param_to_send, QueryDeclaration *param_to_be_intersected, RsType rs_type, bool invert_search) {
+  std::unordered_set<Entity *> valid_entities_for_other_param;
+  for (auto *context_entity : param_to_send->getContext()) {
+    std::unordered_set<Entity *> valid_entities = this->pkb_->getByRelationship(rs_type, context_entity, invert_search);
+    if (valid_entities.empty()) {
+      param_to_send->getContext().erase(context_entity);
+    } else {
+      for (auto *entity : valid_entities) {
+        valid_entities_for_other_param.insert(entity);
+      }
+    }
+  }
+  std::unordered_set<Entity *> intersected_results;
+  std::set_intersection(valid_entities_for_other_param.begin(), valid_entities_for_other_param.end(),
+                        param_to_be_intersected->getContext().begin(), param_to_be_intersected->getContext().end(),
+                        std::inserter(intersected_results, intersected_results.begin()));
+}
+
 
 void PatternStrategy::evaluate() {
-  QuerySynonym placeholder_syn("placeholder");
+  PatternType query_type = this->clause_.getPatternType();
+  RsType rs_type; // TODO(howtoosee) convert SuchThatType query_type to RsType rs_type
+
+  QueryDeclaration *first_param = this->clause_.getFirst();
+  QueryDeclaration *second_param = this->clause_.getSecond();
+  QueryDeclaration *third_param = this->clause_.getThird();
+  intersectContext(first_param, second_param, third_param);
 }
+void PatternStrategy::intersectContext(QueryDeclaration *assign_param,
+                                       QueryDeclaration *left_param,
+                                       QueryDeclaration *right_param) {
+  std::unordered_set<Entity *> valid_assign_entities = this->pkb_->getByPattern(left_param->getString(), right_param->getString(), EntityType::kStatement,
+                                                                                     false);
+
+
+}
+
