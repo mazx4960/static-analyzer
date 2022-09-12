@@ -27,7 +27,7 @@ class QueryCall {
         clause_vector_(std::move(clause_vector)){};
 
   [[nodiscard]] CallType getType() const;
-  QueryDeclaration *getDeclaration() const;
+  [[nodiscard]] QueryDeclaration *getDeclaration() const;
   [[nodiscard]] bool hasSubClauses() const;
   [[nodiscard]] std::vector<QueryClause> getClauseVector() const;
 };
