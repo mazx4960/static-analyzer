@@ -16,43 +16,36 @@ void PKB::populate(std::vector<Entity *> &entities) {
   }
 }
 
-// Return a set of names of a specific entity
-Result PKB::getResults(PKBEntityQuery &query) {
-  return this->getResults(query.getEntityType(), query.getSynonym());
+std::unordered_set<Entity *> PKB::empty() {
+  return std::unordered_set<Entity *>();
 }
 
-Result PKB::getResults(EntityType type, QuerySynonym synonym) {
-  // Table not initialised, return empty Result
-  if (this->entity_map_.find(type) == this->entity_map_.end()) {
-    return Result::empty(synonym);
+std::unordered_set<Entity *> PKB::getEntities(EntityType entity_type) {
+  if (this->entity_map_.find(entity_type) == this->entity_map_.end()) {
+    return this->empty();
   }
-  return this->entity_map_[type]->get(synonym);
+  return this->entity_map_[entity_type]->get(entity_type);
 }
 
-// Return a set of Entity given a relationship
-Result PKB::getResults(PKBSuchThatQuery &query) {
-  return this->getResults(*query.getRelationship());
-}
-
-Result PKB::getResults(std::vector<PKBSuchThatQuery> &query) {
-  std::unordered_set<Entity*> set_entity = {};
-  auto synonym = QuerySynonym("placeholder");
-
-  for (auto itr = query.begin(); itr != query.end(); ++itr) {
-    Result result = this->getResults(*itr);
-    set_entity.insert(result.get_results_entity_set().begin(), result.get_results_entity_set().end());
+std::unordered_set<Entity *> PKB::getEntities(StmtType stmt_type) {
+  if (this->entity_map_.find(EntityType::kStatement) == this->entity_map_.end()) {
+    return this->empty();
   }
-  return Result(synonym, set_entity);
+  auto *entity_table = this->entity_map_[EntityType::kStatement];
+  auto *statement_table = static_cast<StatementTable *>(entity_table);
+  return statement_table->getSpecific(stmt_type);
 }
 
-Result PKB::getResults(Relationship relationship) {
-  auto type = relationship.GetType();
-
-  if (this->relationship_map_.find(type) == this->relationship_map_.end()) {
-    auto synonym = QuerySynonym("placeholder");
-    return Result::empty(synonym);
+std::unordered_set<Entity *> PKB::getByRelationship(RsType rs_type, Entity &entity, bool inverse) {
+  if (this->relationship_map_.find(rs_type) == this->relationship_map_.end()) {
+    return this->empty();
   }
-  return this->relationship_map_[type]->get(type, relationship.GetFirst(), relationship.GetSecond());
+  return this->relationship_map_[rs_type]->get(rs_type, &entity, inverse);
+}
+
+// TODO: (leeenen)
+std::unordered_set<Entity *> PKB::getByPattern(std::string &, std::string &, EntityType, bool) {
+  return this->empty();
 }
 
 int PKB::getCount() {
