@@ -1,8 +1,9 @@
 #include "query_evaluator.h"
 
 std::unordered_set<QueryDeclaration *> QueryEvaluator::copyDeclarations() {
-  std::copy(this->query_.getDeclarations().begin(), this->query_.getDeclarations().end(),
-            std::inserter(this->declarations_, this->declarations_.begin()));
+  Query query = this->query_;
+  std::vector<QueryDeclaration *> query_declarations = query.getDeclarations();
+  this->declarations_ = std::unordered_set<QueryDeclaration *>(query_declarations.begin(), query_declarations.end());
   return this->getDeclarationAsSet();
 }
 
