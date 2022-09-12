@@ -41,7 +41,7 @@ std::unordered_set<QueryDeclaration *> QueryEvaluator::evaluateSubQueries() {
   return this->getDeclarationAsSet();
 }
 
-Result QueryEvaluator::evaluate() {
+Result* QueryEvaluator::evaluate() {
   this->fetchContext();
 
   // Query declaration for whose results are to be returned.
@@ -56,7 +56,7 @@ Result QueryEvaluator::evaluate() {
   QuerySynonym synonym = called_declaration->getSynonym();
   std::unordered_set<Entity *> context = called_declaration->getContext();
 
-  return Result(synonym, context);
+  return new Result(&synonym, &context);
 }
 
 std::unordered_set<QueryDeclaration *> QueryEvaluator::getDeclarationAsSet() {

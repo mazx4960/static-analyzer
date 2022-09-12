@@ -13,5 +13,5 @@ class QPS {
   QPS() = default;
   void SetPKB(IPKBQuerier *pkb);
   static Query parse(std::ifstream *);
-  Result evaluate(Query &query);
+  Result *evaluate(Query &query);
 };

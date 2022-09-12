@@ -26,5 +26,5 @@ class QueryEvaluator {
  public:
   QueryEvaluator(IPKBQuerier *pkb, Query &query) : pkb_(pkb), query_(query) {};
 
-  Result evaluate();
+  Result *evaluate();
 };

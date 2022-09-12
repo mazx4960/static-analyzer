@@ -11,8 +11,11 @@
 class UI {
  private:
   SP *sp_;
+
   QPS *qps_;
+
   std::string source_file_;
+
   std::string query_file_;
 
  public:
@@ -24,6 +27,6 @@ class UI {
   void SetQueryFile(std::string query_file);
   void Run();
   void LoadSource();
-  Result ExecuteQuery();
-  static void DisplayResults(const Result &result);
+  Result *ExecuteQuery();
+  static void DisplayResults(const Result *result);
 };

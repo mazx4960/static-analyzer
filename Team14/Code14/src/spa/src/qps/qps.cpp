@@ -7,6 +7,6 @@ void QPS::SetPKB(IPKBQuerier *pkb) {
 Query QPS::parse(std::ifstream *query) {
   return QueryParser::parse(query);
 }
-Result QPS::evaluate(Query &query) {
+Result *QPS::evaluate(Query &query) {
   return (new QueryEvaluator(this->pkb_, query))->evaluate();
 }

@@ -11,18 +11,19 @@
 
 class Result {
  private:
-  QuerySynonym synonym_;
+  QuerySynonym *synonym_;
 
-  std::unordered_set<Entity *> results_;
+  std::unordered_set<Entity *> *results_;
 
  public:
-  explicit Result(QuerySynonym &synonym, std::unordered_set<Entity *> &results_set)
+  explicit Result(QuerySynonym *synonym, std::unordered_set<Entity *> *results_set)
       : synonym_(synonym), results_(results_set) {};
 
-  static Result empty(QuerySynonym &synonym);
+  static Result *empty();
+  static Result *empty(QuerySynonym *synonym);
 
   [[nodiscard]] bool is_empty() const;
-  [[nodiscard]] QuerySynonym get_synonym() const;
-  [[nodiscard]] std::unordered_set<Entity *> get_results_set() const;
-  [[nodiscard]] std::vector<Entity *> get_sorted_results_list() const;
+  [[nodiscard]] QuerySynonym *get_synonym() const;
+  [[nodiscard]] std::unordered_set<Entity *> *get_results_set() const;
+  [[nodiscard]] std::vector<Entity *> *get_sorted_results_list() const;
 };
