@@ -5,12 +5,11 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "commons/pkb_query.h"
-#include "commons/relationship.h"
-#include "commons/result.h"
 #include "pkb.h"
 #include "pkb/entity/entity_table.h"
+#include "commons/relationship.h"
 #include "pkb/relationship/relationship_table.h"
+
 
 /*
  * Interface for SP -> PKB
@@ -31,12 +30,12 @@ class IPKBQuerier {
   IPKBQuerier() = default;
  public:
   ~IPKBQuerier() = default;
-  virtual Result getResults(PKBEntityQuery &) = 0;
-  virtual Result getResults(EntityType, QuerySynonym) = 0;
+  virtual std::unordered_set<Entity *> getEntities(EntityType) = 0;
+  virtual std::unordered_set<Entity *> getEntities(StmtType) = 0;
+  virtual std::unordered_set<Entity *> getByRelationship(RsType, Entity *, Entity *) = 0;
+  virtual std::unordered_set<Entity *> getByPattern(std::string &, std::string &, EntityType, bool) = 0;
 
-  virtual Result getResults(PKBSuchThatQuery &) = 0;
-  virtual Result getResults(std::vector<PKBSuchThatQuery> &) = 0;
-  virtual Result getResults(Relationship) = 0;
+
 };
 
 class PKB : public IPKBPopulator, public IPKBQuerier {
@@ -44,15 +43,15 @@ class PKB : public IPKBPopulator, public IPKBQuerier {
   std::unordered_map<EntityType, EntityTable *> entity_map_;
   std::unordered_map<RsType, RelationshipTable *> relationship_map_;
 
+  static std::unordered_set<Entity*> empty();
  public:
   PKB() = default;
 
-  Result getResults(PKBEntityQuery &query) override;
-  Result getResults(EntityType type, QuerySynonym synonym) override;
+  std::unordered_set<Entity *> getEntities(EntityType) override;
+  std::unordered_set<Entity *> getEntities(StmtType) override;
+  std::unordered_set<Entity *> getByRelationship(RsType, Entity *, Entity*) override;
+  std::unordered_set<Entity *> getByPattern(std::string &, std::string &, EntityType, bool) override;
 
-  Result getResults(PKBSuchThatQuery &query) override;
-  Result getResults(std::vector<PKBSuchThatQuery> &query) override;
-  Result getResults(Relationship relationship) override;
 
   void populate(std::vector<Entity *> &entities) override;
 

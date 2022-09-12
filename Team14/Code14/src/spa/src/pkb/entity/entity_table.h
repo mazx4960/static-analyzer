@@ -12,12 +12,14 @@
 class EntityTable {
  protected:
   std::unordered_set<std::string> table_;
+
   EntityTable() = default;
 
  public:
   static EntityTable *getTable(EntityType);
   void populate(Entity &entity);
-  Result get(QuerySynonym &synonym);
+  std::unordered_set<Entity *> get(EntityType);
+
 
   // Currently only used for debugging and testing
   int getCount();
@@ -41,4 +43,5 @@ class ProcedureTable : public EntityTable {
 class StatementTable : public EntityTable {
  public:
   StatementTable() = default;
+  std::unordered_set<Entity *> getSpecific(StmtType);
 };

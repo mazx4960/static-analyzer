@@ -6,19 +6,22 @@
 
 #include "commons/entity.h"
 #include "commons/relationship.h"
-#include "commons/result.h"
 
 class RelationshipTable {
  protected:
-  std::unordered_set<std::pair<StatementEntity*, StatementEntity*>> table_;
+  std::unordered_set<std::pair<Entity*, Entity*>, RelationshipTableHashingFunction> table_;
 
   RelationshipTable() = default;
 
+ private:
+  std::unordered_set<Entity *> getMatchingEntity(Entity *, Entity *);
+  std::unordered_set<Entity *> getMatchingStatement(Entity *, Entity *);
+  std::unordered_set<Entity *> getTraversalStatement(Entity *, Entity *);
+
  public:
   static RelationshipTable *getTable(RsType);
-  Result get(RsType, StatementEntity*, StatementEntity*);
-  Result getTraversalResult(StatementEntity*, StatementEntity*);
-  Result getResult(StatementEntity*, StatementEntity*);
+  std::unordered_set<Entity*> get(RsType, Entity *, Entity *);
+
 };
 
 class ModifiesTable : public RelationshipTable {

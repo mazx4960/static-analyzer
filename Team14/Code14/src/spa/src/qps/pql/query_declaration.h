@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <utility>
 #include <unordered_set>
+#include <utility>
 
-#include "qps/pql/query_synonym/query_synonym.h"
 #include "commons/entity.h"
+#include "query_synonym.h"
 
 enum class DeclarationType {
   kStatement,
@@ -28,24 +28,30 @@ enum class DeclarationType {
 class QueryDeclaration {
  private:
   DeclarationType type_;
+
   QuerySynonym query_synonym_ = QuerySynonym("");
+
   std::string string_;
+
   int number_;
 
+ protected:
+  std::unordered_set<Entity *> context_;
+
  public:
-  explicit QueryDeclaration(DeclarationType type) : type_(std::move(type)) {};
+  explicit QueryDeclaration(DeclarationType type) : type_(std::move(type)){};
   QueryDeclaration(DeclarationType type, QuerySynonym query_synonym)
-  : type_(std::move(type)), query_synonym_(std::move(query_synonym)) {};
-  QueryDeclaration(DeclarationType type, std::string string)
-  : type_(std::move(type)), string_(std::move(string)) {};
-  QueryDeclaration(DeclarationType type, int number)
-  : type_(std::move(type)), number_(std::move(number)) {};
-  std::unordered_set<Entity*> context_;
+      : type_(std::move(type)),
+        query_synonym_(std::move(query_synonym)){};
+  QueryDeclaration(DeclarationType type, std::string string) : type_(std::move(type)), string_(std::move(string)){};
+  QueryDeclaration(DeclarationType type, int number) : type_(std::move(type)), number_(std::move(number)){};
+
   [[nodiscard]] DeclarationType getType() const;
   [[nodiscard]] QuerySynonym getSynonym() const;
   [[nodiscard]] std::string getString() const;
   [[nodiscard]] int getNumber() const;
-  [[nodiscard]] std::unordered_set<Entity*> getContext() ;
+  [[nodiscard]] std::unordered_set<Entity *> getContext() const;
+  void setContext(std::unordered_set<Entity *>);
   bool operator==(const QueryDeclaration &other) const;
 };
 
@@ -53,7 +59,7 @@ class QueryDeclaration {
 class StatementDeclaration : public QueryDeclaration {
  public:
   explicit StatementDeclaration(QuerySynonym query_synonym)
-      : QueryDeclaration(DeclarationType::kStatement, std::move(query_synonym)){}
+      : QueryDeclaration(DeclarationType::kStatement, std::move(query_synonym)) {}
 };
 
 // Pre-call declaration of "read x;" where x is the synonym
@@ -122,27 +128,41 @@ class ProcedureDeclaration : public QueryDeclaration {
 // Inline declaration of  Wildcard "_"
 class WildCardDeclaration : public QueryDeclaration {
  public:
-  explicit WildCardDeclaration()
-  : QueryDeclaration(DeclarationType::kWildcard) {}
+  explicit WildCardDeclaration() : QueryDeclaration(DeclarationType::kWildcard) {}
 };
 
 // Inline declaration of Expression "(x + (y * z))"
 class ExpressionDeclaration : public QueryDeclaration {
  public:
   explicit ExpressionDeclaration(std::string string)
-      : QueryDeclaration(DeclarationType::kExpression , std::move(string)) {}
+      : QueryDeclaration(DeclarationType::kExpression, std::move(string)) {}
 };
 
 // Inline declaration of string eg. Modifies("x", v)
 class StringDeclaration : public QueryDeclaration {
  public:
-  explicit StringDeclaration(std::string string)
-      : QueryDeclaration(DeclarationType::kString , std::move(string)) {}
+  explicit StringDeclaration(std::string string) : QueryDeclaration(DeclarationType::kString, std::move(string)) {}
 };
 
 // Inline declaration of integer eg. Modifies(3, v)
 class IntegerDeclaration : public QueryDeclaration {
  public:
-  explicit IntegerDeclaration(int number)
-      : QueryDeclaration(DeclarationType::kInteger, number) {}
+  explicit IntegerDeclaration(int number) : QueryDeclaration(DeclarationType::kInteger, number) {}
+};
+
+class DeclarationTypeAdaptor {
+ public:
+  static bool canConvertToEntityType(DeclarationType);
+  static bool canConvertToStatementType(DeclarationType);
+
+  static EntityType toEntityType(DeclarationType);
+  static StmtType toStatementType(DeclarationType);
+
+  static DeclarationType toDeclarationType(EntityType);
+  static DeclarationType toDeclarationType(StmtType);
+};
+
+class QueryDeclarationHashFunction {
+ public:
+  size_t operator()(const QueryDeclaration &declaration) const;
 };

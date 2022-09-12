@@ -1,35 +1,45 @@
 #pragma once
 
+#include <iterator>
 #include <unordered_set>
 
 #include "commons/result.h"
 #include "pkb/pkb.h"
-#include "qps/pql/query_clause/query_clause.h"
+#include "qps/exceptions.h"
+#include "qps/pql/query_clause.h"
 
 class EvaluationStrategy {
  protected:
-  PKB *pkb_;
+  IPKBQuerier *pkb_;
 
-  QueryClause query_call_;
+  explicit EvaluationStrategy(IPKBQuerier *pkb) : pkb_(pkb){};
 
-  EvaluationStrategy(PKB *pkb, QueryClause &query_clause)
-      : pkb_(pkb), query_call_(query_clause) {};
  public:
-  static EvaluationStrategy *getStrategy(PKB *, QueryClause &);
-  virtual Result evaluate() = 0;
+  static EvaluationStrategy *getStrategy(IPKBQuerier *, QueryClause &);
+  virtual void evaluate() = 0;
 };
 
 /*
  * Selection for such-that clauses
  */
 class SuchThatStrategy : public EvaluationStrategy {
+ private:
+  SuchThatClause clause_;
+
  public:
-  SuchThatStrategy(PKB *pkb, QueryClause &query_clause) : EvaluationStrategy(pkb, query_clause) {};
-  Result evaluate() override;
+  SuchThatStrategy(IPKBQuerier *pkb, SuchThatClause &query_clause) : EvaluationStrategy(pkb), clause_(query_clause){};
+
+  void evaluate() override;
+  void intersectContext(QueryDeclaration *param_to_send, QueryDeclaration *param_to_be_intersected, RsType rs_type,
+                        bool invert_search);
 };
 
 class PatternStrategy : public EvaluationStrategy {
+  PatternClause clause_;
+
  public:
-  PatternStrategy(PKB *pkb, QueryClause &query_clause) : EvaluationStrategy(pkb, query_clause) {};
-  Result evaluate() override;
+  PatternStrategy(IPKBQuerier *pkb, PatternClause &query_clause) : EvaluationStrategy(pkb), clause_(query_clause){};
+
+  void evaluate() override;
+  void intersectContext(QueryDeclaration *assign_param, QueryDeclaration *left_param, QueryDeclaration *right_param);
 };

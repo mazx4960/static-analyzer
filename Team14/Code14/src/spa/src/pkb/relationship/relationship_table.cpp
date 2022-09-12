@@ -11,42 +11,43 @@ RelationshipTable *RelationshipTable::getTable(RsType type) {
   }
 }
 
-Result RelationshipTable::get(RsType type, StatementEntity *first, StatementEntity *second) {
-  switch (type) {
-    case RsType::kFollowsT: case RsType::kParentT: return this->getTraversalResult(first, second);
-    default: return this->getResult(first, second);
+std::unordered_set<Entity *> RelationshipTable::get(RsType rs_type, Entity *first_entity, Entity *second_entity) {
+  switch (rs_type) {
+    case RsType::kFollows: case RsType::kParent: return getMatchingStatement(first_entity, second_entity);
+    case RsType::kFollowsT: case RsType::kParentT: return getTraversalStatement(first_entity,second_entity);
+    default: return getMatchingEntity(first_entity, second_entity);
   }
 }
 
-Result RelationshipTable::getTraversalResult(StatementEntity *first, StatementEntity *second) {
-  std::unordered_set<Entity*> set_result = {};
-  QuerySynonym synonym = QuerySynonym("placeholder");
-  // TODO testing of logic
-  for (auto pair: this->table_) {
-    std::unordered_set<Entity*> temp = {};
-    if (pair.first->GetStmtNo() == first->GetStmtNo()) {
-      if (pair.second->GetStmtNo() == second->GetStmtNo()) {
-        temp.insert(second);
-        return Result(synonym, temp);
-      }
-      Result result = getTraversalResult(pair.second, second);
-      if (!result.is_empty()) {
-        temp.insert(result.get_results_entity_set().begin(), result.get_results_entity_set().end());
-        return Result(synonym, temp);
-      }
-    }
-  }
-  return Result::empty(synonym);
+// TODO: (leeenen) waiting for wildcard
+std::unordered_set<Entity *> RelationshipTable::getMatchingEntity(Entity *first_entity, Entity *second_entity) {
+  std::unordered_set<Entity *> result = {};
+
+  return result;
 }
 
-Result RelationshipTable::getResult(StatementEntity *first, StatementEntity *second) {
-  std::unordered_set<Entity*> set_result = {};
-  QuerySynonym synonym = QuerySynonym("placeholder");
+std::unordered_set<Entity *> RelationshipTable::getMatchingStatement(Entity *first_entity, Entity *second_entity) {
+  std::unordered_set<Entity *> result = {};
 
-  for (auto pair: this->table_) {
-    if (pair.first->GetName() == first->GetName() && pair.second->GetName() == second->GetName()) {
-      set_result.insert(second);
+  // Convert into StatementEntity
+  auto *first_statement = static_cast<StatementEntity *>(first_entity);
+  auto *second_statement = static_cast<StatementEntity *>(second_entity);
+
+  // Loop through table
+  for (auto entity_pair: this->table_) {
+    auto *pair_first_statement = static_cast<StatementEntity *>(entity_pair.first);
+    auto *pair_second_statement = static_cast<StatementEntity *>(entity_pair.second);
+
+    if (pair_first_statement->GetStmtNo() == first_statement->GetStmtNo()
+        && pair_second_statement->GetStmtNo() == second_statement->GetStmtNo()) {
+      result.insert(first_entity);
+      result.insert(second_entity);
     }
   }
-  return Result(synonym, set_result);
+  return result;
+}
+
+// TODO: (leeenen)
+std::unordered_set<Entity *> RelationshipTable::getTraversalStatement(Entity *first_entity, Entity *second_entity) {
+  return std::unordered_set<Entity *>{};
 }

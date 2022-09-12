@@ -15,10 +15,25 @@ void EntityTable::populate(Entity &entity) {
   this->table_.insert(entity.GetName());
 }
 
-Result EntityTable::get(QuerySynonym &synonym) {
-  return Result(synonym, this->table_);
+
+std::unordered_set<Entity *> EntityTable::get(EntityType entity_type) {
+  std::unordered_set<Entity *> result = {};
+
+  for (std::string name: this->table_) {
+    auto *entity = new Entity(entity_type, std::move(name));
+    result.insert(entity);
+  }
+  return result;
 }
 
 int EntityTable::getCount() {
   return this->table_.size();
+}
+
+std::unordered_set<Entity *> StatementTable::getSpecific(StmtType stmt_type) {
+  std::unordered_set<Entity *> result = {};
+
+  // TODO: (leeenen)
+
+  return result;
 }

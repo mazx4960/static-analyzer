@@ -1,9 +1,9 @@
 #include "subquery_evaluator.h"
-SubQueryEvaluator::SubQueryEvaluator(PKB *pkb, QueryClause &query_clause_) : query_clause_(
-    query_clause_) {
-  this->strategy_ = EvaluationStrategy::getStrategy(pkb, query_clause_);
+
+SubQueryEvaluator::SubQueryEvaluator(IPKBQuerier *pkb, QueryClause &query_clause) {
+  this->strategy_ = EvaluationStrategy::getStrategy(pkb, query_clause);
 }
 
-Result SubQueryEvaluator::evaluate() {
-  return this->strategy_->evaluate();
+void SubQueryEvaluator::evaluate() {
+  this->strategy_->evaluate();
 }
