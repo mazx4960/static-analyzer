@@ -6,6 +6,7 @@
 #include <utility>
 
 #include "types.h"
+#include "commons/hash_combine.h"
 
 class Entity {
  private:
@@ -15,8 +16,9 @@ class Entity {
 
  public:
   Entity(EntityType type, std::string name);
-  EntityType GetType();
-  std::string GetName();
+  [[nodiscard]] EntityType GetType() const;
+  [[nodiscard]] std::string GetName() const;
+  [[nodiscard]] virtual size_t GetHash() const;
   bool operator==(const Entity &other) const;
   bool operator==(const Entity *other) const;
   std::string ToString();
@@ -48,8 +50,9 @@ class StatementEntity : public Entity {
 
  public:
   explicit StatementEntity(StmtType stmt_type, int stmt_no);
-  StmtType GetStmtType();
+  [[nodiscard]] StmtType GetStmtType() const;
   [[nodiscard]] int GetStmtNo() const;
+  [[nodiscard]] size_t GetHash() const override;  // Overrides Entity's GetHash() function
   bool operator==(const StatementEntity &other) const;
 };
 
@@ -88,3 +91,20 @@ class IfEntity : public StatementEntity {
   explicit IfEntity(int stmt_no)
       : StatementEntity(StmtType::kIf, stmt_no) {}
 };
+
+class EntityHashFunction {
+ public:
+  size_t operator()(const Entity &entity) const {
+    return entity.GetHash();
+  }
+  size_t operator()(const Entity *entity) const {
+    return entity->GetHash();
+  }
+};
+
+// Usage:
+//std::unordered_map<
+//    Entity *,
+//    std::unordered_set<Entity *, EntityHashFunction>,
+//    EntityHashFunction
+//>
