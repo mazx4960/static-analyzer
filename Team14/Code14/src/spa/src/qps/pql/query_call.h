@@ -29,7 +29,7 @@ class QueryCall {
   CallType getType() const;
   QueryDeclaration *getDeclaration() const;
   bool hasSubClauses() const;
-  std::vector<QueryClause> getClauseVector() const;
+  [[nodiscard]] std::vector<QueryClause> getClauseVector() const;
 };
 
 class SelectCall : public QueryCall {
