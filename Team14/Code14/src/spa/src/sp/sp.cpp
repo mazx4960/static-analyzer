@@ -31,5 +31,5 @@ void SP::LoadSource(std::ifstream &source_stream) {
 
   std::vector<Pattern *> patterns = PatternExtractor::ExtractAll(program_node);
   spdlog::info("Extracted {} patterns", patterns.size());
-
+  for (auto *pattern : patterns) { spdlog::debug("{}", pattern->ToString()); }
 }
