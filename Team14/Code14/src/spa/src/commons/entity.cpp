@@ -16,10 +16,7 @@ bool Entity::operator==(const Entity &other) const {
   return this->type_ == other.type_ && this->name_ == other.name_;
 }
 size_t Entity::GetHash() const {
-  size_t hash = 0;
-  HashCombine<EntityType>::hash_combine(hash, this->type_);
-  HashCombine<std::string>::hash_combine(hash, this->name_);
-  return hash;
+  return std::hash<std::string>()(this->name_);
 }
 std::string Entity::ToString() {
   std::string type_string;
@@ -68,8 +65,5 @@ bool StatementEntity::operator==(const StatementEntity &other) const {
   return this->stmt_type_ == other.stmt_type_ && this->stmt_no_ == other.stmt_no_;
 }
 size_t StatementEntity::GetHash() const {
-  size_t hash = 0;
-  HashCombine<StmtType>::hash_combine(hash, this->stmt_type_);
-  HashCombine<int>::hash_combine(hash, this->stmt_no_);
-  return hash;
+  return std::hash<int>()(this->stmt_no_);
 }
