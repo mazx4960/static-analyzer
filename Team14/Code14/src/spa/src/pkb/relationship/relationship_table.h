@@ -14,19 +14,13 @@ class RelationshipTable {
   RelationshipTable() = default;
 
  private:
-  std::unordered_set<Entity *> getMatchingEntity(Entity *, bool);
-  std::unordered_set<Entity *> getMatchingFirstEntity(Entity *);
-  std::unordered_set<Entity *> getMatchingSecondEntity(Entity *);
-
-  std::unordered_set<Entity *> getMatchingStatement(Entity *, bool);
-  std::unordered_set<Entity *> getMatchingFirstStatement(Entity *);
-  std::unordered_set<Entity *> getMatchingSecondStatement(Entity *);
-
-  std::unordered_set<Entity *> getTraversalStatement(Entity *, bool);
+  std::unordered_set<Entity *> getMatchingEntity(Entity *, Entity *);
+  std::unordered_set<Entity *> getMatchingStatement(Entity *, Entity *);
+  std::unordered_set<Entity *> getTraversalStatement(Entity *, Entity *);
 
  public:
   static RelationshipTable *getTable(RsType);
-  std::unordered_set<Entity*> get(RsType, Entity*, bool);
+  std::unordered_set<Entity*> get(RsType, Entity *, Entity *);
 
 };
 

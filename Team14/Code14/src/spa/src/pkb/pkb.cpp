@@ -36,11 +36,11 @@ std::unordered_set<Entity *> PKB::getEntities(StmtType stmt_type) {
   return statement_table->getSpecific(stmt_type);
 }
 
-std::unordered_set<Entity *> PKB::getByRelationship(RsType rs_type, Entity &entity, bool inverse) {
+std::unordered_set<Entity *> PKB::getByRelationship(RsType rs_type, Entity *first_entity, Entity *second_entity) {
   if (this->relationship_map_.find(rs_type) == this->relationship_map_.end()) {
     return this->empty();
   }
-  return this->relationship_map_[rs_type]->get(rs_type, &entity, inverse);
+  return this->relationship_map_[rs_type]->get(rs_type, first_entity, second_entity);
 }
 
 // TODO: (leeenen)
