@@ -8,7 +8,7 @@ TEST(BuilderTest, QueryBuilderTest) {
   auto* query_declaration = new VariableDeclaration(QuerySynonym("v"));
   std::vector<QueryDeclaration*> query_declarations = {query_declaration};
 
-  std::vector<QueryClause> clause_vector;
+  std::vector<QueryClause*> clause_vector;
   QueryCall* query_call = new SelectCall(query_declaration, clause_vector);
   std::vector<QueryCall*> query_calls = {query_call};
 
