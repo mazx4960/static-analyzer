@@ -16,16 +16,20 @@ void PKB::populate(std::vector<Entity *> &entities) {
   }
 }
 
-Result PKB::getResults(PKBQuery &query) {
-  return this->getResults(query.getEntityType(), query.getSynonym());
+std::unordered_set<Entity *> PKB::getEntities(EntityType entity_type) {
+  return std::unordered_set<Entity *>();
 }
 
-Result PKB::getResults(EntityType type, QuerySynonym synonym) {
-  // Table not initialised, return empty Result
-  if (this->entity_map_.find(type) == this->entity_map_.end()) {
-    return Result::empty(synonym);
-  }
-  return this->entity_map_[type]->get(synonym);
+std::unordered_set<Entity *> PKB::getEntities(StmtType stmt_type) {
+  return std::unordered_set<Entity *>();
+}
+
+std::unordered_set<Entity *> PKB::getByRelationship(RsType rs_type, Entity *entity, bool is_inverse) {
+  return std::unordered_set<Entity *>();
+}
+
+std::unordered_set<Entity *> PKB::getByPattern(std::string &left_pattern, std::string &right_pattern) {
+  return std::unordered_set<Entity *>();
 }
 
 int PKB::getCount() {

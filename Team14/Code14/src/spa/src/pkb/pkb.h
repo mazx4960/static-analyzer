@@ -5,11 +5,10 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "commons/pkb_query.h"
-#include "commons/relationship.h"
-#include "commons/result.h"
 #include "pkb.h"
 #include "pkb/entity/entity_table.h"
+#include "commons/relationship.h"
+#include "commons/result.h"
 
 /*
  * Interface for SP -> PKB
@@ -30,8 +29,11 @@ class IPKBQuerier {
   IPKBQuerier() = default;
  public:
   ~IPKBQuerier() = default;
-  virtual Result getResults(PKBQuery &) = 0;
-  virtual Result getResults(EntityType, QuerySynonym) = 0;
+  virtual std::unordered_set<Entity *> getEntities(EntityType) = 0;
+  virtual std::unordered_set<Entity *> getEntities(StmtType) = 0;
+  virtual std::unordered_set<Entity *> getByRelationship(RsType, Entity *, bool) = 0;
+  virtual std::unordered_set<Entity *> getByPattern(std::string &, std::string &) = 0;
+
 };
 
 class PKB : public IPKBPopulator, public IPKBQuerier {
@@ -41,8 +43,10 @@ class PKB : public IPKBPopulator, public IPKBQuerier {
  public:
   PKB() = default;
 
-  Result getResults(PKBQuery &query) override;
-  Result getResults(EntityType type, QuerySynonym synonym) override;
+  std::unordered_set<Entity *> getEntities(EntityType) override;
+  std::unordered_set<Entity *> getEntities(StmtType) override;
+  std::unordered_set<Entity *> getByRelationship(RsType, Entity *, bool) override;
+  std::unordered_set<Entity *> getByPattern(std::string &, std::string &) override;
 
   void populate(std::vector<Entity *> &entities) override;
 

@@ -15,6 +15,9 @@ std::string Entity::GetName() const {
 bool Entity::operator==(const Entity &other) const {
   return this->type_ == other.type_ && this->name_ == other.name_;
 }
+bool Entity::operator==(const Entity *other) const {
+  return this->type_ == other->type_ && this->name_ == other->name_;
+}
 size_t Entity::GetHash() const {
   return std::hash<std::string>()(this->name_);
 }

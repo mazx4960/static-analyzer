@@ -20,6 +20,7 @@ class Entity {
   [[nodiscard]] std::string GetName() const;
   [[nodiscard]] virtual size_t GetHash() const;
   bool operator==(const Entity &other) const;
+  bool operator==(const Entity *other) const;
   std::string ToString();
 };
 

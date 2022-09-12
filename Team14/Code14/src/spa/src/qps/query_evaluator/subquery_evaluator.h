@@ -1,14 +1,15 @@
 #pragma once
 
+#include <unordered_set>
+#include "commons/entity.h"
 #include "evaluation_strategy.h"
 
 class SubQueryEvaluator {
  private:
-  QueryClause query_clause_;
-
   EvaluationStrategy *strategy_;
 
  public:
-  explicit SubQueryEvaluator(PKB *pkb, QueryClause &query_clause_);
-  Result evaluate();
+  SubQueryEvaluator(IPKBQuerier *pkb, QueryClause &query_clause_);
+
+  void evaluate();
 };
