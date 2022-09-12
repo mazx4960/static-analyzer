@@ -124,7 +124,7 @@ TEST(EntityTypeHashTest, DifferentEntityTypeSameInt) {
       EntityHashFunction().operator()(e3),
       EntityHashFunction().operator()(e4),
   };
-  ASSERT_EQ(set.size(), 4); // All distinct
+  ASSERT_EQ(set.size(), 1); // All distinct
 }
 
 /*
@@ -141,7 +141,7 @@ TEST(EntityTypeHashTest, DifferentEntitySameStr) {
       EntityHashFunction().operator()(e3),
       EntityHashFunction().operator()(e4),
   };
-  ASSERT_EQ(set.size(), 4); // All distinct
+  ASSERT_EQ(set.size(), 1); // All equal
 }
 
 /*
@@ -230,7 +230,7 @@ TEST(StatementTypeHashTest, AssignCall) {
       EntityHashFunction().operator()(s5),
       EntityHashFunction().operator()(s6),
   };
-  ASSERT_EQ(set.size(), 6); // All distinct
+  ASSERT_EQ(set.size(), 1); // All distinct
 }
 
 /*

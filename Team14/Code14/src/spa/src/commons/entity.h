@@ -16,10 +16,10 @@ class Entity {
 
  public:
   Entity(EntityType type, std::string name);
-  EntityType GetType() const;
-  std::string GetName() const;
-  bool operator==(const Entity &other) const;
+  [[nodiscard]] EntityType GetType() const;
+  [[nodiscard]] std::string GetName() const;
   [[nodiscard]] virtual size_t GetHash() const;
+  bool operator==(const Entity &other) const;
   std::string ToString();
 };
 
@@ -49,10 +49,10 @@ class StatementEntity : public Entity {
 
  public:
   explicit StatementEntity(StmtType stmt_type, int stmt_no);
-  StmtType GetStmtType() const;
+  [[nodiscard]] StmtType GetStmtType() const;
   [[nodiscard]] int GetStmtNo() const;
-  bool operator==(const StatementEntity &other) const;
   [[nodiscard]] size_t GetHash() const override;  // Overrides Entity's GetHash() function
+  bool operator==(const StatementEntity &other) const;
 };
 
 class ReadEntity : public StatementEntity {
