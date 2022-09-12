@@ -6,17 +6,20 @@
 #include <utility>
 
 #include "types.h"
+#include "commons/hash_combine.h"
 
 class Entity {
  private:
   EntityType type_;
+
   std::string name_;
 
  public:
   Entity(EntityType type, std::string name);
-  EntityType GetType();
-  std::string GetName();
+  EntityType GetType() const;
+  std::string GetName() const;
   bool operator==(const Entity &other) const;
+  [[nodiscard]] virtual size_t GetHash() const;
   std::string ToString();
 };
 
@@ -41,13 +44,15 @@ class ConstantEntity : public Entity {
 class StatementEntity : public Entity {
  private:
   int stmt_no_;
+
   StmtType stmt_type_;
 
  public:
   explicit StatementEntity(StmtType stmt_type, int stmt_no);
-  StmtType GetStmtType();
+  StmtType GetStmtType() const;
   [[nodiscard]] int GetStmtNo() const;
   bool operator==(const StatementEntity &other) const;
+  [[nodiscard]] size_t GetHash() const override;  // Overrides Entity's GetHash() function
 };
 
 class ReadEntity : public StatementEntity {
@@ -85,3 +90,20 @@ class IfEntity : public StatementEntity {
   explicit IfEntity(int stmt_no)
       : StatementEntity(StmtType::kIf, stmt_no) {}
 };
+
+class EntityHashFunction {
+ public:
+  size_t operator()(const Entity &entity) const {
+    return entity.GetHash();
+  }
+  size_t operator()(const Entity *entity) const {
+    return entity->GetHash();
+  }
+};
+
+// Usage:
+//std::unordered_map<
+//    Entity *,
+//    std::unordered_set<Entity *, EntityHashFunction>,
+//    EntityHashFunction
+//>
