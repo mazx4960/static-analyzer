@@ -15,6 +15,7 @@ void EntityTable::populate(Entity &entity) {
   this->table_.insert(entity.GetName());
 }
 
+
 std::unordered_set<Entity *> EntityTable::get(EntityType entity_type) {
   std::unordered_set<Entity *> result = {};
 

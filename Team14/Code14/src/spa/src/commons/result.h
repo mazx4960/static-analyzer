@@ -5,36 +5,31 @@
 #include <algorithm>
 #include <string>
 #include <unordered_set>
-#include <unordered_map>
+
+#include <utility>
 #include <vector>
-#include "qps/pql/query_synonym/query_synonym.h"
+
 #include "commons/entity.h"
+#include "qps/pql/query_synonym.h"
 
 class Result {
  private:
-  bool is_empty_ = true;
+  QuerySynonym synonym_;
 
-  QuerySynonym syn_;
 
-  std::unordered_set<std::string> results_;
-  std::unordered_set<Entity*> entity_set_results_;
-
- protected:
-  explicit Result(QuerySynonym &syn, std::unordered_set<std::string> &results, bool is_empty)
-      : syn_(syn), results_(results), is_empty_(is_empty) {};
+  std::unordered_set<Entity *> results_;
 
  public:
-  explicit Result(QuerySynonym &syn, std::unordered_set<std::string> &results)
-      : syn_(syn), results_(results), is_empty_(false) {};
+  explicit Result(QuerySynonym synonym, std::unordered_set<Entity *> results_set)
+      : synonym_(std::move(synonym)),
+        results_(std::move(results_set)){};
 
-  explicit Result(QuerySynonym &syn, std::unordered_set<Entity*> &results)
-      : syn_(syn), entity_set_results_(results) {};
 
-  static Result empty(QuerySynonym &);
+  static Result *empty();
+  static Result *empty(QuerySynonym synonym);
 
   [[nodiscard]] bool is_empty() const;
   [[nodiscard]] QuerySynonym get_synonym() const;
-  [[nodiscard]] std::unordered_set<std::string> get_results_set() const;
-  [[nodiscard]] std::vector<std::string> get_sorted_results_list() const;
-  [[nodiscard]] std::unordered_set<Entity*> get_results_entity_set();
+  [[nodiscard]] std::unordered_set<Entity *> get_results_set() const;
+  [[nodiscard]] std::vector<Entity *> get_sorted_results_list() const;
 };

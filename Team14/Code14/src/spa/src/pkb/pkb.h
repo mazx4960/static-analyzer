@@ -5,11 +5,11 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "commons/pkb_query.h"
-#include "commons/relationship.h"
-#include "commons/result.h"
+#include "pkb.h"
 #include "pkb/entity/entity_table.h"
+#include "commons/relationship.h"
 #include "pkb/relationship/relationship_table.h"
+
 
 /*
  * Interface for SP -> PKB
@@ -35,6 +35,7 @@ class IPKBQuerier {
   virtual std::unordered_set<Entity *> getByRelationship(RsType, Entity *, Entity *) = 0;
   virtual std::unordered_set<Entity *> getByPattern(std::string &, std::string &, EntityType, bool) = 0;
 
+
 };
 
 class PKB : public IPKBPopulator, public IPKBQuerier {
@@ -50,6 +51,7 @@ class PKB : public IPKBPopulator, public IPKBQuerier {
   std::unordered_set<Entity *> getEntities(StmtType) override;
   std::unordered_set<Entity *> getByRelationship(RsType, Entity *, Entity*) override;
   std::unordered_set<Entity *> getByPattern(std::string &, std::string &, EntityType, bool) override;
+
 
   void populate(std::vector<Entity *> &entities) override;
 

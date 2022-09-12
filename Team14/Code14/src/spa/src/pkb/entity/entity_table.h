@@ -12,12 +12,14 @@
 class EntityTable {
  protected:
   std::unordered_set<std::string> table_;
+
   EntityTable() = default;
 
  public:
   static EntityTable *getTable(EntityType);
   void populate(Entity &entity);
   std::unordered_set<Entity *> get(EntityType);
+
 
   // Currently only used for debugging and testing
   int getCount();
