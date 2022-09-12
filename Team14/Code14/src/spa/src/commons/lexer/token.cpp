@@ -60,7 +60,7 @@ std::string Token::ToString() const {
       type_string = "WildCard";
       break;
     }
-    default: "unknown token";
+    default: type_string = "unknown token";
   }
   return type_string + "(\"" + this->value + "\")";
 }
