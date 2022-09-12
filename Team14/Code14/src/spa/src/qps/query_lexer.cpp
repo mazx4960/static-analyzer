@@ -3,6 +3,7 @@
 #include "query_lexer.h"
 
 #include "commons/lexer/lexer_exceptions.h"
+#include "qps/pql/query_keywords.h"
 
 Token *QueryLexer::next_token() {
   this->ignore_whitespace();
@@ -13,7 +14,7 @@ Token *QueryLexer::next_token() {
   if (isalpha(c)) {
     // Keyword or symbol
     this->read_alphanumeric();
-    if (this->valid_keywords_.find(this->tmp_) != this->valid_keywords_.end()) { return new KeywordToken(this->tmp_); }
+    if (QueryKeywords::isValidKeyword(tmp_)) { return new KeywordToken(this->tmp_); }
     return new SymbolToken(this->tmp_);
   } else if (isdigit(c)) {
     // Literal
@@ -37,7 +38,7 @@ Token *QueryLexer::next_token() {
   } else if (c == this->wild_card_) {
     // Wild Card
     return new WildCardToken();
-  } else if (this->valid_assign_operators_.find(this->tmp_) != this->valid_assign_operators_.end()) {
+  } else if (QueryKeywords::isValidAssignOperator(tmp_)) {
     // Assign Operators
     return new OperatorToken(this->tmp_);
   }
