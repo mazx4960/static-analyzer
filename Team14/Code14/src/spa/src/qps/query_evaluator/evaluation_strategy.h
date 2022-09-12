@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iterator>
 #include <unordered_set>
 
 #include "commons/result.h"
