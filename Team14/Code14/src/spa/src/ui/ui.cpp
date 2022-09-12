@@ -5,7 +5,6 @@
 #include <utility>
 
 #include "commons/reader.h"
-#include "qps/query_parser/query_parser.h"
 #include "spdlog/spdlog.h"
 
 UI::UI(std::string source_file, std::string query_file)
@@ -54,9 +53,7 @@ Result *UI::ExecuteQuery() {
   spdlog::info("Reading query file...");
   std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
   std::ifstream query_stream = StreamReader::GetStreamFromFile(this->query_file_);
-
-  Query parsed_query = QueryParser::parse(&query_stream);
-  Result *result = this->qps_->evaluate(parsed_query);
+  Result *result = this->qps_->EvaluateQuery(query_stream);
   std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
   spdlog::info("Query executed.");
   spdlog::info("Time taken to execute query:  {} ms",
@@ -65,13 +62,11 @@ Result *UI::ExecuteQuery() {
 }
 void UI::DisplayResults(const Result *result) {
   spdlog::info("Sorting results...");
-  std::vector<Entity *> *results_list = result->get_sorted_results_list();
+  std::vector<Entity *> results_list = result->get_sorted_results_list();
 
   spdlog::info("====================BEGIN QUERY RESULTS====================");
-  std::string result_string = result->get_synonym()->getSynonym() + ": ";
-  for (auto *s : *results_list) {
-    result_string += s->ToString() + " ";
-  }
+  std::string result_string = result->get_synonym().getSynonym() + ": ";
+  for (auto *s : results_list) { result_string += s->ToString() + " "; }
   spdlog::info("{}", result_string);
   spdlog::info("====================END QUERY RESULTS====================");
 }

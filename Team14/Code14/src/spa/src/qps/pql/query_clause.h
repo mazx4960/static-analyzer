@@ -4,7 +4,7 @@
 
 #include <utility>
 
-#include "qps/pql/query_declaration/query_declaration.h"
+#include "query_declaration.h"
 
 enum class ClauseType {
   kSuchThat,
@@ -26,7 +26,7 @@ enum class PatternType {
 
 class QueryClause {
  protected:
-  explicit QueryClause(ClauseType clauseType) : clause_type_(std::move(clauseType)) {};
+  explicit QueryClause(ClauseType clauseType) : clause_type_(std::move(clauseType)){};
 
   ClauseType clause_type_;
 
@@ -37,7 +37,10 @@ class QueryClause {
 class SuchThatClause : public QueryClause {
  public:
   explicit SuchThatClause(SuchThatType type, QueryDeclaration *first, QueryDeclaration *second)
-      : QueryClause(ClauseType::kSuchThat), type_(type), first_(std::move(first)), second_(std::move(second)) {};
+      : QueryClause(ClauseType::kSuchThat),
+        type_(type),
+        first_(std::move(first)),
+        second_(std::move(second)){};
 
   SuchThatType type_;
 
@@ -48,14 +51,16 @@ class SuchThatClause : public QueryClause {
   [[nodiscard]] SuchThatType getSuchThatType() const;
   [[nodiscard]] QueryDeclaration *getFirst() const;
   [[nodiscard]] QueryDeclaration *getSecond() const;
-
 };
 
 class PatternClause : public QueryClause {
  public:
   explicit PatternClause(PatternType type, QueryDeclaration *first, QueryDeclaration *second, QueryDeclaration *third)
       : QueryClause(ClauseType::kSuchThat),
-        type_(type), first_(std::move(first)), second_(std::move(second)), third_(std::move(third)) {};
+        type_(type),
+        first_(std::move(first)),
+        second_(std::move(second)),
+        third_(std::move(third)){};
 
   PatternType type_;
 
@@ -69,7 +74,6 @@ class PatternClause : public QueryClause {
   [[nodiscard]] QueryDeclaration *getFirst() const;
   [[nodiscard]] QueryDeclaration *getSecond() const;
   [[nodiscard]] QueryDeclaration *getThird() const;
-
 };
 
 class ParentClause : public SuchThatClause {
@@ -114,6 +118,4 @@ class AssignPatternClause : public PatternClause {
       : PatternClause(PatternType::kAssignPattern, std::move(first), std::move(second), std::move(third)) {}
 };
 
-class QueryClauseTypeAdapter {
-
-};
+class QueryClauseTypeAdapter {};

@@ -21,8 +21,7 @@ std::unordered_set<QueryDeclaration *> QueryEvaluator::fetchContext() {
       query_declaration_context_set = this->pkb_->getEntities(stmt_type);
     } else {
       throw DeclarationTypeAdaptError(
-          "DeclarationType cannot be converted to EntityType or StmtType, context cannot be fetched"
-      );
+          "DeclarationType cannot be converted to EntityType or StmtType, context cannot be fetched");
     }
     declaration->setContext(query_declaration_context_set);
   }
@@ -41,7 +40,7 @@ std::unordered_set<QueryDeclaration *> QueryEvaluator::evaluateSubQueries() {
   return this->getDeclarationAsSet();
 }
 
-Result* QueryEvaluator::evaluate() {
+Result *QueryEvaluator::evaluate() {
   this->fetchContext();
 
   // Query declaration for whose results are to be returned.
@@ -49,14 +48,12 @@ Result* QueryEvaluator::evaluate() {
 
   // If there are no sub-queries, return the context of the selected query declaration.
   // Else, evaluate sub-queries first.
-  if (this->query_.hasSubClauses()) {
-    this->evaluateSubQueries();
-  }
+  if (this->query_.hasSubClauses()) { this->evaluateSubQueries(); }
 
   QuerySynonym synonym = called_declaration->getSynonym();
   std::unordered_set<Entity *> context = called_declaration->getContext();
 
-  return new Result(&synonym, &context);
+  return new Result(synonym, context);
 }
 
 std::unordered_set<QueryDeclaration *> QueryEvaluator::getDeclarationAsSet() {

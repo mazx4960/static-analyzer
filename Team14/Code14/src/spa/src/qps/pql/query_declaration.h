@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <utility>
 #include <unordered_set>
+#include <utility>
 
-#include "qps/pql/query_synonym/query_synonym.h"
 #include "commons/entity.h"
+#include "query_synonym.h"
 
 enum class DeclarationType {
   kStatement,
@@ -39,13 +39,12 @@ class QueryDeclaration {
   std::unordered_set<Entity *> context_;
 
  public:
-  explicit QueryDeclaration(DeclarationType type) : type_(std::move(type)) {};
+  explicit QueryDeclaration(DeclarationType type) : type_(std::move(type)){};
   QueryDeclaration(DeclarationType type, QuerySynonym query_synonym)
-      : type_(std::move(type)), query_synonym_(std::move(query_synonym)) {};
-  QueryDeclaration(DeclarationType type, std::string string)
-      : type_(std::move(type)), string_(std::move(string)) {};
-  QueryDeclaration(DeclarationType type, int number)
-      : type_(std::move(type)), number_(std::move(number)) {};
+      : type_(std::move(type)),
+        query_synonym_(std::move(query_synonym)){};
+  QueryDeclaration(DeclarationType type, std::string string) : type_(std::move(type)), string_(std::move(string)){};
+  QueryDeclaration(DeclarationType type, int number) : type_(std::move(type)), number_(std::move(number)){};
 
   [[nodiscard]] DeclarationType getType() const;
   [[nodiscard]] QuerySynonym getSynonym() const;
@@ -129,8 +128,7 @@ class ProcedureDeclaration : public QueryDeclaration {
 // Inline declaration of  Wildcard "_"
 class WildCardDeclaration : public QueryDeclaration {
  public:
-  explicit WildCardDeclaration()
-      : QueryDeclaration(DeclarationType::kWildcard) {}
+  explicit WildCardDeclaration() : QueryDeclaration(DeclarationType::kWildcard) {}
 };
 
 // Inline declaration of Expression "(x + (y * z))"
@@ -143,15 +141,13 @@ class ExpressionDeclaration : public QueryDeclaration {
 // Inline declaration of string eg. Modifies("x", v)
 class StringDeclaration : public QueryDeclaration {
  public:
-  explicit StringDeclaration(std::string string)
-      : QueryDeclaration(DeclarationType::kString, std::move(string)) {}
+  explicit StringDeclaration(std::string string) : QueryDeclaration(DeclarationType::kString, std::move(string)) {}
 };
 
 // Inline declaration of integer eg. Modifies(3, v)
 class IntegerDeclaration : public QueryDeclaration {
  public:
-  explicit IntegerDeclaration(int number)
-      : QueryDeclaration(DeclarationType::kInteger, number) {}
+  explicit IntegerDeclaration(int number) : QueryDeclaration(DeclarationType::kInteger, number) {}
 };
 
 class DeclarationTypeAdaptor {
@@ -164,11 +160,6 @@ class DeclarationTypeAdaptor {
 
   static DeclarationType toDeclarationType(EntityType);
   static DeclarationType toDeclarationType(StmtType);
-};
-
-class DeclarationTypeAdaptError : std::runtime_error {
- public:
-  explicit DeclarationTypeAdaptError(const std::string &message) : std::runtime_error(message) {}
 };
 
 class QueryDeclarationHashFunction {
