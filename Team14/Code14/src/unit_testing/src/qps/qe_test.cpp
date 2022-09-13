@@ -122,16 +122,16 @@ class MockPKB : public IPKBQuerier {
 TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
   IPKBQuerier *pkb = new MockPKB();
 
-  auto *stmt_dec = new StatementDeclaration(QuerySynonym("stmt_dec"));
-  auto *read_dec = new ReadDeclaration(QuerySynonym("read_dec"));
-  auto *print_dec = new PrintDeclaration(QuerySynonym("print_dec"));
-  auto *call_dec = new CallDeclaration(QuerySynonym("call_dec"));
-  auto *while_dec = new WhileDeclaration(QuerySynonym("while_dec"));
-  auto *if_dec = new IfDeclaration(QuerySynonym("if_dec"));
-  auto *assign_dec = new AssignDeclaration(QuerySynonym("assign_dec"));
-  auto *var_dec = new VariableDeclaration(QuerySynonym("var_dec"));
-  auto *const_dec = new ConstantDeclaration(QuerySynonym("const_dec"));
-  auto *proc_dec = new ProcedureDeclaration(QuerySynonym("proc_dec"));
+  auto *stmt_dec = new StatementDeclaration(new QuerySynonym("stmt_dec"));
+  auto *read_dec = new ReadDeclaration(new QuerySynonym("read_dec"));
+  auto *print_dec = new PrintDeclaration(new QuerySynonym("print_dec"));
+  auto *call_dec = new CallDeclaration(new QuerySynonym("call_dec"));
+  auto *while_dec = new WhileDeclaration(new QuerySynonym("while_dec"));
+  auto *if_dec = new IfDeclaration(new QuerySynonym("if_dec"));
+  auto *assign_dec = new AssignDeclaration(new QuerySynonym("assign_dec"));
+  auto *var_dec = new VariableDeclaration(new QuerySynonym("var_dec"));
+  auto *const_dec = new ConstantDeclaration(new QuerySynonym("const_dec"));
+  auto *proc_dec = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
   auto *expr_dec = new ExpressionDeclaration("x+y");
   auto *str_dec = new StringDeclaration("string_dec");
   auto *int_dec = new IntegerDeclaration(123);
@@ -159,31 +159,31 @@ TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
 TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   IPKBQuerier *pkb = new MockPKB();
 
-  auto *stmt_dec_1 = new StatementDeclaration(QuerySynonym("stmt_dec_1"));
-  auto *read_dec_1 = new ReadDeclaration(QuerySynonym("read_dec_1"));
-  auto *print_dec_1 = new PrintDeclaration(QuerySynonym("print_dec_1"));
-  auto *call_dec_1 = new CallDeclaration(QuerySynonym("call_dec_1"));
-  auto *while_dec_1 = new WhileDeclaration(QuerySynonym("while_dec_1"));
-  auto *if_dec_1 = new IfDeclaration(QuerySynonym("if_dec_1"));
-  auto *assign_dec_1 = new AssignDeclaration(QuerySynonym("assign_dec_1"));
-  auto *var_dec_1 = new VariableDeclaration(QuerySynonym("var_dec_1"));
-  auto *const_dec_1 = new ConstantDeclaration(QuerySynonym("const_dec_1"));
-  auto *proc_dec_1 = new ProcedureDeclaration(QuerySynonym("proc_dec_1"));
+  auto *stmt_dec_1 = new StatementDeclaration(new QuerySynonym("stmt_dec_1"));
+  auto *read_dec_1 = new ReadDeclaration(new QuerySynonym("read_dec_1"));
+  auto *print_dec_1 = new PrintDeclaration(new QuerySynonym("print_dec_1"));
+  auto *call_dec_1 = new CallDeclaration(new QuerySynonym("call_dec_1"));
+  auto *while_dec_1 = new WhileDeclaration(new QuerySynonym("while_dec_1"));
+  auto *if_dec_1 = new IfDeclaration(new QuerySynonym("if_dec_1"));
+  auto *assign_dec_1 = new AssignDeclaration(new QuerySynonym("assign_dec_1"));
+  auto *var_dec_1 = new VariableDeclaration(new QuerySynonym("var_dec_1"));
+  auto *const_dec_1 = new ConstantDeclaration(new QuerySynonym("const_dec_1"));
+  auto *proc_dec_1 = new ProcedureDeclaration(new QuerySynonym("proc_dec_1"));
   auto *expr_dec_1 = new ExpressionDeclaration("x+y");
   auto *str_dec_1 = new StringDeclaration("string_dec_1");
   auto *int_dec_1 = new IntegerDeclaration(123);
   auto *wild_dec_1 = new WildCardDeclaration();
 
-  auto *stmt_dec_2 = new StatementDeclaration(QuerySynonym("stmt_dec_2"));
-  auto *read_dec_2 = new ReadDeclaration(QuerySynonym("read_dec_2"));
-  auto *print_dec_2 = new PrintDeclaration(QuerySynonym("print_dec_2"));
-  auto *call_dec_2 = new CallDeclaration(QuerySynonym("call_dec_2"));
-  auto *while_dec_2 = new WhileDeclaration(QuerySynonym("while_dec_2"));
-  auto *if_dec_2 = new IfDeclaration(QuerySynonym("if_dec_2"));
-  auto *assign_dec_2 = new AssignDeclaration(QuerySynonym("assign_dec_2"));
-  auto *var_dec_2 = new VariableDeclaration(QuerySynonym("var_dec_2"));
-  auto *const_dec_2 = new ConstantDeclaration(QuerySynonym("const_dec_2"));
-  auto *proc_dec_2 = new ProcedureDeclaration(QuerySynonym("proc_dec_2"));
+  auto *stmt_dec_2 = new StatementDeclaration(new QuerySynonym("stmt_dec_2"));
+  auto *read_dec_2 = new ReadDeclaration(new QuerySynonym("read_dec_2"));
+  auto *print_dec_2 = new PrintDeclaration(new QuerySynonym("print_dec_2"));
+  auto *call_dec_2 = new CallDeclaration(new QuerySynonym("call_dec_2"));
+  auto *while_dec_2 = new WhileDeclaration(new QuerySynonym("while_dec_2"));
+  auto *if_dec_2 = new IfDeclaration(new QuerySynonym("if_dec_2"));
+  auto *assign_dec_2 = new AssignDeclaration(new QuerySynonym("assign_dec_2"));
+  auto *var_dec_2 = new VariableDeclaration(new QuerySynonym("var_dec_2"));
+  auto *const_dec_2 = new ConstantDeclaration(new QuerySynonym("const_dec_2"));
+  auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec_2"));
   auto *expr_dec_2 = new ExpressionDeclaration("x+y");
   auto *str_dec_2 = new StringDeclaration("string_dec_2");
   auto *int_dec_2 = new IntegerDeclaration(123);
@@ -219,7 +219,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
 
 TEST(QeFetchContextTest, StatementDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
-  auto *declaration = new StatementDeclaration(QuerySynonym("stmt"));
+  auto *declaration = new StatementDeclaration(new QuerySynonym("stmt"));
   SelectCall select_call = SelectCall(declaration, {});
   Query query = Query({declaration}, select_call);
 
@@ -231,7 +231,7 @@ TEST(QeFetchContextTest, StatementDeclaration) {
 
 TEST(QeFetchContextTest, ProcedureDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
-  auto *declaration = new ProcedureDeclaration(QuerySynonym("proc"));
+  auto *declaration = new ProcedureDeclaration(new QuerySynonym("proc"));
   SelectCall select_call = SelectCall(declaration, {});
   Query query = Query({declaration}, select_call);
 
@@ -243,7 +243,7 @@ TEST(QeFetchContextTest, ProcedureDeclaration) {
 
 TEST(QeFetchContextTest, VariableDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
-  auto *declaration = new VariableDeclaration(QuerySynonym("stmt"));
+  auto *declaration = new VariableDeclaration(new QuerySynonym("stmt"));
   SelectCall select_call = SelectCall(declaration, {});
   Query query = Query({declaration}, select_call);
 
@@ -255,7 +255,7 @@ TEST(QeFetchContextTest, VariableDeclaration) {
 
 TEST(QeFetchContextTest, ConstantDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
-  auto *declaration = new ConstantDeclaration(QuerySynonym("stmt"));
+  auto *declaration = new ConstantDeclaration(new QuerySynonym("stmt"));
   SelectCall select_call = SelectCall(declaration, {});
   Query query = Query({declaration}, select_call);
 
@@ -267,7 +267,7 @@ TEST(QeFetchContextTest, ConstantDeclaration) {
 
 TEST(QeFetchContextTest, StmtAssignDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
-  auto *declaration = new AssignDeclaration(QuerySynonym("as"));
+  auto *declaration = new AssignDeclaration(new QuerySynonym("as"));
   SelectCall select_call = SelectCall(declaration, {});
   Query query = Query({declaration}, select_call);
 
@@ -279,7 +279,7 @@ TEST(QeFetchContextTest, StmtAssignDeclaration) {
 
 TEST(QeFetchContextTest, StmtCallDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
-  auto *declaration = new CallDeclaration(QuerySynonym("cl"));
+  auto *declaration = new CallDeclaration(new QuerySynonym("cl"));
   SelectCall select_call = SelectCall(declaration, {});
   Query query = Query({declaration}, select_call);
 
@@ -291,7 +291,7 @@ TEST(QeFetchContextTest, StmtCallDeclaration) {
 
 TEST(QeFetchContextTest, StmtIfDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
-  auto *declaration = new IfDeclaration(QuerySynonym("ifs"));
+  auto *declaration = new IfDeclaration(new QuerySynonym("ifs"));
   SelectCall select_call = SelectCall(declaration, {});
   Query query = Query({declaration}, select_call);
 
@@ -303,7 +303,7 @@ TEST(QeFetchContextTest, StmtIfDeclaration) {
 
 TEST(QeFetchContextTest, StmtWhileDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
-  auto *declaration = new WhileDeclaration(QuerySynonym("w"));
+  auto *declaration = new WhileDeclaration(new QuerySynonym("w"));
   SelectCall select_call = SelectCall(declaration, {});
   Query query = Query({declaration}, select_call);
 
@@ -315,7 +315,7 @@ TEST(QeFetchContextTest, StmtWhileDeclaration) {
 
 TEST(QeFetchContextTest, StmtPrintDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
-  auto *declaration = new PrintDeclaration(QuerySynonym("prt"));
+  auto *declaration = new PrintDeclaration(new QuerySynonym("prt"));
   SelectCall select_call = SelectCall(declaration, {});
   Query query = Query({declaration}, select_call);
 
@@ -327,7 +327,7 @@ TEST(QeFetchContextTest, StmtPrintDeclaration) {
 
 TEST(QeFetchContextTest, StmtReadDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
-  auto *declaration = new ReadDeclaration(QuerySynonym("rd"));
+  auto *declaration = new ReadDeclaration(new QuerySynonym("rd"));
   SelectCall select_call = SelectCall(declaration, {});
   Query query = Query({declaration}, select_call);
 

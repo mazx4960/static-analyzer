@@ -12,7 +12,6 @@
 class QueryParser {
  private:
   std::vector<Token *> tokens_;
-
   std::vector<QueryDeclaration *> query_declarations_;
 
   std::unordered_set<std::string> synonyms_;
@@ -20,11 +19,6 @@ class QueryParser {
   std::vector<QueryCall *> query_calls_;
 
   int token_index_ = 0;
-
-  std::unordered_set<std::string> call_keywords_ = {"Select"};
-
-  std::unordered_set<std::string> declaration_keywords_ = {
-      "pattern", "stmt", "read", "print", "call", "while", "if", "assign", "variable", "constant", "procedure"};
 
   Token *nextToken();
   Token *peekToken();
