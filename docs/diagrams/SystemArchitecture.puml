@@ -1,0 +1,60 @@
+@startuml
+
+[User Interface] as UI
+
+package "Query Processing System" {
+    [Query Processing System] as QPS
+    [QueryLexer]
+    [QueryParser]
+    [QueryBuilder]
+    [QueryEvaluator]
+}
+
+package "Source Processor" {
+    [Source Processor] as SP
+    [SimpleLexer]
+    [SimpleParser]
+    [Extractor]
+}
+
+database "Program Knowledge Base" {
+  [Program Knowledge Base] as PKB
+  [Entity Manager] --> [Entity]
+  folder "Entity" {
+    [Variable]
+    [Constant]
+    [Procedure]
+    [Statement]
+  }
+  [Relationship Manager] --> [Relationship]
+  folder "Relationship" {
+    [Uses]
+    [Modifies]
+    [Calls]
+    [Parent]
+    [Follows]
+  }
+  [Pattern Manager] --> [Pattern]
+  folder "Pattern" {
+  }
+}
+
+[UI] --left--> [SP] : LoadSource
+[UI] --down--> [QPS] : EvaluateQuery
+
+[PKB] -down-> [Entity Manager]
+[PKB] -down-> [Relationship Manager]
+[PKB] -down-> [Pattern Manager]
+
+[SP] -down-> [SimpleLexer]
+[SP] -down-> [SimpleParser]
+[SP] -down-> [Extractor]
+[SP] -down--> [PKB]
+
+[QPS] -down-> [QueryLexer]
+[QPS] -down-> [QueryParser]
+[QPS] -down-> [QueryBuilder]
+[QPS] -down-> [QueryEvaluator]
+[QueryEvaluator] -left-> [PKB]
+
+@enduml

@@ -1,0 +1,43 @@
+@startuml
+!include Style.puml
+!include SequenceStyle.puml
+
+box SP SP_COLOR_LIGHT
+participant ":SP" as SP<<SP>>
+participant ":SimpleLexer" as SimpleLexer<<SP>>
+participant ":SimpleParser" as SimpleParser<<SP>>
+participant ":Extractor" as Extractor<<SP>>
+end box
+
+box PKB PKB_COLOR_LIGHT
+participant ":PKB" as PKB<<PKB>>
+end box
+
+[-> SP : LoadSource()
+activate SP
+
+SP -> SimpleLexer : lex()
+activate SimpleLexer
+SimpleLexer -> SimpleLexer : next_token()
+SimpleLexer --> SP : tokens
+deactivate SimpleLexer
+
+SP -> SimpleParser : ParseProgram(tokens)
+activate SimpleParser
+SimpleParser --> SP : AST
+deactivate SimpleParser
+
+SP -> Extractor : ExtractAll(AST)
+activate Extractor
+Extractor --> SP : abstractions
+deactivate Extractor
+
+SP -> PKB : populate(abstractions)
+activate PKB
+PKB --> SP
+deactivate PKB
+
+[<-- SP
+deactivate SP
+
+@enduml
