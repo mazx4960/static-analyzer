@@ -11,7 +11,7 @@ class QuerySynonym {
  public:
   explicit QuerySynonym(std::string);
 
-  [[nodiscard]] std::string getSynonym() const;
+  [[nodiscard]] std::string toString() const;
   bool operator==(const QuerySynonym &) const;
 };
 
