@@ -112,16 +112,15 @@ TEST(QueryParserTest, ValidSinglePatternClauseTest) {
             static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString());
 
-  // TODO(KelvinSoo) check if getSecond should be valid for AssignPatternClause? Currently getSecond() returns a nullptr
-  //ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
-  //              ->getSecond()->getSynonym()->toString(),
-  //          static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
-  //              ->getSecond()->getSynonym()->toString());
+  ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
+                ->getSecond()->getString(),
+            static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
+                ->getSecond()->getString());
 
-  //ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
-  //              ->getThird()->getSynonym()->toString(),
-  //          static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
-  //              ->getThird()->getSynonym()->toString());
+  ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
+                ->getThird()->getString(),
+            static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
+                ->getThird()->getString());
 }
 
 TEST(QueryParserTest, InvalidTokenTest1) {
