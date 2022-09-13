@@ -104,20 +104,20 @@ void QueryParser::parseQueryCalls() {
   Token* token = nextToken();
   if (*token == KeywordToken("Select")) {
     QueryDeclaration* synonym_declaration = getDeclaration(nextToken()->value);
-    std::vector<QueryClause> clause_vector;
+    std::vector<QueryClause*> clause_vector;
     while (!(*peekToken() == EndOfFileToken())) { clause_vector.push_back(parseClause()); }
     query_calls_.push_back(new SelectCall(synonym_declaration, clause_vector));
   } else {
     throw ParseSyntaxError("Unknown query call: " + token->value);
   }
 }
-QueryClause QueryParser::parseClause() {
+QueryClause * QueryParser::parseClause() {
   Token* token = nextToken();
   if (*token == KeywordToken("such") && *nextToken() == KeywordToken("that")) { return parseSuchThat(); }
   if (*token == KeywordToken("pattern")) { return parsePattern(); }
   throw ParseSyntaxError("Unknown clause: " + token->value);
 }
-PatternClause QueryParser::parsePattern() {
+PatternClause * QueryParser::parsePattern() {
   if (peekToken()->type != TokenType::kSymbol) { throw ParseSyntaxError("Missing synonym"); }
   QueryDeclaration* first = getDeclaration(nextToken()->value);
   if (!(*nextToken() == RoundOpenBracketToken())) { throw ParseSyntaxError("Missing '(' before parameters"); }
@@ -125,9 +125,9 @@ PatternClause QueryParser::parsePattern() {
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration* third = parseExpression();
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
-  return AssignPatternClause(first, second, third);
+  return new AssignPatternClause(first, second, third);
 }
-SuchThatClause QueryParser::parseSuchThat() {
+SuchThatClause * QueryParser::parseSuchThat() {
   Token* token = nextToken();
   if (*token == KeywordToken("Follows")) { return parseFollows(); }
   if (*token == KeywordToken("Parent")) { return parseParent(); }
@@ -135,25 +135,25 @@ SuchThatClause QueryParser::parseSuchThat() {
   if (*token == KeywordToken("Modifies")) { return parseModifies(); }
   throw ParseSyntaxError("Unknown such-that relationship: " + token->value);
 }
-FollowsClause QueryParser::parseFollows() {
+FollowsClause * QueryParser::parseFollows() {
   if (!(*nextToken() == RoundOpenBracketToken())) { throw ParseSyntaxError("Missing '(' before parameters"); }
   QueryDeclaration* first = parseStmtRefDeclaration(true);
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration* second = parseStmtRefDeclaration(true);
   ;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
-  return FollowsClause(first, second);
+  return new FollowsClause(first, second);
 }
-ParentClause QueryParser::parseParent() {
+ParentClause * QueryParser::parseParent() {
   if (!(*nextToken() == RoundOpenBracketToken())) { throw ParseSyntaxError("Missing '(' before parameters"); }
   QueryDeclaration* first = parseStmtRefDeclaration(true);
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration* second = parseStmtRefDeclaration(true);
   ;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
-  return ParentClause(first, second);
+  return new ParentClause(first, second);
 }
-UsesClause QueryParser::parseUses() {
+UsesClause * QueryParser::parseUses() {
   if (!(*nextToken() == RoundOpenBracketToken())) { throw ParseSyntaxError("Missing '(' before parameters"); }
   QueryDeclaration* first;
   if (*peekToken() == QuoteToken()) {
@@ -164,9 +164,9 @@ UsesClause QueryParser::parseUses() {
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration* second = parseEntRefDeclaration(false);
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
-  return UsesClause(first, second);
+  return new UsesClause(first, second);
 }
-ModifiesClause QueryParser::parseModifies() {
+ModifiesClause * QueryParser::parseModifies() {
   if (!(*nextToken() == RoundOpenBracketToken())) { throw ParseSyntaxError("Missing '(' before parameters"); }
   QueryDeclaration* first;
   if (*peekToken() == QuoteToken()) {
@@ -178,7 +178,7 @@ ModifiesClause QueryParser::parseModifies() {
   QueryDeclaration* second = parseEntRefDeclaration(false);
   ;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
-  return ModifiesClause(first, second);
+  return new ModifiesClause(first, second);
 }
 ExpressionDeclaration* QueryParser::parseExpression() {
   std::string expression;
@@ -204,6 +204,7 @@ ExpressionDeclaration* QueryParser::parseExpression() {
         toggle = true;
       }
     }
+    nextToken();
   }
   if (peekToken()->type == TokenType::kWildCard) { expression.append(nextToken()->value); }
   return new ExpressionDeclaration(expression);

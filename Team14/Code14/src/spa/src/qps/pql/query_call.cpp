@@ -8,7 +8,7 @@ CallType QueryCall::getType() const {
 QueryDeclaration *QueryCall::getDeclaration() const {
   return this->query_declaration_;
 }
-std::vector<QueryClause> QueryCall::getClauseVector() const {
+std::vector<QueryClause*> QueryCall::getClauseVector() const {
   return this->clause_vector_;
 }
 bool QueryCall::hasSubClauses() const {

@@ -31,9 +31,9 @@ std::unordered_set<QueryDeclaration *> QueryEvaluator::fetchContext() {
 }
 
 std::unordered_set<QueryDeclaration *> QueryEvaluator::evaluateSubQueries() {
-  std::vector<QueryClause> subquery_clauses = this->query_.getQueryCall().getClauseVector();
+  std::vector<QueryClause*> subquery_clauses = this->query_.getQueryCall().getClauseVector();
 
-  for (QueryClause subquery_clause : subquery_clauses) {
+  for (QueryClause* subquery_clause : subquery_clauses) {
     SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, subquery_clause);
     subquery_evaluator.evaluate();
   }
