@@ -8,43 +8,7 @@
 #include "commons/entity.h"
 #include "pkb/pkb.h"
 
-TEST(PKBPopulateTest, CallStatementTest) {
-  std::vector<int> stmt_no({1, 2, 3, 4, 5, 6, 7});
-  std::vector<Entity *> entities;
-  int length = stmt_no.size();
-  entities.reserve(length);
-
-  for (int i = 0; i < length; i++) { entities.push_back(new CallEntity(stmt_no[i])); }
-
-  PKB pkb;
-  pkb.populate(entities);
-  ASSERT_EQ(pkb.getCount(), length);
-}
-
-TEST(PKBPopulateTest, CallStatementAndVariableTest) {
-  std::vector<int> stmt_no({1, 2, 3, 4, 5, 6, 7});
-  std::vector<Entity *> call_entities;
-  int call_length = stmt_no.size();
-  call_entities.reserve(call_length);
-
-  std::vector<std::string> var_names({"a", "b", "c", "d", "e", "f"});
-  std::vector<Entity *> var_entities;
-  int var_length = var_names.size();
-  var_entities.reserve(var_length);
-
-  for (int i = 0; i < call_length; i++) { call_entities.push_back(new CallEntity(stmt_no[i])); }
-
-  for (int j = 0; j < var_length; j++) { var_entities.push_back(new VariableEntity(var_names[j])); }
-
-  PKB pkb;
-  int length = call_length + var_length;
-  pkb.populate(var_entities);
-  pkb.populate(call_entities);
-  ASSERT_EQ(pkb.getCount(), length);
-}
-
-
-TEST(PKBPopulateTest, VariableTest) {
+TEST(PKBSaveTest, VariableTest) {
   std::vector<std::string> entity_names({"a", "b", "c", "d", "e", "f"});
   std::vector<Entity *> entities;
   int length = entity_names.size();
@@ -59,7 +23,7 @@ TEST(PKBPopulateTest, VariableTest) {
   ASSERT_EQ(pkb.getCount(), length);
 }
 
-TEST(PKBPopulateTest, ConstTest) {
+TEST(PKBSaveTest, ConstTest) {
   std::vector<std::string> entity_names({"a", "b", "c", "d", "e", "f"});
   std::vector<Entity *> entities;
   int length = entity_names.size();
@@ -74,7 +38,7 @@ TEST(PKBPopulateTest, ConstTest) {
   ASSERT_EQ(pkb.getCount(), length);
 }
 
-TEST(PKBPopulateTest, ConstantAndVariableTest) {
+TEST(PKBSaveTest, ConstantAndVariableTest) {
   std::vector<std::string> v_entity_names({"a", "b", "c", "d"});
   std::vector<std::string> c_entity_names({"ee", "ff", "gg"});
   std::vector<Entity *> v_entities;
@@ -97,7 +61,7 @@ TEST(PKBPopulateTest, ConstantAndVariableTest) {
   ASSERT_EQ(pkb.getCount(), c_entity_names.size() + v_entity_names.size());
 }
 
-TEST(PKBPopulateTest, DuplicatePopulation) {
+TEST(PKBSaveTest, MultiSave) {
   std::vector<std::string> entity_names({"a", "b", "c", "d", "e", "f"});
   std::vector<Entity *> entities;
   int length = entity_names.size();
