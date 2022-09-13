@@ -18,11 +18,11 @@ std::unordered_set<QueryDeclaration *> QueryEvaluator::fetchContext() {
       EntityType entity_type = DeclarationTypeAdaptor::toEntityType(declaration_type);
       query_declaration_context_set = this->pkb_->getEntities(entity_type);
     } else if (DeclarationTypeAdaptor::canConvertToStatementType(declaration_type)) {
-      StmtType stmt_type = DeclarationTypeAdaptor::toStatementType(declaration_type);
+      EntityType stmt_type = DeclarationTypeAdaptor::toStatementType(declaration_type);
       query_declaration_context_set = this->pkb_->getEntities(stmt_type);
     } else {
       throw DeclarationTypeAdaptError(
-          "DeclarationType cannot be converted to EntityType or StmtType, context cannot be fetched");
+          "DeclarationType cannot be converted to EntityType or EntityType, context cannot be fetched");
     }
     declaration->setContext(query_declaration_context_set);
   }
@@ -31,9 +31,9 @@ std::unordered_set<QueryDeclaration *> QueryEvaluator::fetchContext() {
 }
 
 std::unordered_set<QueryDeclaration *> QueryEvaluator::evaluateSubQueries() {
-  std::vector<QueryClause*> subquery_clauses = this->query_.getQueryCall().getClauseVector();
+  std::vector<QueryClause *> subquery_clauses = this->query_.getQueryCall().getClauseVector();
 
-  for (QueryClause* subquery_clause : subquery_clauses) {
+  for (QueryClause *subquery_clause : subquery_clauses) {
     SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, subquery_clause);
     subquery_evaluator.evaluate();
   }

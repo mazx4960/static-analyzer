@@ -20,10 +20,6 @@ std::unordered_set<Entity *> PKB::getEntities(EntityType entity_type) {
   return std::unordered_set<Entity *>();
 }
 
-std::unordered_set<Entity *> PKB::getEntities(StmtType stmt_type) {
-  return std::unordered_set<Entity *>();
-}
-
 std::unordered_set<Entity *> PKB::getByRelationship(RsType rs_type, Entity *entity, bool is_inverse) {
   return std::unordered_set<Entity *>();
 }

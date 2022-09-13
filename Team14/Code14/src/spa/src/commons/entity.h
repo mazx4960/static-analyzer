@@ -46,11 +46,11 @@ class StatementEntity : public Entity {
  private:
   int stmt_no_;
 
-  StmtType stmt_type_;
+  EntityType stmt_type_;
 
  public:
-  explicit StatementEntity(StmtType stmt_type, int stmt_no);
-  [[nodiscard]] StmtType GetStmtType() const;
+  explicit StatementEntity(EntityType stmt_type, int stmt_no);
+  [[nodiscard]] EntityType GetStmtType() const;
   [[nodiscard]] int GetStmtNo() const;
   [[nodiscard]] size_t GetHash() const override;  // Overrides Entity's GetHash() function
   bool operator==(const StatementEntity &other) const;
@@ -59,37 +59,37 @@ class StatementEntity : public Entity {
 class ReadEntity : public StatementEntity {
  public:
   explicit ReadEntity(int stmt_no)
-      : StatementEntity(StmtType::kRead, stmt_no) {}
+      : StatementEntity(EntityType::kRead, stmt_no) {}
 };
 
 class PrintEntity : public StatementEntity {
  public:
   explicit PrintEntity(int stmt_no)
-      : StatementEntity(StmtType::kPrint, stmt_no) {}
+      : StatementEntity(EntityType::kPrint, stmt_no) {}
 };
 
 class AssignEntity : public StatementEntity {
  public:
   explicit AssignEntity(int stmt_no)
-      : StatementEntity(StmtType::kAssign, stmt_no) {}
+      : StatementEntity(EntityType::kAssign, stmt_no) {}
 };
 
 class CallEntity : public StatementEntity {
  public:
   explicit CallEntity(int stmt_no)
-      : StatementEntity(StmtType::kCall, stmt_no) {}
+      : StatementEntity(EntityType::kCall, stmt_no) {}
 };
 
 class WhileEntity : public StatementEntity {
  public:
   explicit WhileEntity(int stmt_no)
-      : StatementEntity(StmtType::kWhile, stmt_no) {}
+      : StatementEntity(EntityType::kWhile, stmt_no) {}
 };
 
 class IfEntity : public StatementEntity {
  public:
   explicit IfEntity(int stmt_no)
-      : StatementEntity(StmtType::kIf, stmt_no) {}
+      : StatementEntity(EntityType::kIf, stmt_no) {}
 };
 
 class EntityHashFunction {

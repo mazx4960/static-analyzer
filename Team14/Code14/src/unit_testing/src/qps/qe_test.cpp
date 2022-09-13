@@ -42,57 +42,52 @@ class MockPKB : public IPKBQuerier {
             }
         );
       };
-      case EntityType::kStatement:throw std::runtime_error("This statement should not handle statements!");
-      default: throw std::runtime_error("Invalid entity type!");
-    };
-  }
-  inline std::unordered_set<Entity *> getEntities(StmtType stmt_type) override {
-    switch (stmt_type) {
-      case StmtType::kAssign: {
+      case EntityType::kAssign: {
         return std::unordered_set<Entity *>{
             new AssignEntity(1),
             new AssignEntity(2),
             new AssignEntity(3),
         };
       };
-      case StmtType::kCall: {
+      case EntityType::kCall: {
         return std::unordered_set<Entity *>{
             new CallEntity(4),
             new CallEntity(5),
             new CallEntity(6),
         };
       };
-      case StmtType::kIf: {
+      case EntityType::kIf: {
         return std::unordered_set<Entity *>{
             new IfEntity(7),
             new IfEntity(8),
             new IfEntity(9),
         };
       };
-      case StmtType::kWhile: {
+      case EntityType::kWhile: {
         return std::unordered_set<Entity *>{
             new CallEntity(10),
             new CallEntity(11),
             new CallEntity(12),
         };
       };
-      case StmtType::kPrint: {
+      case EntityType::kPrint: {
         return std::unordered_set<Entity *>{
             new PrintEntity(13),
             new PrintEntity(14),
             new PrintEntity(15),
         };
       };
-      case StmtType::kRead: {
+      case EntityType::kRead: {
         return std::unordered_set<Entity *>{
             new ReadEntity(16),
             new ReadEntity(17),
             new ReadEntity(18),
         };
       };
-      default: throw std::runtime_error("Invalid statement type!");
+      case EntityType::kStatement:throw std::runtime_error("This statement should not handle statements!");
+      default: throw std::runtime_error("Invalid entity type!");
     };
-  };
+  }
   inline std::unordered_set<Entity *> getByRelationship(RsType, Entity *, bool) override {
     return std::unordered_set<Entity *>();
   };

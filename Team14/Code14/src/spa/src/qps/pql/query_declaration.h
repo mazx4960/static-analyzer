@@ -39,12 +39,12 @@ class QueryDeclaration {
   std::unordered_set<Entity *> context_;
 
  public:
-  explicit QueryDeclaration(DeclarationType type) : type_(std::move(type)){};
+  explicit QueryDeclaration(DeclarationType type) : type_(std::move(type)) {};
   QueryDeclaration(DeclarationType type, QuerySynonym query_synonym)
       : type_(std::move(type)),
-        query_synonym_(std::move(query_synonym)){};
-  QueryDeclaration(DeclarationType type, std::string string) : type_(std::move(type)), string_(std::move(string)){};
-  QueryDeclaration(DeclarationType type, int number) : type_(std::move(type)), number_(std::move(number)){};
+        query_synonym_(std::move(query_synonym)) {};
+  QueryDeclaration(DeclarationType type, std::string string) : type_(std::move(type)), string_(std::move(string)) {};
+  QueryDeclaration(DeclarationType type, int number) : type_(std::move(type)), number_(std::move(number)) {};
 
   [[nodiscard]] DeclarationType getType() const;
   [[nodiscard]] QuerySynonym getSynonym() const;
@@ -156,10 +156,9 @@ class DeclarationTypeAdaptor {
   static bool canConvertToStatementType(DeclarationType);
 
   static EntityType toEntityType(DeclarationType);
-  static StmtType toStatementType(DeclarationType);
+  static EntityType toStatementType(DeclarationType);
 
   static DeclarationType toDeclarationType(EntityType);
-  static DeclarationType toDeclarationType(StmtType);
 };
 
 class QueryDeclarationHashFunction {
