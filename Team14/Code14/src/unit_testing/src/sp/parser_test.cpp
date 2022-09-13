@@ -28,7 +28,7 @@ TEST(SimpleParserTest, TestBasic) {
   ASSERT_EQ(1, statement_children.size());
   auto *statement_node = statement_children[0];
   ASSERT_EQ(NodeType::kStatement, statement_node->GetNodeType());
-  ASSERT_EQ(StmtType::kAssign, static_cast<StatementNode *>(statement_node)->GetStmtType());
+  ASSERT_EQ(EntityType::kAssign, static_cast<StatementNode *>(statement_node)->GetStmtType());
   auto assign_children = statement_node->GetChildren();
   ASSERT_EQ(2, assign_children.size());
   auto *variable_node = assign_children[0];

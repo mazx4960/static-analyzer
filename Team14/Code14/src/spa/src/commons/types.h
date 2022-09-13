@@ -7,9 +7,6 @@ enum class EntityType {
   kStatement,
   kVariable,
   kConstant,
-};
-
-enum class StmtType {
   kAssign,
   kCall,
   kIf,
