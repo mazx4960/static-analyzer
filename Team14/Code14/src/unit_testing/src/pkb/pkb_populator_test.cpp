@@ -8,6 +8,30 @@
 #include "commons/entity.h"
 #include "pkb/pkb.h"
 
+TEST(PKBSaveTest, FollowsTest) { 
+    std::vector<std::pair<int, int>> follows = {
+        {1, 2}, 
+        {1, 3}, 
+        {1, 4}, 
+        {1, 6}
+    };
+  std::vector<Relationship *> relationships;
+  int length = follows.size();
+  relationships.reserve(length);
+
+  for (int i = 0; i < length; i++) { 
+      relationships.push_back(
+          new FollowsRelationship(
+              new AssignEntity(follows[i].first), 
+              new AssignEntity(follows[i].second))
+      ); 
+  }
+
+  PKB pkb;
+  pkb.populate(relationships);
+  ASSERT_EQ(pkb.getRelationshipCount(), length);
+}
+
 TEST(PKBSaveTest, VariableTest) {
   std::vector<std::string> entity_names({"a", "b", "c", "d", "e", "f"});
   std::vector<Entity *> entities;
