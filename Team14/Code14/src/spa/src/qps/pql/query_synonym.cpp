@@ -5,7 +5,7 @@
 #include <utility>
 
 QuerySynonym::QuerySynonym(std::string synonym) {
-  this->synonym_ = synonym;
+  this->synonym_ = std::move(synonym);
 }
 std::string QuerySynonym::toString() const {
   return this->synonym_;

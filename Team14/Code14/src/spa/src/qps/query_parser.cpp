@@ -82,7 +82,7 @@ StringDeclaration *QueryParser::parseQuotedDeclaration() {
 }
 
 QueryDeclaration *QueryParser::getDeclaration(const std::string &synonym) {
-  QuerySynonym *to_check = new QuerySynonym(synonym);
+  auto *to_check = new QuerySynonym(synonym);
   for (QueryDeclaration *declaration : query_declarations_) {
     QuerySynonym *declaration_synonym = declaration->getSynonym();
     if (*declaration_synonym == *to_check) { return declaration; }
