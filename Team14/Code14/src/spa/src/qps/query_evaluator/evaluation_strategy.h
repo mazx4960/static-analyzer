@@ -15,7 +15,7 @@ class EvaluationStrategy {
   explicit EvaluationStrategy(IPKBQuerier *pkb) : pkb_(pkb) {};
 
  public:
-  static EvaluationStrategy *getStrategy(IPKBQuerier *, QueryClause &);
+  static EvaluationStrategy *getStrategy(IPKBQuerier *, QueryClause *);
   virtual void evaluate() = 0;
 };
 
@@ -24,7 +24,7 @@ class EvaluationStrategy {
  */
 class SuchThatStrategy : public EvaluationStrategy {
  private:
-  SuchThatClause clause_;
+  SuchThatClause *clause_;
 
  protected:
   void intersectContext(QueryDeclaration *param_to_send,
@@ -33,7 +33,7 @@ class SuchThatStrategy : public EvaluationStrategy {
                         bool invert_search);
 
  public:
-  SuchThatStrategy(IPKBQuerier *pkb, SuchThatClause &query_clause)
+  SuchThatStrategy(IPKBQuerier *pkb, SuchThatClause *query_clause)
       : EvaluationStrategy(pkb), clause_(query_clause) {};
 
   void evaluate() override;
@@ -43,10 +43,10 @@ class SuchThatStrategy : public EvaluationStrategy {
  * Selection for pattern clauses
  */
 class PatternStrategy : public EvaluationStrategy {
-  PatternClause clause_;
+  PatternClause *clause_;
 
  public:
-  PatternStrategy(IPKBQuerier *pkb, PatternClause &query_clause)
+  PatternStrategy(IPKBQuerier *pkb, PatternClause *query_clause)
       : EvaluationStrategy(pkb), clause_(query_clause) {};
 
   void evaluate() override;

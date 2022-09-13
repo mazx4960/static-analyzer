@@ -18,6 +18,7 @@ class QuerySynonym {
 class QuerySynonymHashFunction {
  public:
   size_t operator()(const QuerySynonym &) const;
+  size_t operator()(const QuerySynonym *) const;
 };
 
 

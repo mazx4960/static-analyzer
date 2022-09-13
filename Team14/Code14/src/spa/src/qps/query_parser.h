@@ -14,13 +14,18 @@ class QueryParser {
   std::vector<Token *> tokens_;
 
   std::vector<QueryDeclaration *> query_declarations_;
+
   std::unordered_set<std::string> synonyms_;
+
   std::vector<QueryCall *> query_calls_;
+
   int token_index_ = 0;
 
   std::unordered_set<std::string> call_keywords_ = {"Select"};
+
   std::unordered_set<std::string> declaration_keywords_ = {
       "pattern", "stmt", "read", "print", "call", "while", "if", "assign", "variable", "constant", "procedure"};
+
   Token *nextToken();
   Token *peekToken();
   bool outOfTokens();
@@ -34,15 +39,15 @@ class QueryParser {
   void parseQueryCalls();
   QueryDeclaration *parseDeclaration();
   QueryDeclaration *getDeclaration(const std::string &synonym);
-  QuerySynonym parseSynonym();
-  QueryClause parseClause();
-  PatternClause parsePattern();
-  SuchThatClause parseSuchThat();
-  FollowsClause parseFollows();
-  ParentClause parseParent();
-  UsesClause parseUses();
+  QuerySynonym *parseSynonym();
+  QueryClause *parseClause();
+  PatternClause *parsePattern();
+  SuchThatClause *parseSuchThat();
+  FollowsClause *parseFollows();
+  ParentClause *parseParent();
+  UsesClause *parseUses();
   ExpressionDeclaration *parseExpression();
-  ModifiesClause parseModifies();
+  ModifiesClause *parseModifies();
   bool isDeclared(const std::string &synonym);
   StringDeclaration *parseQuotedDeclaration();
   QueryDeclaration *parseStmtRefDeclaration(bool allowWild);
