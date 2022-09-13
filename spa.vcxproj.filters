@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\lexer\lexer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\lexer\token.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\expr_definition\expr_grammar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\expr_definition\expr_grammar_producer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\expr_definition\expr_node.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\grammar\composite_grammar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\grammar\early_choice_grammar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\grammar\late_choice_grammar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\grammar\list_grammar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\grammar\recursive_grammar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\node\node.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\pattern.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\reader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\relationship.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\result.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\pkb\entity\entity_table.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\pkb\pkb.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\pql\query.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\pql\query_call.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\pql\query_clause.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\pql\query_declaration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\pql\query_keywords.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\pql\query_synonym.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\qps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\query_builder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\query_evaluator\evaluation_strategy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\query_evaluator\query_evaluator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\query_evaluator\subquery_evaluator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\query_lexer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\query_parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\extractor\entity_extractor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\extractor\pattern_extractor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\extractor\relationship_extractor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\simple_definition\simple_ast.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\simple_definition\simple_grammar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\simple_definition\simple_grammar_producer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\simple_lexer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\simple_parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\sp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\spa.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\ui\ui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\hash_combine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\lexer\lexer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\lexer\lexer_exceptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\lexer\token.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\expr_definition\expr_grammar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\expr_definition\expr_grammar_producer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\expr_definition\expr_node.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\grammar\composite_grammar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\grammar\early_choice_grammar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\grammar\grammar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\grammar\late_choice_grammar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\grammar\list_grammar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\grammar\recursive_grammar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\node\node.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\node\node_type.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\parser\parser_exceptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\pattern.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\reader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\relationship.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\result.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\commons\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\pkb\entity\entity_table.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\pkb\pkb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\exceptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\pql\query.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\pql\query_call.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\pql\query_clause.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\pql\query_declaration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\pql\query_keywords.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\pql\query_synonym.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\qps.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\query_builder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\query_evaluator\evaluation_strategy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\query_evaluator\query_evaluator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\query_evaluator\subquery_evaluator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\query_lexer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\qps\query_parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\extractor\entity_extractor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\extractor\pattern_extractor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\extractor\relationship_extractor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\simple_definition\simple_ast.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\simple_definition\simple_grammar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\simple_definition\simple_grammar_producer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\simple_lexer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\simple_parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\sp\sp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\spa.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\src\ui\ui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Amanda Ang\source\repos\22s1-cp-spa-team-14\Team14\Code14\src\spa\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{7639E077-5BB1-3D5D-9DE9-00C5A5EBFC2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{5DF19EED-D073-3346-91C9-46E9331E66F6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
