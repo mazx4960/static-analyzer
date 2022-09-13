@@ -202,6 +202,7 @@ ExpressionDeclaration* QueryParser::parseExpression() {
         toggle = true;
       }
     }
+    nextToken();
   }
   if (peekToken()->type == TokenType::kWildCard) { expression.append(nextToken()->value); }
   return new ExpressionDeclaration(expression);
