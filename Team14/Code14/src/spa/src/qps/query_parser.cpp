@@ -3,14 +3,16 @@
 #include <algorithm>
 #include <utility>
 
+#include "qps/pql/query_keywords.h"
+
 QueryParser::QueryParser(std::vector<Token*> tokens) { this->tokens_ = std::move(tokens); }
 
 void QueryParser::parse() {
   while (!outOfTokens()) {
     Token* tmp = peekToken();
-    if (this->declaration_keywords_.count(tmp->value)) {
+    if (QueryKeywords::isValidDeclarationKeyword(tmp->value)) {
       parseDeclarations();
-    } else if (this->call_keywords_.count(tmp->value)) {
+    } else if (QueryKeywords::isValidCallKeyword(tmp->value)) {
       parseQueryCalls();
     } else if (*tmp == EndOfFileToken()) {
       break;
@@ -27,7 +29,7 @@ Token* QueryParser::nextToken() { return tokens_[this->token_index_++]; }
 Token* QueryParser::peekToken() { return tokens_[this->token_index_]; }
 bool QueryParser::outOfTokens() { return this->tokens_.size() == this->token_index_; }
 void QueryParser::parseDeclarations() {
-  while (declaration_keywords_.count(peekToken()->value)) { query_declarations_.push_back(parseDeclaration()); }
+  while (QueryKeywords::isValidDeclarationKeyword(peekToken()->value)) { query_declarations_.push_back(parseDeclaration()); }
 }
 QueryDeclaration* QueryParser::parseDeclaration() {
   Token* token = nextToken();
