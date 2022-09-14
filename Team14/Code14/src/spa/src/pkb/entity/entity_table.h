@@ -17,7 +17,7 @@ class EntityTable {
  public:
   static EntityTable *getTable(EntityType);
   void populate(Entity &entity);
-  std::unordered_set<Entity *> get();
+  static std::unordered_set<Entity *> get();
 
   // Currently only used for debugging and testing
   int getCount();
