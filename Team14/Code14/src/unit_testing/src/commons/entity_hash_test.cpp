@@ -10,21 +10,21 @@ TEST(EntityTypeHashTest, EqualProcedureName) {
   auto *e1 = new ProcedureEntity("abc");
   auto *e2 = new ProcedureEntity("abc");
   ASSERT_EQ(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(e2));
-  ASSERT_EQ((new std::unordered_set<Entity, EntityHashFunction>({*e1, *e2}))->size(), 1);
+  ASSERT_EQ((new std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>({e1, e2}))->size(), 1);
 }
 
 TEST(EntityTypeHashTest, EqualVariableName) {
   auto *e1 = new VariableEntity("abc");
   auto *e2 = new VariableEntity("abc");
   ASSERT_EQ(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(e2));
-  ASSERT_EQ((new std::unordered_set<Entity, EntityHashFunction>({*e1, *e2}))->size(), 1);
+  ASSERT_EQ((new std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>({e1, e2}))->size(), 1);
 }
 
 TEST(EntityTypeHashTest, EqualConstantIntStr) {
   auto *e1 = new ConstantEntity("123");
   auto *e2 = new ConstantEntity("123");
   ASSERT_EQ(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(e2));
-  ASSERT_EQ((new std::unordered_set<Entity, EntityHashFunction>({*e1, *e2}))->size(), 1);
+  ASSERT_EQ((new std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>({e1, e2}))->size(), 1);
 }
 
 /*
@@ -34,21 +34,21 @@ TEST(EntityTypeHashTest, UnequalProcedureName) {
   auto *e1 = new ProcedureEntity("abc");
   auto *e2 = new ProcedureEntity("def");
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(e2));
-  ASSERT_EQ((new std::unordered_set<Entity, EntityHashFunction>({*e1, *e2}))->size(), 2);
+  ASSERT_EQ((new std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>({e1, e2}))->size(), 2);
 }
 
 TEST(EntityTypeHashTest, UnequalVariableName) {
   auto *e1 = new VariableEntity("abc");
   auto *e2 = new VariableEntity("def");
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(e2));
-  ASSERT_EQ((new std::unordered_set<Entity, EntityHashFunction>({*e1, *e2}))->size(), 2);
+  ASSERT_EQ((new std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>({e1, e2}))->size(), 2);
 }
 
 TEST(EntityTypeHashTest, UnequalConstantIntStr) {
   auto *e1 = new ConstantEntity("123");
   auto *e2 = new ConstantEntity("234");
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(e2));
-  ASSERT_EQ((new std::unordered_set<Entity, EntityHashFunction>({*e1, *e2}))->size(), 2);
+  ASSERT_EQ((new std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>({e1, e2}))->size(), 2);
 }
 
 /*
@@ -58,10 +58,11 @@ TEST(EntityTypeHashTest, DifferentEntityTypeSameStr) {
   auto *e1 = new ProcedureEntity("123");
   auto *e2 = new VariableEntity("123");
   auto *e3 = new ConstantEntity("123");
-  std::unordered_set<size_t> hash_value_set = {EntityHashFunction().operator()(e1), EntityHashFunction().operator()(e2),
+  std::unordered_set<size_t> hash_value_set = {EntityHashFunction().operator()(e1),
+                                               EntityHashFunction().operator()(e2),
                                                EntityHashFunction().operator()(e3)};
   ASSERT_EQ(hash_value_set.size(), 3);// All distinct
-  ASSERT_EQ((new std::unordered_set<Entity, EntityHashFunction>({*e1, *e2, *e3}))->size(), 3);
+  ASSERT_EQ((new std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>({e1, e2, e3}))->size(), 3);
 }
 
 /*
@@ -71,37 +72,37 @@ TEST(StatementTypeHashTest, EqualAssign) {
   auto *s1 = new AssignStmtEntity("123");
   auto *s2 = new AssignStmtEntity("123");
   ASSERT_EQ(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
-  ASSERT_EQ((new std::unordered_set<Entity, EntityHashFunction>({*s1, *s2}))->size(), 1);
+  ASSERT_EQ((new std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>({s1, s2}))->size(), 1);
 }
 TEST(StatementTypeHashTest, EqualCall) {
   auto *s1 = new CallStmtEntity("123");
   auto *s2 = new CallStmtEntity("123");
   ASSERT_EQ(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
-  ASSERT_EQ((new std::unordered_set<Entity, EntityHashFunction>({*s1, *s2}))->size(), 1);
+  ASSERT_EQ((new std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>({s1, s2}))->size(), 1);
 }
 TEST(StatementTypeHashTest, EqualIf) {
   auto *s1 = new IfStmtEntity("123");
   auto *s2 = new IfStmtEntity("123");
   ASSERT_EQ(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
-  ASSERT_EQ((new std::unordered_set<Entity, EntityHashFunction>({*s1, *s2}))->size(), 1);
+  ASSERT_EQ((new std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>({s1, s2}))->size(), 1);
 }
 TEST(StatementTypeHashTest, EqualWhile) {
   auto *s1 = new WhileStmtEntity("123");
   auto *s2 = new WhileStmtEntity("123");
   ASSERT_EQ(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
-  ASSERT_EQ((new std::unordered_set<Entity, EntityHashFunction>({*s1, *s2}))->size(), 1);
+  ASSERT_EQ((new std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>({s1, s2}))->size(), 1);
 }
 TEST(StatementTypeHashTest, EqualPrint) {
   auto *s1 = new PrintStmtEntity("123");
   auto *s2 = new PrintStmtEntity("123");
   ASSERT_EQ(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
-  ASSERT_EQ((new std::unordered_set<Entity, EntityHashFunction>({*s1, *s2}))->size(), 1);
+  ASSERT_EQ((new std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>({s1, s2}))->size(), 1);
 }
 TEST(StatementTypeHashTest, EqualRead) {
   auto *s1 = new ReadStmtEntity("123");
   auto *s2 = new ReadStmtEntity("123");
   ASSERT_EQ(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
-  ASSERT_EQ((new std::unordered_set<Entity, EntityHashFunction>({*s1, *s2}))->size(), 1);
+  ASSERT_EQ((new std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>({s1, s2}))->size(), 1);
 }
 
 /*
@@ -111,42 +112,42 @@ TEST(StatementTypeHashTest, UnequalAssign) {
   auto *s1 = new AssignStmtEntity("123");
   auto *s2 = new AssignStmtEntity("234");
   ASSERT_NE(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
-  std::unordered_set<Entity, EntityHashFunction> set = {*s1, *s2};
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> set = {s1, s2};
   ASSERT_EQ(set.size(), 2);
 }
 TEST(StatementTypeHashTest, UnequalCall) {
   auto *s1 = new CallStmtEntity("123");
   auto *s2 = new CallStmtEntity("234");
   ASSERT_NE(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
-  std::unordered_set<Entity, EntityHashFunction> set = {*s1, *s2};
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> set = {s1, s2};
   ASSERT_EQ(set.size(), 2);
 }
 TEST(StatementTypeHashTest, UnequalIf) {
   auto *s1 = new IfStmtEntity("123");
   auto *s2 = new IfStmtEntity("234");
   ASSERT_NE(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
-  std::unordered_set<Entity, EntityHashFunction> set = {*s1, *s2};
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> set = {s1, s2};
   ASSERT_EQ(set.size(), 2);
 }
 TEST(StatementTypeHashTest, UnequalWhile) {
   auto *s1 = new WhileStmtEntity("123");
   auto *s2 = new WhileStmtEntity("234");
   ASSERT_NE(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
-  std::unordered_set<Entity, EntityHashFunction> set = {*s1, *s2};
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> set = {s1, s2};
   ASSERT_EQ(set.size(), 2);
 }
 TEST(StatementTypeHashTest, UnequalPrint) {
   auto *s1 = new PrintStmtEntity("123");
   auto *s2 = new PrintStmtEntity("234");
   ASSERT_NE(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
-  std::unordered_set<Entity, EntityHashFunction> set = {*s1, *s2};
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> set = {s1, s2};
   ASSERT_EQ(set.size(), 2);
 }
 TEST(StatementTypeHashTest, UnequalRead) {
   auto *s1 = new ReadStmtEntity("123");
   auto *s2 = new ReadStmtEntity("234");
   ASSERT_NE(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
-  std::unordered_set<Entity, EntityHashFunction> set = {*s1, *s2};
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> set = {s1, s2};
   ASSERT_EQ(set.size(), 2);
 }
 
