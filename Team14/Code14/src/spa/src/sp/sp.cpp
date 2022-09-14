@@ -1,11 +1,11 @@
 #include "sp.h"
 
-#include "spdlog/spdlog.h"
 #include "simple_lexer.h"
 #include "simple_parser.h"
 #include "sp/extractor/entity_extractor.h"
 #include "sp/extractor/pattern_extractor.h"
 #include "sp/extractor/relationship_extractor.h"
+#include "spdlog/spdlog.h"
 
 void SP::SetPKB(IPKBPopulator *pkb) { this->pkb_ = pkb; }
 void SP::LoadSource(std::ifstream &source_stream) {
@@ -22,7 +22,6 @@ void SP::LoadSource(std::ifstream &source_stream) {
   std::vector<Entity *> entities = EntityExtractor::ExtractAll(program_node);
   spdlog::info("Extracted {} entities", entities.size());
   for (auto *entity : entities) { spdlog::debug("{}", entity->ToString()); }
-  this->pkb_->populate(entities);
 
   std::vector<Relationship *> relationships = RelationshipExtractor::ExtractAll(program_node);
   spdlog::info("Extracted {} relationships", relationships.size());
@@ -31,4 +30,7 @@ void SP::LoadSource(std::ifstream &source_stream) {
   std::vector<Pattern *> patterns = PatternExtractor::ExtractAll(program_node);
   spdlog::info("Extracted {} patterns", patterns.size());
   for (auto *pattern : patterns) { spdlog::debug("{}", pattern->ToString()); }
+
+  spdlog::info("Populating PKB...");
+  //  this->pkb_->populate(entities);
 }

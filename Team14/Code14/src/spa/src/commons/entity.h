@@ -5,19 +5,19 @@
 #include <string>
 #include <utility>
 
-#include "types.h"
 #include "commons/hash_combine.h"
+#include "types.h"
 
 class Entity {
- private:
+ protected:
   EntityType type_;
 
-  std::string name_;
+  std::string value_;
 
  public:
-  Entity(EntityType type, std::string name);
+  Entity(EntityType type, std::string value);
   [[nodiscard]] EntityType GetType() const;
-  [[nodiscard]] std::string GetName() const;
+  [[nodiscard]] std::string GetValue() const;
   [[nodiscard]] virtual size_t GetHash() const;
   bool operator==(const Entity &other) const;
   std::string ToString();
@@ -25,85 +25,56 @@ class Entity {
 
 class ProcedureEntity : public Entity {
  public:
-  explicit ProcedureEntity(std::string name)
-      : Entity(EntityType::kProcedure, std::move(name)) {}
+  explicit ProcedureEntity(std::string name) : Entity(EntityType::kProcedure, std::move(name)) {}
 };
 
 class VariableEntity : public Entity {
  public:
-  explicit VariableEntity(std::string name)
-      : Entity(EntityType::kVariable, std::move(name)) {}
+  explicit VariableEntity(std::string name) : Entity(EntityType::kVariable, std::move(name)) {}
 };
 
 class ConstantEntity : public Entity {
  public:
-  explicit ConstantEntity(std::string name)
-      : Entity(EntityType::kConstant, std::move(name)) {}
+  explicit ConstantEntity(std::string name) : Entity(EntityType::kConstant, std::move(name)) {}
 };
 
-class StatementEntity : public Entity {
- private:
-  int stmt_no_;
-
-  StmtType stmt_type_;
-
+class ReadStmtEntity : public Entity {
  public:
-  explicit StatementEntity(StmtType stmt_type, int stmt_no);
-  [[nodiscard]] StmtType GetStmtType() const;
-  [[nodiscard]] int GetStmtNo() const;
-  [[nodiscard]] size_t GetHash() const override;  // Overrides Entity's GetHash() function
-  bool operator==(const StatementEntity &other) const;
+  explicit ReadStmtEntity(std::string stmt_no) : Entity(EntityType::kReadStmt, std::move(stmt_no)) {}
 };
 
-class ReadEntity : public StatementEntity {
+class PrintStmtEntity : public Entity {
  public:
-  explicit ReadEntity(int stmt_no)
-      : StatementEntity(StmtType::kRead, stmt_no) {}
+  explicit PrintStmtEntity(std::string stmt_no) : Entity(EntityType::kPrintStmt, std::move(stmt_no)) {}
 };
 
-class PrintEntity : public StatementEntity {
+class AssignStmtEntity : public Entity {
  public:
-  explicit PrintEntity(int stmt_no)
-      : StatementEntity(StmtType::kPrint, stmt_no) {}
+  explicit AssignStmtEntity(std::string stmt_no) : Entity(EntityType::kAssignStmt, std::move(stmt_no)) {}
 };
 
-class AssignEntity : public StatementEntity {
+class CallStmtEntity : public Entity {
  public:
-  explicit AssignEntity(int stmt_no)
-      : StatementEntity(StmtType::kAssign, stmt_no) {}
+  explicit CallStmtEntity(std::string stmt_no) : Entity(EntityType::kCallStmt, std::move(stmt_no)) {}
 };
 
-class CallEntity : public StatementEntity {
+class WhileStmtEntity : public Entity {
  public:
-  explicit CallEntity(int stmt_no)
-      : StatementEntity(StmtType::kCall, stmt_no) {}
+  explicit WhileStmtEntity(std::string stmt_no) : Entity(EntityType::kWhileStmt, std::move(stmt_no)) {}
 };
 
-class WhileEntity : public StatementEntity {
+class IfStmtEntity : public Entity {
  public:
-  explicit WhileEntity(int stmt_no)
-      : StatementEntity(StmtType::kWhile, stmt_no) {}
+  explicit IfStmtEntity(std::string stmt_no) : Entity(EntityType::kIfStmt, std::move(stmt_no)) {}
 };
 
-class IfEntity : public StatementEntity {
- public:
-  explicit IfEntity(int stmt_no)
-      : StatementEntity(StmtType::kIf, stmt_no) {}
-};
-
+/**
+ * Hash function for Entity
+ *
+ * Usage: std::unordered_map<Entity *, std::unordered_set<Entity *, EntityHashFunction>, EntityHashFunction>
+ */
 class EntityHashFunction {
  public:
-  size_t operator()(const Entity &entity) const {
-    return entity.GetHash();
-  }
-  size_t operator()(const Entity *entity) const {
-    return entity->GetHash();
-  }
+  size_t operator()(const Entity &entity) const { return entity.GetHash(); }
+  size_t operator()(const Entity *entity) const { return entity->GetHash(); }
 };
-
-// Usage:
-//std::unordered_map<
-//    Entity *,
-//    std::unordered_set<Entity *, EntityHashFunction>,
-//    EntityHashFunction
-//>
