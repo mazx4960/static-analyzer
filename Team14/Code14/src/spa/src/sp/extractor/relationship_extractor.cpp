@@ -45,7 +45,7 @@ void RelationshipExtractor::ExtractFollows(std::vector<Relationship *> &relation
   for (auto *stmt : static_cast<StatementListNode *>(node)->GetStatements()) {
     auto stmt_type = stmt->GetStmtType();
     auto stmt_no = stmt->GetStmtNo();
-    Entity *cur_entity = new StatementEntity(stmt_type, stmt_no);
+    Entity *cur_entity = new StatementEntity(stmt_no);
     if (prev_entity != nullptr) {
       Relationship *follows = new FollowsRelationship(prev_entity, cur_entity);
       relationships.push_back(follows);

@@ -56,13 +56,9 @@ std::string Entity::ToString() {
   return type_string + ": " + name_string;
 }
 
-StatementEntity::StatementEntity(EntityType stmt_type, int stmt_no)
+StatementEntity::StatementEntity(int stmt_no)
     : Entity(EntityType::kStatement, "") {
-  this->stmt_type_ = stmt_type;
   this->stmt_no_ = stmt_no;
-}
-EntityType StatementEntity::GetStmtType() const {
-  return this->stmt_type_;
 }
 int StatementEntity::GetStmtNo() const {
   return this->stmt_no_;
