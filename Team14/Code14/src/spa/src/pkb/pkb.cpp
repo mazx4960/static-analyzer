@@ -42,11 +42,16 @@ std::unordered_set<Entity *> PKB::getEntities(EntityType entity_type) {
 }
 
 std::unordered_set<Entity *> PKB::getByRelationship(RsType rs_type, Entity *entity, bool is_inverse) {
-  if (this->relationship_map_.find(rs_type) == this->relationship_map_.end()) {
-    return std::unordered_set<Entity *> {};
-    //return this->Empty();
+  RsType temp;
+  switch (rs_type) {
+    case RsType::kParentT: temp = RsType::kParent; break;
+    case RsType::kFollowsT: temp = RsType::kFollows; break;
+    default: temp = rs_type;
   }
-  return this->relationship_map_[rs_type]->get(rs_type, entity, is_inverse);
+  if (this->relationship_map_.find(temp) == this->relationship_map_.end()) {
+    return this->Empty();
+  }
+  return this->relationship_map_[temp]->get(rs_type, entity, is_inverse);
 }
 
 std::unordered_set<Entity *> PKB::getByPattern(std::string &, std::string &) {
