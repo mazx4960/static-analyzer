@@ -37,15 +37,15 @@ std::string Entity::ToString() {
       switch (statement_entity->GetType()) {
         case EntityType::kAssignStmt:type_string = "assign";
           break;
-        case EntityType::kCall:type_string = "call";
+        case EntityType::kCallStmt:type_string = "call";
           break;
-        case EntityType::kIf:type_string = "if";
+        case EntityType::kIfStmt:type_string = "if";
           break;
-        case EntityType::kPrint:type_string = "print";
+        case EntityType::kPrintStmt:type_string = "print";
           break;
-        case EntityType::kRead:type_string = "read";
+        case EntityType::kReadStmt:type_string = "read";
           break;
-        case EntityType::kWhile:type_string = "while";
+        case EntityType::kWhileStmt:type_string = "while";
           break;
         default:type_string = "unknown statement";
           break;

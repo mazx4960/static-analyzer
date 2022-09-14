@@ -53,26 +53,26 @@ int StatementNode::SetStatementNo(int next_stmt_no) {
 }
 EntityType StatementNode::GetStmtType() { return this->stmtType_; }
 
-ReadNode::ReadNode(VariableNode *variable) : StatementNode(EntityType::kRead), variable_(variable) {}
+ReadNode::ReadNode(VariableNode *variable) : StatementNode(EntityType::kReadStmt), variable_(variable) {}
 
 std::vector<Node *> ReadNode::GetChildren() { return std::vector<Node *>{variable_}; }
 std::string ReadNode::ToString() { return "read"; }
 VariableNode *ReadNode::GetVariable() { return this->variable_; }
 
-PrintNode::PrintNode(VariableNode *variable) : StatementNode(EntityType::kPrint), variable_(variable) {}
+PrintNode::PrintNode(VariableNode *variable) : StatementNode(EntityType::kPrintStmt), variable_(variable) {}
 std::vector<Node *> PrintNode::GetChildren() { return std::vector<Node *>{variable_}; }
 VariableNode *PrintNode::GetVariable() { return this->variable_; }
 std::string PrintNode::ToString() { return "print"; }
 
 CallNode::CallNode(std::string procedureName)
-    : StatementNode(EntityType::kCall),
+    : StatementNode(EntityType::kCallStmt),
       procedureName_(std::move(procedureName)) {}
 
 std::vector<Node *> CallNode::GetChildren() { return std::vector<Node *>{}; }
 std::string CallNode::ToString() { return "call"; }
 
 WhileNode::WhileNode(CondExprNode *conditional, StatementListNode *statementList)
-    : StatementNode(EntityType::kWhile),
+    : StatementNode(EntityType::kWhileStmt),
       conditional_(conditional),
       statementList_(statementList) {}
 CondExprNode *WhileNode::GetConditional() { return this->conditional_; }
@@ -87,7 +87,7 @@ std::vector<Node *> WhileNode::GetChildren() { return std::vector<Node *>{condit
 std::string WhileNode::ToString() { return "while"; }
 
 IfNode::IfNode(CondExprNode *conditional, StatementListNode *thenStatementList, StatementListNode *elseStatementList)
-    : StatementNode(EntityType::kIf),
+    : StatementNode(EntityType::kIfStmt),
       conditional_(conditional),
       thenStatementList_(thenStatementList),
       elseStatementList_(elseStatementList) {}
@@ -106,7 +106,7 @@ std::vector<Node *> IfNode::GetChildren() {
 std::string IfNode::ToString() { return "if"; }
 
 AssignNode::AssignNode(VariableNode *variable, RelFactorNode *expression)
-    : StatementNode(EntityType::kAssign),
+    : StatementNode(EntityType::kAssignStmt),
       variable_(variable),
       expression_(expression) {}
 std::vector<Node *> AssignNode::GetChildren() { return std::vector<Node *>{variable_, expression_}; }

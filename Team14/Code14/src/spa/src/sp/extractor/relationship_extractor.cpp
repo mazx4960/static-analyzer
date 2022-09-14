@@ -73,14 +73,14 @@ void RelationshipExtractor::ExtractParent(std::vector<Relationship *> &relations
       auto *stmt = static_cast<StatementNode *>(node);
       auto stmt_type = stmt->GetStmtType();
       switch (stmt_type) {
-        case EntityType::kWhile: {
+        case EntityType::kWhileStmt: {
           auto *while_stmt = static_cast<WhileNode *>(stmt);
           auto *stmt_list = while_stmt->GetStatementList();
           Entity *parent = new WhileEntity(while_stmt->GetStmtNo());
           ExtractParentHelper(relationships, parent, stmt_list);
           break;
         }
-        case EntityType::kIf: {
+        case EntityType::kIfStmt: {
           auto *if_stmt = static_cast<IfNode *>(stmt);
           Entity *parent = new WhileEntity(if_stmt->GetStmtNo());
           auto *then_stmt_list = if_stmt->GetThenStatementList();
@@ -133,12 +133,12 @@ void RelationshipExtractor::ExtractUses(std::vector<Relationship *> &relationshi
       auto *stmt = static_cast<StatementNode *>(node);
       auto stmt_type = stmt->GetStmtType();
       switch (stmt_type) {
-        case EntityType::kAssign:// fallthrough
-        case EntityType::kPrint: // fallthrough
-        case EntityType::kIf:    // fallthrough
-        case EntityType::kWhile: // fallthrough
-        case EntityType::kCall: {
-          Entity *parent = new StatementEntity(stmt_type, stmt->GetStmtNo());
+        case EntityType::kAssignStmt:// fallthrough
+        case EntityType::kPrintStmt: // fallthrough
+        case EntityType::kIfStmt:    // fallthrough
+        case EntityType::kWhileStmt: // fallthrough
+        case EntityType::kCallStmt: {
+          Entity *parent = new StatementEntity(stmt->GetStmtNo());
           ExtractUsesHelper(relationships, parent, stmt);
           break;
         }
@@ -160,19 +160,19 @@ void RelationshipExtractor::ExtractUsesHelper(std::vector<Relationship *> &relat
       auto *stmt = static_cast<StatementNode *>(node);
       auto stmt_type = stmt->GetStmtType();
       switch (stmt_type) {
-        case EntityType::kAssign: {
+        case EntityType::kAssignStmt: {
           std::vector<Entity *> children =
               EntityExtractor::ExtractVariables(static_cast<AssignNode *>(node)->GetExpression());
           Match(relationships, RsType::kUses, parent, children);
           break;
         }
-        case EntityType::kPrint: {
+        case EntityType::kPrintStmt: {
           Node *variable = static_cast<PrintNode *>(node)->GetVariable();
           Entity *child = new VariableEntity(static_cast<VariableNode *>(variable)->GetVariableName());
           relationships.push_back(new Relationship(RsType::kUses, parent, child));
           break;
         }
-        case EntityType::kIf: {
+        case EntityType::kIfStmt: {
           auto *if_node = static_cast<IfNode *>(node);
           std::vector<Entity *> children = EntityExtractor::ExtractVariables(if_node->GetConditional());
           Match(relationships, RsType::kUses, parent, children);
@@ -180,14 +180,14 @@ void RelationshipExtractor::ExtractUsesHelper(std::vector<Relationship *> &relat
           ExtractUsesHelper(relationships, parent, if_node->GetElseStatementList());
           break;
         }
-        case EntityType::kWhile: {
+        case EntityType::kWhileStmt: {
           auto *while_node = static_cast<WhileNode *>(node);
           std::vector<Entity *> children = EntityExtractor::ExtractVariables(while_node->GetConditional());
           Match(relationships, RsType::kUses, parent, children);
           ExtractUsesHelper(relationships, parent, while_node->GetStatementList());
           break;
         }
-        case EntityType::kCall: {
+        case EntityType::kCallStmt: {
           // TODO(mazx4960): implement recursive uses for statements in call
           break;
         }
@@ -216,12 +216,12 @@ void RelationshipExtractor::ExtractModifies(std::vector<Relationship *> &relatio
       auto stmt_type = stmt->GetStmtType();
 
       switch (stmt_type) {
-        case EntityType::kAssign:// fallthrough
-        case EntityType::kRead:  // fallthrough
-        case EntityType::kIf:    // fallthrough
-        case EntityType::kWhile: // fallthrough
-        case EntityType::kCall: {
-          Entity *parent = new StatementEntity(stmt_type, stmt->GetStmtNo());
+        case EntityType::kAssignStmt:// fallthrough
+        case EntityType::kReadStmt:  // fallthrough
+        case EntityType::kIfStmt:    // fallthrough
+        case EntityType::kWhileStmt: // fallthrough
+        case EntityType::kCallStmt: {
+          Entity *parent = new StatementEntity(stmt->GetStmtNo());
           ExtractModifiesHelper(relationships, parent, stmt);
         }
         default: break; // other statement entity types are ignored.
@@ -243,30 +243,30 @@ void RelationshipExtractor::ExtractModifiesHelper(std::vector<Relationship *> &r
       auto *stmt = static_cast<StatementNode *>(node);
       auto stmt_type = stmt->GetStmtType();
       switch (stmt_type) {
-        case EntityType::kAssign: {
+        case EntityType::kAssignStmt: {
           VariableNode *variable = static_cast<AssignNode *>(node)->GetVariable();
           Entity *child = new VariableEntity(variable->GetVariableName());
           relationships.push_back(new Relationship(RsType::kModifies, parent, child));
           break;
         }
-        case EntityType::kRead: {
+        case EntityType::kReadStmt: {
           VariableNode *variable = static_cast<ReadNode *>(node)->GetVariable();
           Entity *child = new VariableEntity(variable->GetVariableName());
           relationships.push_back(new Relationship(RsType::kModifies, parent, child));
           break;
         }
-        case EntityType::kIf: {
+        case EntityType::kIfStmt: {
           auto *if_node = static_cast<IfNode *>(node);
           ExtractModifiesHelper(relationships, parent, if_node->GetThenStatementList());
           ExtractModifiesHelper(relationships, parent, if_node->GetElseStatementList());
           break;
         }
-        case EntityType::kWhile: {
+        case EntityType::kWhileStmt: {
           auto *while_node = static_cast<WhileNode *>(node);
           ExtractModifiesHelper(relationships, parent, while_node->GetStatementList());
           break;
         }
-        case EntityType::kCall: {
+        case EntityType::kCallStmt: {
           // TODO(mazx4960): implement recursive uses for statements in call
           break;
         }

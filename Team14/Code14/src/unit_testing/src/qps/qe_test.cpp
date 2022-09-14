@@ -42,42 +42,42 @@ class MockPKB : public IPKBQuerier {
             }
         );
       };
-      case EntityType::kAssign: {
+      case EntityType::kAssignStmt: {
         return std::unordered_set<Entity *>{
             new AssignEntity(1),
             new AssignEntity(2),
             new AssignEntity(3),
         };
       };
-      case EntityType::kCall: {
+      case EntityType::kCallStmt: {
         return std::unordered_set<Entity *>{
             new CallEntity(4),
             new CallEntity(5),
             new CallEntity(6),
         };
       };
-      case EntityType::kIf: {
+      case EntityType::kIfStmt: {
         return std::unordered_set<Entity *>{
             new IfEntity(7),
             new IfEntity(8),
             new IfEntity(9),
         };
       };
-      case EntityType::kWhile: {
+      case EntityType::kWhileStmt: {
         return std::unordered_set<Entity *>{
             new CallEntity(10),
             new CallEntity(11),
             new CallEntity(12),
         };
       };
-      case EntityType::kPrint: {
+      case EntityType::kPrintStmt: {
         return std::unordered_set<Entity *>{
             new PrintEntity(13),
             new PrintEntity(14),
             new PrintEntity(15),
         };
       };
-      case EntityType::kRead: {
+      case EntityType::kReadStmt: {
         return std::unordered_set<Entity *>{
             new ReadEntity(16),
             new ReadEntity(17),
