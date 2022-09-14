@@ -31,7 +31,8 @@ std::string Entity::ToString() {
       break;
     case EntityType::kConstant:type_string = "constant";
       break;
-    case EntityType::kStatement:auto *statement_entity = static_cast<StatementEntity *>(this);
+    case EntityType::kStatement: {
+      auto *statement_entity = static_cast<StatementEntity *>(this);
       name_string = std::to_string(statement_entity->GetStmtNo());
       switch (statement_entity->GetStmtType()) {
         case EntityType::kAssign:type_string = "assign";
@@ -49,6 +50,8 @@ std::string Entity::ToString() {
         default:type_string = "unknown statement";
           break;
       }
+    }
+    default: break; // string entity types should not reach this stage
   }
   return type_string + ": " + name_string;
 }
