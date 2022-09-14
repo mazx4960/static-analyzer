@@ -124,6 +124,13 @@ class ExpressionDeclaration : public QueryDeclaration {
       : QueryDeclaration(EntityType::kExpression, std::move(string)) {}
 };
 
+// Inline declaration of Expression _"(x + (y * z))"_
+class WildCardExpressionDeclaration : public QueryDeclaration {
+ public:
+  explicit WildCardExpressionDeclaration(std::string string)
+      : QueryDeclaration(EntityType::kWildcardExpression, std::move(string)) {}
+};
+
 // Inline declaration of string eg. Modifies("x", v)
 class StringDeclaration : public QueryDeclaration {
  public:

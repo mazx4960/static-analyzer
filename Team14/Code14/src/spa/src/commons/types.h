@@ -17,6 +17,7 @@ enum class EntityType {
   // Used by PQL
   kWildcard,
   kExpression,
+  kWildcardExpression,
   kString,
   kInteger,
 };

@@ -42,7 +42,7 @@ class QueryParser {
   SuchThatClause *parseUses();
   SuchThatClause *parseModifies();
   bool isDeclared(const std::string &synonym);
-  ExpressionDeclaration *parseExpression();
+  QueryDeclaration *parseExpression();
   StringDeclaration *parseQuotedDeclaration();
   QueryDeclaration *parseStmtRefDeclaration(bool allowWild);
   QueryDeclaration *parseEntRefDeclaration(bool allowWild);

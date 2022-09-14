@@ -194,9 +194,10 @@ SuchThatClause *QueryParser::parseModifies() {
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
   return new ModifiesClause(first, second);
 }
-ExpressionDeclaration *QueryParser::parseExpression() {
+QueryDeclaration *QueryParser::parseExpression() {
+  bool wild_expression = false;
   std::string expression;
-  if (peekToken()->type == TokenType::kWildCard) { expression.append(nextToken()->value); }
+  if (peekToken()->type == TokenType::kWildCard) { wild_expression = true; }
   if (peekToken()->type == TokenType::kQuote) {
     Token *tmp = nextToken();
     bool toggle = true;
@@ -220,6 +221,11 @@ ExpressionDeclaration *QueryParser::parseExpression() {
     }
     nextToken();
   }
-  if (peekToken()->type == TokenType::kWildCard) { expression.append(nextToken()->value); }
+  if (wild_expression) {
+    if (nextToken()->type != TokenType::kWildCard) {
+      throw ParseSyntaxError("Invalid wildcard expression");
+    }
+    return new WildCardExpressionDeclaration(expression);
+  }
   return new ExpressionDeclaration(expression);
 }
