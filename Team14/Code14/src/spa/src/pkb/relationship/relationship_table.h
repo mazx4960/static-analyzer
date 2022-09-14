@@ -9,7 +9,7 @@
 
 class RelationshipTable {
  protected:
-  std::unordered_map<Entity *, std::unordered_set<Entity *>> table_;
+  std::unordered_map<Entity, std::unordered_set<Entity, EntityHashFunction>, EntityHashFunction> table_;
 
   RelationshipTable() = default;
 
@@ -18,11 +18,11 @@ class RelationshipTable {
   std::unordered_set<Entity *> getStatements(Entity *, bool);
   std::unordered_set<Entity *> getTraversal(Entity *, bool);
   std::unordered_set<Entity *> get(Entity *, bool);
-  std::unordered_set<Entity *> traversalHelper(Entity *);
+  std::unordered_set<Entity, EntityHashFunction> traversalHelper(Entity *);
+  std::unordered_set<Entity *> formatResults(const std::unordered_set<Entity, EntityHashFunction>&);
  public:
   static RelationshipTable *getTable(RsType);
   std::unordered_set<Entity*> get(RsType, Entity *, bool);
-
 };
 
 class ModifiesTable : public RelationshipTable {
