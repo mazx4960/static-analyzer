@@ -5,61 +5,91 @@
 
 class TestStorage {
  public:
-  inline static std::unordered_set<Entity *> procedure_entities_ = {
+  inline static std::unordered_set<Entity *,
+                                   EntityHashFunction,
+                                   EntityPointerEquality>
+      procedure_entities_ = {
       new ProcedureEntity("procedure1"),
       new ProcedureEntity("procedure2"),
       new ProcedureEntity("procedure3")
   };
 
-  inline static std::unordered_set<Entity *> variable_entities_ = {
+  inline static std::unordered_set<Entity *,
+                                   EntityHashFunction,
+                                   EntityPointerEquality>
+      variable_entities_ = {
       new VariableEntity("x"),
       new VariableEntity("y"),
       new VariableEntity("z"),
   };
 
-  inline static std::unordered_set<Entity *> constant_entities_ = {
+  inline static std::unordered_set<Entity *,
+                                   EntityHashFunction,
+                                   EntityPointerEquality>
+      constant_entities_ = {
       new ConstantEntity("1"),
       new ConstantEntity("2"),
       new ConstantEntity("3"),
   };
 
-  inline static std::unordered_set<Entity *> stmt_assign_entities_ = {
+  inline static std::unordered_set<Entity *,
+                                   EntityHashFunction,
+                                   EntityPointerEquality>
+      stmt_assign_entities_ = {
       new AssignStmtEntity("1"),
       new AssignStmtEntity("2"),
       new AssignStmtEntity("3"),
   };
 
-  inline static std::unordered_set<Entity *> stmt_call_entities_ = {
+  inline static std::unordered_set<Entity *,
+                                   EntityHashFunction,
+                                   EntityPointerEquality>
+      stmt_call_entities_ = {
       new CallStmtEntity("4"),
       new CallStmtEntity("5"),
       new CallStmtEntity("6"),
   };
 
-  inline static std::unordered_set<Entity *> stmt_if_entities_ = {
+  inline static std::unordered_set<Entity *,
+                                   EntityHashFunction,
+                                   EntityPointerEquality>
+      stmt_if_entities_ = {
       new IfStmtEntity("7"),
       new IfStmtEntity("8"),
       new IfStmtEntity("9"),
   };
 
-  inline static std::unordered_set<Entity *> stmt_while_entities_ = {
+  inline static std::unordered_set<Entity *,
+                                   EntityHashFunction,
+                                   EntityPointerEquality>
+      stmt_while_entities_ = {
       new WhileStmtEntity("10"),
       new WhileStmtEntity("11"),
       new WhileStmtEntity("12"),
   };
 
-  inline static std::unordered_set<Entity *> stmt_print_entities_ = {
+  inline static std::unordered_set<Entity *,
+                                   EntityHashFunction,
+                                   EntityPointerEquality>
+      stmt_print_entities_ = {
       new PrintStmtEntity("13"),
       new PrintStmtEntity("14"),
       new PrintStmtEntity("15"),
   };
 
-  inline static std::unordered_set<Entity *> stmt_read_entities_ = {
+  inline static std::unordered_set<Entity *,
+                                   EntityHashFunction,
+                                   EntityPointerEquality>
+      stmt_read_entities_ = {
       new ReadStmtEntity("16"),
       new ReadStmtEntity("17"),
       new ReadStmtEntity("18"),
   };
 
-  inline static std::unordered_set<Entity *> all_stmt_entities_ = {
+  inline static std::unordered_set<Entity *,
+                                   EntityHashFunction,
+                                   EntityPointerEquality>
+      all_stmt_entities_ = {
       new AssignStmtEntity("1"),
       new AssignStmtEntity("2"),
       new AssignStmtEntity("3"),
@@ -91,49 +121,40 @@ class QueryEvaluatorMock : public QueryEvaluator {
 };
 
 class MockPKB : public IPKBQuerier {
-  inline std::unordered_set<Entity *> getEntities(EntityType entity_type)
+  inline std::unordered_set<Entity *,
+                            EntityHashFunction,
+                            EntityPointerEquality> getEntities(EntityType entity_type)
   override {
     switch (entity_type) {
-      case EntityType::kProcedure:
-        return
-            TestStorage::procedure_entities_;
-      case EntityType::kVariable:
-        return
-            TestStorage::variable_entities_;
-      case EntityType::kConstant:
-        return
-            TestStorage::constant_entities_;
-      case EntityType::kStatement:
-        return
-            TestStorage::all_stmt_entities_;
-      case EntityType::kAssignStmt:
-        return
-            TestStorage::stmt_assign_entities_;
-      case EntityType::kCallStmt :
-        return
-            TestStorage::stmt_call_entities_;
-      case EntityType::kIfStmt :
-        return
-            TestStorage::stmt_if_entities_;
-      case EntityType::kWhileStmt:
-        return
-            TestStorage::stmt_while_entities_;
-      case EntityType::kPrintStmt:
-        return
-            TestStorage::stmt_print_entities_;
-      case EntityType::kReadStmt :
-        return
-            TestStorage::stmt_read_entities_;
+      case EntityType::kProcedure:return TestStorage::procedure_entities_;
+      case EntityType::kVariable:return TestStorage::variable_entities_;
+      case EntityType::kConstant:return TestStorage::constant_entities_;
+      case EntityType::kStatement:return TestStorage::all_stmt_entities_;
+      case EntityType::kAssignStmt:return TestStorage::stmt_assign_entities_;
+      case EntityType::kCallStmt :return TestStorage::stmt_call_entities_;
+      case EntityType::kIfStmt :return TestStorage::stmt_if_entities_;
+      case EntityType::kWhileStmt:return TestStorage::stmt_while_entities_;
+      case EntityType::kPrintStmt:return TestStorage::stmt_print_entities_;
+      case EntityType::kReadStmt :return TestStorage::stmt_read_entities_;
       default: throw std::runtime_error("Invalid entity type!");
     };
   }
-  inline std::unordered_set<Entity *> getByRelationship(RsType rs_type, Entity *entity, bool inverse) override {
-    return
-        std::unordered_set<Entity *>();
+  inline std::unordered_set<Entity *,
+                            EntityHashFunction,
+                            EntityPointerEquality> getByRelationship(RsType rs_type,
+                                                                     Entity *entity,
+                                                                     bool inverse) override {
+    return std::unordered_set<Entity *,
+                              EntityHashFunction,
+                              EntityPointerEquality>();
   };
-  inline std::unordered_set<Entity *> getByPattern(std::string &left_pattern, std::string &right_pattern) override {
-    return
-        std::unordered_set<Entity *>();
+  inline std::unordered_set<Entity *,
+                            EntityHashFunction,
+                            EntityPointerEquality> getByPattern(std::string &left_pattern,
+                                                                std::string &right_pattern) override {
+    return std::unordered_set<Entity *,
+                              EntityHashFunction,
+                              EntityPointerEquality>();
   };
 };
 

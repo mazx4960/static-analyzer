@@ -29,9 +29,12 @@ class IPKBQuerier {
   IPKBQuerier() = default;
  public:
   ~IPKBQuerier() = default;
-  virtual std::unordered_set<Entity *> getEntities(EntityType) = 0;
-  virtual std::unordered_set<Entity *> getByRelationship(RsType, Entity *, bool) = 0;
-  virtual std::unordered_set<Entity *> getByPattern(std::string &, std::string &) = 0;
+  virtual std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getEntities(EntityType) = 0;
+  virtual std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByRelationship(RsType,
+                                                                                                    Entity *,
+                                                                                                    bool) = 0;
+  virtual std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByPattern(std::string &,
+                                                                                               std::string &) = 0;
 
 };
 
@@ -42,9 +45,12 @@ class PKB : public IPKBPopulator, public IPKBQuerier {
  public:
   PKB() = default;
 
-  std::unordered_set<Entity *> getEntities(EntityType) override;
-  std::unordered_set<Entity *> getByRelationship(RsType, Entity *, bool) override;
-  std::unordered_set<Entity *> getByPattern(std::string &, std::string &) override;
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getEntities(EntityType) override;
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByRelationship(RsType,
+                                                                                            Entity *,
+                                                                                            bool) override;
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByPattern(std::string &,
+                                                                                       std::string &) override;
 
   void populate(std::vector<Entity *> &entities) override;
 

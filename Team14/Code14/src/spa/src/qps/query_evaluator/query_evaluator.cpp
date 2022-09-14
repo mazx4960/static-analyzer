@@ -11,7 +11,7 @@ std::unordered_set<QueryDeclaration *> QueryEvaluator::fetchContext() {
   this->copyDeclarations();
 
   for (auto *declaration : this->declarations_) {
-    std::unordered_set<Entity *> query_declaration_context_set;
+    std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> query_declaration_context_set;
 
     DeclarationType declaration_type = declaration->getType();
     if (DeclarationTypeAdaptor::canConvertToEntityType(declaration_type)) {
@@ -52,7 +52,7 @@ Result *QueryEvaluator::evaluate() {
   if (this->query_.hasSubClauses()) { this->evaluateSubQueries(); }
 
   QuerySynonym *synonym = called_declaration->getSynonym();
-  std::unordered_set<Entity *> context = called_declaration->getContext();
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> context = called_declaration->getContext();
 
   return new Result(synonym, context);
 }
