@@ -22,7 +22,7 @@ TEST(ExtractorTest, TestUses) {
   // DFS traversal should yield the following result
   std::vector<Relationship *> expected = {
       new UsesRelationship(new ProcedureEntity("main"), new VariableEntity("v2")),
-      new UsesRelationship(new AssignEntity(1), new VariableEntity("v2")),
+      new UsesRelationship(new AssignStmtEntity("1"), new VariableEntity("v2")),
   };
 
   ASSERT_EQ(relationships.size(), expected.size());

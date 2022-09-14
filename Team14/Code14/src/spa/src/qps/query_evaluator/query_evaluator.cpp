@@ -18,11 +18,11 @@ std::unordered_set<QueryDeclaration *> QueryEvaluator::fetchContext() {
       EntityType entity_type = DeclarationTypeAdaptor::toEntityType(declaration_type);
       query_declaration_context_set = this->pkb_->getEntities(entity_type);
     } else if (DeclarationTypeAdaptor::canConvertToStatementType(declaration_type)) {
-      StmtType stmt_type = DeclarationTypeAdaptor::toStatementType(declaration_type);
+      EntityType stmt_type = DeclarationTypeAdaptor::toStatementType(declaration_type);
       query_declaration_context_set = this->pkb_->getEntities(stmt_type);
     } else {
       throw DeclarationTypeAdaptError(
-          "DeclarationType cannot be converted to EntityType or StmtType, context cannot be fetched");
+          "DeclarationType cannot be converted to EntityType or EntityType, context cannot be fetched");
     }
     declaration->setContext(query_declaration_context_set);
   }

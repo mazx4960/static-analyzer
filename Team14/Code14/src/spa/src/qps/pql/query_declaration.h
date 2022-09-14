@@ -156,10 +156,9 @@ class DeclarationTypeAdaptor {
   static bool canConvertToStatementType(DeclarationType);
 
   static EntityType toEntityType(DeclarationType);
-  static StmtType toStatementType(DeclarationType);
+  static EntityType toStatementType(DeclarationType);
 
   static DeclarationType toDeclarationType(EntityType);
-  static DeclarationType toDeclarationType(StmtType);
 };
 
 class QueryDeclarationHashFunction {

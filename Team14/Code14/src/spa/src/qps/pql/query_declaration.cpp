@@ -53,15 +53,15 @@ EntityType DeclarationTypeAdaptor::toEntityType(DeclarationType declaration_type
   }
 }
 
-StmtType DeclarationTypeAdaptor::toStatementType(DeclarationType declaration_type) {
+EntityType DeclarationTypeAdaptor::toStatementType(DeclarationType declaration_type) {
   switch (declaration_type) {
-    case DeclarationType::kAssign: return StmtType::kAssign;
-    case DeclarationType::kCall: return StmtType::kCall;
-    case DeclarationType::kIf: return StmtType::kIf;
-    case DeclarationType::kWhile: return StmtType::kWhile;
-    case DeclarationType::kPrint: return StmtType::kPrint;
-    case DeclarationType::kRead: return StmtType::kRead;
-    default: throw DeclarationTypeAdaptError("DeclarationType cannot be adapted to StmtType");
+    case DeclarationType::kAssign: return EntityType::kAssignStmt;
+    case DeclarationType::kCall: return EntityType::kCallStmt;
+    case DeclarationType::kIf: return EntityType::kIfStmt;
+    case DeclarationType::kWhile: return EntityType::kWhileStmt;
+    case DeclarationType::kPrint: return EntityType::kPrintStmt;
+    case DeclarationType::kRead: return EntityType::kReadStmt;
+    default: throw DeclarationTypeAdaptError("DeclarationType cannot be adapted to EntityType");
   }
 }
 
@@ -71,19 +71,13 @@ DeclarationType DeclarationTypeAdaptor::toDeclarationType(EntityType entity_type
     case EntityType::kStatement: return DeclarationType::kStatement;
     case EntityType::kVariable: return DeclarationType::kVariable;
     case EntityType::kConstant: return DeclarationType::kConstant;
+    case EntityType::kAssignStmt: return DeclarationType::kAssign;
+    case EntityType::kCallStmt: return DeclarationType::kCall;
+    case EntityType::kIfStmt: return DeclarationType::kIf;
+    case EntityType::kWhileStmt: return DeclarationType::kWhile;
+    case EntityType::kPrintStmt: return DeclarationType::kPrint;
+    case EntityType::kReadStmt: return DeclarationType::kRead;
     default: throw DeclarationTypeAdaptError("EntityType cannot be adapted to DeclarationType");
-  }
-}
-
-DeclarationType DeclarationTypeAdaptor::toDeclarationType(StmtType stmt_type) {
-  switch (stmt_type) {
-    case StmtType::kAssign: return DeclarationType::kAssign;
-    case StmtType::kCall: return DeclarationType::kCall;
-    case StmtType::kIf: return DeclarationType::kIf;
-    case StmtType::kWhile: return DeclarationType::kWhile;
-    case StmtType::kPrint: return DeclarationType::kPrint;
-    case StmtType::kRead: return DeclarationType::kRead;
-    default: throw DeclarationTypeAdaptError("StmtType cannot be adapted to DeclarationType");
   }
 }
 

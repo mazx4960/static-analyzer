@@ -11,29 +11,8 @@ EntityTable *EntityTable::getTable(EntityType type) {
   }
 }
 
-void EntityTable::populate(Entity &entity) {
-  this->table_.insert(entity.GetName());
-}
+void EntityTable::populate(Entity &entity) { this->table_.insert(entity.GetValue()); }
 
+std::unordered_set<std::string> EntityTable::get() { return this->table_; }
 
-std::unordered_set<Entity *> EntityTable::get(EntityType entity_type) {
-  std::unordered_set<Entity *> result = {};
-
-  for (std::string name: this->table_) {
-    auto *entity = new Entity(entity_type, std::move(name));
-    result.insert(entity);
-  }
-  return result;
-}
-
-int EntityTable::getCount() {
-  return this->table_.size();
-}
-
-std::unordered_set<Entity *> StatementTable::getSpecific(StmtType stmt_type) {
-  std::unordered_set<Entity *> result = {};
-
-  // TODO: (leeenen)
-
-  return result;
-}
+int EntityTable::getCount() { return this->table_.size(); }
