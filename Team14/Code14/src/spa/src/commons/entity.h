@@ -79,8 +79,7 @@ struct EntityPointerEquality {
   }
 };
 
-class EntityHashFunction {
- public:
+struct EntityHashFunction {
   size_t operator()(const Entity &entity) const { return entity.GetHash(); }
   size_t operator()(const Entity *entity) const { return entity->GetHash(); }
 };
