@@ -19,8 +19,8 @@ TEST(ExtractorTest, TestEntity) {
   std::vector<Entity *> entities = EntityExtractor::ExtractAll(program);
   // DFS traversal should yield the following result
   std::vector<Entity *> expected = {
-      new ProcedureEntity("main"), new AssignEntity(0),      new VariableEntity("v1"), new ConstantEntity("1"),
-      new AssignEntity(0),         new VariableEntity("v2"), new ConstantEntity("1"),
+      new ProcedureEntity("main"), new AssignStmtEntity(0), new VariableEntity("v1"), new ConstantEntity("1"),
+      new AssignStmtEntity(0), new VariableEntity("v2"), new ConstantEntity("1"),
   };
   ASSERT_EQ(entities.size(), expected.size());
   for (int i = 0; i < entities.size(); ++i) {

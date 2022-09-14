@@ -55,39 +55,39 @@ class StatementEntity : public Entity {
   bool operator==(const StatementEntity &other) const;
 };
 
-class ReadEntity : public StatementEntity {
+class ReadStmtEntity : public StatementEntity {
  public:
-  explicit ReadEntity(int stmt_no)
+  explicit ReadStmtEntity(int stmt_no)
       : StatementEntity(stmt_no) {}
 };
 
-class PrintEntity : public StatementEntity {
+class PrintStmtEntity : public StatementEntity {
  public:
-  explicit PrintEntity(int stmt_no)
+  explicit PrintStmtEntity(int stmt_no)
       : StatementEntity(stmt_no) {}
 };
 
-class AssignEntity : public StatementEntity {
+class AssignStmtEntity : public StatementEntity {
  public:
-  explicit AssignEntity(int stmt_no)
+  explicit AssignStmtEntity(int stmt_no)
       : StatementEntity(stmt_no) {}
 };
 
-class CallEntity : public StatementEntity {
+class CallStmtEntity : public StatementEntity {
  public:
-  explicit CallEntity(int stmt_no)
+  explicit CallStmtEntity(int stmt_no)
       : StatementEntity(stmt_no) {}
 };
 
-class WhileEntity : public StatementEntity {
+class WhileStmtEntity : public StatementEntity {
  public:
-  explicit WhileEntity(int stmt_no)
+  explicit WhileStmtEntity(int stmt_no)
       : StatementEntity(stmt_no) {}
 };
 
-class IfEntity : public StatementEntity {
+class IfStmtEntity : public StatementEntity {
  public:
-  explicit IfEntity(int stmt_no)
+  explicit IfStmtEntity(int stmt_no)
       : StatementEntity(stmt_no) {}
 };
 

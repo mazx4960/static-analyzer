@@ -44,44 +44,44 @@ class MockPKB : public IPKBQuerier {
       };
       case EntityType::kAssignStmt: {
         return std::unordered_set<Entity *>{
-            new AssignEntity(1),
-            new AssignEntity(2),
-            new AssignEntity(3),
+            new AssignStmtEntity(1),
+            new AssignStmtEntity(2),
+            new AssignStmtEntity(3),
         };
       };
       case EntityType::kCallStmt: {
         return std::unordered_set<Entity *>{
-            new CallEntity(4),
-            new CallEntity(5),
-            new CallEntity(6),
+            new CallStmtEntity(4),
+            new CallStmtEntity(5),
+            new CallStmtEntity(6),
         };
       };
       case EntityType::kIfStmt: {
         return std::unordered_set<Entity *>{
-            new IfEntity(7),
-            new IfEntity(8),
-            new IfEntity(9),
+            new IfStmtEntity(7),
+            new IfStmtEntity(8),
+            new IfStmtEntity(9),
         };
       };
       case EntityType::kWhileStmt: {
         return std::unordered_set<Entity *>{
-            new CallEntity(10),
-            new CallEntity(11),
-            new CallEntity(12),
+            new CallStmtEntity(10),
+            new CallStmtEntity(11),
+            new CallStmtEntity(12),
         };
       };
       case EntityType::kPrintStmt: {
         return std::unordered_set<Entity *>{
-            new PrintEntity(13),
-            new PrintEntity(14),
-            new PrintEntity(15),
+            new PrintStmtEntity(13),
+            new PrintStmtEntity(14),
+            new PrintStmtEntity(15),
         };
       };
       case EntityType::kReadStmt: {
         return std::unordered_set<Entity *>{
-            new ReadEntity(16),
-            new ReadEntity(17),
-            new ReadEntity(18),
+            new ReadStmtEntity(16),
+            new ReadStmtEntity(17),
+            new ReadStmtEntity(18),
         };
       };
       case EntityType::kStatement:throw std::runtime_error("This statement should not handle statements!");

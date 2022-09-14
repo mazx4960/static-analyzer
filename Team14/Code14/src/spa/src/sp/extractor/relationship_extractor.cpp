@@ -76,13 +76,13 @@ void RelationshipExtractor::ExtractParent(std::vector<Relationship *> &relations
         case EntityType::kWhileStmt: {
           auto *while_stmt = static_cast<WhileNode *>(stmt);
           auto *stmt_list = while_stmt->GetStatementList();
-          Entity *parent = new WhileEntity(while_stmt->GetStmtNo());
+          Entity *parent = new WhileStmtEntity(while_stmt->GetStmtNo());
           ExtractParentHelper(relationships, parent, stmt_list);
           break;
         }
         case EntityType::kIfStmt: {
           auto *if_stmt = static_cast<IfNode *>(stmt);
-          Entity *parent = new WhileEntity(if_stmt->GetStmtNo());
+          Entity *parent = new WhileStmtEntity(if_stmt->GetStmtNo());
           auto *then_stmt_list = if_stmt->GetThenStatementList();
           auto *else_stmt_list = if_stmt->GetElseStatementList();
           ExtractParentHelper(relationships, parent, then_stmt_list);
