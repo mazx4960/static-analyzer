@@ -115,9 +115,21 @@ class TestStorage {
 class QueryEvaluatorMock : public QueryEvaluator {
  public:
   QueryEvaluatorMock(IPKBQuerier *pkb, Query &query) : QueryEvaluator(pkb, query) {};
-  std::unordered_set<QueryDeclaration *> mockCopyDeclarations() { return this->copyDeclarations(); };
-  std::unordered_set<QueryDeclaration *> mockFetchContext() { return this->fetchContext(); };
-  std::unordered_set<QueryDeclaration *> mockEvaluateSubQueries() { return this->evaluateSubQueries(); };
+  std::unordered_set<QueryDeclaration *,
+                     QueryDeclarationHashFunction,
+                     QueryDeclarationPointerEquality> mockCopyDeclarations() {
+    return this->copyDeclarations();
+  };
+  std::unordered_set<QueryDeclaration *,
+                     QueryDeclarationHashFunction,
+                     QueryDeclarationPointerEquality> mockFetchContext() {
+    return this->fetchContext();
+  };
+  std::unordered_set<QueryDeclaration *,
+                     QueryDeclarationHashFunction,
+                     QueryDeclarationPointerEquality> mockEvaluateSubQueries() {
+    return this->evaluateSubQueries();
+  };
 };
 
 class MockPKB : public IPKBQuerier {
@@ -161,27 +173,29 @@ class MockPKB : public IPKBQuerier {
 TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
   IPKBQuerier *pkb = new MockPKB();
 
-  auto stmt_dec = new StatementDeclaration(new QuerySynonym("stmt_dec"));
-  auto read_dec = new ReadDeclaration(new QuerySynonym("read_dec"));
-  auto print_dec = new PrintDeclaration(new QuerySynonym("print_dec"));
-  auto call_dec = new CallDeclaration(new QuerySynonym("call_dec"));
-  auto while_dec = new WhileDeclaration(new QuerySynonym("while_dec"));
-  auto if_dec = new IfDeclaration(new QuerySynonym("if_dec"));
-  auto assign_dec = new AssignDeclaration(new QuerySynonym("assign_dec"));
-  auto var_dec = new VariableDeclaration(new QuerySynonym("var_dec"));
-  auto const_dec = new ConstantDeclaration(new QuerySynonym("const_dec"));
-  auto proc_dec = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
-  auto expr_dec = new ExpressionDeclaration("x+y");
-  auto str_dec = new StringDeclaration("string_dec");
-  auto int_dec = new IntegerDeclaration(123);
-  auto wild_dec = new WildCardDeclaration();
+  auto *stmt_dec = new StatementDeclaration(new QuerySynonym("stmt_dec"));
+  auto *read_dec = new ReadDeclaration(new QuerySynonym("read_dec"));
+  auto *print_dec = new PrintDeclaration(new QuerySynonym("print_dec"));
+  auto *call_dec = new CallDeclaration(new QuerySynonym("call_dec"));
+  auto *while_dec = new WhileDeclaration(new QuerySynonym("while_dec"));
+  auto *if_dec = new IfDeclaration(new QuerySynonym("if_dec"));
+  auto *assign_dec = new AssignDeclaration(new QuerySynonym("assign_dec"));
+  auto *var_dec = new VariableDeclaration(new QuerySynonym("var_dec"));
+  auto *const_dec = new ConstantDeclaration(new QuerySynonym("const_dec"));
+  auto *proc_dec = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
+  auto *expr_dec = new ExpressionDeclaration("x+y");
+  auto *str_dec = new StringDeclaration("string_dec");
+  auto *int_dec = new IntegerDeclaration(123);
+  auto *wild_dec = new WildCardDeclaration();
 
   std::vector<QueryDeclaration *> declarations_vector = {
       stmt_dec, read_dec, print_dec, call_dec, while_dec,
       if_dec, assign_dec, var_dec, const_dec, proc_dec,
       expr_dec, str_dec, int_dec, wild_dec
   };
-  std::unordered_set<QueryDeclaration *> declarations_set = {
+  std::unordered_set<QueryDeclaration *,
+                     QueryDeclarationHashFunction,
+                     QueryDeclarationPointerEquality> declarations_set = {
       stmt_dec, read_dec, print_dec, call_dec, while_dec,
       if_dec, assign_dec, var_dec, const_dec, proc_dec,
       expr_dec, str_dec, int_dec, wild_dec
@@ -191,7 +205,8 @@ TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
   Query query = Query(declarations_vector, select_call);
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
-  std::unordered_set<QueryDeclaration *> returned_declaration_set = query_evaluator->mockCopyDeclarations();
+  std::unordered_set<QueryDeclaration *, QueryDeclarationHashFunction, QueryDeclarationPointerEquality>
+      returned_declaration_set = query_evaluator->mockCopyDeclarations();
 
   ASSERT_EQ(declarations_set, returned_declaration_set);
 }
@@ -237,7 +252,9 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
       if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
       expr_dec_2, str_dec_2, int_dec_2, wild_dec_2
   };
-  std::unordered_set<QueryDeclaration *> declarations_set = {
+  std::unordered_set<QueryDeclaration *,
+                     QueryDeclarationHashFunction,
+                     QueryDeclarationPointerEquality> declarations_set = {
       stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
       if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
       expr_dec_1, str_dec_1, int_dec_1, wild_dec_1,
@@ -251,73 +268,81 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   Query query = Query(declarations_vector, select_call);
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
-  std::unordered_set<QueryDeclaration *> returned_declaration_set = query_evaluator->mockCopyDeclarations();
+  std::unordered_set<QueryDeclaration *,
+                     QueryDeclarationHashFunction,
+                     QueryDeclarationPointerEquality>
+      returned_declaration_set = query_evaluator->mockCopyDeclarations();
 
   ASSERT_EQ(declarations_set, returned_declaration_set);
 }
 
-//TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
-//  IPKBQuerier *pkb = new MockPKB();
-//
-//  auto *stmt_dec_1 = new StatementDeclaration(new QuerySynonym("stmt_dec"));
-//  auto *read_dec_1 = new ReadDeclaration(new QuerySynonym("read_dec"));
-//  auto *print_dec_1 = new PrintDeclaration(new QuerySynonym("print_dec"));
-//  auto *call_dec_1 = new CallDeclaration(new QuerySynonym("call_dec"));
-//  auto *while_dec_1 = new WhileDeclaration(new QuerySynonym("while_dec"));
-//  auto *if_dec_1 = new IfDeclaration(new QuerySynonym("if_dec"));
-//  auto *assign_dec_1 = new AssignDeclaration(new QuerySynonym("assign_dec"));
-//  auto *var_dec_1 = new VariableDeclaration(new QuerySynonym("var_dec"));
-//  auto *const_dec_1 = new ConstantDeclaration(new QuerySynonym("const_dec"));
-//  auto *proc_dec_1 = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
-//  auto *expr_dec_1 = new ExpressionDeclaration("x+y");
-//  auto *str_dec_1 = new StringDeclaration("string_dec");
-//  auto *int_dec_1 = new IntegerDeclaration(123);
-//  auto *wild_dec_1 = new WildCardDeclaration();
-//
-//  auto *stmt_dec_2 = new StatementDeclaration(new QuerySynonym("stmt_dec"));
-//  auto *read_dec_2 = new ReadDeclaration(new QuerySynonym("read_dec"));
-//  auto *print_dec_2 = new PrintDeclaration(new QuerySynonym("print_dec"));
-//  auto *call_dec_2 = new CallDeclaration(new QuerySynonym("call_dec"));
-//  auto *while_dec_2 = new WhileDeclaration(new QuerySynonym("while_dec"));
-//  auto *if_dec_2 = new IfDeclaration(new QuerySynonym("if_dec"));
-//  auto *assign_dec_2 = new AssignDeclaration(new QuerySynonym("assign_dec"));
-//  auto *var_dec_2 = new VariableDeclaration(new QuerySynonym("var_dec"));
-//  auto *const_dec_2 = new ConstantDeclaration(new QuerySynonym("const_dec"));
-//  auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
-//  auto *expr_dec_2 = new ExpressionDeclaration("x+y");
-//  auto *str_dec_2 = new StringDeclaration("string_dec");
-//  auto *int_dec_2 = new IntegerDeclaration(123);
-//  auto *wild_dec_2 = new WildCardDeclaration();
-//
-//  std::vector<QueryDeclaration *> declarations_vector = {
-//      stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
-//      if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
-//      expr_dec_1, str_dec_1, int_dec_1, wild_dec_1,
-//
-//      stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
-//      if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
-//      expr_dec_2, str_dec_2, int_dec_2, wild_dec_2
-//  };
-//  std::unordered_set<QueryDeclaration *> declarations_set = {
-//      stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
-//      if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
-//      expr_dec_1, str_dec_1, int_dec_1, wild_dec_1,
-//
-//      stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
-//      if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
-//      expr_dec_2, str_dec_2, int_dec_2, wild_dec_2
-//  };
-//
-//  SelectCall select_call = SelectCall(stmt_dec_1, {});
-//  Query query = Query(declarations_vector, select_call);
-//
-//  auto query_evaluator = QueryEvaluatorMock(pkb, query);
-//  std::unordered_set<QueryDeclaration *> returned_declaration_set = query_evaluator->mockCopyDeclarations();
-//
-//  ASSERT_EQ(declarations_set.size(), 14);
-//  ASSERT_EQ(returned_declaration_set.size(), 14);
-//  ASSERT_EQ(declarations_set, returned_declaration_set);
-//}
+TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
+  IPKBQuerier *pkb = new MockPKB();
+
+  auto *stmt_dec_1 = new StatementDeclaration(new QuerySynonym("stmt_dec"));
+  auto *read_dec_1 = new ReadDeclaration(new QuerySynonym("read_dec"));
+  auto *print_dec_1 = new PrintDeclaration(new QuerySynonym("print_dec"));
+  auto *call_dec_1 = new CallDeclaration(new QuerySynonym("call_dec"));
+  auto *while_dec_1 = new WhileDeclaration(new QuerySynonym("while_dec"));
+  auto *if_dec_1 = new IfDeclaration(new QuerySynonym("if_dec"));
+  auto *assign_dec_1 = new AssignDeclaration(new QuerySynonym("assign_dec"));
+  auto *var_dec_1 = new VariableDeclaration(new QuerySynonym("var_dec"));
+  auto *const_dec_1 = new ConstantDeclaration(new QuerySynonym("const_dec"));
+  auto *proc_dec_1 = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
+  auto *expr_dec_1 = new ExpressionDeclaration("x+y");
+  auto *str_dec_1 = new StringDeclaration("string_dec");
+  auto *int_dec_1 = new IntegerDeclaration(123);
+  auto *wild_dec_1 = new WildCardDeclaration();
+
+  auto *stmt_dec_2 = new StatementDeclaration(new QuerySynonym("stmt_dec"));
+  auto *read_dec_2 = new ReadDeclaration(new QuerySynonym("read_dec"));
+  auto *print_dec_2 = new PrintDeclaration(new QuerySynonym("print_dec"));
+  auto *call_dec_2 = new CallDeclaration(new QuerySynonym("call_dec"));
+  auto *while_dec_2 = new WhileDeclaration(new QuerySynonym("while_dec"));
+  auto *if_dec_2 = new IfDeclaration(new QuerySynonym("if_dec"));
+  auto *assign_dec_2 = new AssignDeclaration(new QuerySynonym("assign_dec"));
+  auto *var_dec_2 = new VariableDeclaration(new QuerySynonym("var_dec"));
+  auto *const_dec_2 = new ConstantDeclaration(new QuerySynonym("const_dec"));
+  auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
+  auto *expr_dec_2 = new ExpressionDeclaration("x+y");
+  auto *str_dec_2 = new StringDeclaration("string_dec");
+  auto *int_dec_2 = new IntegerDeclaration(123);
+  auto *wild_dec_2 = new WildCardDeclaration();
+
+  std::vector<QueryDeclaration *> declarations_vector = {
+      stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
+      if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
+      expr_dec_1, str_dec_1, int_dec_1, wild_dec_1,
+
+      stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
+      if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
+      expr_dec_2, str_dec_2, int_dec_2, wild_dec_2
+  };
+  std::unordered_set<QueryDeclaration *,
+                     QueryDeclarationHashFunction,
+                     QueryDeclarationPointerEquality> declarations_set = {
+      stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
+      if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
+      expr_dec_1, str_dec_1, int_dec_1, wild_dec_1,
+
+      stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
+      if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
+      expr_dec_2, str_dec_2, int_dec_2, wild_dec_2
+  };
+
+  SelectCall select_call = SelectCall(stmt_dec_1, {});
+  Query query = Query(declarations_vector, select_call);
+
+  auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
+  std::unordered_set<QueryDeclaration *,
+                     QueryDeclarationHashFunction,
+                     QueryDeclarationPointerEquality>
+      returned_declaration_set = query_evaluator->mockCopyDeclarations();
+
+  ASSERT_EQ(declarations_set.size(), 14);
+  ASSERT_EQ(returned_declaration_set.size(), 14);
+  ASSERT_EQ(declarations_set, returned_declaration_set);
+}
 
 TEST(QeFetchContextTest, StatementDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
