@@ -71,10 +71,15 @@ class IfStmtEntity : public Entity {
 /**
  * Hash function for Entity
  *
- * Usage: std::unordered_map<Entity *, std::unordered_set<Entity *, EntityHashFunction>, EntityHashFunction>
+ * Usage: std::unordered_map<Entity *, std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>, EntityHashFunction, EntityPointerEquality>
  */
-class EntityHashFunction {
- public:
+struct EntityPointerEquality {
+  bool operator()(Entity const *lhs, Entity const *rhs) const {
+    return lhs->GetType() == rhs->GetType() && lhs->GetValue() == rhs->GetValue();
+  }
+};
+
+struct EntityHashFunction {
   size_t operator()(const Entity &entity) const { return entity.GetHash(); }
   size_t operator()(const Entity *entity) const { return entity->GetHash(); }
 };
