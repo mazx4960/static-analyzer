@@ -3,10 +3,10 @@
 /**
  * Factory method
  */
-EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClause* query_clause) {
+EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClause *query_clause) {
   switch (query_clause->getClauseType()) {
-    case ClauseType::kSuchThat: return new SuchThatStrategy(pkb, static_cast<SuchThatClause*>(query_clause));
-    case ClauseType::kPattern: return new PatternStrategy(pkb, static_cast<PatternClause*>(query_clause));
+    case ClauseType::kSuchThat: return new SuchThatStrategy(pkb, static_cast<SuchThatClause *>(query_clause));
+    case ClauseType::kPattern: return new PatternStrategy(pkb, static_cast<PatternClause *>(query_clause));
     default: throw EvaluationStrategyCreationError("Invalid query clause type");
   }
 }
@@ -17,8 +17,10 @@ void SuchThatStrategy::evaluate() {
 
   QueryDeclaration *first_param = this->clause_->getFirst();
   QueryDeclaration *second_param = this->clause_->getSecond();
+  std::unordered_set<Entity *> first_param_context = first_param->getContext();
+  std::unordered_set<Entity *> second_param_context = second_param->getContext();
 
-  if (first_param->getContext().size() <= second_param->getContext().size()) {
+  if (first_param_context.size() <= second_param_context.size()) {
     // Intersect 2nd set first
     intersectContext(first_param, second_param, rs_type, false);
     // Then intersect 1st set

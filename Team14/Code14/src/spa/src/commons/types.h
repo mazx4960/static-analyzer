@@ -7,12 +7,12 @@ enum class EntityType {
   kStatement,
   kVariable,
   kConstant,
-  kAssign,
-  kCall,
-  kIf,
-  kWhile,
-  kPrint,
-  kRead,
+  kAssignStmt,
+  kCallStmt,
+  kIfStmt,
+  kWhileStmt,
+  kPrintStmt,
+  kReadStmt,
 };
 
 enum class RsType {

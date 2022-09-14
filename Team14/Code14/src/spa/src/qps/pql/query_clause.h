@@ -26,7 +26,7 @@ enum class PatternType {
 
 class QueryClause {
  protected:
-  explicit QueryClause(ClauseType clauseType) : clause_type_(std::move(clauseType)){};
+  explicit QueryClause(ClauseType clauseType) : clause_type_(clauseType) {};
 
   ClauseType clause_type_;
 
@@ -37,10 +37,7 @@ class QueryClause {
 class SuchThatClause : public QueryClause {
  public:
   explicit SuchThatClause(SuchThatType type, QueryDeclaration *first, QueryDeclaration *second)
-      : QueryClause(ClauseType::kSuchThat),
-        type_(type),
-        first_(std::move(first)),
-        second_(std::move(second)){};
+      : QueryClause(ClauseType::kSuchThat), type_(type), first_(first), second_(second) {};
 
   SuchThatType type_;
 
@@ -56,11 +53,7 @@ class SuchThatClause : public QueryClause {
 class PatternClause : public QueryClause {
  public:
   explicit PatternClause(PatternType type, QueryDeclaration *first, QueryDeclaration *second, QueryDeclaration *third)
-      : QueryClause(ClauseType::kSuchThat),
-        type_(type),
-        first_(std::move(first)),
-        second_(std::move(second)),
-        third_(std::move(third)){};
+      : QueryClause(ClauseType::kSuchThat), type_(type), first_(first), second_(second), third_(third) {};
 
   PatternType type_;
 
@@ -79,43 +72,43 @@ class PatternClause : public QueryClause {
 class ParentClause : public SuchThatClause {
  public:
   explicit ParentClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(SuchThatType::kParent, std::move(first), std::move(second)) {}
+      : SuchThatClause(SuchThatType::kParent, first, second) {}
 };
 
 class ParentAllClause : public SuchThatClause {
  public:
   explicit ParentAllClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(SuchThatType::kParentAll, std::move(first), std::move(second)) {}
+      : SuchThatClause(SuchThatType::kParentAll, first, second) {}
 };
 
 class FollowsClause : public SuchThatClause {
  public:
   explicit FollowsClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(SuchThatType::kFollows, std::move(first), std::move(second)) {}
+      : SuchThatClause(SuchThatType::kFollows, first, second) {}
 };
 
 class FollowsAllClause : public SuchThatClause {
  public:
   explicit FollowsAllClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(SuchThatType::kFollowsAll, std::move(first), std::move(second)) {}
+      : SuchThatClause(SuchThatType::kFollowsAll, first, second) {}
 };
 
 class UsesClause : public SuchThatClause {
  public:
   explicit UsesClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(SuchThatType::kUses, std::move(first), std::move(second)) {}
+      : SuchThatClause(SuchThatType::kUses, first, second) {}
 };
 
 class ModifiesClause : public SuchThatClause {
  public:
   explicit ModifiesClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(SuchThatType::kModifies, std::move(first), std::move(second)) {}
+      : SuchThatClause(SuchThatType::kModifies, first, second) {}
 };
 
 class AssignPatternClause : public PatternClause {
  public:
   explicit AssignPatternClause(QueryDeclaration *first, QueryDeclaration *second, QueryDeclaration *third)
-      : PatternClause(PatternType::kAssignPattern, std::move(first), std::move(second), std::move(third)) {}
+      : PatternClause(PatternType::kAssignPattern, first, second, third) {}
 };
 
 class QueryClauseTypeAdapter {};

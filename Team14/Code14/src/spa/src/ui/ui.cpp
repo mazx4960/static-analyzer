@@ -65,7 +65,7 @@ void UI::DisplayResults(const Result *result) {
   std::vector<Entity *> results_list = result->get_sorted_results_list();
 
   spdlog::info("====================BEGIN QUERY RESULTS====================");
-  std::string result_string = result->get_synonym().toString() + ": ";
+  std::string result_string = result->get_synonym()->toString() + ": ";
   for (auto *s : results_list) { result_string += s->ToString() + " "; }
   spdlog::info("{}", result_string);
   spdlog::info("====================END QUERY RESULTS====================");

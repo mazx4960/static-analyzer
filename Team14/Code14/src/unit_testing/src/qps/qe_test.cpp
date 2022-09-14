@@ -42,46 +42,46 @@ class MockPKB : public IPKBQuerier {
             }
         );
       };
-      case EntityType::kAssign: {
+      case EntityType::kAssignStmt: {
         return std::unordered_set<Entity *>{
-            new AssignEntity(1),
-            new AssignEntity(2),
-            new AssignEntity(3),
+            new AssignStmtEntity(1),
+            new AssignStmtEntity(2),
+            new AssignStmtEntity(3),
         };
       };
-      case EntityType::kCall: {
+      case EntityType::kCallStmt: {
         return std::unordered_set<Entity *>{
-            new CallEntity(4),
-            new CallEntity(5),
-            new CallEntity(6),
+            new CallStmtEntity(4),
+            new CallStmtEntity(5),
+            new CallStmtEntity(6),
         };
       };
-      case EntityType::kIf: {
+      case EntityType::kIfStmt: {
         return std::unordered_set<Entity *>{
-            new IfEntity(7),
-            new IfEntity(8),
-            new IfEntity(9),
+            new IfStmtEntity(7),
+            new IfStmtEntity(8),
+            new IfStmtEntity(9),
         };
       };
-      case EntityType::kWhile: {
+      case EntityType::kWhileStmt: {
         return std::unordered_set<Entity *>{
-            new CallEntity(10),
-            new CallEntity(11),
-            new CallEntity(12),
+            new WhileStmtEntity(10),
+            new WhileStmtEntity(11),
+            new WhileStmtEntity(12),
         };
       };
-      case EntityType::kPrint: {
+      case EntityType::kPrintStmt: {
         return std::unordered_set<Entity *>{
-            new PrintEntity(13),
-            new PrintEntity(14),
-            new PrintEntity(15),
+            new PrintStmtEntity(13),
+            new PrintStmtEntity(14),
+            new PrintStmtEntity(15),
         };
       };
-      case EntityType::kRead: {
+      case EntityType::kReadStmt: {
         return std::unordered_set<Entity *>{
-            new ReadEntity(16),
-            new ReadEntity(17),
-            new ReadEntity(18),
+            new ReadStmtEntity(16),
+            new ReadStmtEntity(17),
+            new ReadStmtEntity(18),
         };
       };
       case EntityType::kStatement:throw std::runtime_error("This statement should not handle statements!");
@@ -99,16 +99,16 @@ class MockPKB : public IPKBQuerier {
 TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
   IPKBQuerier *pkb = new MockPKB();
 
-  auto *dec1 = new StatementDeclaration(QuerySynonym("dec1"));
-  auto *dec2 = new ReadDeclaration(QuerySynonym("dec2"));
-  auto *dec3 = new PrintDeclaration(QuerySynonym("dec3"));
-  auto *dec4 = new CallDeclaration(QuerySynonym("dec4"));
-  auto *dec5 = new WhileDeclaration(QuerySynonym("dec5"));
-  auto *dec6 = new IfDeclaration(QuerySynonym("dec6"));
-  auto *dec7 = new AssignDeclaration(QuerySynonym("dec7"));
-  auto *dec8 = new VariableDeclaration(QuerySynonym("dec8"));
-  auto *dec9 = new ConstantDeclaration(QuerySynonym("dec9"));
-  auto *dec10 = new ProcedureDeclaration(QuerySynonym("dec10"));
+  auto *dec1 = new StatementDeclaration(new QuerySynonym("dec1"));
+  auto *dec2 = new ReadDeclaration(new QuerySynonym("dec2"));
+  auto *dec3 = new PrintDeclaration(new QuerySynonym("dec3"));
+  auto *dec4 = new CallDeclaration(new QuerySynonym("dec4"));
+  auto *dec5 = new WhileDeclaration(new QuerySynonym("dec5"));
+  auto *dec6 = new IfDeclaration(new QuerySynonym("dec6"));
+  auto *dec7 = new AssignDeclaration(new QuerySynonym("dec7"));
+  auto *dec8 = new VariableDeclaration(new QuerySynonym("dec8"));
+  auto *dec9 = new ConstantDeclaration(new QuerySynonym("dec9"));
+  auto *dec10 = new ProcedureDeclaration(new QuerySynonym("dec10"));
   auto *dec11 = new ExpressionDeclaration("x+y");
   auto *dec12 = new StringDeclaration("12");
   auto *dec13 = new IntegerDeclaration(13);
@@ -134,26 +134,26 @@ TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
 TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   IPKBQuerier *pkb = new MockPKB();
 
-  auto *dec1_1 = new StatementDeclaration(QuerySynonym("dec1_1"));
-  auto *dec1_2 = new StatementDeclaration(QuerySynonym("dec1_2"));
-  auto *dec2_1 = new ReadDeclaration(QuerySynonym("dec2_1"));
-  auto *dec2_2 = new ReadDeclaration(QuerySynonym("dec2_2"));
-  auto *dec3_1 = new PrintDeclaration(QuerySynonym("dec3_1"));
-  auto *dec3_2 = new PrintDeclaration(QuerySynonym("dec3_2"));
-  auto *dec4_1 = new CallDeclaration(QuerySynonym("dec4_1"));
-  auto *dec4_2 = new CallDeclaration(QuerySynonym("dec4_2"));
-  auto *dec5_1 = new WhileDeclaration(QuerySynonym("dec5_1"));
-  auto *dec5_2 = new WhileDeclaration(QuerySynonym("dec5_2"));
-  auto *dec6_1 = new IfDeclaration(QuerySynonym("dec6_1"));
-  auto *dec6_2 = new IfDeclaration(QuerySynonym("dec6_2"));
-  auto *dec7_1 = new AssignDeclaration(QuerySynonym("dec7_1"));
-  auto *dec7_2 = new AssignDeclaration(QuerySynonym("dec7_2"));
-  auto *dec8_1 = new VariableDeclaration(QuerySynonym("dec8_1"));
-  auto *dec8_2 = new VariableDeclaration(QuerySynonym("dec8_2"));
-  auto *dec9_1 = new ConstantDeclaration(QuerySynonym("dec9_1"));
-  auto *dec9_2 = new ConstantDeclaration(QuerySynonym("dec9_2"));
-  auto *dec10_1 = new ProcedureDeclaration(QuerySynonym("dec10_1"));
-  auto *dec10_2 = new ProcedureDeclaration(QuerySynonym("dec10_2"));
+  auto *dec1_1 = new StatementDeclaration(new QuerySynonym("dec1_1"));
+  auto *dec1_2 = new StatementDeclaration(new QuerySynonym("dec1_2"));
+  auto *dec2_1 = new ReadDeclaration(new QuerySynonym("dec2_1"));
+  auto *dec2_2 = new ReadDeclaration(new QuerySynonym("dec2_2"));
+  auto *dec3_1 = new PrintDeclaration(new QuerySynonym("dec3_1"));
+  auto *dec3_2 = new PrintDeclaration(new QuerySynonym("dec3_2"));
+  auto *dec4_1 = new CallDeclaration(new QuerySynonym("dec4_1"));
+  auto *dec4_2 = new CallDeclaration(new QuerySynonym("dec4_2"));
+  auto *dec5_1 = new WhileDeclaration(new QuerySynonym("dec5_1"));
+  auto *dec5_2 = new WhileDeclaration(new QuerySynonym("dec5_2"));
+  auto *dec6_1 = new IfDeclaration(new QuerySynonym("dec6_1"));
+  auto *dec6_2 = new IfDeclaration(new QuerySynonym("dec6_2"));
+  auto *dec7_1 = new AssignDeclaration(new QuerySynonym("dec7_1"));
+  auto *dec7_2 = new AssignDeclaration(new QuerySynonym("dec7_2"));
+  auto *dec8_1 = new VariableDeclaration(new QuerySynonym("dec8_1"));
+  auto *dec8_2 = new VariableDeclaration(new QuerySynonym("dec8_2"));
+  auto *dec9_1 = new ConstantDeclaration(new QuerySynonym("dec9_1"));
+  auto *dec9_2 = new ConstantDeclaration(new QuerySynonym("dec9_2"));
+  auto *dec10_1 = new ProcedureDeclaration(new QuerySynonym("dec10_1"));
+  auto *dec10_2 = new ProcedureDeclaration(new QuerySynonym("dec10_2"));
   auto *dec11_1 = new ExpressionDeclaration("x+y+1");
   auto *dec11_2 = new ExpressionDeclaration("x+y+2");
   auto *dec12_1 = new StringDeclaration("12_1");
