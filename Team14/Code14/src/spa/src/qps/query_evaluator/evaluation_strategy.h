@@ -12,7 +12,7 @@ class EvaluationStrategy {
  protected:
   IPKBQuerier *pkb_;
 
-  explicit EvaluationStrategy(IPKBQuerier *pkb) : pkb_(pkb){};
+  explicit EvaluationStrategy(IPKBQuerier *pkb) : pkb_(pkb) {};
 
  public:
   static EvaluationStrategy *getStrategy(IPKBQuerier *, QueryClause *);
@@ -24,22 +24,33 @@ class EvaluationStrategy {
  */
 class SuchThatStrategy : public EvaluationStrategy {
  private:
-  SuchThatClause* clause_;
+  SuchThatClause *clause_;
+
+ protected:
+  void intersectContext(QueryDeclaration *param_to_send,
+                        QueryDeclaration *param_to_be_intersected,
+                        RsType rs_type,
+                        bool invert_search);
 
  public:
-  SuchThatStrategy(IPKBQuerier *pkb, SuchThatClause* query_clause) : EvaluationStrategy(pkb), clause_(query_clause){};
+  SuchThatStrategy(IPKBQuerier *pkb, SuchThatClause *query_clause)
+      : EvaluationStrategy(pkb), clause_(query_clause) {};
 
   void evaluate() override;
-  void intersectContext(QueryDeclaration *param_to_send, QueryDeclaration *param_to_be_intersected, RsType rs_type,
-                        bool invert_search);
 };
 
+/*
+ * Selection for pattern clauses
+ */
 class PatternStrategy : public EvaluationStrategy {
-  PatternClause* clause_;
+  PatternClause *clause_;
 
  public:
-  PatternStrategy(IPKBQuerier *pkb, PatternClause* query_clause) : EvaluationStrategy(pkb), clause_(query_clause){};
+  PatternStrategy(IPKBQuerier *pkb, PatternClause *query_clause)
+      : EvaluationStrategy(pkb), clause_(query_clause) {};
 
   void evaluate() override;
-  void intersectContext(QueryDeclaration *assign_param, QueryDeclaration *left_param, QueryDeclaration *right_param);
+  void intersectContext(QueryDeclaration *assign_param,
+                        QueryDeclaration *left_param,
+                        QueryDeclaration *right_param);
 };

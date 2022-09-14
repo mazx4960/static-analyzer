@@ -16,3 +16,6 @@ bool QuerySynonym::operator==(const QuerySynonym &other) const {
 size_t QuerySynonymHashFunction::operator()(const QuerySynonym &synonym) const {
   return std::hash<std::string>()(synonym.toString());
 }
+size_t QuerySynonymHashFunction::operator()(const QuerySynonym *synonym) const {
+  return std::hash<std::string>()(synonym->toString());
+}

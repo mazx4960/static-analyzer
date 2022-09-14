@@ -1,7 +1,6 @@
 #include "sp.h"
 
-#include <spdlog/spdlog.h>
-
+#include "spdlog/spdlog.h"
 #include "simple_lexer.h"
 #include "simple_parser.h"
 #include "sp/extractor/entity_extractor.h"
