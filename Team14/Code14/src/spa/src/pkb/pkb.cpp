@@ -16,16 +16,19 @@ void PKB::populate(std::vector<Entity *> &entities) {
   }
 }
 
-std::unordered_set<Entity *> PKB::getEntities(EntityType entity_type) {
-  return std::unordered_set<Entity *>();
+std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::getEntities(EntityType entity_type) {
+  return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>();
 }
 
-std::unordered_set<Entity *> PKB::getByRelationship(RsType rs_type, Entity *entity, bool is_inverse) {
-  return std::unordered_set<Entity *>();
+std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::getByRelationship(RsType rs_type,
+                                                                                               Entity *entity,
+                                                                                               bool is_inverse) {
+  return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>();
 }
 
-std::unordered_set<Entity *> PKB::getByPattern(std::string &left_pattern, std::string &right_pattern) {
-  return std::unordered_set<Entity *>();
+std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::getByPattern(std::string &left_pattern,
+                                                                                          std::string &right_pattern) {
+  return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>();
 }
 
 int PKB::getCount() {

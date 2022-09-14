@@ -7,6 +7,7 @@
 
 #include "commons/entity.h"
 #include "query_synonym.h"
+#include "qps/exceptions.h"
 
 enum class DeclarationType {
   kStatement,
@@ -36,23 +37,25 @@ class QueryDeclaration {
   int number_;
 
  protected:
-  std::unordered_set<Entity *> context_;
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> context_;
 
  public:
   explicit QueryDeclaration(DeclarationType type) : type_(std::move(type)) {};
   QueryDeclaration(DeclarationType type, QuerySynonym *query_synonym)
-      : type_(std::move(type)),
-        query_synonym_(std::move(query_synonym)) {};
-  QueryDeclaration(DeclarationType type, std::string string) : type_(std::move(type)), string_(std::move(string)) {};
-  QueryDeclaration(DeclarationType type, int number) : type_(std::move(type)), number_(std::move(number)) {};
+      : type_(std::move(type)), query_synonym_(std::move(query_synonym)) {};
+  QueryDeclaration(DeclarationType type, std::string string)
+      : type_(std::move(type)), string_(std::move(string)), query_synonym_(QuerySynonym::empty()) {};
+  QueryDeclaration(DeclarationType type, int number)
+      : type_(std::move(type)), number_(std::move(number)), query_synonym_(QuerySynonym::empty()) {};
 
   [[nodiscard]] DeclarationType getType() const;
   [[nodiscard]] QuerySynonym *getSynonym() const;
   [[nodiscard]] std::string getString() const;
   [[nodiscard]] int getNumber() const;
-  [[nodiscard]] std::unordered_set<Entity *> getContext() const;
-  void setContext(std::unordered_set<Entity *>);
-  bool operator==(const QueryDeclaration &other) const;
+  [[nodiscard]] std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getContext() const;
+  void setContext(std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>);
+  bool operator==(const QueryDeclaration &) const;
+  bool operator==(const QueryDeclaration *) const;
 };
 
 // Pre-call declaration of "stmt x;" where x is the synonym
@@ -128,7 +131,7 @@ class ProcedureDeclaration : public QueryDeclaration {
 // Inline declaration of  Wildcard "_"
 class WildCardDeclaration : public QueryDeclaration {
  public:
-  explicit WildCardDeclaration() : QueryDeclaration(DeclarationType::kWildcard) {}
+  explicit WildCardDeclaration() : QueryDeclaration(DeclarationType::kWildcard, QuerySynonym::empty()) {}
 };
 
 // Inline declaration of Expression "(x + (y * z))"
@@ -161,7 +164,20 @@ class DeclarationTypeAdaptor {
   static DeclarationType toDeclarationType(EntityType);
 };
 
-class QueryDeclarationHashFunction {
- public:
-  size_t operator()(const QueryDeclaration &declaration) const;
+struct QueryDeclarationHashFunction {
+  size_t operator()(const QueryDeclaration &declaration) const {
+    return QuerySynonymHashFunction().operator()(declaration.getSynonym());
+  }
+  size_t operator()(const QueryDeclaration *declaration) const {
+    return QuerySynonymHashFunction().operator()(declaration->getSynonym());
+  }
+};
+
+struct QueryDeclarationPointerEquality {
+  bool operator()(const QueryDeclaration *lhs, const QueryDeclaration *rhs) const {
+    if (lhs->getType() == DeclarationType::kWildcard || rhs->getType() == DeclarationType::kWildcard) {
+      return true;
+    }
+    return (*lhs) == (*rhs);
+  }
 };
