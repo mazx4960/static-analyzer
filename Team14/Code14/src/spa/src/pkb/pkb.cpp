@@ -30,7 +30,7 @@ void PKB::populate(std::vector<Relationship *> &relationships) {
   }
 }
 
-std::unordered_set<Entity *> PKB::getEntities(EntityType entity_type) {
+std::unordered_set<Entity *> PKB::getEntities(EntityType  /*entity_type*/) {
   return std::unordered_set<Entity *>();
 }
 
