@@ -6,10 +6,12 @@
 
 #include "qps/exceptions.h"
 
-QuerySynonym QueryDeclaration::getSynonym() const { return this->query_synonym_; }
+QuerySynonym *QueryDeclaration::getSynonym() const { return this->query_synonym_; }
 bool QueryDeclaration::operator==(const QueryDeclaration &other) const {
-  return this->query_synonym_ == other.getSynonym() && this->type_ == other.getType()
-      && this->string_ == other.getString() && this->number_ == other.getNumber();
+  return this->query_synonym_ == other.getSynonym()
+      && this->type_ == other.getType()
+      && this->string_ == other.getString()
+      && this->number_ == other.getNumber();
 }
 DeclarationType QueryDeclaration::getType() const { return this->type_; }
 std::string QueryDeclaration::getString() const { return this->string_; }
