@@ -151,19 +151,15 @@ TEST(StatementTypeHashTest, UnequalRead) {
 }
 
 /*
- * Different statement type, same integer
+ * Different entity type, same value
  */
-TEST(StatementTypeHashTest, AssignCall) {
-  auto *s2 = new AssignStmtEntity("123");
-  auto *s3 = new CallStmtEntity("123");
-  auto *s4 = new IfStmtEntity("123");
-  auto *s5 = new WhileStmtEntity("123");
-  auto *s6 = new PrintStmtEntity("123");
-  auto *s7 = new ReadStmtEntity("123");
-  std::unordered_set<size_t> hash_value_set = {
-      EntityHashFunction().operator()(s2), EntityHashFunction().operator()(s3), EntityHashFunction().operator()(s4),
-      EntityHashFunction().operator()(s5), EntityHashFunction().operator()(s6), EntityHashFunction().operator()(s7)};
-  ASSERT_EQ(hash_value_set.size(), 6);// All distinct
-  std::unordered_set<Entity, EntityHashFunction> set = {*s2, *s3, *s4, *s5, *s6, *s7};
-  ASSERT_EQ(set.size(), 6);
+TEST(EntityTypeHashTest, DiffPointerSameEntity) {
+  auto *s1 = new VariableEntity("123");
+  auto *s2 = new VariableEntity("123");
+  auto *s3 = new VariableEntity("123");
+  auto *s4 = new VariableEntity("123");
+  auto *s5 = new VariableEntity("123");
+  auto *s6 = new VariableEntity("123");
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> set = {s1, s2, s3, s4, s5, s6};
+  ASSERT_EQ(set.size(), 1);
 }
