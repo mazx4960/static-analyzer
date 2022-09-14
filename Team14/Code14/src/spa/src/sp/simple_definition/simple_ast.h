@@ -64,7 +64,7 @@ class StatementNode : public Node {
   EntityType stmtType_;
 
  public:
-  explicit StatementNode(EntityType stmtType);
+  explicit StatementNode(EntityType stmt_type);
   [[nodiscard]] int GetStmtNo() const;
   EntityType GetStmtType();
   virtual int SetStatementNo(int next_stmt_no);

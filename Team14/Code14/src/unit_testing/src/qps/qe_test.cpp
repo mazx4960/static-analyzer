@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+
 #include "qps/query_evaluator/query_evaluator.h"
 
 class QueryEvaluatorMock : public QueryEvaluator {
  public:
-  QueryEvaluatorMock(IPKBQuerier *pkb, Query &query) : QueryEvaluator(pkb, query) {};
+  QueryEvaluatorMock(IPKBQuerier *pkb, Query &query) : QueryEvaluator(pkb, query){};
   std::unordered_set<QueryDeclaration *> mockCopyDeclarations() { return this->copyDeclarations(); };
   std::unordered_set<QueryDeclaration *> mockFetchContext() { return this->fetchContext(); };
   std::unordered_set<QueryDeclaration *> mockEvaluateSubQueries() { return this->evaluateSubQueries(); };
@@ -17,74 +18,65 @@ class MockPKB : public IPKBQuerier {
 
       case EntityType::kProcedure: {
         return std::unordered_set<Entity *>(
-            {
-                new ProcedureEntity("procedure1"),
-                new ProcedureEntity("procedure2"),
-                new ProcedureEntity("procedure3")
-            }
-        );
+            {new ProcedureEntity("procedure1"), new ProcedureEntity("procedure2"), new ProcedureEntity("procedure3")});
       };
       case EntityType::kVariable: {
-        return std::unordered_set<Entity *>(
-            {
-                new VariableEntity("x"),
-                new VariableEntity("y"),
-                new VariableEntity("z"),
-            }
-        );
+        return std::unordered_set<Entity *>({
+            new VariableEntity("x"),
+            new VariableEntity("y"),
+            new VariableEntity("z"),
+        });
       };
       case EntityType::kConstant: {
-        return std::unordered_set<Entity *>(
-            {
-                new ConstantEntity("1"),
-                new ConstantEntity("2"),
-                new ConstantEntity("3"),
-            }
-        );
+        return std::unordered_set<Entity *>({
+            new ConstantEntity("1"),
+            new ConstantEntity("2"),
+            new ConstantEntity("3"),
+        });
       };
       case EntityType::kAssignStmt: {
         return std::unordered_set<Entity *>{
-            new AssignStmtEntity(1),
-            new AssignStmtEntity(2),
-            new AssignStmtEntity(3),
+            new AssignStmtEntity("1"),
+            new AssignStmtEntity("2"),
+            new AssignStmtEntity("3"),
         };
       };
       case EntityType::kCallStmt: {
         return std::unordered_set<Entity *>{
-            new CallStmtEntity(4),
-            new CallStmtEntity(5),
-            new CallStmtEntity(6),
+            new CallStmtEntity("4"),
+            new CallStmtEntity("5"),
+            new CallStmtEntity("6"),
         };
       };
       case EntityType::kIfStmt: {
         return std::unordered_set<Entity *>{
-            new IfStmtEntity(7),
-            new IfStmtEntity(8),
-            new IfStmtEntity(9),
+            new IfStmtEntity("7"),
+            new IfStmtEntity("8"),
+            new IfStmtEntity("9"),
         };
       };
       case EntityType::kWhileStmt: {
         return std::unordered_set<Entity *>{
-            new WhileStmtEntity(10),
-            new WhileStmtEntity(11),
-            new WhileStmtEntity(12),
+            new WhileStmtEntity("10"),
+            new WhileStmtEntity("11"),
+            new WhileStmtEntity("12"),
         };
       };
       case EntityType::kPrintStmt: {
         return std::unordered_set<Entity *>{
-            new PrintStmtEntity(13),
-            new PrintStmtEntity(14),
-            new PrintStmtEntity(15),
+            new PrintStmtEntity("13"),
+            new PrintStmtEntity("14"),
+            new PrintStmtEntity("15"),
         };
       };
       case EntityType::kReadStmt: {
         return std::unordered_set<Entity *>{
-            new ReadStmtEntity(16),
-            new ReadStmtEntity(17),
-            new ReadStmtEntity(18),
+            new ReadStmtEntity("16"),
+            new ReadStmtEntity("17"),
+            new ReadStmtEntity("18"),
         };
       };
-      case EntityType::kStatement:throw std::runtime_error("This statement should not handle statements!");
+      case EntityType::kStatement: throw std::runtime_error("This statement should not handle statements!");
       default: throw std::runtime_error("Invalid entity type!");
     };
   }
@@ -114,14 +106,10 @@ TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
   auto *dec13 = new IntegerDeclaration(13);
   auto *dec14 = new WildCardDeclaration();
 
-  std::vector<QueryDeclaration *> declarations_vector = {
-      dec1, dec2, dec3, dec4, dec5, dec6, dec7,
-      dec8, dec9, dec10, dec11, dec12, dec13, dec14
-  };
-  std::unordered_set<QueryDeclaration *> declarations_set = {
-      dec1, dec2, dec3, dec4, dec5, dec6, dec7,
-      dec8, dec9, dec10, dec11, dec12, dec13, dec14
-  };
+  std::vector<QueryDeclaration *> declarations_vector = {dec1, dec2, dec3,  dec4,  dec5,  dec6,  dec7,
+                                                         dec8, dec9, dec10, dec11, dec12, dec13, dec14};
+  std::unordered_set<QueryDeclaration *> declarations_set = {dec1, dec2, dec3,  dec4,  dec5,  dec6,  dec7,
+                                                             dec8, dec9, dec10, dec11, dec12, dec13, dec14};
 
   SelectCall select_call = SelectCall(dec1, {});
   Query query = Query(declarations_vector, select_call);
@@ -163,20 +151,14 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   auto *dec14_1 = new WildCardDeclaration();
   auto *dec14_2 = new WildCardDeclaration();
 
-  std::vector<QueryDeclaration *> declarations_vector = {
-      dec1_1, dec1_2, dec2_1, dec2_2, dec3_1, dec3_2,
-      dec4_1, dec4_2, dec5_1, dec5_2, dec6_1, dec6_2,
-      dec7_1, dec7_2, dec8_1, dec8_2, dec9_1, dec9_2,
-      dec10_1, dec10_2, dec11_1, dec11_2, dec12_1, dec12_2,
-      dec13_1, dec13_2, dec14_1, dec14_2
-  };
+  std::vector<QueryDeclaration *> declarations_vector = {dec1_1,  dec1_2,  dec2_1,  dec2_2,  dec3_1,  dec3_2,  dec4_1,
+                                                         dec4_2,  dec5_1,  dec5_2,  dec6_1,  dec6_2,  dec7_1,  dec7_2,
+                                                         dec8_1,  dec8_2,  dec9_1,  dec9_2,  dec10_1, dec10_2, dec11_1,
+                                                         dec11_2, dec12_1, dec12_2, dec13_1, dec13_2, dec14_1, dec14_2};
   std::unordered_set<QueryDeclaration *> declarations_set = {
-      dec1_1, dec1_2, dec2_1, dec2_2, dec3_1, dec3_2,
-      dec4_1, dec4_2, dec5_1, dec5_2, dec6_1, dec6_2,
-      dec7_1, dec7_2, dec8_1, dec8_2, dec9_1, dec9_2,
-      dec10_1, dec10_2, dec11_1, dec11_2, dec12_1, dec12_2,
-      dec13_1, dec13_2, dec14_1, dec14_2
-  };
+      dec1_1,  dec1_2,  dec2_1,  dec2_2,  dec3_1,  dec3_2,  dec4_1,  dec4_2, dec5_1,  dec5_2,
+      dec6_1,  dec6_2,  dec7_1,  dec7_2,  dec8_1,  dec8_2,  dec9_1,  dec9_2, dec10_1, dec10_2,
+      dec11_1, dec11_2, dec12_1, dec12_2, dec13_1, dec13_2, dec14_1, dec14_2};
 
   SelectCall select_call = SelectCall(dec1_1, {});
   Query query = Query(declarations_vector, select_call);
