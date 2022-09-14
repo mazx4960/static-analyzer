@@ -68,15 +68,13 @@ class IfStmtEntity : public Entity {
   explicit IfStmtEntity(std::string stmt_no) : Entity(EntityType::kIfStmt, std::move(stmt_no)) {}
 };
 
+/**
+ * Hash function for Entity
+ *
+ * Usage: std::unordered_map<Entity *, std::unordered_set<Entity *, EntityHashFunction>, EntityHashFunction>
+ */
 class EntityHashFunction {
  public:
   size_t operator()(const Entity &entity) const { return entity.GetHash(); }
   size_t operator()(const Entity *entity) const { return entity->GetHash(); }
 };
-
-// Usage:
-//std::unordered_map<
-//    Entity *,
-//    std::unordered_set<Entity *, EntityHashFunction>,
-//    EntityHashFunction
-//>
