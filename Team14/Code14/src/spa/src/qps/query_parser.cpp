@@ -69,7 +69,7 @@ QueryDeclaration *QueryParser::parseEntRefDeclaration(bool allowWild) {
 }
 
 IntegerDeclaration *QueryParser::parseLiteralDeclaration() {
-  return new IntegerDeclaration(std::stoi(nextToken()->value));
+  return new IntegerDeclaration(nextToken()->value);
 }
 
 StringDeclaration *QueryParser::parseStringDeclaration() { return new StringDeclaration(nextToken()->value); }
@@ -136,23 +136,39 @@ SuchThatClause *QueryParser::parseSuchThat() {
   if (*token == KeywordToken("Modifies")) { return parseModifies(); }
   throw ParseSyntaxError("Unknown such-that relationship: " + token->value);
 }
-FollowsClause *QueryParser::parseFollows() {
+SuchThatClause *QueryParser::parseFollows() {
+  bool follows_all = false;
+  if (*peekToken() == OperatorToken("*")) {
+    nextToken();
+    follows_all = true;
+  }
   if (!(*nextToken() == RoundOpenBracketToken())) { throw ParseSyntaxError("Missing '(' before parameters"); }
   QueryDeclaration *first = parseStmtRefDeclaration(true);
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration *second = parseStmtRefDeclaration(true);;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
+  if (follows_all) {
+    return new FollowsAllClause(first, second);
+  }
   return new FollowsClause(first, second);
 }
-ParentClause *QueryParser::parseParent() {
+SuchThatClause *QueryParser::parseParent() {
+  bool parent_all = false;
+  if (*peekToken() == OperatorToken("*")) {
+    nextToken();
+    parent_all = true;
+  }
   if (!(*nextToken() == RoundOpenBracketToken())) { throw ParseSyntaxError("Missing '(' before parameters"); }
   QueryDeclaration *first = parseStmtRefDeclaration(true);
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration *second = parseStmtRefDeclaration(true);;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
+  if (parent_all) {
+    return new ParentAllClause(first, second);
+  }
   return new ParentClause(first, second);
 }
-UsesClause *QueryParser::parseUses() {
+SuchThatClause *QueryParser::parseUses() {
   if (!(*nextToken() == RoundOpenBracketToken())) { throw ParseSyntaxError("Missing '(' before parameters"); }
   QueryDeclaration *first;
   if (*peekToken() == QuoteToken()) {
@@ -165,7 +181,7 @@ UsesClause *QueryParser::parseUses() {
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
   return new UsesClause(first, second);
 }
-ModifiesClause *QueryParser::parseModifies() {
+SuchThatClause *QueryParser::parseModifies() {
   if (!(*nextToken() == RoundOpenBracketToken())) { throw ParseSyntaxError("Missing '(' before parameters"); }
   QueryDeclaration *first;
   if (*peekToken() == QuoteToken()) {

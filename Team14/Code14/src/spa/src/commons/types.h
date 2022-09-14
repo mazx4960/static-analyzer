@@ -14,6 +14,11 @@ enum class EntityType {
   kWhileStmt,
   kPrintStmt,
   kReadStmt,
+  // Used by PQL
+  kWildcard,
+  kExpression,
+  kString,
+  kInteger,
 };
 
 enum class RsType {
@@ -21,4 +26,8 @@ enum class RsType {
   kParent,
   kUses,
   kModifies,
+  // Used by PQL
+  kParentAll,
+  kFollowsAll,
+  kAssignPattern,
 };

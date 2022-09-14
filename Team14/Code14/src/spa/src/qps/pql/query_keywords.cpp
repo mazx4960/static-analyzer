@@ -1,7 +1,8 @@
 #include "query_keywords.h"
 
 bool QueryKeywords::isValidKeyword(const std::string& keyword) {
-  return kValidKeywords.find(keyword) != kValidKeywords.end();
+  return isValidCallKeyword(keyword) || isValidDeclarationKeyword(keyword) ||
+  isValidClauseKeyword(keyword) || isValidSuchThatKeyword(keyword);
 }
 bool QueryKeywords::isValidDeclarationKeyword(const std::string& keyword) {
   return kDeclarationKeywords.find(keyword) != kDeclarationKeywords.end();
