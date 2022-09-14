@@ -16,36 +16,26 @@ void PKB::populate(std::vector<Entity *> &entities) {
   }
 }
 
-std::unordered_set<Entity *> PKB::empty() {
+std::unordered_set<Entity *> PKB::Empty() {
   return std::unordered_set<Entity *>();
 }
 
 std::unordered_set<Entity *> PKB::getEntities(EntityType entity_type) {
   if (this->entity_map_.find(entity_type) == this->entity_map_.end()) {
-    return this->empty();
+    return this->Empty();
   }
   return this->entity_map_[entity_type]->get(entity_type);
 }
 
-std::unordered_set<Entity *> PKB::getEntities(StmtType stmt_type) {
-  if (this->entity_map_.find(EntityType::kStatement) == this->entity_map_.end()) {
-    return this->empty();
-  }
-  auto *entity_table = this->entity_map_[EntityType::kStatement];
-  auto *statement_table = static_cast<StatementTable *>(entity_table);
-  return statement_table->getSpecific(stmt_type);
-}
-
-std::unordered_set<Entity *> PKB::getByRelationship(RsType rs_type, Entity *first_entity, Entity *second_entity) {
+std::unordered_set<Entity *> PKB::getByRelationship(RsType rs_type, Entity *entity, bool inversion) {
   if (this->relationship_map_.find(rs_type) == this->relationship_map_.end()) {
-    return this->empty();
+    return this->Empty();
   }
-  return this->relationship_map_[rs_type]->get(rs_type, first_entity, second_entity);
+  return this->relationship_map_[rs_type]->get(rs_type, entity, inversion);
 }
 
-// TODO: (leeenen)
-std::unordered_set<Entity *> PKB::getByPattern(std::string &, std::string &, EntityType, bool) {
-  return this->empty();
+std::unordered_set<Entity *> PKB::getByPattern(std::string &, std::string &) {
+  return this->Empty();
 }
 
 int PKB::getCount() {

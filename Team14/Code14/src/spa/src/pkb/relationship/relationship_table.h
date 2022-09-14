@@ -9,18 +9,19 @@
 
 class RelationshipTable {
  protected:
-  std::unordered_set<std::pair<Entity*, Entity*>, RelationshipTableHashingFunction> table_;
+  std::unordered_map<Entity *, std::unordered_set<Entity *>> table_;
 
   RelationshipTable() = default;
 
  private:
-  std::unordered_set<Entity *> getMatchingEntity(Entity *, Entity *);
-  std::unordered_set<Entity *> getMatchingStatement(Entity *, Entity *);
-  std::unordered_set<Entity *> getTraversalStatement(Entity *, Entity *);
-
+  static std::unordered_set<Entity*> Empty();
+  std::unordered_set<Entity *> getStatements(Entity *, bool);
+  std::unordered_set<Entity *> getTraversal(Entity *, bool);
+  std::unordered_set<Entity *> get(Entity *, bool);
+  std::unordered_set<Entity *> traversalHelper(Entity *);
  public:
   static RelationshipTable *getTable(RsType);
-  std::unordered_set<Entity*> get(RsType, Entity *, Entity *);
+  std::unordered_set<Entity*> get(RsType, Entity *, bool);
 
 };
 

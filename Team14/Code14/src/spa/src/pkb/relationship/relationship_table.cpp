@@ -11,43 +11,61 @@ RelationshipTable *RelationshipTable::getTable(RsType type) {
   }
 }
 
-std::unordered_set<Entity *> RelationshipTable::get(RsType rs_type, Entity *first_entity, Entity *second_entity) {
-  switch (rs_type) {
-    case RsType::kFollows: case RsType::kParent: return getMatchingStatement(first_entity, second_entity);
-    case RsType::kFollowsT: case RsType::kParentT: return getTraversalStatement(first_entity,second_entity);
-    default: return getMatchingEntity(first_entity, second_entity);
+std::unordered_set<Entity*> RelationshipTable::Empty() {
+  return std::unordered_set<Entity*>{};
+}
+
+std::unordered_set<Entity *> RelationshipTable::get(RsType type, Entity *query_entity, bool inversion) {
+  switch (type) {
+    case RsType::kFollows: case RsType::kParent: return this->getStatements(query_entity, inversion);
+    case RsType::kFollowsT: case RsType::kParentT: return this->getTraversal(query_entity, inversion);
+    default: return this->get(query_entity, inversion);
   }
 }
 
-// TODO: (leeenen) waiting for wildcard
-std::unordered_set<Entity *> RelationshipTable::getMatchingEntity(Entity *first_entity, Entity *second_entity) {
-  std::unordered_set<Entity *> result = {};
-
-  return result;
+std::unordered_set<Entity *> RelationshipTable::getStatements(Entity *query_entity, bool inversion) {
+  if (inversion) {
+    return this->Empty();
+  }
+  if (this->table_.find(query_entity) == this->table_.end()) {
+    return this->Empty();
+  }
+  return this->table_[query_entity];
 }
 
-std::unordered_set<Entity *> RelationshipTable::getMatchingStatement(Entity *first_entity, Entity *second_entity) {
-  std::unordered_set<Entity *> result = {};
+std::unordered_set<Entity *> RelationshipTable::getTraversal(Entity *query_entity, bool inversion) {
+  if (inversion || this->table_.find(query_entity) == this->table_.end()) {
+    return this->Empty();
+  }
+  return traversalHelper(query_entity);
+}
 
-  // Convert into StatementEntity
-  auto *first_statement = static_cast<StatementEntity *>(first_entity);
-  auto *second_statement = static_cast<StatementEntity *>(second_entity);
+std::unordered_set<Entity *> RelationshipTable::traversalHelper(Entity *query_entity) {
+  if (this->table_.find(query_entity) == this->table_.end()) {
+    return this->Empty();
+  }
+  auto next_statement = this->table_[query_entity];
+  auto *next_entity = *next_statement.begin();
+  auto recursive_result = this->traversalHelper(next_entity);
+  next_statement.insert(recursive_result.begin(), recursive_result.end());
+  return next_statement;
+}
 
-  // Loop through table
-  for (auto entity_pair: this->table_) {
-    auto *pair_first_statement = static_cast<StatementEntity *>(entity_pair.first);
-    auto *pair_second_statement = static_cast<StatementEntity *>(entity_pair.second);
-
-    if (pair_first_statement->GetStmtNo() == first_statement->GetStmtNo()
-        && pair_second_statement->GetStmtNo() == second_statement->GetStmtNo()) {
-      result.insert(first_entity);
-      result.insert(second_entity);
+std::unordered_set<Entity *> RelationshipTable::get(Entity *query_entity, bool inversion) {
+  if (!inversion) {
+    if (this->table_.find(query_entity) == this->table_.end()) {
+      return this->Empty();
+    }
+    return this->table_[query_entity];
+  }
+  std::unordered_set<Entity *> results = {};
+  for (auto [key, value]: this->table_) {
+    for (auto *entity: value) {
+      if (entity->GetName() == query_entity->GetName()) {
+        results.insert(key);
+        break;
+      }
     }
   }
-  return result;
-}
-
-// TODO: (leeenen)
-std::unordered_set<Entity *> RelationshipTable::getTraversalStatement(Entity *first_entity, Entity *second_entity) {
-  return std::unordered_set<Entity *>{};
+  return results;
 }
