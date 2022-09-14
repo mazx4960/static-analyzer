@@ -48,47 +48,46 @@ class StatementEntity : public Entity {
   EntityType stmt_type_;
 
  public:
-  explicit StatementEntity(EntityType stmt_type, int stmt_no);
-  [[nodiscard]] EntityType GetStmtType() const;
+  explicit StatementEntity(int stmt_no);
   [[nodiscard]] int GetStmtNo() const;
   [[nodiscard]] size_t GetHash() const override;  // Overrides Entity's GetHash() function
   bool operator==(const StatementEntity &other) const;
 };
 
-class ReadEntity : public StatementEntity {
+class ReadStmtEntity : public StatementEntity {
  public:
-  explicit ReadEntity(int stmt_no)
-      : StatementEntity(EntityType::kRead, stmt_no) {}
+  explicit ReadStmtEntity(int stmt_no)
+      : StatementEntity(stmt_no) {}
 };
 
-class PrintEntity : public StatementEntity {
+class PrintStmtEntity : public StatementEntity {
  public:
-  explicit PrintEntity(int stmt_no)
-      : StatementEntity(EntityType::kPrint, stmt_no) {}
+  explicit PrintStmtEntity(int stmt_no)
+      : StatementEntity(stmt_no) {}
 };
 
-class AssignEntity : public StatementEntity {
+class AssignStmtEntity : public StatementEntity {
  public:
-  explicit AssignEntity(int stmt_no)
-      : StatementEntity(EntityType::kAssign, stmt_no) {}
+  explicit AssignStmtEntity(int stmt_no)
+      : StatementEntity(stmt_no) {}
 };
 
-class CallEntity : public StatementEntity {
+class CallStmtEntity : public StatementEntity {
  public:
-  explicit CallEntity(int stmt_no)
-      : StatementEntity(EntityType::kCall, stmt_no) {}
+  explicit CallStmtEntity(int stmt_no)
+      : StatementEntity(stmt_no) {}
 };
 
-class WhileEntity : public StatementEntity {
+class WhileStmtEntity : public StatementEntity {
  public:
-  explicit WhileEntity(int stmt_no)
-      : StatementEntity(EntityType::kWhile, stmt_no) {}
+  explicit WhileStmtEntity(int stmt_no)
+      : StatementEntity(stmt_no) {}
 };
 
-class IfEntity : public StatementEntity {
+class IfStmtEntity : public StatementEntity {
  public:
-  explicit IfEntity(int stmt_no)
-      : StatementEntity(EntityType::kIf, stmt_no) {}
+  explicit IfStmtEntity(int stmt_no)
+      : StatementEntity(stmt_no) {}
 };
 
 class EntityHashFunction {

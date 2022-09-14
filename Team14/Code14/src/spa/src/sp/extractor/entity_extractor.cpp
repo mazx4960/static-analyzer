@@ -40,7 +40,7 @@ void EntityExtractor::ExtractStatement(std::vector<Entity *> &entities, Node *no
   auto *stmt = static_cast<StatementNode *>(node);
   auto stmt_type = stmt->GetStmtType();
   auto stmt_no = stmt->GetStmtNo();
-  Entity *entity = new StatementEntity(stmt_type, stmt_no);
+  Entity *entity = new StatementEntity(stmt_no);
   entities.push_back(entity);
 }
 void EntityExtractor::ExtractVariable(std::vector<Entity *> &entities, Node *node) {

@@ -55,12 +55,12 @@ EntityType DeclarationTypeAdaptor::toEntityType(DeclarationType declaration_type
 
 EntityType DeclarationTypeAdaptor::toStatementType(DeclarationType declaration_type) {
   switch (declaration_type) {
-    case DeclarationType::kAssign: return EntityType::kAssign;
-    case DeclarationType::kCall: return EntityType::kCall;
-    case DeclarationType::kIf: return EntityType::kIf;
-    case DeclarationType::kWhile: return EntityType::kWhile;
-    case DeclarationType::kPrint: return EntityType::kPrint;
-    case DeclarationType::kRead: return EntityType::kRead;
+    case DeclarationType::kAssign: return EntityType::kAssignStmt;
+    case DeclarationType::kCall: return EntityType::kCallStmt;
+    case DeclarationType::kIf: return EntityType::kIfStmt;
+    case DeclarationType::kWhile: return EntityType::kWhileStmt;
+    case DeclarationType::kPrint: return EntityType::kPrintStmt;
+    case DeclarationType::kRead: return EntityType::kReadStmt;
     default: throw DeclarationTypeAdaptError("DeclarationType cannot be adapted to EntityType");
   }
 }
@@ -71,12 +71,12 @@ DeclarationType DeclarationTypeAdaptor::toDeclarationType(EntityType entity_type
     case EntityType::kStatement: return DeclarationType::kStatement;
     case EntityType::kVariable: return DeclarationType::kVariable;
     case EntityType::kConstant: return DeclarationType::kConstant;
-    case EntityType::kAssign: return DeclarationType::kAssign;
-    case EntityType::kCall: return DeclarationType::kCall;
-    case EntityType::kIf: return DeclarationType::kIf;
-    case EntityType::kWhile: return DeclarationType::kWhile;
-    case EntityType::kPrint: return DeclarationType::kPrint;
-    case EntityType::kRead: return DeclarationType::kRead;
+    case EntityType::kAssignStmt: return DeclarationType::kAssign;
+    case EntityType::kCallStmt: return DeclarationType::kCall;
+    case EntityType::kIfStmt: return DeclarationType::kIf;
+    case EntityType::kWhileStmt: return DeclarationType::kWhile;
+    case EntityType::kPrintStmt: return DeclarationType::kPrint;
+    case EntityType::kReadStmt: return DeclarationType::kRead;
     default: throw DeclarationTypeAdaptError("EntityType cannot be adapted to DeclarationType");
   }
 }

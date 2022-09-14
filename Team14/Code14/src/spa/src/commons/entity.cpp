@@ -28,35 +28,34 @@ std::string Entity::ToString() {
       break;
     case EntityType::kConstant:type_string = "constant";
       break;
-    case EntityType::kStatement:auto *statement_entity = static_cast<StatementEntity *>(this);
+    case EntityType::kStatement: {
+      auto *statement_entity = static_cast<StatementEntity *>(this);
       name_string = std::to_string(statement_entity->GetStmtNo());
-      switch (statement_entity->GetStmtType()) {
-        case EntityType::kAssign:type_string = "assign";
+      switch (statement_entity->GetType()) {
+        case EntityType::kAssignStmt:type_string = "assign";
           break;
-        case EntityType::kCall:type_string = "call";
+        case EntityType::kCallStmt:type_string = "call";
           break;
-        case EntityType::kIf:type_string = "if";
+        case EntityType::kIfStmt:type_string = "if";
           break;
-        case EntityType::kPrint:type_string = "print";
+        case EntityType::kPrintStmt:type_string = "print";
           break;
-        case EntityType::kRead:type_string = "read";
+        case EntityType::kReadStmt:type_string = "read";
           break;
-        case EntityType::kWhile:type_string = "while";
+        case EntityType::kWhileStmt:type_string = "while";
           break;
         default:type_string = "unknown statement";
           break;
       }
+    }
+    default: break; // string entity types should not reach this stage
   }
   return type_string + ": " + name_string;
 }
 
-StatementEntity::StatementEntity(EntityType stmt_type, int stmt_no)
+StatementEntity::StatementEntity(int stmt_no)
     : Entity(EntityType::kStatement, "") {
-  this->stmt_type_ = stmt_type;
   this->stmt_no_ = stmt_no;
-}
-EntityType StatementEntity::GetStmtType() const {
-  return this->stmt_type_;
 }
 int StatementEntity::GetStmtNo() const {
   return this->stmt_no_;

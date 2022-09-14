@@ -148,33 +148,33 @@ TEST(EntityTypeHashTest, DifferentEntitySameStr) {
  * Same statement type, same integer
  */
 TEST(StatementTypeHashTest, EqualAssign) {
-  auto *s1 = new StatementEntity(EntityType::kAssign, 123);
-  auto *s2 = new StatementEntity(EntityType::kAssign, 123);
+  auto *s1 = new StatementEntity(123);
+  auto *s2 = new StatementEntity(123);
   ASSERT_EQ(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
 }
 TEST(StatementTypeHashTest, EqualCall) {
-  auto *s1 = new StatementEntity(EntityType::kCall, 123);
-  auto *s2 = new StatementEntity(EntityType::kCall, 123);
+  auto *s1 = new StatementEntity(123);
+  auto *s2 = new StatementEntity(123);
   ASSERT_EQ(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
 }
 TEST(StatementTypeHashTest, EqualIf) {
-  auto *s1 = new StatementEntity(EntityType::kIf, 123);
-  auto *s2 = new StatementEntity(EntityType::kIf, 123);
+  auto *s1 = new StatementEntity(123);
+  auto *s2 = new StatementEntity(123);
   ASSERT_EQ(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
 }
 TEST(StatementTypeHashTest, EqualWhile) {
-  auto *s1 = new StatementEntity(EntityType::kWhile, 123);
-  auto *s2 = new StatementEntity(EntityType::kWhile, 123);
+  auto *s1 = new StatementEntity(123);
+  auto *s2 = new StatementEntity(123);
   ASSERT_EQ(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
 }
 TEST(StatementTypeHashTest, EqualPrint) {
-  auto *s1 = new StatementEntity(EntityType::kPrint, 123);
-  auto *s2 = new StatementEntity(EntityType::kPrint, 123);
+  auto *s1 = new StatementEntity(123);
+  auto *s2 = new StatementEntity(123);
   ASSERT_EQ(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
 }
 TEST(StatementTypeHashTest, EqualRead) {
-  auto *s1 = new StatementEntity(EntityType::kRead, 123);
-  auto *s2 = new StatementEntity(EntityType::kRead, 123);
+  auto *s1 = new StatementEntity(123);
+  auto *s2 = new StatementEntity(123);
   ASSERT_EQ(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
 }
 
@@ -182,33 +182,33 @@ TEST(StatementTypeHashTest, EqualRead) {
  * Same statement type, different integer
  */
 TEST(StatementTypeHashTest, UnequalAssign) {
-  auto *s1 = new StatementEntity(EntityType::kAssign, 123);
-  auto *s2 = new StatementEntity(EntityType::kAssign, 234);
+  auto *s1 = new StatementEntity(123);
+  auto *s2 = new StatementEntity(234);
   ASSERT_NE(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
 }
 TEST(StatementTypeHashTest, UnequalCall) {
-  auto *s1 = new StatementEntity(EntityType::kCall, 123);
-  auto *s2 = new StatementEntity(EntityType::kCall, 234);
+  auto *s1 = new StatementEntity(123);
+  auto *s2 = new StatementEntity(234);
   ASSERT_NE(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
 }
 TEST(StatementTypeHashTest, UnequalIf) {
-  auto *s1 = new StatementEntity(EntityType::kIf, 123);
-  auto *s2 = new StatementEntity(EntityType::kIf, 234);
+  auto *s1 = new StatementEntity(123);
+  auto *s2 = new StatementEntity(234);
   ASSERT_NE(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
 }
 TEST(StatementTypeHashTest, UnequalWhile) {
-  auto *s1 = new StatementEntity(EntityType::kWhile, 123);
-  auto *s2 = new StatementEntity(EntityType::kWhile, 234);
+  auto *s1 = new StatementEntity(123);
+  auto *s2 = new StatementEntity(234);
   ASSERT_NE(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
 }
 TEST(StatementTypeHashTest, UnequalPrint) {
-  auto *s1 = new StatementEntity(EntityType::kPrint, 123);
-  auto *s2 = new StatementEntity(EntityType::kPrint, 234);
+  auto *s1 = new StatementEntity(123);
+  auto *s2 = new StatementEntity(234);
   ASSERT_NE(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
 }
 TEST(StatementTypeHashTest, UnequalRead) {
-  auto *s1 = new StatementEntity(EntityType::kRead, 123);
-  auto *s2 = new StatementEntity(EntityType::kRead, 234);
+  auto *s1 = new StatementEntity(123);
+  auto *s2 = new StatementEntity(234);
   ASSERT_NE(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
 }
 
@@ -216,12 +216,12 @@ TEST(StatementTypeHashTest, UnequalRead) {
  * Different statement type, same integer
  */
 TEST(StatementTypeHashTest, AssignCall) {
-  auto *s1 = new StatementEntity(EntityType::kAssign, 123);
-  auto *s2 = new StatementEntity(EntityType::kCall, 123);
-  auto *s3 = new StatementEntity(EntityType::kIf, 123);
-  auto *s4 = new StatementEntity(EntityType::kWhile, 123);
-  auto *s5 = new StatementEntity(EntityType::kPrint, 123);
-  auto *s6 = new StatementEntity(EntityType::kRead, 123);
+  auto *s1 = new StatementEntity(123);
+  auto *s2 = new StatementEntity(123);
+  auto *s3 = new StatementEntity(123);
+  auto *s4 = new StatementEntity(123);
+  auto *s5 = new StatementEntity(123);
+  auto *s6 = new StatementEntity(123);
   std::unordered_set<size_t> set = {
       EntityHashFunction().operator()(s1),
       EntityHashFunction().operator()(s2),
@@ -238,121 +238,121 @@ TEST(StatementTypeHashTest, AssignCall) {
  */
 TEST(CrossTypeHashTest, ProcedureAssign) {
   auto *e1 = new Entity(EntityType::kProcedure, "123");
-  auto *s1 = new StatementEntity(EntityType::kAssign, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, ProcedureCall) {
   auto *e1 = new Entity(EntityType::kProcedure, "123");
-  auto *s1 = new StatementEntity(EntityType::kCall, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, ProcedureIf) {
   auto *e1 = new Entity(EntityType::kProcedure, "123");
-  auto *s1 = new StatementEntity(EntityType::kIf, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, ProcedureWhile) {
   auto *e1 = new Entity(EntityType::kProcedure, "123");
-  auto *s1 = new StatementEntity(EntityType::kWhile, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, ProcedurePrint) {
   auto *e1 = new Entity(EntityType::kProcedure, "123");
-  auto *s1 = new StatementEntity(EntityType::kPrint, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, ProcedureRead) {
   auto *e1 = new Entity(EntityType::kProcedure, "123");
-  auto *s1 = new StatementEntity(EntityType::kRead, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, StatementAssign) {
   auto *e1 = new Entity(EntityType::kStatement, "123");
-  auto *s1 = new StatementEntity(EntityType::kAssign, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, StatementCall) {
   auto *e1 = new Entity(EntityType::kStatement, "123");
-  auto *s1 = new StatementEntity(EntityType::kCall, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, StatementIf) {
   auto *e1 = new Entity(EntityType::kStatement, "123");
-  auto *s1 = new StatementEntity(EntityType::kIf, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, StatementWhile) {
   auto *e1 = new Entity(EntityType::kStatement, "123");
-  auto *s1 = new StatementEntity(EntityType::kWhile, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, StatementPrint) {
   auto *e1 = new Entity(EntityType::kStatement, "123");
-  auto *s1 = new StatementEntity(EntityType::kPrint, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, StatementRead) {
   auto *e1 = new Entity(EntityType::kStatement, "123");
-  auto *s1 = new StatementEntity(EntityType::kRead, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, VariableAssign) {
   auto *e1 = new Entity(EntityType::kVariable, "123");
-  auto *s1 = new StatementEntity(EntityType::kAssign, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, VariableCall) {
   auto *e1 = new Entity(EntityType::kVariable, "123");
-  auto *s1 = new StatementEntity(EntityType::kCall, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, VariableIf) {
   auto *e1 = new Entity(EntityType::kVariable, "123");
-  auto *s1 = new StatementEntity(EntityType::kIf, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, VariableWhile) {
   auto *e1 = new Entity(EntityType::kVariable, "123");
-  auto *s1 = new StatementEntity(EntityType::kWhile, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, VariablePrint) {
   auto *e1 = new Entity(EntityType::kVariable, "123");
-  auto *s1 = new StatementEntity(EntityType::kPrint, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, VariableRead) {
   auto *e1 = new Entity(EntityType::kVariable, "123");
-  auto *s1 = new StatementEntity(EntityType::kRead, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, ConstantAssign) {
   auto *e1 = new Entity(EntityType::kConstant, "123");
-  auto *s1 = new StatementEntity(EntityType::kAssign, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, ConstantCall) {
   auto *e1 = new Entity(EntityType::kConstant, "123");
-  auto *s1 = new StatementEntity(EntityType::kCall, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, ConstantIf) {
   auto *e1 = new Entity(EntityType::kConstant, "123");
-  auto *s1 = new StatementEntity(EntityType::kIf, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, ConstantWhile) {
   auto *e1 = new Entity(EntityType::kConstant, "123");
-  auto *s1 = new StatementEntity(EntityType::kWhile, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, ConstantPrint) {
   auto *e1 = new Entity(EntityType::kConstant, "123");
-  auto *s1 = new StatementEntity(EntityType::kPrint, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
 TEST(CrossTypeHashTest, ConstantRead) {
   auto *e1 = new Entity(EntityType::kConstant, "123");
-  auto *s1 = new StatementEntity(EntityType::kRead, 123);
+  auto *s1 = new StatementEntity(123);
   ASSERT_NE(EntityHashFunction().operator()(e1), EntityHashFunction().operator()(s1));
 }
