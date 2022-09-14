@@ -11,10 +11,10 @@
 std::vector<Relationship *> RelationshipExtractor::ExtractAll(Node *node) {
   std::vector<Relationship *> relationships;
   auto const op = [&relationships](Node *node) {
-    //    ExtractFollows(relationships, node);
-    //    ExtractParent(relationships, node);
-    //    ExtractUses(relationships, node);
-    //    ExtractModifies(relationships, node);
+    ExtractFollows(relationships, node);
+    ExtractParent(relationships, node);
+    ExtractUses(relationships, node);
+    ExtractModifies(relationships, node);
   };
   node->VisitAll(op);
   return relationships;
