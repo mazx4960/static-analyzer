@@ -13,11 +13,11 @@ class QueryDeclaration {
  private:
   EntityType type_;
 
-  QuerySynonym *query_synonym_;
+  QuerySynonym *query_synonym_ = QuerySynonym::empty();
 
   std::string string_;
 
-  int number_;
+  int number_ = 0;
 
  protected:
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> context_;
@@ -114,7 +114,7 @@ class ProcedureDeclaration : public QueryDeclaration {
 // Inline declaration of  Wildcard "_"
 class WildCardDeclaration : public QueryDeclaration {
  public:
-  explicit WildCardDeclaration() : QueryDeclaration(EntityType::kWildcard, QuerySynonym::empty()) {}
+  explicit WildCardDeclaration() : QueryDeclaration(EntityType::kWildcard) {}
 };
 
 // Inline declaration of Expression "(x + (y * z))"
