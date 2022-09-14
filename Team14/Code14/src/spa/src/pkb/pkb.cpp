@@ -16,6 +16,20 @@ void PKB::populate(std::vector<Entity *> &entities) {
   }
 }
 
+void PKB::populate(std::vector<Relationship *> &relationships) {
+  for (auto *relationship : relationships) {
+    RsType rs_type = relationship->GetType();
+
+    // If table hasn't been created, create it first.
+    if (this->relationship_map_.find(rs_type) == this->relationship_map_.end()) {
+      this->relationship_map_[rs_type] = RelationshipTable::getTable(rs_type);
+    }
+
+    // Populate table here
+    this->relationship_map_[rs_type]->populate(*relationship);
+  }
+}
+
 std::unordered_set<Entity *> PKB::Empty() {
   return std::unordered_set<Entity *>();
 }
@@ -24,12 +38,13 @@ std::unordered_set<Entity *> PKB::getEntities(EntityType entity_type) {
   if (this->entity_map_.find(entity_type) == this->entity_map_.end()) {
     return this->Empty();
   }
-  return this->entity_map_[entity_type]->get(entity_type);
+  return this->entity_map_[entity_type]->get();
 }
 
 std::unordered_set<Entity *> PKB::getByRelationship(RsType rs_type, Entity *entity, bool is_inverse) {
   if (this->relationship_map_.find(rs_type) == this->relationship_map_.end()) {
-    return this->Empty();
+    return std::unordered_set<Entity *> {};
+    //return this->Empty();
   }
   return this->relationship_map_[rs_type]->get(rs_type, entity, is_inverse);
 }

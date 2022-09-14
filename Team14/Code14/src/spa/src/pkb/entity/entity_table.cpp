@@ -11,8 +11,18 @@ EntityTable *EntityTable::getTable(EntityType type) {
   }
 }
 
-void EntityTable::populate(Entity &entity) { this->table_.insert(entity.GetValue()); }
+void EntityTable::populate(Entity &entity) {
+  this->table_.insert(entity);
+}
 
-std::unordered_set<std::string> EntityTable::get() { return this->table_; }
+std::unordered_set<Entity *> EntityTable::get() {
+  std::unordered_set<Entity *> result = {};
+  for (auto entity: this->table_) {
+    result.insert(&entity);
+  }
+  return result;
+}
 
-int EntityTable::getCount() { return this->table_.size(); }
+int EntityTable::getCount() {
+  return this->table_.size();
+}

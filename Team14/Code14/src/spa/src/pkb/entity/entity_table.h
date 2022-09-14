@@ -11,14 +11,14 @@
 
 class EntityTable {
  protected:
-  std::unordered_set<std::string> table_;
+  std::unordered_set<Entity, EntityHashFunction> table_;
 
   EntityTable() = default;
 
  public:
   static EntityTable *getTable(EntityType);
   void populate(Entity &entity);
-  std::unordered_set<Entity *> get(EntityType);
+  std::unordered_set<Entity *> get();
 
 
   // Currently only used for debugging and testing
@@ -43,5 +43,4 @@ class ProcedureTable : public EntityTable {
 class StatementTable : public EntityTable {
  public:
   StatementTable() = default;
-  std::unordered_set<Entity *> getSpecific(StmtType);
 };
