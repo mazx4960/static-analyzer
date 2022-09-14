@@ -83,5 +83,4 @@ class EntityHashFunction {
  public:
   size_t operator()(const Entity &entity) const { return entity.GetHash(); }
   size_t operator()(const Entity *entity) const { return entity->GetHash(); }
-  bool operator()(int *const &a, int *const &b) const { return *a < *b; }
 };
