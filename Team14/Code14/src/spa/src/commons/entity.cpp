@@ -34,8 +34,8 @@ std::string Entity::ToString() {
     case EntityType::kStatement: {
       auto *statement_entity = static_cast<StatementEntity *>(this);
       name_string = std::to_string(statement_entity->GetStmtNo());
-      switch (statement_entity->GetStmtType()) {
-        case EntityType::kAssign:type_string = "assign";
+      switch (statement_entity->GetType()) {
+        case EntityType::kAssignStmt:type_string = "assign";
           break;
         case EntityType::kCall:type_string = "call";
           break;
