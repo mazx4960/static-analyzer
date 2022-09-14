@@ -1,7 +1,6 @@
 #include "sp.h"
 
-#include <spdlog/spdlog.h>
-
+#include "spdlog/spdlog.h"
 #include "simple_lexer.h"
 #include "simple_parser.h"
 #include "sp/extractor/entity_extractor.h"
@@ -31,5 +30,5 @@ void SP::LoadSource(std::ifstream &source_stream) {
 
   std::vector<Pattern *> patterns = PatternExtractor::ExtractAll(program_node);
   spdlog::info("Extracted {} patterns", patterns.size());
-
+  for (auto *pattern : patterns) { spdlog::debug("{}", pattern->ToString()); }
 }

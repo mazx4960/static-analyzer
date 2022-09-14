@@ -9,7 +9,7 @@ class SubQueryEvaluator {
   EvaluationStrategy *strategy_;
 
  public:
-  SubQueryEvaluator(IPKBQuerier *pkb, QueryClause &query_clause_);
+  SubQueryEvaluator(IPKBQuerier *pkb, QueryClause *query_clause);
 
   void evaluate();
 };

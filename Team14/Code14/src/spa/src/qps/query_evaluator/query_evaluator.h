@@ -10,7 +10,7 @@
 #include "subquery_evaluator.h"
 
 class QueryEvaluator {
- private:
+ protected:
   Query query_;
 
   IPKBQuerier *pkb_;
@@ -25,7 +25,7 @@ class QueryEvaluator {
   std::unordered_set<QueryDeclaration *> getDeclarationAsSet();
 
  public:
-  QueryEvaluator(IPKBQuerier *pkb, Query &query) : pkb_(pkb), query_(query){};
+  QueryEvaluator(IPKBQuerier *pkb, Query &query) : pkb_(pkb), query_(query) {};
 
   Result *evaluate();
 };

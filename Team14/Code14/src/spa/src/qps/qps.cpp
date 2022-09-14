@@ -1,8 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 #include "qps.h"
 
-#include <spdlog/spdlog.h>
-
+#include "spdlog/spdlog.h"
 #include "query_builder.h"
 
 void QPS::SetPKB(IPKBQuerier *pkb) { this->pkb_ = pkb; }

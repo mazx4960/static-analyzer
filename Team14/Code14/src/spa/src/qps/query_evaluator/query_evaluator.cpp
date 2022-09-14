@@ -1,8 +1,9 @@
 #include "query_evaluator.h"
 
 std::unordered_set<QueryDeclaration *> QueryEvaluator::copyDeclarations() {
-  std::copy(this->query_.getDeclarations().begin(), this->query_.getDeclarations().end(),
-            std::inserter(this->declarations_, this->declarations_.begin()));
+  Query &query = this->query_;
+  std::vector<QueryDeclaration *> query_declarations = query.getDeclarations();
+  this->declarations_ = std::unordered_set<QueryDeclaration *>(query_declarations.begin(), query_declarations.end());
   return this->getDeclarationAsSet();
 }
 
@@ -30,9 +31,9 @@ std::unordered_set<QueryDeclaration *> QueryEvaluator::fetchContext() {
 }
 
 std::unordered_set<QueryDeclaration *> QueryEvaluator::evaluateSubQueries() {
-  std::vector<QueryClause> subquery_clauses = this->query_.getQueryCall().getClauseVector();
+  std::vector<QueryClause *> subquery_clauses = this->query_.getQueryCall().getClauseVector();
 
-  for (QueryClause subquery_clause : subquery_clauses) {
+  for (auto *subquery_clause : subquery_clauses) {
     SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, subquery_clause);
     subquery_evaluator.evaluate();
   }
@@ -50,7 +51,7 @@ Result *QueryEvaluator::evaluate() {
   // Else, evaluate sub-queries first.
   if (this->query_.hasSubClauses()) { this->evaluateSubQueries(); }
 
-  QuerySynonym synonym = called_declaration->getSynonym();
+  QuerySynonym *synonym = called_declaration->getSynonym();
   std::unordered_set<Entity *> context = called_declaration->getContext();
 
   return new Result(synonym, context);

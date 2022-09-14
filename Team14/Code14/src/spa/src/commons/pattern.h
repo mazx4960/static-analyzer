@@ -8,6 +8,11 @@ class Pattern {
   std::string var_name_;
   int stmt_no_;
   std::string expr_;
+
  public:
   Pattern(std::string var_name, int stmt_no, std::string expr_);
+  [[nodiscard]] std::string GetVarName() const;
+  [[nodiscard]] int GetStmtNo() const;
+  [[nodiscard]] std::string GetExpr() const;
+  std::string ToString();
 };

@@ -11,13 +11,14 @@ class QuerySynonym {
  public:
   explicit QuerySynonym(std::string);
 
-  [[nodiscard]] std::string getSynonym() const;
+  [[nodiscard]] std::string toString() const;
   bool operator==(const QuerySynonym &) const;
 };
 
 class QuerySynonymHashFunction {
  public:
   size_t operator()(const QuerySynonym &) const;
+  size_t operator()(const QuerySynonym *) const;
 };
 
 
