@@ -4,12 +4,13 @@
 
 #include <string>
 #include <utility>
+#include <iostream>
 
 #include "types.h"
 #include "commons/hash_combine.h"
 
 class Entity {
- private:
+ protected:
   EntityType type_;
 
   std::string name_;
@@ -45,49 +46,46 @@ class StatementEntity : public Entity {
  private:
   int stmt_no_;
 
-  EntityType stmt_type_;
-
  public:
-  explicit StatementEntity(int stmt_no);
+  explicit StatementEntity(int stmt_no, EntityType entity_type = EntityType::kStatement);
   [[nodiscard]] int GetStmtNo() const;
-  [[nodiscard]] size_t GetHash() const override;  // Overrides Entity's GetHash() function
   bool operator==(const StatementEntity &other) const;
 };
 
 class ReadStmtEntity : public StatementEntity {
  public:
   explicit ReadStmtEntity(int stmt_no)
-      : StatementEntity(stmt_no) {}
+      : StatementEntity(stmt_no, EntityType::kReadStmt) {}
 };
 
 class PrintStmtEntity : public StatementEntity {
  public:
   explicit PrintStmtEntity(int stmt_no)
-      : StatementEntity(stmt_no) {}
+      : StatementEntity(stmt_no, EntityType::kPrintStmt) {}
 };
 
 class AssignStmtEntity : public StatementEntity {
  public:
   explicit AssignStmtEntity(int stmt_no)
-      : StatementEntity(stmt_no) {}
+      : StatementEntity(stmt_no, EntityType::kAssignStmt) {}
 };
 
 class CallStmtEntity : public StatementEntity {
  public:
   explicit CallStmtEntity(int stmt_no)
-      : StatementEntity(stmt_no) {}
+      : StatementEntity(stmt_no, EntityType::kCallStmt) {}
 };
 
 class WhileStmtEntity : public StatementEntity {
  public:
   explicit WhileStmtEntity(int stmt_no)
-      : StatementEntity(stmt_no) {}
+      : StatementEntity(stmt_no, EntityType::kWhileStmt) {}
 };
 
 class IfStmtEntity : public StatementEntity {
  public:
   explicit IfStmtEntity(int stmt_no)
-      : StatementEntity(stmt_no) {}
+      : StatementEntity(stmt_no, EntityType::kIfStmt) {}
 };
 
 class EntityHashFunction {

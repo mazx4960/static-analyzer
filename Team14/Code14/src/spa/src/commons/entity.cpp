@@ -1,6 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "entity.h"
+#include "spdlog/spdlog.h"
 
 Entity::Entity(EntityType type, std::string name) {
   this->type_ = type;
@@ -13,10 +14,17 @@ std::string Entity::GetName() const {
   return this->name_;
 }
 bool Entity::operator==(const Entity &other) const {
-  return this->type_ == other.type_ && this->name_ == other.name_;
+  return this->type_ == other.GetType() && this->name_ == other.GetName();
 }
 size_t Entity::GetHash() const {
-  return std::hash<std::string>()(this->name_);
+  size_t hash = 0;
+  HashCombine<EntityType>::hash_combine(hash, this->GetType());
+  HashCombine<std::string>::hash_combine(hash, this->GetName());
+  spdlog::info("String hash: {}, EntityType hash: {} Entity hash: {}",
+               std::hash<std::string>{}(this->name_),
+               std::hash<EntityType>{}(this->type_),
+               hash);
+  return hash;
 }
 std::string Entity::ToString() {
   std::string type_string;
@@ -53,16 +61,13 @@ std::string Entity::ToString() {
   return type_string + ": " + name_string;
 }
 
-StatementEntity::StatementEntity(int stmt_no)
-    : Entity(EntityType::kStatement, "") {
+StatementEntity::StatementEntity(int stmt_no, EntityType entity_type)
+    : Entity(entity_type, std::to_string(stmt_no)) {
   this->stmt_no_ = stmt_no;
 }
 int StatementEntity::GetStmtNo() const {
   return this->stmt_no_;
 }
 bool StatementEntity::operator==(const StatementEntity &other) const {
-  return this->stmt_type_ == other.stmt_type_ && this->stmt_no_ == other.stmt_no_;
-}
-size_t StatementEntity::GetHash() const {
-  return std::hash<int>()(this->stmt_no_);
+  return this->type_ == other.GetType() && this->stmt_no_ == other.GetStmtNo();
 }
