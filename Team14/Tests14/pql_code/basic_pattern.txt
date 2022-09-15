@@ -1,0 +1,2 @@
+variable x; assign a;
+Select x pattern a(x, _"1"_)

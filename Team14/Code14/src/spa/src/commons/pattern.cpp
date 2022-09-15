@@ -11,8 +11,8 @@ Pattern::Pattern(Entity *stmt, Entity *variable, std::string expr_) {
   this->variable_ = variable;
   this->expr_ = std::move(expr_);
 }
-Entity *Pattern::GetStmt() { return this->stmt_; }
-Entity *Pattern::GetVariable() { return this->variable_; }
+Entity *Pattern::GetStmt() const { return this->stmt_; }
+Entity *Pattern::GetVariable() const { return this->variable_; }
 std::string Pattern::GetExpr() const { return this->expr_; }
 std::string Pattern::ToString() {
   return this->stmt_->ToString() + " : " + this->variable_->ToString() + " = " + this->expr_;
