@@ -37,12 +37,12 @@ class QueryParser {
   QueryClause *parseClause();
   PatternClause *parsePattern();
   SuchThatClause *parseSuchThat();
-  FollowsClause *parseFollows();
-  ParentClause *parseParent();
-  UsesClause *parseUses();
-  ExpressionDeclaration *parseExpression();
-  ModifiesClause *parseModifies();
+  SuchThatClause *parseFollows();
+  SuchThatClause *parseParent();
+  SuchThatClause *parseUses();
+  SuchThatClause *parseModifies();
   bool isDeclared(const std::string &synonym);
+  QueryDeclaration *parseExpression();
   StringDeclaration *parseQuotedDeclaration();
   QueryDeclaration *parseStmtRefDeclaration(bool allowWild);
   QueryDeclaration *parseEntRefDeclaration(bool allowWild);

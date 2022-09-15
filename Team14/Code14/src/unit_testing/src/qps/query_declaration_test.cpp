@@ -93,8 +93,8 @@ TEST(QueryDeclarationPointerEqualityTest, EqualString) {
   ASSERT_TRUE((*q1) == (*q2));
 }
 TEST(QueryDeclarationPointerEqualityTest, EqualInteger) {
-  auto *q1 = new IntegerDeclaration(123);
-  auto *q2 = new IntegerDeclaration(123);
+  auto *q1 = new IntegerDeclaration("123");
+  auto *q2 = new IntegerDeclaration("123");
   std::unordered_set<QueryDeclaration *, QueryDeclarationHashFunction, QueryDeclarationPointerEquality> s = {q1, q2};
   ASSERT_EQ(s.size(), 1);
   ASSERT_TRUE((*q1) == (*q2));

@@ -1,24 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "entity_table.h"
-EntityTable *EntityTable::getTable(EntityType type) {
-  switch (type) {
-    case EntityType::kProcedure: return new ProcedureTable();
-    case EntityType::kStatement: return new StatementTable();
-    case EntityType::kVariable: return new VariableTable();
-    case EntityType::kConstant: return new ConstantTable();
-    default: return nullptr;
-  }
-}
 
-void EntityTable::populate(Entity &entity) {
-  this->table_.insert(&entity);
-}
+void EntityTable::populate(Entity &entity) { this->table_.insert(&entity); }
 
-std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> EntityTable::get() {
-  return this->table_;
-}
-
-int EntityTable::getCount() {
-  return this->table_.size();
-}
+std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> EntityTable::get() { return this->table_; }
