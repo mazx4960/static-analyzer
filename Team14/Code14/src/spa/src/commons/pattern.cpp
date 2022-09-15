@@ -6,14 +6,15 @@
 
 #include <utility>
 
-Pattern::Pattern(std::string var_name, int stmt_no, std::string expr)
-    : var_name_(std::move(var_name)),
-      stmt_no_(stmt_no),
-      expr_(std::move(expr)) {}
-std::string Pattern::GetVarName() const { return this->var_name_; }
-int Pattern::GetStmtNo() const { return this->stmt_no_; }
+Pattern::Pattern(Entity *stmt, Entity *variable, std::string expr_) {
+  this->stmt_ = stmt;
+  this->variable_ = variable;
+  this->expr_ = std::move(expr_);
+}
+Entity *Pattern::GetStmt() { return this->stmt_; }
+Entity *Pattern::GetVariable() { return this->variable_; }
 std::string Pattern::GetExpr() const { return this->expr_; }
 std::string Pattern::ToString() {
-  return std::to_string(this->stmt_no_) + ": " + this->var_name_ + " = " + this->expr_;
+  return this->stmt_->ToString() + " : " + this->variable_->ToString() + " = " + this->expr_;
   ;
 }
