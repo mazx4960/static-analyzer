@@ -10,10 +10,6 @@
 
 class QueryKeywords {
  private:
-  inline static const std::unordered_set<std::string> kValidKeywords {
-      "Select", "such", "that", "Follows", "Parent", "Uses",
-      "Modifies", "pattern", "stmt", "read", "print", "call", "while",
-      "if", "assign", "variable", "constant", "procedure"};
   inline static const std::unordered_set<std::string> kCallKeywords {"Select"};
   inline static const std::unordered_set<std::string> kDeclarationKeywords {
       "stmt", "read", "print", "call", "while", "if", "assign", "variable", "constant", "procedure"};

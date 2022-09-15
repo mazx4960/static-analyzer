@@ -21,18 +21,7 @@ std::unordered_set<QueryDeclaration *,
 
   for (auto *declaration : this->declarations_) {
     std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> query_declaration_context_set;
-
-    DeclarationType declaration_type = declaration->getType();
-    if (DeclarationTypeAdaptor::canConvertToEntityType(declaration_type)) {
-      EntityType entity_type = DeclarationTypeAdaptor::toEntityType(declaration_type);
-      query_declaration_context_set = this->pkb_->getEntities(entity_type);
-    } else if (DeclarationTypeAdaptor::canConvertToStatementType(declaration_type)) {
-      EntityType stmt_type = DeclarationTypeAdaptor::toStatementType(declaration_type);
-      query_declaration_context_set = this->pkb_->getEntities(stmt_type);
-    } else {
-      throw DeclarationTypeAdaptError(
-          "DeclarationType cannot be converted to EntityType or EntityType, context cannot be fetched");
-    }
+    query_declaration_context_set = this->pkb_->getEntities(declaration->getType());
     declaration->setContext(query_declaration_context_set);
   }
 

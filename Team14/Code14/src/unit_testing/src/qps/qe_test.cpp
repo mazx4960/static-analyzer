@@ -185,7 +185,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
   auto *proc_dec = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
   auto *expr_dec = new ExpressionDeclaration("x+y");
   auto *str_dec = new StringDeclaration("string_dec");
-  auto *int_dec = new IntegerDeclaration(123);
+  auto *int_dec = new IntegerDeclaration("123");
   auto *wild_dec = new WildCardDeclaration();
 
   std::vector<QueryDeclaration *> declarations_vector = {
@@ -225,7 +225,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   auto *proc_dec_1 = new ProcedureDeclaration(new QuerySynonym("proc_dec_1"));
   auto *expr_dec_1 = new ExpressionDeclaration("x+y");
   auto *str_dec_1 = new StringDeclaration("string_dec_1");
-  auto *int_dec_1 = new IntegerDeclaration(123);
+  auto *int_dec_1 = new IntegerDeclaration("123");
   auto *wild_dec_1 = new WildCardDeclaration();
 
   auto *stmt_dec_2 = new StatementDeclaration(new QuerySynonym("stmt_dec_2"));
@@ -240,7 +240,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec_2"));
   auto *expr_dec_2 = new ExpressionDeclaration("x+y");
   auto *str_dec_2 = new StringDeclaration("string_dec_2");
-  auto *int_dec_2 = new IntegerDeclaration(123);
+  auto *int_dec_2 = new IntegerDeclaration("123");
   auto *wild_dec_2 = new WildCardDeclaration();
 
   std::vector<QueryDeclaration *> declarations_vector = {
@@ -291,7 +291,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
   auto *proc_dec_1 = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
   auto *expr_dec_1 = new ExpressionDeclaration("x+y");
   auto *str_dec_1 = new StringDeclaration("string_dec");
-  auto *int_dec_1 = new IntegerDeclaration(123);
+  auto *int_dec_1 = new IntegerDeclaration("123");
   auto *wild_dec_1 = new WildCardDeclaration();
 
   auto *stmt_dec_2 = new StatementDeclaration(new QuerySynonym("stmt_dec"));
@@ -306,7 +306,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
   auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
   auto *expr_dec_2 = new ExpressionDeclaration("x+y");
   auto *str_dec_2 = new StringDeclaration("string_dec");
-  auto *int_dec_2 = new IntegerDeclaration(123);
+  auto *int_dec_2 = new IntegerDeclaration("123");
   auto *wild_dec_2 = new WildCardDeclaration();
 
   std::vector<QueryDeclaration *> declarations_vector = {

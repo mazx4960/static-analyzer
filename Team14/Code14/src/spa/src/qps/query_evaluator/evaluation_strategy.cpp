@@ -13,7 +13,7 @@ EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClaus
 
 // TODO(howtoosee) implement SuchThat strategy
 void SuchThatStrategy::evaluate() {
-  RsType rs_type;// TODO (howtoosee) translate clause type to rs_type
+  RsType rs_type = this->clause_->getSuchThatType();
 
   QueryDeclaration *first_param = this->clause_->getFirst();
   QueryDeclaration *second_param = this->clause_->getSecond();
