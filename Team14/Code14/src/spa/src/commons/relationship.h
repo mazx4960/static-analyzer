@@ -43,11 +43,3 @@ class ModifiesRelationship : public Relationship {
   ModifiesRelationship(Entity *first, Entity *second)
       : Relationship(RsType::kModifies, std::move(first), std::move(second)) {}
 };
-
-class RelationshipTableHashingFunction {
- public:
-  template<class T1, class T2>
-  std::size_t operator () (std::pair<T1, T2> &p) const {
-    return std::hash<T1>()(p.first) ^ (std::hash<T2>()(p.second) << 1);
-  }
-};
