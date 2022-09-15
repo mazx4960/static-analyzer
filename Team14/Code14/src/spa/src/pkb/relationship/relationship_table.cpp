@@ -1,22 +1,24 @@
 
 #include "relationship_table.h"
 
-
-std::unordered_set<Entity*, EntityHashFunction, EntityPointerEquality> RelationshipTable::Empty() {
-  return std::unordered_set<Entity*, EntityHashFunction, EntityPointerEquality>{};
+std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> RelationshipTable::Empty() {
+  return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>{};
 }
 
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> RelationshipTable::get(RsType type,
                                                                                                Entity *query_entity,
                                                                                                bool is_inverse) {
   switch (type) {
-    case RsType::kFollowsT: case RsType::kParentT: return this->getTraversal(query_entity, is_inverse);
+    case RsType::kFollowsT:
+    case RsType::kParentT: return this->getTraversal(query_entity, is_inverse);
     default: return this->get(query_entity, is_inverse);
   }
 }
 
-std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> RelationshipTable::getTraversal(Entity *query_entity,
-                                                                                                        bool is_inverse) {
+std::unordered_set<Entity *,
+                   EntityHashFunction,
+                   EntityPointerEquality> RelationshipTable::getTraversal(Entity *query_entity,
+                                                                          bool is_inverse) {
   std::unordered_map<Entity *,
                      std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
                      EntityHashFunction, EntityPointerEquality> *table_ptr;
@@ -28,8 +30,8 @@ std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Relation
 }
 
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>
-    RelationshipTable::traversalHelper(Entity *query_entity,
-                                   std::unordered_map<Entity *,std::unordered_set<Entity *,
+RelationshipTable::traversalHelper(Entity *query_entity,
+                                   std::unordered_map<Entity *, std::unordered_set<Entity *,
                                                                                    EntityHashFunction,
                                                                                    EntityPointerEquality>,
                                                       EntityHashFunction,
@@ -49,14 +51,6 @@ void RelationshipTable::populate(Relationship &relationship) {
   Entity *second = relationship.GetSecond();
   this->table_[first].insert(second);
   this->inverse_table_[second].insert(first);
-}
-
-std::unordered_map<Entity *,
-                   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
-                   EntityHashFunction,
-                   EntityPointerEquality>
-RelationshipTable::get() {
-  return this->table_;
 }
 
 std::unordered_map<Entity *,
