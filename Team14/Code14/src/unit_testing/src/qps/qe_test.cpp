@@ -339,8 +339,8 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
                      QueryDeclarationPointerEquality>
       returned_declaration_set = query_evaluator->mockCopyDeclarations();
 
-  ASSERT_EQ(declarations_set.size(), 14);
-  ASSERT_EQ(returned_declaration_set.size(), 14);
+  ASSERT_EQ(declarations_set.size(), 13);
+  ASSERT_EQ(returned_declaration_set.size(), 13);
   ASSERT_EQ(declarations_set, returned_declaration_set);
 }
 
