@@ -5,131 +5,176 @@
 #include "pkb/relationship/relationship_table.h"
 
 TEST(QueryTest, FollowsRelationshipInversionFalse) {
-  std::vector<std::pair<std::string, std::string>> follows = {
-      {"1", "2"},
-      {"2", "3"},
-      {"3", "4"},
-      {"8", "10"}
+  std::vector<Relationship *> relationships = {
+      new FollowsRelationship(new AssignStmtEntity("1"), new AssignStmtEntity("2")),
+      new FollowsRelationship(new AssignStmtEntity("2"), new AssignStmtEntity("3")),
+      new FollowsRelationship(new AssignStmtEntity("3"), new AssignStmtEntity("4")),
+      new FollowsRelationship(new AssignStmtEntity("8"), new AssignStmtEntity("10")),
   };
-  std::vector<Relationship *> relationships;
-  relationships.reserve(follows.size());
-  for (auto & follow : follows) {
-    relationships.push_back(
-        new FollowsRelationship(
-            new AssignStmtEntity(follow.first),
-            new AssignStmtEntity(follow.second))
-    );
-  }
   PKB pkb;
   pkb.populate(relationships);
   auto result = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("8"), false);
-  std::unordered_set<Entity *> expected_result = {new AssignStmtEntity("10")};
-  ASSERT_EQ((*result.begin())->GetValue(), (*expected_result.begin())->GetValue());
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result = {new AssignStmtEntity("10")};
+  ASSERT_EQ(result, expected_result);
 }
-
+TEST(QueryTest, FollowsRelationshipInversionTrue) {
+  std::vector<Relationship *> relationships = {
+      new FollowsRelationship(new AssignStmtEntity("1"), new AssignStmtEntity("2")),
+      new FollowsRelationship(new AssignStmtEntity("2"), new AssignStmtEntity("3")),
+      new FollowsRelationship(new AssignStmtEntity("3"), new AssignStmtEntity("4")),
+      new FollowsRelationship(new AssignStmtEntity("8"), new AssignStmtEntity("10")),
+  };
+  PKB pkb;
+  pkb.populate(relationships);
+  auto result = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("10"), true);
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result = {new AssignStmtEntity("8")};
+  ASSERT_EQ(result, expected_result);
+}
+TEST(QueryTest, FollowsTRelationshipInversionFalse) {
+  std::vector<Relationship *> relationships = {
+      new FollowsRelationship(new AssignStmtEntity("1"), new AssignStmtEntity("2")),
+      new FollowsRelationship(new AssignStmtEntity("2"), new AssignStmtEntity("3")),
+      new FollowsRelationship(new AssignStmtEntity("3"), new AssignStmtEntity("4")),
+      new FollowsRelationship(new AssignStmtEntity("8"), new AssignStmtEntity("10")),
+  };
+  PKB pkb;
+  pkb.populate(relationships);
+  auto result = pkb.getByRelationship(RsType::kFollowsT, new AssignStmtEntity("1"), false);
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result = {
+      new AssignStmtEntity("2"),
+      new AssignStmtEntity("3"),
+      new AssignStmtEntity("4")
+  };
+  ASSERT_EQ(result, expected_result);
+}
+TEST(QueryTest, FollowsTRelationshipInversionTrue) {
+  std::vector<Relationship *> relationships = {
+      new FollowsRelationship(new AssignStmtEntity("1"), new AssignStmtEntity("2")),
+      new FollowsRelationship(new AssignStmtEntity("2"), new AssignStmtEntity("3")),
+      new FollowsRelationship(new AssignStmtEntity("3"), new AssignStmtEntity("4")),
+      new FollowsRelationship(new AssignStmtEntity("8"), new AssignStmtEntity("10")),
+  };
+  PKB pkb;
+  pkb.populate(relationships);
+  auto result = pkb.getByRelationship(RsType::kFollowsT, new AssignStmtEntity("4"), true);
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result = {
+      new AssignStmtEntity("1"),
+      new AssignStmtEntity("2"),
+      new AssignStmtEntity("3")
+  };
+  ASSERT_EQ(result, expected_result);
+}
+TEST(QueryTest, ParentRelationshipInversionFalse) {
+  std::vector<Relationship *> relationships = {
+      new ParentRelationship(new WhileStmtEntity("1"), new IfStmtEntity("2")),
+      new ParentRelationship(new IfStmtEntity("2"), new WhileStmtEntity("3")),
+      new ParentRelationship(new WhileStmtEntity("3"), new AssignStmtEntity("4")),
+      new ParentRelationship(new AssignStmtEntity("8"), new AssignStmtEntity("10")),
+  };
+  PKB pkb;
+  pkb.populate(relationships);
+  auto result = pkb.getByRelationship(RsType::kParent, new AssignStmtEntity("8"), false);
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result = {new AssignStmtEntity("10")};
+  ASSERT_EQ(result, expected_result);
+}
+TEST(QueryTest, ParentRelationshipInversionTrue) {
+  std::vector<Relationship *> relationships = {
+      new ParentRelationship(new WhileStmtEntity("1"), new IfStmtEntity("2")),
+      new ParentRelationship(new IfStmtEntity("2"), new WhileStmtEntity("3")),
+      new ParentRelationship(new WhileStmtEntity("3"), new AssignStmtEntity("4")),
+      new ParentRelationship(new AssignStmtEntity("8"), new AssignStmtEntity("10")),
+  };
+  PKB pkb;
+  pkb.populate(relationships);
+  auto result = pkb.getByRelationship(RsType::kParent, new AssignStmtEntity("10"), true);
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result = {new AssignStmtEntity("8")};
+  ASSERT_EQ(result, expected_result);
+}
 TEST(QueryTest, ParentTRelationshipInversionFalse) {
-  std::vector<std::pair<std::string, std::string>> parent = {
-      {"2", "1"},
-      {"3", "2"},
-      {"4", "3"},
-      {"10", "8"}
+  std::vector<Relationship *> relationships = {
+      new ParentRelationship(new WhileStmtEntity("1"), new IfStmtEntity("2")),
+      new ParentRelationship(new IfStmtEntity("2"), new WhileStmtEntity("3")),
+      new ParentRelationship(new WhileStmtEntity("3"), new AssignStmtEntity("4")),
+      new ParentRelationship(new AssignStmtEntity("8"), new AssignStmtEntity("10")),
   };
-  std::vector<Relationship *> relationships;
-  relationships.reserve(parent.size());
-  for (auto & p : parent) {
-    relationships.push_back(
-        new ParentRelationship(
-            new WhileStmtEntity(p.first),
-            new WhileStmtEntity(p.second))
-    );
-  }
   PKB pkb;
   pkb.populate(relationships);
-  auto result = pkb.getByRelationship(RsType::kParentT, new WhileStmtEntity("4"), false);
-  std::unordered_set<Entity *> expected_result = {new WhileStmtEntity("3"),
-                                                  new WhileStmtEntity("2"),
-                                                  new WhileStmtEntity("1")};
-
-  ASSERT_EQ(result.size(), expected_result.size());
+  auto result = pkb.getByRelationship(RsType::kParentT, new WhileStmtEntity("1"), false);
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result = {
+      new IfStmtEntity("2"),
+      new WhileStmtEntity("3"),
+      new AssignStmtEntity("4")};
+  ASSERT_EQ(result, expected_result);
 }
-
-TEST(QuerTest, ParentRelationshipInversionTrue) {
+TEST(QueryTest, ParentTRelationshipInversionTrue) {
+  std::vector<Relationship *> relationships = {
+      new ParentRelationship(new WhileStmtEntity("1"), new IfStmtEntity("2")),
+      new ParentRelationship(new IfStmtEntity("2"), new WhileStmtEntity("3")),
+      new ParentRelationship(new WhileStmtEntity("3"), new AssignStmtEntity("4")),
+      new ParentRelationship(new AssignStmtEntity("8"), new AssignStmtEntity("10")),
+  };
   PKB pkb;
-  auto result = pkb.getByRelationship(RsType::kParent, new AssignStmtEntity("3"), true);
-  std::unordered_set<Entity *> expected_result = {};
-  ASSERT_EQ(result.size(), expected_result.size());
+  pkb.populate(relationships);
+  auto result = pkb.getByRelationship(RsType::kParentT, new AssignStmtEntity("4"), true);
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result = {
+      new WhileStmtEntity("3"),
+      new IfStmtEntity("2"),
+      new WhileStmtEntity("1")};
+  ASSERT_EQ(result, expected_result);
 }
-
 TEST(QueryTest, ModifiesRelationshipInversionFalse) {
-  std::vector<std::pair<std::string, std::string>> modifies = {
-      {"1", "X"},
-      {"2", "Y"},
-      {"3", "Z"},
-      {"3", "A"}
+  std::vector<Relationship *> relationships = {
+      new ModifiesRelationship(new AssignStmtEntity("1"), new VariableEntity("X")),
+      new ModifiesRelationship(new AssignStmtEntity("2"), new VariableEntity("X")),
+      new ModifiesRelationship(new ReadStmtEntity("3"), new VariableEntity("Y")),
+      new ModifiesRelationship(new ProcedureEntity("main"), new VariableEntity("Z")),
   };
-  std::vector<Relationship *> relationships;
-  relationships.reserve(modifies.size());
-  for (auto & m: modifies) {
-    relationships.push_back(
-        new ModifiesRelationship(
-            new AssignStmtEntity(m.first),
-            new VariableEntity(m.second))
-    );
-  }
   PKB pkb;
   pkb.populate(relationships);
-  auto query_result = pkb.getByRelationship(RsType::kModifies, new AssignStmtEntity("3"), false);
-  std::unordered_set<std::string> v_result = {};
-  for (auto *entity: query_result) {
-    v_result.insert(entity->GetValue());
-  }
-  std::unordered_set<std::string> expected_result = {"A","Z"};
-  ASSERT_EQ(v_result, expected_result);
+  auto result = pkb.getByRelationship(RsType::kModifies, new AssignStmtEntity("1"), false);
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result = {new VariableEntity("X")};
+  ASSERT_EQ(result, expected_result);
 }
-
 TEST(QueryTest, ModifiesRelationshipInversionTrue) {
-  std::vector<std::pair<std::string, std::string>> modifies = {
-      {"1", "X"},
-      {"2", "Y"},
-      {"3", "Z"},
-      {"3", "A"}
+  std::vector<Relationship *> relationships = {
+      new ModifiesRelationship(new AssignStmtEntity("1"), new VariableEntity("X")),
+      new ModifiesRelationship(new AssignStmtEntity("2"), new VariableEntity("X")),
+      new ModifiesRelationship(new ReadStmtEntity("3"), new VariableEntity("Y")),
+      new ModifiesRelationship(new ProcedureEntity("main"), new VariableEntity("Z")),
   };
-  std::vector<Relationship *> relationships;
-  relationships.reserve(modifies.size());
-  for (auto & m: modifies) {
-    relationships.push_back(
-        new ModifiesRelationship(
-            new AssignStmtEntity(m.first),
-            new VariableEntity(m.second))
-    );
-  }
   PKB pkb;
   pkb.populate(relationships);
   auto result = pkb.getByRelationship(RsType::kModifies, new VariableEntity("X"), true);
-  std::unordered_set<Entity *> expected_result = {new AssignStmtEntity("1")};
-  ASSERT_EQ((*result.begin())->GetValue(), (*expected_result.begin())->GetValue());
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result = {
+      new AssignStmtEntity("1"),
+      new AssignStmtEntity("2")};
+  ASSERT_EQ(result, expected_result);
 }
-
-TEST(QueryTest, UsesRelationshipInvalidQueryInversionFalse) {
-  std::vector<std::pair<std::string, std::string>> modifies = {
-      {"1", "X"},
-      {"2", "Y"},
-      {"3", "Z"},
-      {"3", "A"}
+TEST(QueryTest, UsesRelationshipInversionFalse) {
+  std::vector<Relationship *> relationships = {
+      new UsesRelationship(new AssignStmtEntity("1"), new VariableEntity("X")),
+      new UsesRelationship(new AssignStmtEntity("2"), new VariableEntity("X")),
+      new UsesRelationship(new ReadStmtEntity("3"), new VariableEntity("Y")),
+      new UsesRelationship(new ProcedureEntity("main"), new VariableEntity("Z")),
   };
-
-  std::vector<Relationship *> relationships;
-  relationships.reserve(modifies.size());
-  for (auto & m: modifies) {
-    relationships.push_back(
-        new UsesRelationship(
-            new WhileStmtEntity(m.first),
-            new IfStmtEntity(m.second))
-    );
-  }
   PKB pkb;
   pkb.populate(relationships);
-  auto result = pkb.getByRelationship(RsType::kUses, new VariableEntity("X"), false);
-  std::unordered_set<Entity *> expected_result = {};
-  ASSERT_EQ(result.size(), expected_result.size());
+  auto result = pkb.getByRelationship(RsType::kUses, new ReadStmtEntity("3"), false);
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result = {new VariableEntity("Y")};
+  ASSERT_EQ(result, expected_result);
+}
+TEST(QueryTest, UsesRelationshipInversionTrue) {
+  std::vector<Relationship *> relationships = {
+      new UsesRelationship(new AssignStmtEntity("1"), new VariableEntity("X")),
+      new UsesRelationship(new AssignStmtEntity("2"), new VariableEntity("X")),
+      new UsesRelationship(new ReadStmtEntity("3"), new VariableEntity("Y")),
+      new UsesRelationship(new ProcedureEntity("main"), new VariableEntity("Z")),
+  };
+  PKB pkb;
+  pkb.populate(relationships);
+  auto result = pkb.getByRelationship(RsType::kUses, new VariableEntity("X"), true);
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result = {
+      new AssignStmtEntity("1"),
+      new AssignStmtEntity("2")};
+  ASSERT_EQ(result, expected_result);
 }

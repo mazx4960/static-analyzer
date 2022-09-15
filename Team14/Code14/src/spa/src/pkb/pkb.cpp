@@ -11,10 +11,11 @@ std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::Emp
 }
 
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::getEntities(EntityType entity_type) {
-  if (this->entity_map_.find(entity_type) == this->entity_map_.end()) {
+//  if (this->entity_map_.find(entity_type) == this->entity_map_.end()) {
+//    return this->Empty();
+//  }
+//  return this->entity_map_[entity_type]->get();
     return this->Empty();
-  }
-  return this->entity_map_[entity_type]->get();
 }
 
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::getByRelationship(RsType rs_type, Entity *entity, bool is_inverse) {

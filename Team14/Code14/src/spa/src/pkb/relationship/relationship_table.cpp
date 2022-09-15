@@ -19,36 +19,37 @@ std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Relation
                                                                                                Entity *query_entity,
                                                                                                bool is_inverse) {
   switch (type) {
-    case RsType::kFollows: case RsType::kParent: return this->getStatements(query_entity, is_inverse);
     case RsType::kFollowsT: case RsType::kParentT: return this->getTraversal(query_entity, is_inverse);
     default: return this->get(query_entity, is_inverse);
   }
 }
 
-std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> RelationshipTable::getStatements(Entity *query_entity,
-                                                                                                         bool is_inverse) {
-  if (is_inverse || this->table_.find(query_entity) == this->table_.end()) {
-    return this->Empty();
-  }
-  return this->table_[query_entity];
-}
-
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> RelationshipTable::getTraversal(Entity *query_entity,
                                                                                                         bool is_inverse) {
-  if (is_inverse || this->table_.find(query_entity) == this->table_.end()) {
+  std::unordered_map<Entity *,
+                     std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
+                     EntityHashFunction, EntityPointerEquality> *table_ptr;
+
+  table_ptr = is_inverse ? &this->inverse_table_ : &this->table_;
+  if (table_ptr->find(query_entity) == table_ptr->end()) {
     return this->Empty();
   }
-  auto result = traversalHelper(query_entity);
-  return result;
+  return this->traversalHelper(query_entity, table_ptr);
 }
 
-std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> RelationshipTable::traversalHelper(Entity *query_entity) {
-  if (this->table_.find(query_entity) == this->table_.end()) {
-    return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> {};
+std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>
+    RelationshipTable::traversalHelper(Entity *query_entity,
+                                   std::unordered_map<Entity *,std::unordered_set<Entity *,
+                                                                                   EntityHashFunction,
+                                                                                   EntityPointerEquality>,
+                                                      EntityHashFunction,
+                                                      EntityPointerEquality> *table_ptr) {
+  if (table_ptr->find(query_entity) == table_ptr->end()) {
+    return this->Empty();
   }
-  auto next_statement = this->table_[query_entity];
+  auto next_statement = (*table_ptr)[query_entity];
   auto *next_entity = *next_statement.begin();
-  auto recursive_result = this->traversalHelper(next_entity);
+  auto recursive_result = this->traversalHelper(next_entity, table_ptr);
   next_statement.insert(recursive_result.begin(), recursive_result.end());
   return next_statement;
 }
@@ -56,16 +57,13 @@ std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Relation
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> RelationshipTable::get(Entity *query_entity,
                                                                                                bool is_inverse) {
   if (is_inverse) {
-    std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> results = {};
-    for (auto [k, v]: this->table_) {
-      for (auto *entity: v) {
-        if (entity->GetValue() == query_entity->GetValue()) {
-          results.insert(k);
-          break;
-        }
-      }
+    if (this->inverse_table_.find(query_entity) == this->inverse_table_.end()) {
+      return this->Empty();
     }
-    return results;
+    return this->inverse_table_[query_entity];
+  }
+  if (this->table_.find(query_entity) == this->table_.end()) {
+    return this->Empty();
   }
   return this->table_[query_entity];
 }

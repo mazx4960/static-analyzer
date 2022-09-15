@@ -9,6 +9,7 @@
 #include "commons/result.h"
 #include "pkb/entity/entity_manager.h"
 #include "pkb/entity/entity_table.h"
+#include "pkb/relationship/relationship_table.h"
 
 /*
  * Interface for SP -> PKB
@@ -41,7 +42,8 @@ class IPKBQuerier {
 class PKB : public IPKBPopulator, public IPKBQuerier {
  private:
   EntityManager *entity_manager_;
-
+  std::unordered_map<RsType, RelationshipTable *> relationship_map_;
+  static std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Empty();
  public:
   PKB();
 
