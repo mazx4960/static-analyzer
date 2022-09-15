@@ -84,5 +84,13 @@ void PatternStrategy::intersectContext(QueryDeclaration *assign_param, QueryDecl
   if (left_param->getType() == EntityType::kString) {
     intersected_results = pkb_->getByPattern(new VariableEntity(left_param->getString()), pattern_substring);
   }
+  if (left_param->getType() == EntityType::kVariable) {
+    for (auto *variable_entity : left_param->getContext()) {
+      assign_result.merge(pkb_->getByPattern(variable_entity, pattern_substring));
+    }
+    std::set_intersection(assign_result.begin(), assign_result.end(), assign_param->getContext().begin(),
+                          assign_param->getContext().end(),
+                          std::inserter(intersected_results, intersected_results.begin()));
+  }
   assign_param->setContext(intersected_results);
 }
