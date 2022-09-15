@@ -16,7 +16,7 @@ std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::get
   return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>();
 }
 
-std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::getByPattern(std::string &left_pattern,
+std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::getByPattern(Entity *entity,
                                                                                           std::string &right_pattern) {
   return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>();
 }
