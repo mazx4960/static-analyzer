@@ -5,6 +5,18 @@ std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Relation
   return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>{};
 }
 
+std::unordered_map<Entity *,
+                   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
+                   EntityHashFunction, EntityPointerEquality> RelationshipTable::GetTable() {
+  return this->table_;
+}
+
+std::unordered_map<Entity *,
+                   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
+                   EntityHashFunction, EntityPointerEquality> RelationshipTable::GetInverseTable() {
+  return this->inverse_table_;
+}
+
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> RelationshipTable::get(RsType type,
                                                                                                Entity *query_entity,
                                                                                                bool is_inverse) {

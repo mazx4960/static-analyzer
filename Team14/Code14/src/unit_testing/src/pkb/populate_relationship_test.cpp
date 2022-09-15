@@ -25,9 +25,9 @@ TEST(PopulateRelationshipTest, FollowsTest) {
 
   int count = 0;
   int inverse_count = 0;
-  for (auto &key : relationship_table->get()) { count += key.second.size(); }
+  for (auto &key : relationship_table->GetTable()) { count += key.second.size(); }
 
-  for (auto &inverse_key : relationship_table->get_inverse()) { inverse_count += inverse_key.second.size(); }
+  for (auto &inverse_key : relationship_table->GetInverseTable()) { inverse_count += inverse_key.second.size(); }
 
   ASSERT_EQ(count, length);
   ASSERT_EQ(inverse_count, length);
