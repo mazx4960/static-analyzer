@@ -2,22 +2,36 @@
 
 #include "query_declaration.h"
 
-#include <utility>
-
-#include "qps/exceptions.h"
-
 QuerySynonym *QueryDeclaration::getSynonym() const { return this->query_synonym_; }
 bool QueryDeclaration::operator==(const QueryDeclaration &other) const {
-  return this->query_synonym_ == other.getSynonym()
-      && this->type_ == other.getType()
+  if (this->type_ == DeclarationType::kWildcard || other.getType() == DeclarationType::kWildcard) {
+    return true;
+  }
+  return this->type_ == other.getType()
+      && *(this->query_synonym_) == *(other.getSynonym())
       && this->string_ == other.getString()
       && this->number_ == other.getNumber();
+}
+bool QueryDeclaration::operator==(const QueryDeclaration *other) const {
+  if (this->type_ == DeclarationType::kWildcard || other->getType() == DeclarationType::kWildcard) {
+    return true;
+  }
+  return this->type_ == other->getType()
+      && this->query_synonym_ == other->getSynonym()
+      && this->string_ == other->getString()
+      && this->number_ == other->getNumber();
 }
 DeclarationType QueryDeclaration::getType() const { return this->type_; }
 std::string QueryDeclaration::getString() const { return this->string_; }
 int QueryDeclaration::getNumber() const { return this->number_; }
-std::unordered_set<Entity *> QueryDeclaration::getContext() const { return this->context_; }
-void QueryDeclaration::setContext(std::unordered_set<Entity *> context) { this->context_ = std::move(context); }
+std::unordered_set<Entity *,
+                   EntityHashFunction,
+                   EntityPointerEquality> QueryDeclaration::getContext() const {
+  return this->context_;
+}
+void QueryDeclaration::setContext(std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> context) {
+  this->context_ = std::move(context);
+}
 
 bool DeclarationTypeAdaptor::canConvertToEntityType(DeclarationType declaration_type) {
   switch (declaration_type) {
@@ -79,8 +93,4 @@ DeclarationType DeclarationTypeAdaptor::toDeclarationType(EntityType entity_type
     case EntityType::kReadStmt: return DeclarationType::kRead;
     default: throw DeclarationTypeAdaptError("EntityType cannot be adapted to DeclarationType");
   }
-}
-
-size_t QueryDeclarationHashFunction::operator()(const QueryDeclaration &query_declaration) const {
-  return QuerySynonymHashFunction().operator()(query_declaration.getSynonym());
 }

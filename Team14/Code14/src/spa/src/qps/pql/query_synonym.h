@@ -10,15 +10,25 @@ class QuerySynonym {
 
  public:
   explicit QuerySynonym(std::string);
+  static QuerySynonym *empty();
 
   [[nodiscard]] std::string toString() const;
   bool operator==(const QuerySynonym &) const;
+  bool operator!=(const QuerySynonym &) const;
 };
 
-class QuerySynonymHashFunction {
- public:
-  size_t operator()(const QuerySynonym &) const;
-  size_t operator()(const QuerySynonym *) const;
+struct QuerySynonymHashFunction {
+  size_t operator()(const QuerySynonym &synonym) const {
+    return std::hash<std::string>()(synonym.toString());
+  }
+  size_t operator()(const QuerySynonym *synonym) const {
+    return std::hash<std::string>()(synonym->toString());
+  };
 };
 
+struct QuerySynonymPointerEquality {
+  bool operator()(const QuerySynonym *lhs, const QuerySynonym *rhs) const {
+    return lhs->toString() == rhs->toString();
+  }
+};
 

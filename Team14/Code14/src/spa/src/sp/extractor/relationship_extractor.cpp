@@ -45,7 +45,7 @@ void RelationshipExtractor::ExtractFollows(std::vector<Relationship *> &relation
   for (auto *stmt : static_cast<StatementListNode *>(node)->GetStatements()) {
     auto stmt_type = stmt->GetStmtType();
     auto stmt_no = stmt->GetStmtNo();
-    Entity *cur_entity = new StatementEntity(stmt_no);
+    auto *cur_entity = new Entity(stmt_type, std::to_string(stmt_no));
     if (prev_entity != nullptr) {
       Relationship *follows = new FollowsRelationship(prev_entity, cur_entity);
       relationships.push_back(follows);
@@ -76,24 +76,24 @@ void RelationshipExtractor::ExtractParent(std::vector<Relationship *> &relations
         case EntityType::kWhileStmt: {
           auto *while_stmt = static_cast<WhileNode *>(stmt);
           auto *stmt_list = while_stmt->GetStatementList();
-          Entity *parent = new WhileStmtEntity(while_stmt->GetStmtNo());
+          Entity *parent = new WhileStmtEntity(std::to_string(while_stmt->GetStmtNo()));
           ExtractParentHelper(relationships, parent, stmt_list);
           break;
         }
         case EntityType::kIfStmt: {
           auto *if_stmt = static_cast<IfNode *>(stmt);
-          Entity *parent = new WhileStmtEntity(if_stmt->GetStmtNo());
+          Entity *parent = new WhileStmtEntity(std::to_string(if_stmt->GetStmtNo()));
           auto *then_stmt_list = if_stmt->GetThenStatementList();
           auto *else_stmt_list = if_stmt->GetElseStatementList();
           ExtractParentHelper(relationships, parent, then_stmt_list);
           ExtractParentHelper(relationships, parent, else_stmt_list);
           break;
         }
-        default: break; // other statement entity types are ignored.
+        default: break;// other statement entity types are ignored.
       }
       break;
     }
-    default: break; // other node types are ignored.
+    default: break;// other node types are ignored.
   }
 }
 /**
@@ -138,15 +138,15 @@ void RelationshipExtractor::ExtractUses(std::vector<Relationship *> &relationshi
         case EntityType::kIfStmt:    // fallthrough
         case EntityType::kWhileStmt: // fallthrough
         case EntityType::kCallStmt: {
-          Entity *parent = new StatementEntity(stmt->GetStmtNo());
+          auto *parent = new Entity(stmt_type, std::to_string(stmt->GetStmtNo()));
           ExtractUsesHelper(relationships, parent, stmt);
           break;
         }
-        default: break; // other statement entity types are ignored.
+        default: break;// other statement entity types are ignored.
       }
       break;
     }
-    default: break; // other node types are ignored.
+    default: break;// other node types are ignored.
   }
 }
 void RelationshipExtractor::ExtractUsesHelper(std::vector<Relationship *> &relationships, Entity *parent, Node *node) {
@@ -191,10 +191,10 @@ void RelationshipExtractor::ExtractUsesHelper(std::vector<Relationship *> &relat
           // TODO(mazx4960): implement recursive uses for statements in call
           break;
         }
-        default: break; // other statement entity types are ignored.
+        default: break;// other statement entity types are ignored.
       }
     }
-    default: break; // other node types are ignored.
+    default: break;// other node types are ignored.
   }
 }
 /**
@@ -221,14 +221,14 @@ void RelationshipExtractor::ExtractModifies(std::vector<Relationship *> &relatio
         case EntityType::kIfStmt:    // fallthrough
         case EntityType::kWhileStmt: // fallthrough
         case EntityType::kCallStmt: {
-          Entity *parent = new StatementEntity(stmt->GetStmtNo());
+          auto *parent = new Entity(stmt_type, std::to_string(stmt->GetStmtNo()));
           ExtractModifiesHelper(relationships, parent, stmt);
         }
-        default: break; // other statement entity types are ignored.
+        default: break;// other statement entity types are ignored.
       }
       break;
     }
-    default: break; // other node types are ignored.
+    default: break;// other node types are ignored.
   }
 }
 void RelationshipExtractor::ExtractModifiesHelper(std::vector<Relationship *> &relationships, Entity *parent,
@@ -273,6 +273,6 @@ void RelationshipExtractor::ExtractModifiesHelper(std::vector<Relationship *> &r
         default: break;
       }
     }
-    default: break; // other node types are ignored.
+    default: break;// other node types are ignored.
   }
 }
