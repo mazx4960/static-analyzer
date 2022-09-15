@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <utility>
 #include "qps/pql/query_keywords.h"
+#include "commons/parser/parser.h"
 
 QueryParser::QueryParser(std::vector<Token *> tokens) { this->tokens_ = std::move(tokens); }
 
@@ -197,22 +198,27 @@ SuchThatClause *QueryParser::parseModifies() {
 QueryDeclaration *QueryParser::parseExpression() {
   bool wild_expression = false;
   std::string expression;
-  if (peekToken()->type == TokenType::kWildCard) { wild_expression = true; }
-  if (peekToken()->type == TokenType::kQuote) {
-    Token *tmp = nextToken();
+  Token *tmp = nextToken();
+  if (tmp->type == TokenType::kWildCard) {
+    wild_expression = true;
+    tmp = peekToken();
+  }
+  if (tmp->type == TokenType::kQuote) {
+    nextToken();
     bool toggle = true;
+    std::vector<Token *> expr_tokens;
     while (peekToken()->type != TokenType::kQuote) {
       tmp = nextToken();
       if (toggle) {
         if (tmp->type == TokenType::kSymbol) {
-          expression.append(tmp->value);
+          expr_tokens.push_back(tmp);
         } else {
           throw ParseSyntaxError("Unexpected symbol in expression" + tmp->value);
         }
         toggle = false;
       } else {
         if (tmp->type == TokenType::kOperator) {
-          expression.append(tmp->value);
+          expr_tokens.push_back(tmp);
         } else {
           throw ParseSyntaxError("Unexpected operator in expression" + tmp->value);
         }
@@ -220,12 +226,15 @@ QueryDeclaration *QueryParser::parseExpression() {
       }
     }
     nextToken();
-  }
-  if (wild_expression) {
-    if (nextToken()->type != TokenType::kWildCard) {
-      throw ParseSyntaxError("Invalid wildcard expression");
+    expr_tokens.push_back(new EndOfFileToken());
+    expression = Parser::ParseExpression(expr_tokens)->ToString();
+    if (wild_expression) {
+      if (nextToken()->type != TokenType::kWildCard) {
+        throw ParseSyntaxError("Invalid wildcard expression");
+      }
+      return new WildCardExpressionDeclaration(expression);
     }
-    return new WildCardExpressionDeclaration(expression);
+    return new ExpressionDeclaration(expression);
   }
-  return new ExpressionDeclaration(expression);
+  return new WildCardDeclaration();
 }
