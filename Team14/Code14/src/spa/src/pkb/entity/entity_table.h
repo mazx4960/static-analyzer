@@ -11,17 +11,12 @@
 
 class EntityTable {
  protected:
-  std::unordered_set<std::string> table_;
-
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> table_;
   EntityTable() = default;
 
  public:
-  static EntityTable *getTable(EntityType);
   void populate(Entity &entity);
-  std::unordered_set<std::string> get();
-
-  // Currently only used for debugging and testing
-  int getCount();
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> get();
 };
 
 class VariableTable : public EntityTable {
@@ -39,7 +34,32 @@ class ProcedureTable : public EntityTable {
   ProcedureTable() = default;
 };
 
-class StatementTable : public EntityTable {
+class AssignTable : public EntityTable {
  public:
-  StatementTable() = default;
+  AssignTable() = default;
+};
+
+class CallTable : public EntityTable {
+ public:
+  CallTable() = default;
+};
+
+class IfTable : public EntityTable {
+ public:
+  IfTable() = default;
+};
+
+class WhileTable : public EntityTable {
+ public:
+  WhileTable() = default;
+};
+
+class ReadTable : public EntityTable {
+ public:
+  ReadTable() = default;
+};
+
+class PrintTable : public EntityTable {
+ public:
+  PrintTable() = default;
 };
