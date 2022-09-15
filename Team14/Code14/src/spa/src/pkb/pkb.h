@@ -23,8 +23,8 @@ class IPKBPopulator {
 
  public:
   ~IPKBPopulator() = default; 
-  virtual void populate(std::vector<Entity *> &) = 0;
-  virtual void populate(std::vector<Relationship *> &) = 0;  
+  virtual void populate(std::vector<Entity *>) = 0;
+  virtual void populate(std::vector<Relationship *>) = 0;  
   virtual void populate(std::vector<Pattern *>) = 0; 
 };
 
@@ -63,11 +63,7 @@ class PKB : public IPKBPopulator, public IPKBQuerier {
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByPattern(Entity *,
                                                                                        std::string &) override;
  
-  void populate(std::vector<Entity *> &entities) override;
-  void populate(std::vector<Relationship *> &relationships) override; 
+  void populate(std::vector<Entity *> entities) override;
+  void populate(std::vector<Relationship *> relationships) override; 
   void populate(std::vector<Pattern *> patterns) override;
-
-  // Currently only used for debugging and testing
-  int getEntityCount();
-  int getRelationshipCount(); 
 };

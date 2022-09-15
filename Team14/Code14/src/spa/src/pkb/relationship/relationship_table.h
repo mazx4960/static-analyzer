@@ -25,9 +25,12 @@ class RelationshipTable {
 
  public: 
   void populate(Relationship &relationship);   
-
-  // Currently only used for debugging and testing
-  int getCount();
+  std::unordered_map<Entity *, std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
+                     EntityHashFunction, EntityPointerEquality>
+  get(); 
+  std::unordered_map<Entity *, std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
+                     EntityHashFunction, EntityPointerEquality>
+  get_inverse();
 };
  
 class UsesTable : public RelationshipTable {
@@ -35,29 +38,15 @@ class UsesTable : public RelationshipTable {
   UsesTable() = default;
 };
 
-class UsesInverseTable : public RelationshipTable {
- public:
-  UsesInverseTable() = default;
-};
-
 class ModifiesTable : public RelationshipTable {
  public:
   ModifiesTable() = default;
 };
 
-class ModifiesInverseTable : public RelationshipTable {
- public:
-  ModifiesInverseTable() = default;
-};
 
 class FollowsTable : public RelationshipTable {
  public:
   FollowsTable() = default;
-};
-
-class FollowsInverseTable : public RelationshipTable {
- public:
-  FollowsInverseTable() = default;
 };
 	
 	
@@ -66,7 +55,3 @@ class ParentTable : public RelationshipTable {
   ParentTable() = default;
 };
 
-class ParentInverseTable : public RelationshipTable {
- public:
-  ParentInverseTable() = default;
-};

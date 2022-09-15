@@ -9,8 +9,14 @@ void RelationshipTable::populate(Relationship& relationship) {
   this->inverse_table_[second].insert(first);
 }
 
-int RelationshipTable::getCount() {
-  int count = 0;
-  for (auto& relationships : this->table_) { count += relationships.second.size(); }
-  return count;
+std::unordered_map<Entity*, std::unordered_set<Entity*, EntityHashFunction, EntityPointerEquality>, EntityHashFunction,
+                   EntityPointerEquality>
+    RelationshipTable::get() {
+  return this->table_;
+}
+
+std::unordered_map<Entity*, std::unordered_set<Entity*, EntityHashFunction, EntityPointerEquality>, EntityHashFunction,
+                   EntityPointerEquality>
+RelationshipTable::get_inverse() {
+  return this->inverse_table_;
 }
