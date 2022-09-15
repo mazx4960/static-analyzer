@@ -162,7 +162,7 @@ class MockPKB : public IPKBQuerier {
   };
   inline std::unordered_set<Entity *,
                             EntityHashFunction,
-                            EntityPointerEquality> getByPattern(std::string &left_pattern,
+                            EntityPointerEquality> getByPattern(Entity *entity,
                                                                 std::string &right_pattern) override {
     return std::unordered_set<Entity *,
                               EntityHashFunction,

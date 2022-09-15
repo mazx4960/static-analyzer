@@ -32,5 +32,6 @@ void SP::LoadSource(std::ifstream &source_stream) {
   for (auto *pattern : patterns) { spdlog::debug("{}", pattern->ToString()); }
 
   spdlog::info("Populating PKB...");
-  //  this->pkb_->populate(entities);
+  this->pkb_->populate(entities);
+  this->pkb_->populate(patterns);
 }

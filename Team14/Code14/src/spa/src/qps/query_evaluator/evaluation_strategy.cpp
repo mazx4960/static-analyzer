@@ -68,16 +68,21 @@ void PatternStrategy::evaluate() {
 }
 void PatternStrategy::intersectContext(QueryDeclaration *assign_param, QueryDeclaration *left_param,
                                        QueryDeclaration *right_param) {
-  std::string left_string = left_param->getString();
   std::string pattern_substring = right_param->getString();
-
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>
-      valid_assign_entities = this->pkb_->getByPattern(left_string, pattern_substring);
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> assign_result;
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> intersected_results;
 
-  std::set_intersection(valid_assign_entities.begin(), valid_assign_entities.end(), assign_param->getContext().begin(),
-                        assign_param->getContext().end(),
-                        std::inserter(intersected_results, intersected_results.begin()));
-
+  if (left_param->getType() == EntityType::kWildcard) {
+    std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> all_variables = pkb_->getEntities(EntityType::kVariable);
+    for (auto *variable_entity : all_variables) {
+      assign_result.merge(pkb_->getByPattern(variable_entity, pattern_substring));
+    }
+    std::set_intersection(assign_result.begin(), assign_result.end(), assign_param->getContext().begin(),
+                          assign_param->getContext().end(),
+                          std::inserter(intersected_results, intersected_results.begin()));
+  }
+  if (left_param->getType() == EntityType::kString) {
+    intersected_results = pkb_->getByPattern(new VariableEntity(left_param->getString()), pattern_substring);
+  }
   assign_param->setContext(intersected_results);
 }

@@ -31,9 +31,9 @@ void EntityManager::CreateTable(EntityType entity_type) {
   if (table == nullptr) { 
     throw PKBException(EntityTypeToString(entity_type) + "table could not be created"); }
     this->entity_table_map_[entity_type] = table;
-}
+} 
 
-void EntityManager::Populate(std::vector<Entity *> &entities) {
+void EntityManager::Populate(const std::vector<Entity *> &entities) { 
   for (auto *entity : entities) {
     EntityType entity_type = entity->GetType();
 

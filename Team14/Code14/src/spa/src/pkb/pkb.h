@@ -12,6 +12,7 @@
 #include "commons/result.h"
 #include "pkb/entity/entity_manager.h"
 #include "pkb/entity/entity_table.h"
+#include "pkb/pattern/pattern_manager.h"
 
 /*
  * Interface for SP -> PKB
@@ -21,9 +22,10 @@ class IPKBPopulator {
   IPKBPopulator() = default;
 
  public:
-  ~IPKBPopulator() = default;
+  ~IPKBPopulator() = default; 
   virtual void populate(std::vector<Entity *> &) = 0;
-  virtual void populate(std::vector<Relationship *> &) = 0;
+  virtual void populate(std::vector<Relationship *> &) = 0;  
+  virtual void populate(std::vector<Pattern *>) = 0; 
 };
 
 /*
@@ -38,17 +40,19 @@ class IPKBQuerier {
   virtual std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getEntities(EntityType) = 0;
   virtual std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByRelationship(RsType, Entity *,
                                                                                                     bool) = 0;
-  virtual std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByPattern(std::string &,
+  virtual std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByPattern(Entity *,
                                                                                                std::string &) = 0;
 };
 
 class PKB : public IPKBPopulator, public IPKBQuerier {
- private:
+ private: 
   EntityManager *entity_manager_; 
   std::unordered_map<EntityType, EntityTable *> entity_map_;
 
   RelationshipManager *relationship_manager_;
-  std::unordered_map<RsType, RelationshipTable *> relationship_map_;
+  std::unordered_map<RsType, RelationshipTable *> relationship_map_;  
+  
+  PatternManager *pattern_manager_; 
 
  public:
   PKB();
@@ -56,13 +60,14 @@ class PKB : public IPKBPopulator, public IPKBQuerier {
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getEntities(EntityType) override;
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByRelationship(RsType, Entity *,
                                                                                             bool) override;
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByPattern(std::string &,
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByPattern(Entity *,
                                                                                        std::string &) override;
-
+ 
   void populate(std::vector<Entity *> &entities) override;
-  void populate(std::vector<Relationship *> &relationships) override;
+  void populate(std::vector<Relationship *> &relationships) override; 
+  void populate(std::vector<Pattern *> patterns) override;
 
   // Currently only used for debugging and testing
   int getEntityCount();
-  int getRelationshipCount();
+  int getRelationshipCount(); 
 };
