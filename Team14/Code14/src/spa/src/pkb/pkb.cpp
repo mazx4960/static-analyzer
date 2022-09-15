@@ -30,18 +30,18 @@ void PKB::populate(std::vector<Relationship *> &relationships) {
   }
 }
 
-std::unordered_set<Entity *> PKB::Empty() {
-  return std::unordered_set<Entity *>();
+std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::Empty() {
+  return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>();
 }
 
-std::unordered_set<Entity *> PKB::getEntities(EntityType entity_type) {
+std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::getEntities(EntityType entity_type) {
   if (this->entity_map_.find(entity_type) == this->entity_map_.end()) {
     return this->Empty();
   }
   return this->entity_map_[entity_type]->get();
 }
 
-std::unordered_set<Entity *> PKB::getByRelationship(RsType rs_type, Entity *entity, bool is_inverse) {
+std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::getByRelationship(RsType rs_type, Entity *entity, bool is_inverse) {
   RsType temp;
   switch (rs_type) {
     case RsType::kParentT: temp = RsType::kParent; break;
@@ -54,7 +54,7 @@ std::unordered_set<Entity *> PKB::getByRelationship(RsType rs_type, Entity *enti
   return this->relationship_map_[temp]->get(rs_type, entity, is_inverse);
 }
 
-std::unordered_set<Entity *> PKB::getByPattern(std::string &, std::string &) {
+std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::getByPattern(std::string &, std::string &) {
   return this->Empty();
 }
 

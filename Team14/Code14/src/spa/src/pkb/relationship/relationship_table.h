@@ -16,15 +16,14 @@ class RelationshipTable {
   RelationshipTable() = default;
 
  private:
-  static std::unordered_set<Entity*> Empty();
-  std::unordered_set<Entity *> getStatements(Entity *, bool);
-  std::unordered_set<Entity *> getTraversal(Entity *, bool);
-  std::unordered_set<Entity *> get(Entity *, bool);
+  static std::unordered_set<Entity*, EntityHashFunction, EntityPointerEquality> Empty();
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getStatements(Entity *, bool);
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getTraversal(Entity *, bool);
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> get(Entity *, bool);
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> traversalHelper(Entity *);
-  std::unordered_set<Entity *> formatResults(std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>&);
  public:
   static RelationshipTable *getTable(RsType);
-  std::unordered_set<Entity*> get(RsType, Entity *, bool);
+  std::unordered_set<Entity*, EntityHashFunction, EntityPointerEquality> get(RsType, Entity *, bool);
   void populate(Relationship &);
 };
 

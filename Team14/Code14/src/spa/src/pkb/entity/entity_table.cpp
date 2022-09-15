@@ -12,15 +12,11 @@ EntityTable *EntityTable::getTable(EntityType type) {
 }
 
 void EntityTable::populate(Entity &entity) {
-  this->table_.insert(entity);
+  this->table_.insert(&entity);
 }
 
-std::unordered_set<Entity *> EntityTable::get() {
-  std::unordered_set<Entity *> result = {};
-  for (auto entity: this->table_) {
-    result.insert(&entity);
-  }
-  return result;
+std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> EntityTable::get() {
+  return this->table_;
 }
 
 int EntityTable::getCount() {

@@ -47,7 +47,7 @@ TEST(QueryTest, ParentTRelationshipInversionFalse) {
   pkb.populate(relationships);
   auto result = pkb.getByRelationship(RsType::kParentT, new WhileStmtEntity("4"), false);
   std::unordered_set<Entity *> expected_result = {new WhileStmtEntity("3"),
-                                                  new IfStmtEntity("2"),
+                                                  new WhileStmtEntity("2"),
                                                   new WhileStmtEntity("1")};
 
   ASSERT_EQ(result.size(), expected_result.size());
@@ -57,7 +57,7 @@ TEST(QuerTest, ParentRelationshipInversionTrue) {
   PKB pkb;
   auto result = pkb.getByRelationship(RsType::kParent, new AssignStmtEntity("3"), true);
   std::unordered_set<Entity *> expected_result = {};
-  ASSERT_EQ(result, expected_result);
+  ASSERT_EQ(result.size(), expected_result.size());
 }
 
 TEST(QueryTest, ModifiesRelationshipInversionFalse) {
@@ -131,5 +131,5 @@ TEST(QueryTest, UsesRelationshipInvalidQueryInversionFalse) {
   pkb.populate(relationships);
   auto result = pkb.getByRelationship(RsType::kUses, new VariableEntity("X"), false);
   std::unordered_set<Entity *> expected_result = {};
-  ASSERT_EQ(result, expected_result);
+  ASSERT_EQ(result.size(), expected_result.size());
 }

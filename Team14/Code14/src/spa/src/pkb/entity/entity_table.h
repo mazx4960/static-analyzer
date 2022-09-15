@@ -11,14 +11,14 @@
 
 class EntityTable {
  protected:
-  std::unordered_set<Entity, EntityHashFunction> table_;
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> table_;
 
   EntityTable() = default;
 
  public:
   static EntityTable *getTable(EntityType);
   void populate(Entity &entity);
-  std::unordered_set<Entity *> get();
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> get();
 
 
   // Currently only used for debugging and testing
