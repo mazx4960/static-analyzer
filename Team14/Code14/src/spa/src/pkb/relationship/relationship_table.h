@@ -26,7 +26,6 @@ class RelationshipTable {
                   std::unordered_map<Entity *, std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
                       EntityHashFunction, EntityPointerEquality> *);
  public:
-  static RelationshipTable *getTable(RsType);
   std::unordered_set<Entity*, EntityHashFunction, EntityPointerEquality> get(RsType, Entity *, bool);
 
 };

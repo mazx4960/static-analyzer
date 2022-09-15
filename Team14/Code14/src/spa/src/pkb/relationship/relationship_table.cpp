@@ -1,15 +1,6 @@
 
 #include "relationship_table.h"
 
-RelationshipTable *RelationshipTable::getTable(RsType type) {
-  switch (type) {
-    case RsType::kUses: return new UsesTable();
-    case RsType::kModifies: return new ModifiesTable();
-    case RsType::kParent: return new ParentTable();
-    case RsType::kFollows: return new FollowsTable();
-    default: return nullptr;
-  }
-}
 
 std::unordered_set<Entity*, EntityHashFunction, EntityPointerEquality> RelationshipTable::Empty() {
   return std::unordered_set<Entity*, EntityHashFunction, EntityPointerEquality>{};
@@ -29,7 +20,6 @@ std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Relation
   std::unordered_map<Entity *,
                      std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
                      EntityHashFunction, EntityPointerEquality> *table_ptr;
-
   table_ptr = is_inverse ? &this->inverse_table_ : &this->table_;
   if (table_ptr->find(query_entity) == table_ptr->end()) {
     return this->Empty();
