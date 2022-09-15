@@ -17,8 +17,6 @@ size_t Entity::GetHash() const {
   size_t hash = 0;
   HashCombine<EntityType>::hash_combine(hash, this->GetType());
   HashCombine<std::string>::hash_combine(hash, this->GetValue());
-  spdlog::debug("String hash: {}, EntityType hash: {} Entity hash: {}", std::hash<std::string>{}(this->value_),
-                std::hash<EntityType>{}(this->type_), hash);
   return hash;
 }
 std::string Entity::ToString() {
