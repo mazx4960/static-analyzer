@@ -9,6 +9,7 @@
 #include "commons/result.h"
 #include "pkb/entity/entity_manager.h"
 #include "pkb/entity/entity_table.h"
+#include "pkb/pattern/pattern_manager.h"
 
 /*
  * Interface for SP -> PKB
@@ -19,7 +20,8 @@ class IPKBPopulator {
 
  public:
   ~IPKBPopulator() = default;
-  virtual void populate(std::vector<Entity *> &) = 0;
+  virtual void populate(std::vector<Entity *>) = 0;
+  virtual void populate(std::vector<Pattern *>) = 0;
 };
 
 /*
@@ -41,6 +43,7 @@ class IPKBQuerier {
 class PKB : public IPKBPopulator, public IPKBQuerier {
  private:
   EntityManager *entity_manager_;
+  PatternManager *pattern_manager_;
 
  public:
   PKB();
@@ -51,5 +54,6 @@ class PKB : public IPKBPopulator, public IPKBQuerier {
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByPattern(std::string &,
                                                                                        std::string &) override;
 
-  void populate(std::vector<Entity *> &entities) override;
+  void populate(std::vector<Entity *> entities) override;
+  void populate(std::vector<Pattern *> patterns) override;
 };

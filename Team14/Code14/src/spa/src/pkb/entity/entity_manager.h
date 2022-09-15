@@ -15,6 +15,6 @@ class EntityManager {
  public:
   EntityManager() = default;
   EntityTable *GetTable(EntityType entity_type);
-  void Populate(std::vector<Entity *> &entities);
+  void Populate(const std::vector<Entity *> &entities);
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Get(EntityType entity_type);
 };
