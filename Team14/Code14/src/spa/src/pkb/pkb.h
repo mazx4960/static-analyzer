@@ -34,7 +34,7 @@ class IPKBQuerier {
   virtual std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getEntities(EntityType) = 0;
   virtual std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByRelationship(RsType, Entity *,
                                                                                                     bool) = 0;
-  virtual std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByPattern(std::string &,
+  virtual std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByPattern(Entity *,
                                                                                                std::string &) = 0;
 };
 
@@ -48,7 +48,7 @@ class PKB : public IPKBPopulator, public IPKBQuerier {
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getEntities(EntityType) override;
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByRelationship(RsType, Entity *,
                                                                                             bool) override;
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByPattern(std::string &,
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByPattern(Entity *,
                                                                                        std::string &) override;
 
   void populate(std::vector<Entity *> &entities) override;
