@@ -40,7 +40,7 @@ class SuchThatClause : public QueryClause {
 class PatternClause : public QueryClause {
  public:
   explicit PatternClause(RsType type, QueryDeclaration *first, QueryDeclaration *second, QueryDeclaration *third)
-      : QueryClause(ClauseType::kSuchThat), type_(type), first_(first), second_(second), third_(third) {};
+      : QueryClause(ClauseType::kPattern), type_(type), first_(first), second_(second), third_(third) {};
 
   RsType type_;
 
