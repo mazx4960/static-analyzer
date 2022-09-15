@@ -12,6 +12,7 @@ TEST(QueryTest, FollowsRelationshipInversionFalse) {
       {"8", "10"}
   };
   std::vector<Relationship *> relationships;
+  relationships.reserve(follows.size());
   for (auto & follow : follows) {
     relationships.push_back(
         new FollowsRelationship(
@@ -34,6 +35,7 @@ TEST(QueryTest, ParentTRelationshipInversionFalse) {
       {"10", "8"}
   };
   std::vector<Relationship *> relationships;
+  relationships.reserve(parent.size());
   for (auto & p : parent) {
     relationships.push_back(
         new ParentRelationship(
@@ -65,8 +67,8 @@ TEST(QueryTest, ModifiesRelationshipInversionFalse) {
       {"3", "Z"},
       {"3", "A"}
   };
-
   std::vector<Relationship *> relationships;
+  relationships.reserve(modifies.size());
   for (auto & m: modifies) {
     relationships.push_back(
         new ModifiesRelationship(
@@ -92,8 +94,8 @@ TEST(QueryTest, ModifiesRelationshipInversionTrue) {
       {"3", "Z"},
       {"3", "A"}
   };
-
   std::vector<Relationship *> relationships;
+  relationships.reserve(modifies.size());
   for (auto & m: modifies) {
     relationships.push_back(
         new ModifiesRelationship(
@@ -117,6 +119,7 @@ TEST(QueryTest, UsesRelationshipInvalidQueryInversionFalse) {
   };
 
   std::vector<Relationship *> relationships;
+  relationships.reserve(modifies.size());
   for (auto & m: modifies) {
     relationships.push_back(
         new UsesRelationship(
