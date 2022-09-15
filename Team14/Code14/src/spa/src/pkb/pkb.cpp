@@ -3,9 +3,9 @@
 #include "pkb.h"
 
 PKB::PKB() {
-  this->entity_manager_ = new EntityManager();
+  this->entity_manager_ = new EntityManager(); 
+  this->relationship_manager_ = new RelationshipManager(); 
   this->pattern_manager_ = new PatternManager(); 
-  this->relationship_manager_ = new RelationshipManager();
 }
 
 void PKB::populate(std::vector<Entity *> entities) { this->entity_manager_->Populate(entities); }

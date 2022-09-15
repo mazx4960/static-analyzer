@@ -22,10 +22,10 @@ class IPKBPopulator {
   IPKBPopulator() = default;
 
  public:
-  ~IPKBPopulator() = default;
-  virtual void populate(std::vector<Entity *>) = 0;
+  ~IPKBPopulator() = default; 
+  virtual void populate(std::vector<Entity *> &) = 0;
+  virtual void populate(std::vector<Relationship *> &) = 0;  
   virtual void populate(std::vector<Pattern *>) = 0; 
-  virtual void populate(std::vector<Relationship *> &) = 0;
 };
 
 /*
@@ -45,13 +45,14 @@ class IPKBQuerier {
 };
 
 class PKB : public IPKBPopulator, public IPKBQuerier {
- private:
-  EntityManager *entity_manager_;
-  std::unordered_map<EntityType, EntityTable*> entity_map_;
-  PatternManager *pattern_manager_; 
+ private: 
+  EntityManager *entity_manager_; 
+  std::unordered_map<EntityType, EntityTable *> entity_map_;
 
   RelationshipManager *relationship_manager_;
-  std::unordered_map<RsType, RelationshipTable *> relationship_map_;
+  std::unordered_map<RsType, RelationshipTable *> relationship_map_;  
+  
+  PatternManager *pattern_manager_; 
 
  public:
   PKB();
@@ -61,12 +62,12 @@ class PKB : public IPKBPopulator, public IPKBQuerier {
                                                                                             bool) override;
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByPattern(Entity *,
                                                                                        std::string &) override;
-
-  void populate(std::vector<Entity *> entities) override;
-  void populate(std::vector<Pattern *> patterns) override; 
-  void populate(std::vector<Relationship *> &relationships) override;
+ 
+  void populate(std::vector<Entity *> &entities) override;
+  void populate(std::vector<Relationship *> &relationships) override; 
+  void populate(std::vector<Pattern *> patterns) override;
 
   // Currently only used for debugging and testing
   int getEntityCount();
-  int getRelationshipCount();
+  int getRelationshipCount(); 
 };
