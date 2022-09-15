@@ -17,12 +17,22 @@ class QueryEvaluator {
 
   std::vector<Result> partial_results_list_;
 
-  std::unordered_set<QueryDeclaration *> declarations_;
+  std::unordered_set<QueryDeclaration *,
+                     QueryDeclarationHashFunction,
+                     QueryDeclarationPointerEquality> declarations_;
 
-  std::unordered_set<QueryDeclaration *> copyDeclarations();
-  std::unordered_set<QueryDeclaration *> fetchContext();
-  std::unordered_set<QueryDeclaration *> evaluateSubQueries();
-  std::unordered_set<QueryDeclaration *> getDeclarationAsSet();
+  std::unordered_set<QueryDeclaration *,
+                     QueryDeclarationHashFunction,
+                     QueryDeclarationPointerEquality> copyDeclarations();
+  std::unordered_set<QueryDeclaration *,
+                     QueryDeclarationHashFunction,
+                     QueryDeclarationPointerEquality> fetchContext();
+  std::unordered_set<QueryDeclaration *,
+                     QueryDeclarationHashFunction,
+                     QueryDeclarationPointerEquality> evaluateSubQueries();
+  std::unordered_set<QueryDeclaration *,
+                     QueryDeclarationHashFunction,
+                     QueryDeclarationPointerEquality> getDeclarationAsSet();
 
  public:
   QueryEvaluator(IPKBQuerier *pkb, Query &query) : pkb_(pkb), query_(query) {};

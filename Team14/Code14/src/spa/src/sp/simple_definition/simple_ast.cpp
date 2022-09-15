@@ -43,8 +43,8 @@ std::vector<Node *> StatementListNode::GetChildren() {
 }
 std::string StatementListNode::ToString() { return std::string(); }
 
-StatementNode::StatementNode(EntityType stmtType) : Node(NodeType::kStatement), stmtNo_(0) {
-  this->stmtType_ = stmtType;
+StatementNode::StatementNode(EntityType stmt_type) : Node(NodeType::kStatement), stmtNo_(0) {
+  this->stmtType_ = stmt_type;
 }
 int StatementNode::GetStmtNo() const { return this->stmtNo_; }
 int StatementNode::SetStatementNo(int next_stmt_no) {

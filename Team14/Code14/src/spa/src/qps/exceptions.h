@@ -9,10 +9,6 @@ class BuilderError : public std::runtime_error {
   explicit BuilderError(const std::string &message) : std::runtime_error("Query build Error: " + message) {}
 };
 
-class DeclarationTypeAdaptError : std::runtime_error {
- public:
-  explicit DeclarationTypeAdaptError(const std::string &message) : std::runtime_error(message) {}
-};
 
 class EvaluationStrategyCreationError : public std::runtime_error {
  public:
