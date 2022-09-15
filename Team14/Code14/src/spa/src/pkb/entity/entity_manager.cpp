@@ -4,6 +4,7 @@
 
 #include <spdlog/spdlog.h>
 
+#include "commons/types.h"
 #include "pkb/exception.h"
 
 EntityTable *EntityManager::GetTable(EntityType entity_type) {
@@ -40,6 +41,20 @@ void EntityManager::Populate(const std::vector<Entity *> &entities) {
   }
 }
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> EntityManager::Get(EntityType entity_type) {
-  auto *entity_table = GetTable(entity_type);
-  return entity_table->get();
+  spdlog::debug("Retrieving all {}s", EntityTypeToString(entity_type));
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> matches;
+  if (entity_type == EntityType::kStatement) {
+    for (auto stmt_type : GetAllStmtTypes()) {
+      auto *entity_table = GetTable(stmt_type);
+      auto stmts = entity_table->get();
+      matches.insert(stmts.begin(), stmts.end());
+    }
+  } else {
+    auto *entity_table = GetTable(entity_type);
+    matches = entity_table->get();
+  }
+  std::string result_string;
+  for (auto *match : matches) { result_string += match->GetValue() + " "; }
+  spdlog::debug("Result: {}", result_string);
+  return matches;
 }
