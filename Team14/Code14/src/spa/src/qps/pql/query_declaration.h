@@ -36,6 +36,8 @@ class QueryDeclaration {
   [[nodiscard]] std::string getString() const;
   [[nodiscard]] int getNumber() const;
   [[nodiscard]] std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getContext() const;
+  void removeEntityFromContext(const Entity& entity);
+  void intersectContext(const std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>& other_context);
   void setContext(std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>);
   bool operator==(const QueryDeclaration &) const;
   bool operator==(const QueryDeclaration *) const;
