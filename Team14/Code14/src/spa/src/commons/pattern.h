@@ -13,7 +13,7 @@ class Pattern {
  public:
   Pattern(Entity *stmt, Entity *variable, std::string expr_);
   [[nodiscard]] Entity *GetStmt() const;
-  Entity *GetVariable();
+  [[nodiscard]] Entity *GetVariable() const;
   [[nodiscard]] std::string GetExpr() const;
   std::string ToString();
 };
