@@ -5,8 +5,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "pkb.h"
-#include "pkb/entity/entity_table.h"
+#include "pkb.h" 
+#include "pkb/relationship/relationship_manager.h"
 #include "pkb/relationship/relationship_table.h"
 #include "commons/relationship.h"
 #include "commons/result.h"
@@ -44,8 +44,10 @@ class IPKBQuerier {
 
 class PKB : public IPKBPopulator, public IPKBQuerier {
  private:
-  EntityManager *entity_manager_;
+  EntityManager *entity_manager_; 
   std::unordered_map<EntityType, EntityTable *> entity_map_;
+
+  RelationshipManager *relationship_manager_;
   std::unordered_map<RsType, RelationshipTable *> relationship_map_;
 
  public:
@@ -61,6 +63,6 @@ class PKB : public IPKBPopulator, public IPKBQuerier {
   void populate(std::vector<Relationship *> &relationships) override;
 
   // Currently only used for debugging and testing
-  int getCount();
+  int getEntityCount();
   int getRelationshipCount();
 };

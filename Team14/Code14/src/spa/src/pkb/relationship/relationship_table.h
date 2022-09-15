@@ -13,13 +13,18 @@
 
 class RelationshipTable {
  protected:
-  std::unordered_map<Entity *, std::unordered_set<Entity *, EntityHashFunction>, EntityHashFunction> table_;
+  std::unordered_map<Entity *, 
+	  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>, 
+	  EntityHashFunction, EntityPointerEquality> table_;
+
+  std::unordered_map<Entity *, 
+	  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
+	  EntityHashFunction, EntityPointerEquality> inverse_table_;
 
   RelationshipTable() = default;
 
- public:
-  static RelationshipTable *getTable(RsType);
-  void populate(Relationship &relationship); 
+ public: 
+  void populate(Relationship &relationship);   
 
   // Currently only used for debugging and testing
   int getCount();
@@ -30,9 +35,19 @@ class UsesTable : public RelationshipTable {
   UsesTable() = default;
 };
 
+class UsesInverseTable : public RelationshipTable {
+ public:
+  UsesInverseTable() = default;
+};
+
 class ModifiesTable : public RelationshipTable {
  public:
   ModifiesTable() = default;
+};
+
+class ModifiesInverseTable : public RelationshipTable {
+ public:
+  ModifiesInverseTable() = default;
 };
 
 class FollowsTable : public RelationshipTable {
@@ -40,7 +55,18 @@ class FollowsTable : public RelationshipTable {
   FollowsTable() = default;
 };
 
+class FollowsInverseTable : public RelationshipTable {
+ public:
+  FollowsInverseTable() = default;
+};
+	
+	
 class ParentTable : public RelationshipTable {
  public:
   ParentTable() = default;
+};
+
+class ParentInverseTable : public RelationshipTable {
+ public:
+  ParentInverseTable() = default;
 };
