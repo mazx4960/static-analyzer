@@ -24,7 +24,7 @@ class RelationshipTable {
  public:
   static RelationshipTable *getTable(RsType);
   std::unordered_set<Entity*, EntityHashFunction, EntityPointerEquality> get(RsType, Entity *, bool);
-  void populate(Relationship &);
+
 };
 
 class ModifiesTable : public RelationshipTable {

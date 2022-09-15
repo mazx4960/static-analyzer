@@ -17,10 +17,11 @@ class Result {
   QuerySynonym *synonym_;
 
 
-  std::unordered_set<Entity *> results_;
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> results_;
 
  public:
-  explicit Result(QuerySynonym *synonym, std::unordered_set<Entity *> results_set)
+  explicit Result(QuerySynonym *synonym,
+                  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> results_set)
       : synonym_(std::move(synonym)),
         results_(std::move(results_set)) {};
 
@@ -30,6 +31,6 @@ class Result {
 
   [[nodiscard]] bool is_empty() const;
   [[nodiscard]] QuerySynonym *get_synonym() const;
-  [[nodiscard]] std::unordered_set<Entity *> get_results_set() const;
+  [[nodiscard]] std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> get_results_set() const;
   [[nodiscard]] std::vector<Entity *> get_sorted_results_list() const;
 };

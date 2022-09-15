@@ -16,20 +16,6 @@ void PKB::populate(std::vector<Entity *> &entities) {
   }
 }
 
-void PKB::populate(std::vector<Relationship *> &relationships) {
-  for (auto *relationship : relationships) {
-    RsType rs_type = relationship->GetType();
-
-    // If table hasn't been created, create it first.
-    if (this->relationship_map_.find(rs_type) == this->relationship_map_.end()) {
-      this->relationship_map_[rs_type] = RelationshipTable::getTable(rs_type);
-    }
-
-    // Populate table here
-    this->relationship_map_[rs_type]->populate(*relationship);
-  }
-}
-
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::Empty() {
   return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>();
 }

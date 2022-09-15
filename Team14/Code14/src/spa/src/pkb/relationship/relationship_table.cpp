@@ -11,12 +11,6 @@ RelationshipTable *RelationshipTable::getTable(RsType type) {
   }
 }
 
-void RelationshipTable::populate(Relationship &relationship) {
-  Entity* first = relationship.GetFirst();
-  Entity* second = relationship.GetSecond();
-  this->table_[first].insert(second);
-}
-
 std::unordered_set<Entity*, EntityHashFunction, EntityPointerEquality> RelationshipTable::Empty() {
   return std::unordered_set<Entity*, EntityHashFunction, EntityPointerEquality>{};
 }
