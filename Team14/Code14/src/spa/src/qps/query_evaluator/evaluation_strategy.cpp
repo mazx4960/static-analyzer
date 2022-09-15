@@ -1,12 +1,19 @@
 #include "evaluation_strategy.h"
+#include "spdlog/spdlog.h"
 
 /**
  * Factory method
  */
 EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClause *query_clause) {
   switch (query_clause->getClauseType()) {
-    case ClauseType::kSuchThat: return new SuchThatStrategy(pkb, static_cast<SuchThatClause *>(query_clause));
-    case ClauseType::kPattern: return new PatternStrategy(pkb, static_cast<PatternClause *>(query_clause));
+    case ClauseType::kSuchThat: {
+      spdlog::debug("Creating SuchThatEvaluationStrategy");
+      return new SuchThatStrategy(pkb, static_cast<SuchThatClause *>(query_clause));
+    }
+    case ClauseType::kPattern: {
+      spdlog::debug("Creating PatternEvaluationStrategy");
+      return new PatternStrategy(pkb, static_cast<PatternClause *>(query_clause));
+    }
     default: throw EvaluationStrategyCreationError("Invalid query clause type");
   }
 }
@@ -14,6 +21,7 @@ EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClaus
 // TODO(howtoosee) implement SuchThat strategy
 void SuchThatStrategy::evaluate() {
   RsType rs_type = this->clause_->getSuchThatType();
+  spdlog::debug("Evaluating SuchThat clause with relationship {}", RsTypeToString(rs_type));
 
   QueryDeclaration *first_param = this->clause_->getFirst();
   QueryDeclaration *second_param = this->clause_->getSecond();
@@ -60,6 +68,8 @@ void SuchThatStrategy::intersectContext(QueryDeclaration *param_to_send, QueryDe
 }
 
 void PatternStrategy::evaluate() {
+  spdlog::debug("Evaluating Pattern clause");
+
   QueryDeclaration *first_param = this->clause_->getFirst();
   QueryDeclaration *second_param = this->clause_->getSecond();
   QueryDeclaration *third_param = this->clause_->getThird();
@@ -73,7 +83,8 @@ void PatternStrategy::intersectContext(QueryDeclaration *assign_param, QueryDecl
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> intersected_results;
 
   if (left_param->getType() == EntityType::kWildcard) {
-    std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> all_variables = pkb_->getEntities(EntityType::kVariable);
+    std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>
+        all_variables = pkb_->getEntities(EntityType::kVariable);
     for (auto *variable_entity : all_variables) {
       assign_result.merge(pkb_->getByPattern(variable_entity, pattern_substring));
     }
