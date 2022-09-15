@@ -10,16 +10,17 @@ PKB::PKB() {
 
 void PKB::populate(std::vector<Entity *> entities) { this->entity_manager_->Populate(entities); }
 void PKB::populate(std::vector<Pattern *> patterns) { this->pattern_manager_->Populate(patterns); }
+void PKB::populate(std::vector<Relationship *> relationships) { this->relationship_manager_->Populate(relationships); }
 
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::getEntities(EntityType entity_type) {
   return this->entity_manager_->Get(entity_type);
 }
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::getByRelationship(
-    RsType rs_type, Entity * entity, bool is_inverse) {
+    RsType rs_type, Entity *entity, bool is_inverse) {
   return this->relationship_manager_->Get(rs_type, entity, is_inverse);
 }
 
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> PKB::getByPattern(
-    Entity * entity, std::string & right_pattern) {
+    Entity *entity, std::string &right_pattern) {
   return this->pattern_manager_->Get(entity, right_pattern);
 }

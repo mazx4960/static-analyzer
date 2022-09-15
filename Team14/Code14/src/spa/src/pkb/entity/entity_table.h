@@ -16,7 +16,7 @@ class EntityTable {
 
  public:
   void populate(Entity &entity);
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> get();
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> get(); 
 };
 
 class VariableTable : public EntityTable {
