@@ -211,7 +211,7 @@ QueryDeclaration *QueryParser::parseExpression() {
     while (peekToken()->type != TokenType::kQuote) {
       tmp = nextToken();
       if (toggle) {
-        if (tmp->type == TokenType::kSymbol) {
+        if (tmp->type == TokenType::kSymbol || tmp->type == TokenType::kLiteral) {
           expr_tokens.push_back(tmp);
         } else {
           throw ParseSyntaxError("Unexpected symbol in expression" + tmp->value);
