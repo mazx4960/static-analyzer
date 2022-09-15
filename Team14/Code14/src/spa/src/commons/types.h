@@ -3,6 +3,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 enum class EntityType {
   kProcedure,
@@ -60,3 +61,8 @@ inline std::string RsTypeToString(RsType type) {
     default: return "Unknown";
   }
 }
+
+inline std::vector<EntityType> all_stmt_types = {EntityType::kAssignStmt, EntityType::kCallStmt,
+                                                 EntityType::kIfStmt,     EntityType::kPrintStmt,
+                                                 EntityType::kReadStmt,   EntityType::kWhileStmt};
+inline std::vector<EntityType> GetAllStmtTypes() { return all_stmt_types; }
