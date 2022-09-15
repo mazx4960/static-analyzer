@@ -17,5 +17,6 @@ class PatternManager {
   PatternManager();
   PatternTable *GetTable();
   void Populate(const std::vector<Pattern *> &patterns);
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Get();
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Get(Entity *variable,
+                                                                              const std::string &expr);
 };

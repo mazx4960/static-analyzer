@@ -20,5 +20,5 @@ class PatternTable {
   std::unordered_map<Entity *, std::unordered_set<std::pair<Entity *, std::string>, StmtExprHashFunction>,
                      EntityHashFunction, EntityPointerEquality>
   GetTable();
-  std::unordered_set<Entity *> Get(Entity &variable, std::string &expression);
+  std::unordered_set<std::pair<Entity *, std::string>, StmtExprHashFunction> Get(Entity *variable);
 };

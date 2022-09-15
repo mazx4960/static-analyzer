@@ -21,8 +21,8 @@ void PatternTable::Populate(Pattern& pattern) {
     this->pattern_table_[variable].insert(pair);
   }
 }
-std::unordered_set<Entity*> PatternTable::Get(Entity& variable, std::string& expression) {
-  return std::unordered_set<Entity*>();
+std::unordered_set<std::pair<Entity*, std::string>, StmtExprHashFunction> PatternTable::Get(Entity* variable) {
+  return this->pattern_table_[variable];
 }
 std::unordered_map<Entity*, std::unordered_set<std::pair<Entity*, std::string>, StmtExprHashFunction>,
                    EntityHashFunction, EntityPointerEquality>

@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 #include "pkb/pattern/pattern_manager.h"
 
-TEST(PopulatePatternTest, BasicTest) {
+TEST(QueryPatternTest, BasicTest) {
   auto *stmt1 = new AssignStmtEntity("1");
   auto *stmt2 = new AssignStmtEntity("2");
   auto *stmt3 = new AssignStmtEntity("3");
@@ -18,13 +18,7 @@ TEST(PopulatePatternTest, BasicTest) {
 
   auto *pattern_manager = new PatternManager();
   pattern_manager->Populate(patterns);
-  auto *pattern_table = pattern_manager->GetTable();
-  ASSERT_EQ(pattern_table->GetTable().size(), 2);
-  ASSERT_EQ(pattern_table->Get(v1).size(), 1);
-  ASSERT_EQ(pattern_table->Get(v2).size(), 2);
+  auto result = pattern_manager->Get(v2, "x");
 
-  auto *s_actual = pattern_table->Get(v1).begin()->first;
-  auto expr_actual = pattern_table->Get(v1).begin()->second;
-  ASSERT_EQ(s_actual, stmt1);
-  ASSERT_EQ(expr_actual, "x + 1");
+  ASSERT_EQ(result.size(), 1);
 }
