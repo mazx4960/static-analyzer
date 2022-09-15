@@ -7,7 +7,7 @@
 #include "commons/entity.h"
 #include "pkb/pkb.h"
 
-TEST(PopulateTest, VariableTest) {
+TEST(PopulateEntityTest, VariableTest) {
   std::vector<std::string> entity_names({"a", "b", "c", "d", "e", "f"});
   std::vector<Entity *> entities;
   int length = entity_names.size();
@@ -21,7 +21,7 @@ TEST(PopulateTest, VariableTest) {
   ASSERT_EQ(entity_table->get().size(), length);
 }
 
-TEST(PopulateTest, ConstTest) {
+TEST(PopulateEntityTest, ConstTest) {
   std::vector<std::string> entity_names({"a", "b", "c", "d", "e", "f"});
   std::vector<Entity *> entities;
   int length = entity_names.size();
@@ -35,7 +35,7 @@ TEST(PopulateTest, ConstTest) {
   ASSERT_EQ(entity_table->get().size(), length);
 }
 
-TEST(PopulateTest, MixedEntityTest) {
+TEST(PopulateEntityTest, MixedEntityTest) {
   std::vector<Entity *> entities;
 
   std::vector<std::string> v_entity_names({"a", "b", "c", "d"});

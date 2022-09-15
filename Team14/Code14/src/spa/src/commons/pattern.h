@@ -3,16 +3,26 @@
 //
 #pragma once
 #include "commons/parser/expr_definition/expr_node.h"
+#include "entity.h"
 class Pattern {
  private:
-  std::string var_name_;
-  int stmt_no_;
+  Entity *stmt_;
+  Entity *variable_;
   std::string expr_;
 
  public:
-  Pattern(std::string var_name, int stmt_no, std::string expr_);
-  [[nodiscard]] std::string GetVarName() const;
-  [[nodiscard]] int GetStmtNo() const;
+  Pattern(Entity *stmt, Entity *variable, std::string expr_);
+  [[nodiscard]] Entity *GetStmt() const;
+  [[nodiscard]] Entity *GetVariable() const;
   [[nodiscard]] std::string GetExpr() const;
   std::string ToString();
+};
+
+struct StmtExprHashFunction {
+  size_t operator()(const std::pair<Entity *, std::string> &p) const {
+    size_t hash = 0;
+    HashCombine<Entity *>::hash_combine(hash, p.first);
+    HashCombine<std::string>::hash_combine(hash, p.second);
+    return hash;
+  }
 };
