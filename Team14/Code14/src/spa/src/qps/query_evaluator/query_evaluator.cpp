@@ -1,4 +1,5 @@
 #include "query_evaluator.h"
+#include "spdlog/spdlog.h"
 
 std::unordered_set<QueryDeclaration *,
                    QueryDeclarationHashFunction,
@@ -53,7 +54,6 @@ Result *QueryEvaluator::evaluate() {
 
   QuerySynonym *synonym = called_declaration->getSynonym();
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> context = called_declaration->getContext();
-
   return new Result(synonym, context);
 }
 

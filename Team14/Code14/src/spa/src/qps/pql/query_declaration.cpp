@@ -29,6 +29,27 @@ std::unordered_set<Entity *,
                    EntityPointerEquality> QueryDeclaration::getContext() const {
   return this->context_;
 }
+
+void QueryDeclaration::removeEntityFromContext(const Entity& entity) {
+  for (auto *entity_ptr : this->context_) {
+    if (*entity_ptr == entity) {
+      context_.erase(entity_ptr);
+    }
+  }
+}
+
+void QueryDeclaration::intersectContext(const std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>& other_context) {
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> new_context;
+  for (auto *entity_ptr : this->context_) {
+    for (auto *other_entity_ptr : other_context) {
+      if (*entity_ptr == *other_entity_ptr) {
+        new_context.insert(entity_ptr);
+      }
+    }
+  }
+  this->setContext(new_context);
+}
+
 void QueryDeclaration::setContext(std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> context) {
   this->context_ = std::move(context);
 }
