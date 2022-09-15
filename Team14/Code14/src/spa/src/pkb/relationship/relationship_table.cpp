@@ -1,5 +1,13 @@
 
 #include "relationship_table.h"
+RelationshipTable::RelationshipTable() {
+  this->table_ = std::unordered_map<Entity *,
+                                    std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
+                                    EntityHashFunction, EntityPointerEquality>();
+  this->inverse_table_ = std::unordered_map<Entity *,
+                                            std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
+                                            EntityHashFunction, EntityPointerEquality>();
+}
 
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> RelationshipTable::Empty() {
   return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>{};
@@ -65,13 +73,6 @@ void RelationshipTable::populate(Relationship &relationship) {
   this->inverse_table_[second].insert(first);
 }
 
-std::unordered_map<Entity *,
-                   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
-                   EntityHashFunction,
-                   EntityPointerEquality>
-RelationshipTable::get_inverse() {
-  return this->inverse_table_;
-}
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> RelationshipTable::get(Entity *query_entity,
                                                                                                bool is_inverse) {
   if (is_inverse) {

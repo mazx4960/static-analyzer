@@ -20,16 +20,12 @@ class RelationshipTable {
                      std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
                      EntityHashFunction, EntityPointerEquality> inverse_table_;
 
-  RelationshipTable() = default;
+  RelationshipTable();
 
  private:
   static std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Empty();
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getTraversal(Entity *, bool);
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> get(Entity *, bool);
-  std::unordered_map<Entity *,
-                     std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
-                     EntityHashFunction,
-                     EntityPointerEquality> get_inverse();
   std::unordered_set<Entity *,
                      EntityHashFunction,
                      EntityPointerEquality> traversalHelper(Entity *,
