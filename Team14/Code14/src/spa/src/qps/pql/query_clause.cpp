@@ -5,7 +5,7 @@
 ClauseType QueryClause::getClauseType() {
   return this->clause_type_;
 }
-SuchThatType SuchThatClause::getSuchThatType() const {
+RsType SuchThatClause::getSuchThatType() const {
   return this->type_;
 }
 QueryDeclaration *SuchThatClause::getFirst() const {
@@ -15,7 +15,7 @@ QueryDeclaration *SuchThatClause::getSecond() const {
   return this->second_;
 }
 
-PatternType PatternClause::getPatternType() const {
+RsType PatternClause::getPatternType() const {
   return this->type_;
 }
 QueryDeclaration *PatternClause::getFirst() const {
