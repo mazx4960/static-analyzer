@@ -33,7 +33,6 @@ class IPKBQuerier {
   virtual std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getEntities(EntityType) = 0;
   virtual std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByRelationship(RsType, Entity *, bool) = 0;
   virtual std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getByPattern(std::string &, std::string &) = 0;
-
 };
 
 class PKB : public IPKBPopulator, public IPKBQuerier {

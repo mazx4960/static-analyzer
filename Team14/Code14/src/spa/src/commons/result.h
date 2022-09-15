@@ -16,7 +16,6 @@ class Result {
  private:
   QuerySynonym *synonym_;
 
-
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> results_;
 
  public:
