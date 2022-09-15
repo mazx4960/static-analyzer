@@ -13,9 +13,12 @@ class PatternTable {
   std::unordered_map<Entity *, std::unordered_set<std::pair<Entity *, std::string>, StmtExprHashFunction>,
                      EntityHashFunction,
                      EntityPointerEquality>
-      pattern_map_;// stores a mapping for the variable to a set of entity and expression pairs
+      pattern_table_;// stores a mapping for the variable to a set of entity and expression pairs
  public:
   PatternTable();
   void Populate(Pattern &pattern);
+  std::unordered_map<Entity *, std::unordered_set<std::pair<Entity *, std::string>, StmtExprHashFunction>,
+                     EntityHashFunction, EntityPointerEquality>
+  GetTable();
   std::unordered_set<Entity *> Get(Entity &variable, std::string &expression);
 };

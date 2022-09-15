@@ -33,4 +33,5 @@ void SP::LoadSource(std::ifstream &source_stream) {
 
   spdlog::info("Populating PKB...");
   this->pkb_->populate(entities);
+  this->pkb_->populate(patterns);
 }

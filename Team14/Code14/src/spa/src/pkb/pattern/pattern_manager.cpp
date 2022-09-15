@@ -6,4 +6,6 @@ PatternTable* PatternManager::GetTable() { return this->pattern_table_; }
 void PatternManager::Populate(const std::vector<Pattern*>& patterns) {
   for (Pattern* pattern : patterns) { this->pattern_table_->Populate(*pattern); }
 }
-std::unordered_set<Entity*, EntityHashFunction, EntityPointerEquality> PatternManager::Get() { return nullptr; }
+std::unordered_set<Entity*, EntityHashFunction, EntityPointerEquality> PatternManager::Get() {
+  return std::unordered_set<Entity*, EntityHashFunction, EntityPointerEquality>();
+}
