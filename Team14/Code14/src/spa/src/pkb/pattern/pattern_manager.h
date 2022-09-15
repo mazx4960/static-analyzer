@@ -5,8 +5,8 @@
 #include <unordered_set>
 #include <vector>
 
-#include "../../commons/entity.h"
-#include "../../commons/pattern.h"
+#include "commons/entity.h"
+#include "commons/pattern.h"
 #include "pattern_table.h"
 
 class PatternManager {

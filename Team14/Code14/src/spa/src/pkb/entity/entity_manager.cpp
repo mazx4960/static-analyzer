@@ -4,6 +4,7 @@
 
 #include <spdlog/spdlog.h>
 
+#include "commons/types.h"
 #include "pkb/exception.h"
 
 EntityTable *EntityManager::GetTable(EntityType entity_type) {
@@ -40,6 +41,15 @@ void EntityManager::Populate(const std::vector<Entity *> &entities) {
   }
 }
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> EntityManager::Get(EntityType entity_type) {
+  if (entity_type == EntityType::kStatement) {
+    std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> result;
+    for (auto stmt_type : GetAllStmtTypes()) {
+      auto *entity_table = GetTable(stmt_type);
+      auto stmts = entity_table->get();
+      result.insert(stmts.begin(), stmts.end());
+    }
+    return result;
+  }
   auto *entity_table = GetTable(entity_type);
   return entity_table->get();
 }
