@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <string>
+
 enum class EntityType {
   kProcedure,
   kStatement,
