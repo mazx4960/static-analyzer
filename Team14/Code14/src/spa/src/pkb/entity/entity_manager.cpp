@@ -40,6 +40,11 @@ void EntityManager::Populate(const std::vector<Entity *> &entities) {
   }
 }
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> EntityManager::Get(EntityType entity_type) {
+  spdlog::debug("Retrieving all {}s", EntityTypeToString(entity_type));
   auto *entity_table = GetTable(entity_type);
-  return entity_table->get();
+  auto matches = entity_table->get();
+  std::string result_string;
+  for (auto *match : matches) { result_string += match->GetValue() + " "; }
+  spdlog::debug("Result: {}", result_string);
+  return matches;
 }
