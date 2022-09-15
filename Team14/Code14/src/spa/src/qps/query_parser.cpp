@@ -198,8 +198,9 @@ SuchThatClause *QueryParser::parseModifies() {
 QueryDeclaration *QueryParser::parseExpression() {
   bool wild_expression = false;
   std::string expression;
-  Token *tmp = nextToken();
+  Token *tmp = peekToken();
   if (tmp->type == TokenType::kWildCard) {
+    nextToken();
     wild_expression = true;
     tmp = peekToken();
   }
