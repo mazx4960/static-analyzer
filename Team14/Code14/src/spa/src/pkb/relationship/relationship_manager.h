@@ -17,7 +17,7 @@ class RelationshipManager {
   std::unordered_set<Entity *,
                      EntityHashFunction,
                      EntityPointerEquality> getTraversal(RsType, Entity *, bool);
-  std::unordered_set<Entity *,
+  static std::unordered_set<Entity *,
                      EntityHashFunction,
                      EntityPointerEquality> traversalHelper(Entity *,
                                                             std::unordered_map<Entity *,

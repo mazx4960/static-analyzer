@@ -75,7 +75,7 @@ std::unordered_set<Entity *,
   if (table_ptr.find(query_entity) == table_ptr.end()) {
     return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> {};
   }
-  return this->traversalHelper(query_entity, &table_ptr);
+  return traversalHelper(query_entity, &table_ptr);
 }
 
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>
