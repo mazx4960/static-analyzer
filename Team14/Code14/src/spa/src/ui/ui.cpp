@@ -7,9 +7,19 @@
 #include "commons/reader.h"
 #include "spdlog/spdlog.h"
 
-UI::UI(std::string source_file, std::string query_file)
+UI::UI(std::string source_file, std::string query_file, int mode = 0)
     : source_file_(std::move(source_file)),
-      query_file_(std::move(query_file)) {}
+      query_file_(std::move(query_file)) {
+  // Setup logging
+  if (mode == 2) {
+    spdlog::set_level(spdlog::level::debug);
+  } else if (mode == 1) {
+    spdlog::set_level(spdlog::level::info);
+  } else {
+    spdlog::set_level(spdlog::level::off);
+  }
+}
+UI::UI() { spdlog::set_level(spdlog::level::off); }
 void UI::SetSP(SP *sp) { this->sp_ = sp; }
 void UI::SetQPS(QPS *qps) { this->qps_ = qps; }
 void UI::SetSourceFile(std::string source_file) { this->source_file_ = std::move(source_file); }

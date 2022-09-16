@@ -2,20 +2,13 @@
 
 #include "spa.h"
 
-#include "spdlog/spdlog.h"
 #include <utility>
 
-SPA::SPA(std::string source_file, std::string query_file, bool debug_mode) {
-  // Setup logging
-  if (debug_mode) {
-    spdlog::set_level(spdlog::level::debug);
-  } else {
-    spdlog::set_level(spdlog::level::info);
-  }
-  spdlog::info("Initialising SPA...");
+#include "spdlog/spdlog.h"
 
+SPA::SPA(std::string source_file, std::string query_file, int mode) {
   // Initialize all components.
-  this->ui_ = new UI(std::move(source_file), std::move(query_file));
+  this->ui_ = new UI(std::move(source_file), std::move(query_file), mode);
   auto *sp = new SP();
   auto *qps = new QPS();
   auto *pkb = new PKB();
@@ -26,6 +19,4 @@ SPA::SPA(std::string source_file, std::string query_file, bool debug_mode) {
   sp->SetPKB(pkb);
   qps->SetPKB(pkb);
 }
-void SPA::Run() {
-  this->ui_->Run();
-}
+void SPA::Run() { this->ui_->Run(); }

@@ -82,7 +82,7 @@ void RelationshipExtractor::ExtractParent(std::vector<Relationship *> &relations
         }
         case EntityType::kIfStmt: {
           auto *if_stmt = static_cast<IfNode *>(stmt);
-          Entity *parent = new WhileStmtEntity(std::to_string(if_stmt->GetStmtNo()));
+          Entity *parent = new IfStmtEntity(std::to_string(if_stmt->GetStmtNo()));
           auto *then_stmt_list = if_stmt->GetThenStatementList();
           auto *else_stmt_list = if_stmt->GetElseStatementList();
           ExtractParentHelper(relationships, parent, then_stmt_list);

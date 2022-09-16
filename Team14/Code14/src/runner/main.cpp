@@ -1,18 +1,17 @@
-#include <iostream>
 #include <cstring>
+#include <iostream>
+
 #include "spa.h"
 
 int main(int argc, char *argv[]) {
-  bool flag = false;
+  int verbosity = 1;
   std::string source_file;
   std::string query_file;
   if (argc == 3) {
     source_file = argv[1];
     query_file = argv[2];
   } else if (argc == 4) {
-    if (strcmp(argv[1], "-v") == 0) {
-      flag = true;
-    }
+    if (strcmp(argv[1], "-v") == 0) { verbosity = 2; }
     source_file = argv[2];
     query_file = argv[3];
   } else {
@@ -22,6 +21,6 @@ int main(int argc, char *argv[]) {
   }
 
   // Initialize and run SPA
-  auto *spa = new SPA(source_file, query_file, flag);
+  auto *spa = new SPA(source_file, query_file, verbosity);
   spa->Run();
 }
