@@ -19,8 +19,8 @@ class UI {
   std::string query_file_;
 
  public:
-  explicit UI(std::string source_file, std::string query_file);
-  explicit UI() = default;
+  explicit UI(std::string source_file, std::string query_file, int mode);
+  explicit UI();
   void SetSP(SP *sp);
   void SetQPS(QPS *qps);
   void SetSourceFile(std::string source_file);

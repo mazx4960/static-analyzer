@@ -9,7 +9,7 @@ class SPA {
   UI *ui_;
 
  public:
-  SPA(std::string source_file, std::string query_file, bool debug_mode);
+  SPA(std::string source_file, std::string query_file, int mode);
   ~SPA() = default;
   void Run();
 };

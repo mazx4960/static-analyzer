@@ -1,9 +1,11 @@
-
 # Created by https://www.toptal.com/developers/gitignore/api/qt,qtcreator,linux,windows,macos,visualstudio,visualstudiocode,clion,c++
 # Edit at https://www.toptal.com/developers/gitignore?templates=qt,qtcreator,linux,windows,macos,visualstudio,visualstudiocode,clion,c++
 
 # Build files
 build/
+
+# test results
+test_results/
 
 ### C++ ###
 # Prerequisites
