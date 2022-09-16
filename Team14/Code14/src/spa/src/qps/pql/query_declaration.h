@@ -6,8 +6,8 @@
 #include <utility>
 
 #include "commons/entity.h"
-#include "query_synonym.h"
 #include "qps/exceptions.h"
+#include "query_synonym.h"
 
 class QueryDeclaration {
  private:
@@ -21,18 +21,22 @@ class QueryDeclaration {
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> context_;
 
  public:
-  explicit QueryDeclaration(EntityType type) : type_(std::move(type)) {};
+  explicit QueryDeclaration(EntityType type) : type_(std::move(type)){};
   QueryDeclaration(EntityType type, QuerySynonym *query_synonym)
-      : type_(std::move(type)), query_synonym_(std::move(query_synonym)), string_(query_synonym->toString()) {};
+      : type_(std::move(type)),
+        query_synonym_(std::move(query_synonym)),
+        string_(query_synonym->toString()){};
   QueryDeclaration(EntityType type, std::string string)
-      : type_(std::move(type)), string_(std::move(string)), query_synonym_(QuerySynonym::empty()) {};
+      : type_(std::move(type)),
+        string_(std::move(string)),
+        query_synonym_(QuerySynonym::empty()){};
 
   [[nodiscard]] EntityType getType() const;
   [[nodiscard]] QuerySynonym *getSynonym() const;
   [[nodiscard]] std::string toString() const;
   [[nodiscard]] std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getContext() const;
-  void removeEntityFromContext(const Entity& entity);
-  void intersectContext(const std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>& other_context);
+  void removeEntityFromContext(Entity *entity);
+  void intersectContext(const std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> &other_context);
   void setContext(std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>);
   bool operator==(const QueryDeclaration &) const;
   bool operator==(const QueryDeclaration *) const;
@@ -117,8 +121,7 @@ class WildCardDeclaration : public QueryDeclaration {
 // Inline declaration of Expression "(x + (y * z))"
 class ExpressionDeclaration : public QueryDeclaration {
  public:
-  explicit ExpressionDeclaration(std::string string)
-      : QueryDeclaration(EntityType::kExpression, std::move(string)) {}
+  explicit ExpressionDeclaration(std::string string) : QueryDeclaration(EntityType::kExpression, std::move(string)) {}
 };
 
 // Inline declaration of Expression _"(x + (y * z))"_
@@ -151,9 +154,7 @@ struct QueryDeclarationHashFunction {
 
 struct QueryDeclarationPointerEquality {
   bool operator()(const QueryDeclaration *lhs, const QueryDeclaration *rhs) const {
-    if (lhs->getType() == EntityType::kWildcard || rhs->getType() == EntityType::kWildcard) {
-      return true;
-    }
+    if (lhs->getType() == EntityType::kWildcard || rhs->getType() == EntityType::kWildcard) { return true; }
     return (*lhs) == (*rhs);
   }
 };

@@ -1,4 +1,5 @@
 #include "evaluation_strategy.h"
+
 #include "spdlog/spdlog.h"
 
 /**
@@ -49,7 +50,7 @@ void SuchThatStrategy::intersectContext(QueryDeclaration *param_to_send, QueryDe
   for (auto *context_entity : param_to_send->getContext()) {
     EntityPointerUnorderedSet valid_entities = this->pkb_->getByRelationship(rs_type, context_entity, invert_search);
     if (valid_entities.empty()) {
-      param_to_send->removeEntityFromContext(*context_entity);
+      param_to_send->removeEntityFromContext(context_entity);
     } else {
       for (auto *entity : valid_entities) { valid_entities_for_other_param.insert(entity); }
     }
@@ -91,7 +92,7 @@ void PatternStrategy::intersectContext(QueryDeclaration *assign_param, QueryDecl
     for (auto *variable_entity : left_param->getContext()) {
       EntityPointerUnorderedSet valid_entities = pkb_->getByPattern(variable_entity, pattern_substring);
       if (valid_entities.empty()) {
-        left_param->removeEntityFromContext(*variable_entity);
+        left_param->removeEntityFromContext(variable_entity);
       } else {
         for (auto *assign_entity : valid_entities) { assign_result.insert(assign_entity); }
       }
