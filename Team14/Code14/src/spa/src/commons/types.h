@@ -50,6 +50,11 @@ inline std::string EntityTypeToString(EntityType type) {
     case EntityType::kWhileStmt: return "WhileStmt";
     case EntityType::kPrintStmt: return "PrintStmt";
     case EntityType::kReadStmt: return "ReadStmt";
+    case EntityType::kWildcard: return "Wildcard";
+    case EntityType::kExpression: return "Expression";
+    case EntityType::kWildcardExpression: return "WildcardExpression";
+    case EntityType::kString: return "String";
+    case EntityType::kInteger: return "Integer";
     default: return "Unknown";
   }
 }
@@ -60,6 +65,9 @@ inline std::string RsTypeToString(RsType type) {
     case RsType::kParent: return "Parent";
     case RsType::kUses: return "Uses";
     case RsType::kModifies: return "Modifies";
+    case RsType::kParentAll: return "Parent*";
+    case RsType::kFollowsAll: return "Follows*";
+    case RsType::kAssignPattern: return "pattern";
     default: return "Unknown";
   }
 }

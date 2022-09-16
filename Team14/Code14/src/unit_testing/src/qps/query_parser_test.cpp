@@ -261,14 +261,14 @@ TEST(QueryParserTest, ValidSinglePatternClauseTest) {
                 ->getFirst()->getSynonym()->toString());
 
   ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
-                ->getSecond()->getString(),
+                ->getSecond()->toString(),
             static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
-                ->getSecond()->getString());
+                ->getSecond()->toString());
 
   ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
-                ->getThird()->getString(),
+                ->getThird()->toString(),
             static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
-                ->getThird()->getString());
+                ->getThird()->toString());
 }
 
 TEST(QueryParserTest, InvalidTokenTest1) {
