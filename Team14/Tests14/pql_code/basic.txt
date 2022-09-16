@@ -1,2 +1,2 @@
-while w;
-Select w
+variable a;
+Select a
