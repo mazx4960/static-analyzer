@@ -68,6 +68,11 @@ class IfStmtEntity : public Entity {
   explicit IfStmtEntity(std::string stmt_no) : Entity(EntityType::kIfStmt, std::move(stmt_no)) {}
 };
 
+class StmtEntity : public Entity {
+ public:
+  explicit StmtEntity(std::string stmt_no) : Entity(EntityType::kStatement, std::move(stmt_no)) {}
+};
+
 /**
  * Hash function for Entity
  *
