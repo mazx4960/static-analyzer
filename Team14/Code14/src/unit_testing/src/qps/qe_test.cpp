@@ -3,93 +3,65 @@
 #include <algorithm>
 #include "qps/query_evaluator/query_evaluator.h"
 
+using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
+
 class TestStorage {
  public:
-  inline static std::unordered_set<Entity *,
-                                   EntityHashFunction,
-                                   EntityPointerEquality>
-      procedure_entities_ = {
+  inline static EntityPointerUnorderedSet procedure_entities_ = {
       new ProcedureEntity("procedure1"),
       new ProcedureEntity("procedure2"),
       new ProcedureEntity("procedure3")
   };
 
-  inline static std::unordered_set<Entity *,
-                                   EntityHashFunction,
-                                   EntityPointerEquality>
-      variable_entities_ = {
+  inline static EntityPointerUnorderedSet variable_entities_ = {
       new VariableEntity("x"),
       new VariableEntity("y"),
       new VariableEntity("z"),
   };
 
-  inline static std::unordered_set<Entity *,
-                                   EntityHashFunction,
-                                   EntityPointerEquality>
-      constant_entities_ = {
+  inline static EntityPointerUnorderedSet constant_entities_ = {
       new ConstantEntity("1"),
       new ConstantEntity("2"),
       new ConstantEntity("3"),
   };
 
-  inline static std::unordered_set<Entity *,
-                                   EntityHashFunction,
-                                   EntityPointerEquality>
-      stmt_assign_entities_ = {
+  inline static EntityPointerUnorderedSet stmt_assign_entities_ = {
       new AssignStmtEntity("1"),
       new AssignStmtEntity("2"),
       new AssignStmtEntity("3"),
   };
 
-  inline static std::unordered_set<Entity *,
-                                   EntityHashFunction,
-                                   EntityPointerEquality>
-      stmt_call_entities_ = {
+  inline static EntityPointerUnorderedSet stmt_call_entities_ = {
       new CallStmtEntity("4"),
       new CallStmtEntity("5"),
       new CallStmtEntity("6"),
   };
 
-  inline static std::unordered_set<Entity *,
-                                   EntityHashFunction,
-                                   EntityPointerEquality>
-      stmt_if_entities_ = {
+  inline static EntityPointerUnorderedSet stmt_if_entities_ = {
       new IfStmtEntity("7"),
       new IfStmtEntity("8"),
       new IfStmtEntity("9"),
   };
 
-  inline static std::unordered_set<Entity *,
-                                   EntityHashFunction,
-                                   EntityPointerEquality>
-      stmt_while_entities_ = {
+  inline static EntityPointerUnorderedSet stmt_while_entities_ = {
       new WhileStmtEntity("10"),
       new WhileStmtEntity("11"),
       new WhileStmtEntity("12"),
   };
 
-  inline static std::unordered_set<Entity *,
-                                   EntityHashFunction,
-                                   EntityPointerEquality>
-      stmt_print_entities_ = {
+  inline static EntityPointerUnorderedSet stmt_print_entities_ = {
       new PrintStmtEntity("13"),
       new PrintStmtEntity("14"),
       new PrintStmtEntity("15"),
   };
 
-  inline static std::unordered_set<Entity *,
-                                   EntityHashFunction,
-                                   EntityPointerEquality>
-      stmt_read_entities_ = {
+  inline static EntityPointerUnorderedSet stmt_read_entities_ = {
       new ReadStmtEntity("16"),
       new ReadStmtEntity("17"),
       new ReadStmtEntity("18"),
   };
 
-  inline static std::unordered_set<Entity *,
-                                   EntityHashFunction,
-                                   EntityPointerEquality>
-      all_stmt_entities_ = {
+  inline static EntityPointerUnorderedSet all_stmt_entities_ = {
       new AssignStmtEntity("1"),
       new AssignStmtEntity("2"),
       new AssignStmtEntity("3"),
@@ -151,22 +123,11 @@ class MockPKB : public IPKBQuerier {
       default: throw std::runtime_error("Invalid entity type!");
     };
   }
-  inline std::unordered_set<Entity *,
-                            EntityHashFunction,
-                            EntityPointerEquality> getByRelationship(RsType rs_type,
-                                                                     Entity *entity,
-                                                                     bool inverse) override {
-    return std::unordered_set<Entity *,
-                              EntityHashFunction,
-                              EntityPointerEquality>();
+  inline EntityPointerUnorderedSet getByRelationship(RsType rs_type, Entity *entity, bool inverse) override {
+    return EntityPointerUnorderedSet();
   };
-  inline std::unordered_set<Entity *,
-                            EntityHashFunction,
-                            EntityPointerEquality> getByPattern(Entity *entity,
-                                                                std::string &right_pattern) override {
-    return std::unordered_set<Entity *,
-                              EntityHashFunction,
-                              EntityPointerEquality>();
+  inline EntityPointerUnorderedSet getByPattern(Entity *entity, std::string &right_pattern) override {
+    return EntityPointerUnorderedSet();
   };
 };
 

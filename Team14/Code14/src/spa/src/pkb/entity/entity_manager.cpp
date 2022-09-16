@@ -18,20 +18,32 @@ EntityTable *EntityManager::GetTable(EntityType entity_type) {
 void EntityManager::CreateTable(EntityType entity_type) {
   EntityTable *table;
   switch (entity_type) {
-    case EntityType::kProcedure: table = new ProcedureTable(); break;
-    case EntityType::kVariable: table = new VariableTable(); break;
-    case EntityType::kConstant: table = new ConstantTable(); break;
-    case EntityType::kAssignStmt: table = new AssignTable(); break;
-    case EntityType::kCallStmt: table = new CallTable(); break;
-    case EntityType::kIfStmt: table = new IfTable(); break;
-    case EntityType::kPrintStmt: table = new PrintTable(); break;
-    case EntityType::kReadStmt: table = new ReadTable(); break;
-    case EntityType::kWhileStmt: table = new WhileTable(); break;
+    case EntityType::kProcedure: table = new ProcedureTable();
+      break;
+    case EntityType::kVariable: table = new VariableTable();
+      break;
+    case EntityType::kConstant: table = new ConstantTable();
+      break;
+    case EntityType::kAssignStmt: table = new AssignTable();
+      break;
+    case EntityType::kCallStmt: table = new CallTable();
+      break;
+    case EntityType::kIfStmt: table = new IfTable();
+      break;
+    case EntityType::kPrintStmt: table = new PrintTable();
+      break;
+    case EntityType::kReadStmt: table = new ReadTable();
+      break;
+    case EntityType::kWhileStmt: table = new WhileTable();
+      break;
     default: table = nullptr;
   }
-  if (table == nullptr) { throw PKBException(EntityTypeToString(entity_type) + "table could not be created"); }
+  if (table == nullptr) {
+    throw PKBException(EntityTypeToString(entity_type) + "table could not be created");
+  }
   this->entity_table_map_[entity_type] = table;
 }
+
 void EntityManager::Populate(const std::vector<Entity *> &entities) {
   for (auto *entity : entities) {
     EntityType entity_type = entity->GetType();
@@ -40,9 +52,9 @@ void EntityManager::Populate(const std::vector<Entity *> &entities) {
     entity_table->populate(*entity);
   }
 }
-std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> EntityManager::Get(EntityType entity_type) {
+EntityPointerUnorderedSet EntityManager::Get(EntityType entity_type) {
   spdlog::debug("Retrieving all {}s", EntityTypeToString(entity_type));
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> matches;
+  EntityPointerUnorderedSet matches;
   if (entity_type == EntityType::kStatement) {
     for (auto stmt_type : GetAllStmtTypes()) {
       auto *entity_table = GetTable(stmt_type);

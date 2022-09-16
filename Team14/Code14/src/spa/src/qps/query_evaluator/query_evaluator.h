@@ -9,6 +9,10 @@
 #include "qps/pql/query.h"
 #include "subquery_evaluator.h"
 
+using QueryDeclarationPointerUnorderedSet = std::unordered_set<QueryDeclaration *,
+                                                               QueryDeclarationHashFunction,
+                                                               QueryDeclarationPointerEquality>;
+
 class QueryEvaluator {
  protected:
   Query query_;
@@ -17,22 +21,12 @@ class QueryEvaluator {
 
   std::vector<Result> partial_results_list_;
 
-  std::unordered_set<QueryDeclaration *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> declarations_;
+  QueryDeclarationPointerUnorderedSet declarations_;
 
-  std::unordered_set<QueryDeclaration *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> copyDeclarations();
-  std::unordered_set<QueryDeclaration *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> fetchContext();
-  std::unordered_set<QueryDeclaration *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> evaluateSubQueries();
-  std::unordered_set<QueryDeclaration *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> getDeclarationAsSet();
+  QueryDeclarationPointerUnorderedSet copyDeclarations();
+  QueryDeclarationPointerUnorderedSet fetchContext();
+  QueryDeclarationPointerUnorderedSet evaluateSubQueries();
+  QueryDeclarationPointerUnorderedSet getDeclarationAsSet();
 
  public:
   QueryEvaluator(IPKBQuerier *pkb, Query &query) : pkb_(pkb), query_(query) {};
