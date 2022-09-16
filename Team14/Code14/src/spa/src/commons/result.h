@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <string>
 #include <unordered_set>
+
 #include <utility>
 #include <vector>
 
@@ -22,6 +23,7 @@ class Result {
                   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> results_set)
       : synonym_(std::move(synonym)),
         results_(std::move(results_set)) {};
+
 
   static Result *empty();
   static Result *empty(QuerySynonym *synonym);
