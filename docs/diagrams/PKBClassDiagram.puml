@@ -1,33 +1,39 @@
 @startuml
+skinparam classAttributeIconSize 0
 
 class SP
 class QPS
 class PKB
 
 abstract class IPKBPopulator {
-	void populate(Abstraction)
+	+void populate(Abstraction)
 }
 
 abstract class IPKBQuerier {
-	Results query(Query)
+	+Results query(Query)
 }
 
 class EntityManager {
-    void populate(Entity)
-    Results query(Query)
+    -unordered_map entity_map_
+    +void populate(Entity)
+    +Results query(Query)
 }
 class RelationshipManager {
-    void populate(Relationship)
-    Results query(Query)
+    -unordered_map relationship_map_
+    +void populate(Relationship)
+    +Results query(Query)
 }
 class PatternManager {
-    void populate(Pattern)
-    Results query(Query)
+    +void populate(Pattern)
+    +Results query(Query)
 }
 
 class PKB {
-    void populate(Abstraction)
-    Results query(Query)
+    -EntityManager entity_manager_
+    -PatternManager pattern_manager_
+    -RelationshipManager relationship_manager_
+    +void populate(Abstraction)
+    +Results query(Query)
 }
 
 abstract class "SIMPLEAbstraction"
@@ -35,67 +41,67 @@ abstract class "SIMPLEEntity"
 abstract class "QueryPattern"
 
 class Variable {
-	variableTable
+	-variableTable
 }
 
 class Read {
-	readTable
+	-readTable
 }
 
 class Print {
-	printTable
+	-printTable
 }
 
 class Call {
-	callTable
+	-callTable
 }
 
 class If {
-	ifTable
+	-ifTable
 }
 
 class While {
-	whileTable
+	-whileTable
 }
 
 class Constant {
-	constantTable
+	-constantTable
 }
 
 class Procedure{
-	procedureTable
+	-procedureTable
 }
 
 class Assign {
-	assignTable
+	-assignTable
 }
 
 class Pattern {
-	patternTable
+	-patternTable
 }
 
 class Modifies {
-	modifiesTable
+	-modifiesTable
 }
 
 class Follows {
-	followsTable
+	-followsTable
 }
 
 class FollowsT {
-	followsTable
+	-followsTable
 }
 
 class Uses {
-	usesTable
+	-usesTable
 }
 
 class Parent{
-	parentTable
+	-parentTable
 }
 
 class ParentT {
-	parentTable
+	-parentTable
 }
 
 
@@ -104,9 +110,9 @@ IPKBQuerier *-down- PKB
 SP -down- IPKBPopulator
 QPS -down- IPKBQuerier
 
-PKB <|.down. EntityManager
+PKB <|.down EntityManager
 PKB <|.down.  PatternManager
-PKB <|.down.  RelationshipManager
+PKB <|.down.. RelationshipManager
 
 Variable -up-* EntityManager
 Read -up-* EntityManager
