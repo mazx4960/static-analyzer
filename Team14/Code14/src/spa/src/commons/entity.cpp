@@ -20,7 +20,6 @@ size_t Entity::GetHash() const {
   return hash;
 }
 std::string Entity::ToString() {
-  std::string type_string;
   std::string name_string = this->value_;
   return EntityTypeToString(this->type_) + ": " + name_string;
 }
