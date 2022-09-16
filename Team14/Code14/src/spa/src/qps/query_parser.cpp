@@ -4,6 +4,7 @@
 #include <utility>
 #include "qps/pql/query_keywords.h"
 #include "commons/parser/parser.h"
+#include "spdlog/spdlog.h"
 
 QueryParser::QueryParser(std::vector<Token *> tokens) { this->tokens_ = std::move(tokens); }
 
@@ -46,6 +47,7 @@ QueryDeclaration *QueryParser::parseDeclaration() {
   if (*token == KeywordToken("assign")) { declaration = new AssignDeclaration(parseSynonym()); }
   if (declaration == nullptr) { throw ParseSyntaxError("Unknown declaration type: " + token->value); }
   if (!(*nextToken() == SemicolonToken())) { throw ParseSyntaxError("Missing `;` after declaration"); }
+  spdlog::debug(EntityTypeToString(declaration->getType()) + " declared as " + declaration->getSynonym()->toString());
   return declaration;
 }
 
@@ -127,6 +129,7 @@ PatternClause *QueryParser::parsePattern() {
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration *third = parseExpression();
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
+  spdlog::debug("Pattern parsed: " + first->toString() + "(" + second->toString() + ", " + third->toString() + ")");
   return new AssignPatternClause(first, second, third);
 }
 SuchThatClause *QueryParser::parseSuchThat() {
@@ -148,6 +151,7 @@ SuchThatClause *QueryParser::parseFollows() {
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration *second = parseStmtRefDeclaration(true);;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
+  spdlog::debug("Follows parsed: " + first->toString() + ", " + second->toString());
   if (follows_all) {
     return new FollowsAllClause(first, second);
   }
@@ -164,6 +168,7 @@ SuchThatClause *QueryParser::parseParent() {
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration *second = parseStmtRefDeclaration(true);;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
+  spdlog::debug("Parent parsed: " + first->toString() + ", " + second->toString());
   if (parent_all) {
     return new ParentAllClause(first, second);
   }
@@ -180,6 +185,7 @@ SuchThatClause *QueryParser::parseUses() {
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration *second = parseEntRefDeclaration(false);
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
+  spdlog::debug("Uses parsed: " + first->toString() + ", " + second->toString());
   return new UsesClause(first, second);
 }
 SuchThatClause *QueryParser::parseModifies() {
@@ -193,6 +199,7 @@ SuchThatClause *QueryParser::parseModifies() {
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration *second = parseEntRefDeclaration(false);;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
+  spdlog::debug("Modifies parsed: " + first->toString() + ", " + second->toString());
   return new ModifiesClause(first, second);
 }
 QueryDeclaration *QueryParser::parseExpression() {

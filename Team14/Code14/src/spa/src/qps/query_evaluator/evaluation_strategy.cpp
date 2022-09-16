@@ -71,7 +71,7 @@ void PatternStrategy::evaluate() {
 }
 void PatternStrategy::intersectContext(QueryDeclaration *assign_param, QueryDeclaration *left_param,
                                        QueryDeclaration *right_param) {
-  std::string pattern_substring = right_param->getString();
+  std::string pattern_substring = right_param->toString();
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> assign_result;
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> intersected_results;
 
@@ -87,7 +87,7 @@ void PatternStrategy::intersectContext(QueryDeclaration *assign_param, QueryDecl
 
   // Assignment on the left is a SIMPLE entity
   if (left_param->getType() == EntityType::kString) {
-    assign_param->intersectContext(pkb_->getByPattern(new VariableEntity(left_param->getString()), pattern_substring));
+    assign_param->intersectContext(pkb_->getByPattern(new VariableEntity(left_param->toString()), pattern_substring));
   }
 
   // Assignment on the left is a PQL declaration
