@@ -1,2 +1,2 @@
-variable a; variable b;
-Select a such that Parent(a, b)
+stmt s1; stmt s2;
+Select s1 such that Parent(s1, s2)
