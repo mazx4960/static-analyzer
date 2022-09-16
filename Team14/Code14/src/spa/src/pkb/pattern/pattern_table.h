@@ -7,6 +7,10 @@
 
 #include "commons/entity.h"
 #include "commons/pattern.h"
+using EntityStringPair = std::pair<Entity *, std::string>;
+using EntityStringPairUnorderedSet = std::unordered_set<EntityStringPair, StmtExprHashFunction>;
+using PatternEntityUnorderedMap = std::unordered_map<Entity *, EntityStringPairUnorderedSet, EntityHashFunction,
+                                                     EntityPointerEquality>;
 
 class PatternTable {
  private:
@@ -17,8 +21,6 @@ class PatternTable {
  public:
   PatternTable();
   void Populate(Pattern &pattern);
-  std::unordered_map<Entity *, std::unordered_set<std::pair<Entity *, std::string>, StmtExprHashFunction>,
-                     EntityHashFunction, EntityPointerEquality>
-  GetTable();
-  std::unordered_set<std::pair<Entity *, std::string>, StmtExprHashFunction> Get(Entity *variable);
+  PatternEntityUnorderedMap GetTable();
+  EntityStringPairUnorderedSet Get(Entity *variable);
 };

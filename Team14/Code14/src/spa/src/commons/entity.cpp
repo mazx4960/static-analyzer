@@ -20,21 +20,6 @@ size_t Entity::GetHash() const {
   return hash;
 }
 std::string Entity::ToString() {
-  std::string type_string;
   std::string name_string = this->value_;
-  switch (this->type_) {
-    case EntityType::kProcedure: type_string = "procedure"; break;
-    case EntityType::kStatement: type_string = "statement"; break;
-    case EntityType::kVariable: type_string = "variable"; break;
-    case EntityType::kConstant: type_string = "constant"; break;
-    case EntityType::kAssignStmt: type_string = "assign"; break;
-    case EntityType::kCallStmt: type_string = "call"; break;
-    case EntityType::kIfStmt: type_string = "if"; break;
-    case EntityType::kPrintStmt: type_string = "print"; break;
-    case EntityType::kReadStmt: type_string = "read"; break;
-    case EntityType::kWhileStmt: type_string = "while"; break;
-    default: type_string = "unknown"; break;
-  }
-
-  return type_string + ": " + name_string;
+  return EntityTypeToString(this->type_) + ": " + name_string;
 }

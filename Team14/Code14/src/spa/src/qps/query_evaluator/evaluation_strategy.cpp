@@ -25,10 +25,8 @@ void SuchThatStrategy::evaluate() {
 
   QueryDeclaration *first_param = this->clause_->getFirst();
   QueryDeclaration *second_param = this->clause_->getSecond();
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>
-      first_param_context = first_param->getContext();
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>
-      second_param_context = second_param->getContext();
+  EntityPointerUnorderedSet first_param_context = first_param->getContext();
+  EntityPointerUnorderedSet second_param_context = second_param->getContext();
 
   if (first_param_context.size() <= second_param_context.size()) {
     // Intersect 2nd set first
@@ -46,11 +44,10 @@ void SuchThatStrategy::evaluate() {
 
 void SuchThatStrategy::intersectContext(QueryDeclaration *param_to_send, QueryDeclaration *param_to_be_intersected,
                                         RsType rs_type, bool invert_search) {
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> valid_entities_for_other_param;
+  EntityPointerUnorderedSet valid_entities_for_other_param;
 
   for (auto *context_entity : param_to_send->getContext()) {
-    std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>
-        valid_entities = this->pkb_->getByRelationship(rs_type, context_entity, invert_search);
+    EntityPointerUnorderedSet valid_entities = this->pkb_->getByRelationship(rs_type, context_entity, invert_search);
     if (valid_entities.empty()) {
       param_to_send->removeEntityFromContext(*context_entity);
     } else {
@@ -72,13 +69,12 @@ void PatternStrategy::evaluate() {
 void PatternStrategy::intersectContext(QueryDeclaration *assign_param, QueryDeclaration *left_param,
                                        QueryDeclaration *right_param) {
   std::string pattern_substring = right_param->toString();
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> assign_result;
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> intersected_results;
+  EntityPointerUnorderedSet assign_result;
+  EntityPointerUnorderedSet intersected_results;
 
   // Assignment on the left is a Wildcard
   if (left_param->getType() == EntityType::kWildcard) {
-    std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>
-        all_variables = pkb_->getEntities(EntityType::kVariable);
+    EntityPointerUnorderedSet all_variables = pkb_->getEntities(EntityType::kVariable);
     for (auto *variable_entity : all_variables) {
       assign_result.merge(pkb_->getByPattern(variable_entity, pattern_substring));
     }
@@ -93,8 +89,7 @@ void PatternStrategy::intersectContext(QueryDeclaration *assign_param, QueryDecl
   // Assignment on the left is a PQL declaration
   if (left_param->getType() == EntityType::kVariable) {
     for (auto *variable_entity : left_param->getContext()) {
-      std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>
-          valid_entities = pkb_->getByPattern(variable_entity, pattern_substring);
+      EntityPointerUnorderedSet valid_entities = pkb_->getByPattern(variable_entity, pattern_substring);
       if (valid_entities.empty()) {
         left_param->removeEntityFromContext(*variable_entity);
       } else {

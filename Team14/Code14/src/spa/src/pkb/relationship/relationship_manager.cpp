@@ -44,48 +44,36 @@ void RelationshipManager::Populate(std::vector<Relationship *> &relationships) {
   }
 }
 
-std::unordered_set<Entity *,
-                   EntityHashFunction,
-                   EntityPointerEquality> RelationshipManager::Get(RsType rs_type,
-                                                                   Entity *entity,
-                                                                   bool is_inverse) {
+EntityPointerUnorderedSet RelationshipManager::Get(RsType rs_type, Entity *entity, bool is_inverse) {
   RsType temp_type;
   switch (rs_type) {
-    case RsType::kFollowsT: temp_type = RsType::kFollows; return this->getTraversal(temp_type,
-                                                                                    entity,
-                                                                                    is_inverse);
-
-    case RsType::kParentT: temp_type = RsType::kParent; return this->getTraversal(temp_type,
-                                                                                  entity,
-                                                                                  is_inverse);
+    case RsType::kFollowsT: {
+      temp_type = RsType::kFollows;
+      return this->getTraversal(temp_type, entity, is_inverse);
+    }
+    case RsType::kParentT: {
+      temp_type = RsType::kParent;
+      return this->getTraversal(temp_type, entity, is_inverse);
+    }
 
     default: temp_type = rs_type;
   }
   return this->relationship_table_map_[temp_type]->get(entity, is_inverse);
 }
 
-std::unordered_set<Entity *,
-                   EntityHashFunction,
-                   EntityPointerEquality> RelationshipManager::getTraversal(RsType rs_type, Entity *query_entity,
-                                bool is_inverse) {
-  std::unordered_map<Entity *,
-                     std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
-                     EntityHashFunction, EntityPointerEquality> table_ptr;
+EntityPointerUnorderedSet RelationshipManager::getTraversal(RsType rs_type, Entity *query_entity,
+                                                            bool is_inverse) {
+  EntityPointerUnorderedMap table_ptr;
   table_ptr = this->relationship_table_map_[rs_type]->GetTable(is_inverse);
   if (table_ptr.find(query_entity) == table_ptr.end()) {
-    return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> {};
+    return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>{};
   }
   return traversalHelper(query_entity, &table_ptr);
 }
 
-std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>
-RelationshipManager::traversalHelper(Entity *query_entity,
-                                   std::unordered_map<Entity *, std::unordered_set<Entity *,
-                                                                                   EntityHashFunction,
-                                                                                   EntityPointerEquality>,
-                                                      EntityHashFunction,
-                                                      EntityPointerEquality> *table_ptr) {
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> result = {};
+EntityPointerUnorderedSet RelationshipManager::traversalHelper(
+    Entity *query_entity, EntityPointerUnorderedMap *table_ptr) {
+  EntityPointerUnorderedSet result = {};
   std::queue<Entity *> queue;
   queue.push(query_entity);
   while (!queue.empty()) {

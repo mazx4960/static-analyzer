@@ -4,6 +4,8 @@
 #include "pkb/pkb.h"
 #include "pkb/relationship/relationship_table.h"
 
+using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
+
 TEST(QueryTest, FollowsRelationship) {
   std::vector<Relationship *> relationships = {
       new FollowsRelationship(new AssignStmtEntity("1"), new AssignStmtEntity("2")),
@@ -19,17 +21,17 @@ TEST(QueryTest, FollowsRelationship) {
   auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kFollowsT, new AssignStmtEntity("4"), true);
   auto result_no_preceding_statement = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("1"), true);
   auto result_no_subsequent_statement = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("10"), false);
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_inverse_false = {new AssignStmtEntity("10")};
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_inverse_true = {new AssignStmtEntity("8")};
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_traverse_inverse_false = {
+  EntityPointerUnorderedSet expected_result_inverse_false = {new AssignStmtEntity("10")};
+  EntityPointerUnorderedSet expected_result_inverse_true = {new AssignStmtEntity("8")};
+  EntityPointerUnorderedSet expected_result_traverse_inverse_false = {
       new AssignStmtEntity("2"),
       new AssignStmtEntity("3"),
       new AssignStmtEntity("4")};
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_traverse_inverse_true = {
+  EntityPointerUnorderedSet expected_result_traverse_inverse_true = {
       new AssignStmtEntity("1"),
       new AssignStmtEntity("2"),
       new AssignStmtEntity("3")};
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_empty = {};
+  EntityPointerUnorderedSet expected_empty = {};
   ASSERT_EQ(result_inverse_false, expected_result_inverse_false);
   ASSERT_EQ(result_inverse_true, expected_result_inverse_true);
   ASSERT_EQ(result_traverse_inverse_false, expected_result_traverse_inverse_false);
@@ -53,17 +55,17 @@ TEST(QueryTest, ParentRelationship) {
   auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kParentT, new AssignStmtEntity("4"), true);
   auto result_no_parent = pkb.getByRelationship(RsType::kParentT, new ProcedureEntity("main"), true);
   auto result_no_child = pkb.getByRelationship(RsType::kParent, new AssignStmtEntity("10"), false);
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_inverse_false = {new AssignStmtEntity("10")};
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_inverse_true = {new ProcedureEntity("Megatron")};
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_traverse_inverse_false = {
+  EntityPointerUnorderedSet expected_result_inverse_false = {new AssignStmtEntity("10")};
+  EntityPointerUnorderedSet expected_result_inverse_true = {new ProcedureEntity("Megatron")};
+  EntityPointerUnorderedSet expected_result_traverse_inverse_false = {
       new IfStmtEntity("2"),
       new WhileStmtEntity("3"),
       new AssignStmtEntity("4")};
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_traverse_inverse_true = {
+  EntityPointerUnorderedSet expected_result_traverse_inverse_true = {
       new WhileStmtEntity("3"),
       new IfStmtEntity("2"),
       new WhileStmtEntity("1")};
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_empty = {};
+  EntityPointerUnorderedSet expected_result_empty = {};
   ASSERT_EQ(result_inverse_false, expected_result_inverse_false);
   ASSERT_EQ(result_inverse_true, expected_result_inverse_true);
   ASSERT_EQ(result_traverse_inverse_false, expected_result_traverse_inverse_false);
@@ -85,10 +87,10 @@ TEST(QueryTest, ModifiesRelationship) {
   auto result_invalid_procedure = pkb.getByRelationship(RsType::kModifies, new ProcedureEntity("Megatron"), false);
   auto result_invalid_variable = pkb.getByRelationship(RsType::kModifies, new VariableEntity("A"), false);
   auto result_multiple_inverse_true = pkb.getByRelationship(RsType::kModifies, new VariableEntity("X"), true);
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_single_inverse_false = {new VariableEntity("Y")};
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_single_inverse_true = {new ProcedureEntity("main")};
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_empty = {};
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_multiple_inverse_true = {
+  EntityPointerUnorderedSet expected_result_single_inverse_false = {new VariableEntity("Y")};
+  EntityPointerUnorderedSet expected_result_single_inverse_true = {new ProcedureEntity("main")};
+  EntityPointerUnorderedSet expected_result_empty = {};
+  EntityPointerUnorderedSet expected_result_multiple_inverse_true = {
       new AssignStmtEntity("1"),
       new AssignStmtEntity("2")};
   ASSERT_EQ(result_single_inverse_false, expected_result_single_inverse_false);
@@ -113,15 +115,15 @@ TEST(QueryTest, UsesRelationship) {
   auto result_invalid_variable = pkb.getByRelationship(RsType::kUses, new VariableEntity("east"), true);
   auto result_multiple_inverse_false = pkb.getByRelationship(RsType::kUses, new AssignStmtEntity("1"), false);
   auto result_multiple_inverse_true = pkb.getByRelationship(RsType::kUses, new VariableEntity("X"), true);
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_single_inverse_false = {new VariableEntity("Y")};
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_single_inverse_true = {new ProcedureEntity("main")};
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_multiple_inverse_false = {
+  EntityPointerUnorderedSet expected_result_single_inverse_false = {new VariableEntity("Y")};
+  EntityPointerUnorderedSet expected_result_single_inverse_true = {new ProcedureEntity("main")};
+  EntityPointerUnorderedSet expected_result_multiple_inverse_false = {
       new VariableEntity("X"),
       new VariableEntity("A")};
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_multiple_inverse_true = {
+  EntityPointerUnorderedSet expected_result_multiple_inverse_true = {
       new AssignStmtEntity("1"),
       new AssignStmtEntity("2")};
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> expected_result_empty = {};
+  EntityPointerUnorderedSet expected_result_empty = {};
   ASSERT_EQ(result_single_inverse_false, expected_result_single_inverse_false);
   ASSERT_EQ(result_single_inverse_true, expected_result_single_inverse_true);
   ASSERT_EQ(result_invalid_procedure, expected_result_empty);
