@@ -47,7 +47,6 @@ QueryDeclaration *QueryParser::parseDeclaration() {
   if (*token == KeywordToken("assign")) { declaration = new AssignDeclaration(parseSynonym()); }
   if (declaration == nullptr) { throw ParseSyntaxError("Unknown declaration type: " + token->value); }
   if (!(*nextToken() == SemicolonToken())) { throw ParseSyntaxError("Missing `;` after declaration"); }
-  spdlog::debug(EntityTypeToString(declaration->getType()) + " declared as " + declaration->getSynonym()->toString());
   return declaration;
 }
 

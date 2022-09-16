@@ -12,15 +12,20 @@ Result *QPS::EvaluateQuery(std::ifstream &query_stream) {
   std::string token_string = "Tokens: ";
   for (auto *token : tokens) { token_string += token->ToString() + " "; }
   spdlog::debug(token_string);
-  
-  QueryParser validator(tokens);
-  spdlog::info("Validating tokens...");
-  validator.parse();
-  spdlog::info("Tokens validated");
+
+  QueryParser parser(tokens);
+  spdlog::info("Parsing tokens...");
+  parser.parse();
   QueryBuilder builder = QueryBuilder();
-  builder.withDeclarations(validator.getDeclarations());
-  builder.withQueryCalls(validator.getQueryCalls());
+  builder.withDeclarations(parser.getDeclarations());
+  builder.withQueryCalls(parser.getQueryCalls());
+  std::string declaration_string = "Declaration: ";
+  for (auto *declaration : parser.getDeclarations()) {
+    declaration_string += EntityTypeToString(declaration->getType()) + ":" + declaration->toString() + " ";
+  }
+  spdlog::debug(declaration_string);
   Query query = builder.build();
+  spdlog::info("Tokens parsed");
 
   Result *result = (new QueryEvaluator(this->pkb_, query))->evaluate();
   return result;
