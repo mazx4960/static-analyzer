@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <fstream>
+#include <istream>
 #include <unordered_set>
 #include <vector>
 
@@ -11,6 +11,6 @@
 
 class QueryLexer : public Lexer {
  public:
-  explicit QueryLexer(std::ifstream *source_stream) : Lexer(source_stream) {};
+  explicit QueryLexer(std::istream *source_stream) : Lexer(source_stream){};
   Token *next_token() override;
 };

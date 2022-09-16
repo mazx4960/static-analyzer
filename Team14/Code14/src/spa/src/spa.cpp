@@ -6,7 +6,7 @@
 
 #include "spdlog/spdlog.h"
 
-SPA::SPA(std::string source_file, std::string query_file, int mode) {
+SPA::SPA(std::string source_file, const std::string &query_file, int mode) {
   // Initialize all components.
   this->ui_ = new UI(std::move(source_file), std::move(query_file), mode);
   auto *sp = new SP();

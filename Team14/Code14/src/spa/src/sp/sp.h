@@ -1,6 +1,6 @@
 #pragma once
 
-#include <fstream>
+#include <istream>
 
 #include "pkb/pkb.h"
 
@@ -11,5 +11,5 @@ class SP {
  public:
   SP() = default;
   void SetPKB(IPKBPopulator *pkb);
-  void LoadSource(std::ifstream &source_stream);
+  void LoadSource(std::istream *source_stream);
 };

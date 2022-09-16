@@ -12,5 +12,5 @@ class QPS {
  public:
   QPS() = default;
   void SetPKB(IPKBQuerier *pkb);
-  Result *EvaluateQuery(std::ifstream &query_stream);
+  Result *EvaluateQuery(std::istream *query_stream);
 };
