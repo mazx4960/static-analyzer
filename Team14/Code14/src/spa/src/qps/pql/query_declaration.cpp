@@ -9,8 +9,7 @@ bool QueryDeclaration::operator==(const QueryDeclaration &other) const {
   }
   return this->type_ == other.getType()
       && *(this->query_synonym_) == *(other.getSynonym())
-      && this->string_ == other.getString()
-      && this->number_ == other.getNumber();
+      && this->string_ == other.toString();
 }
 bool QueryDeclaration::operator==(const QueryDeclaration *other) const {
   if (this->type_ == EntityType::kWildcard || other->getType() == EntityType::kWildcard) {
@@ -18,12 +17,11 @@ bool QueryDeclaration::operator==(const QueryDeclaration *other) const {
   }
   return this->type_ == other->getType()
       && this->query_synonym_ == other->getSynonym()
-      && this->string_ == other->getString()
-      && this->number_ == other->getNumber();
+      && this->string_ == other->toString();
 }
 EntityType QueryDeclaration::getType() const { return this->type_; }
-std::string QueryDeclaration::getString() const { return this->string_; }
-int QueryDeclaration::getNumber() const { return this->number_; }
+std::string QueryDeclaration::toString() const { return this->string_; }
+
 std::unordered_set<Entity *,
                    EntityHashFunction,
                    EntityPointerEquality> QueryDeclaration::getContext() const {
@@ -53,4 +51,5 @@ void QueryDeclaration::intersectContext(const std::unordered_set<Entity *, Entit
 void QueryDeclaration::setContext(std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> context) {
   this->context_ = std::move(context);
 }
+
 
