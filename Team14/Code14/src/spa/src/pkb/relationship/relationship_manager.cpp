@@ -37,7 +37,7 @@ void RelationshipManager::Populate(std::vector<Relationship *> &relationships) {
 }
 
 EntityPointerUnorderedSet RelationshipManager::Get(RsType rs_type, Entity *entity, bool is_inverse) {
-  spdlog::debug("Retrieving all entities that {} {}, inverse = {}", RsTypeToString(rs_type), entity->GetValue(),
+  spdlog::debug("Retrieving all entities that {} {}, inverse = {}", RsTypeToString(rs_type), entity->ToString(),
                 is_inverse);
   auto matches = EntityPointerUnorderedSet();
   switch (rs_type) {
