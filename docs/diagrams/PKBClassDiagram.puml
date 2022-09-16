@@ -4,17 +4,31 @@ class SP
 class QPS
 class PKB
 
-abstract class PKBWriter {
+abstract class IPKBPopulator {
 	void populate(Abstraction)
 }
 
-abstract class PKBReader {
+abstract class IPKBQuerier {
 	Results query(Query)
 }
 
-class "EntityManager"
-class "AbstractionManager"
-class "PatternManager"
+class EntityManager {
+    void populate(Entity)
+    Results query(Query)
+}
+class RelationshipManager {
+    void populate(Relationship)
+    Results query(Query)
+}
+class PatternManager {
+    void populate(Pattern)
+    Results query(Query)
+}
+
+class PKB {
+    void populate(Abstraction)
+    Results query(Query)
+}
 
 abstract class "SIMPLEAbstraction"
 abstract class "SIMPLEEntity"
@@ -68,7 +82,11 @@ class Follows {
 	followsTable
 }
 
-class Uses { 
+class FollowsT {
+	followsTable
+}
+
+class Uses {
 	usesTable
 }
 
@@ -76,20 +94,19 @@ class Parent{
 	parentTable
 }
 
+class ParentT {
+	parentTable
+}
 
-PKB *-down- PKBWriter
-PKB *-down- PKBReader
-SP -down- PKBWriter
-QPS -down- PKBReader
 
-PKBWriter <|.down. EntityManager
-PKBReader <|.down. EntityManager
+IPKBPopulator *-down- PKB
+IPKBQuerier *-down- PKB
+SP -down- IPKBPopulator
+QPS -down- IPKBQuerier
 
-PKBWriter <|.down.  PatternManager
-PKBReader <|.down. PatternManager
-
-PKBWriter <|.left.  AbstractionManager
-PKBReader <|.left. AbstractionManager
+PKB <|.down. EntityManager
+PKB <|.down.  PatternManager
+PKB <|.down.  RelationshipManager
 
 Variable -up-* EntityManager
 Read -up-* EntityManager
@@ -111,16 +128,20 @@ Constant -down-|> SIMPLEEntity
 Procedure -down-|> SIMPLEEntity
 Assign -down-|> SIMPLEEntity
 
-Modifies -up-* AbstractionManager
-Follows -up-* AbstractionManager
-Uses -up-* AbstractionManager
-Parent -up-* AbstractionManager
+Modifies -up-* RelationshipManager
+Follows -up-* RelationshipManager
+FollowsT -up-* RelationshipManager
+Uses -up-* RelationshipManager
+Parent -up-* RelationshipManager
+ParentT -up-* RelationshipManager
 
 
 Modifies -down-|> SIMPLEAbstraction
 Follows -down-|> SIMPLEAbstraction
+FollowsT -down-|> SIMPLEAbstraction
 Uses -down-|> SIMPLEAbstraction
 Parent -down-|> SIMPLEAbstraction
+ParentT -down-|> SIMPLEAbstraction
 
 Pattern -up-* PatternManager
 Pattern -down-|> QueryPattern
