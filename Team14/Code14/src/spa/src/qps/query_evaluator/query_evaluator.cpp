@@ -1,9 +1,7 @@
 #include "query_evaluator.h"
 #include "spdlog/spdlog.h"
 
-std::unordered_set<QueryDeclaration *,
-                   QueryDeclarationHashFunction,
-                   QueryDeclarationPointerEquality> QueryEvaluator::copyDeclarations() {
+QueryDeclarationPointerUnorderedSet QueryEvaluator::copyDeclarations() {
   Query &query = this->query_;
   std::vector<QueryDeclaration *> query_declarations = query.getDeclarations();
   this->declarations_ = std::unordered_set<QueryDeclaration *,
@@ -11,13 +9,10 @@ std::unordered_set<QueryDeclaration *,
                                            QueryDeclarationPointerEquality>(
       query_declarations.begin(), query_declarations.end()
   );
-  
   return this->getDeclarationAsSet();
 }
 
-std::unordered_set<QueryDeclaration *,
-                   QueryDeclarationHashFunction,
-                   QueryDeclarationPointerEquality> QueryEvaluator::fetchContext() {
+QueryDeclarationPointerUnorderedSet QueryEvaluator::fetchContext() {
   this->copyDeclarations();
 
   for (auto *declaration : this->declarations_) {
@@ -25,20 +20,16 @@ std::unordered_set<QueryDeclaration *,
     query_declaration_context_set = this->pkb_->getEntities(declaration->getType());
     declaration->setContext(query_declaration_context_set);
   }
-
   return this->getDeclarationAsSet();
 }
 
-std::unordered_set<QueryDeclaration *,
-                   QueryDeclarationHashFunction,
-                   QueryDeclarationPointerEquality> QueryEvaluator::evaluateSubQueries() {
+QueryDeclarationPointerUnorderedSet QueryEvaluator::evaluateSubQueries() {
   std::vector<QueryClause *> subquery_clauses = this->query_.getQueryCall().getClauseVector();
 
   for (auto *subquery_clause : subquery_clauses) {
     SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, subquery_clause);
     subquery_evaluator.evaluate();
   }
-
   return this->getDeclarationAsSet();
 }
 
@@ -57,15 +48,10 @@ Result *QueryEvaluator::evaluate() {
   return new Result(synonym, context);
 }
 
-std::unordered_set<QueryDeclaration *,
-                   QueryDeclarationHashFunction,
-                   QueryDeclarationPointerEquality> QueryEvaluator::getDeclarationAsSet() {
-  std::unordered_set<QueryDeclaration *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> declaration_set;
+QueryDeclarationPointerUnorderedSet QueryEvaluator::getDeclarationAsSet() {
+  QueryDeclarationPointerUnorderedSet declaration_set;
 
   std::copy(this->declarations_.begin(), this->declarations_.end(),
             std::inserter(declaration_set, declaration_set.begin()));
-
   return declaration_set;
 }

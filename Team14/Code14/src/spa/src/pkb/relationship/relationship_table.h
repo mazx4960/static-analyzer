@@ -11,27 +11,27 @@
 #include "commons/entity.h"
 #include "commons/relationship.h"
 
+using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
+using EntityPointerUnorderedMap = std::unordered_map<Entity *,
+                                                     EntityPointerUnorderedSet,
+                                                     EntityHashFunction,
+                                                     EntityPointerEquality>;
+
 class RelationshipTable {
  protected:
-  std::unordered_map<Entity *,
-                     std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
-                     EntityHashFunction, EntityPointerEquality> table_;
+  EntityPointerUnorderedMap table_;
 
-  std::unordered_map<Entity *,
-                     std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
-                     EntityHashFunction, EntityPointerEquality> inverse_table_;
+  EntityPointerUnorderedMap inverse_table_;
 
   RelationshipTable();
 
  private:
-  static std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Empty();
+  static EntityPointerUnorderedSet Empty();
 
  public:
-  std::unordered_map<Entity *,
-                     std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
-                     EntityHashFunction, EntityPointerEquality> GetTable(bool inverse = false);
+  EntityPointerUnorderedMap GetTable(bool inverse = false);
   void populate(Relationship &);
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> get(Entity *, bool);
+  EntityPointerUnorderedSet get(Entity *, bool);
 };
 
 class UsesTable : public RelationshipTable {

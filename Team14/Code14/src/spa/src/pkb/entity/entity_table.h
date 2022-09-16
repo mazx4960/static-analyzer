@@ -8,15 +8,17 @@
 #include "commons/entity.h"
 #include "commons/result.h"
 #include "commons/types.h"
+using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
 
 class EntityTable {
  protected:
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> table_;
+  EntityPointerUnorderedSet table_;
+
   EntityTable() = default;
 
  public:
   void populate(Entity &entity);
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> get(); 
+  EntityPointerUnorderedSet get();
 };
 
 class VariableTable : public EntityTable {

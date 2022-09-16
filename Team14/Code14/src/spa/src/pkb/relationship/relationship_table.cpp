@@ -1,29 +1,22 @@
 
 #include "relationship_table.h"
 RelationshipTable::RelationshipTable() {
-  this->table_ = std::unordered_map<Entity *,
-                                    std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
-                                    EntityHashFunction, EntityPointerEquality>();
-  this->inverse_table_ = std::unordered_map<Entity *,
-                                            std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
-                                            EntityHashFunction, EntityPointerEquality>();
+  this->table_ = EntityPointerUnorderedMap();
+  this->inverse_table_ = EntityPointerUnorderedMap();
 }
 
-std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> RelationshipTable::Empty() {
-  return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>{};
+EntityPointerUnorderedSet RelationshipTable::Empty() {
+  return EntityPointerUnorderedSet();
 }
 
-std::unordered_map<Entity *,
-                   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
-                   EntityHashFunction, EntityPointerEquality> RelationshipTable::GetTable(bool inverse) {
+EntityPointerUnorderedMap RelationshipTable::GetTable(bool inverse) {
   if (inverse) {
     return this->inverse_table_;
   }
   return this->table_;
 }
 
-std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> RelationshipTable::get(Entity *query_entity,
-                                                                                               bool is_inverse) {
+EntityPointerUnorderedSet RelationshipTable::get(Entity *query_entity, bool is_inverse) {
   if (is_inverse) {
     if (this->inverse_table_.find(query_entity) == this->inverse_table_.end()) {
       return this->Empty();
@@ -35,8 +28,6 @@ std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Relation
   }
   return this->table_[query_entity];
 }
-
-
 
 void RelationshipTable::populate(Relationship &relationship) {
   Entity *first = relationship.GetFirst();

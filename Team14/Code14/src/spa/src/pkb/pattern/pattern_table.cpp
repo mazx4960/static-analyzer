@@ -3,29 +3,24 @@
 #include "pattern_table.h"
 
 PatternTable::PatternTable() {
-  this->pattern_table_ =
-      std::unordered_map<Entity*, std::unordered_set<std::pair<Entity*, std::string>, StmtExprHashFunction>,
-                         EntityHashFunction, EntityPointerEquality>();
+  this->pattern_table_ = PatternEntityUnorderedMap();
 }
-void PatternTable::Populate(Pattern& pattern) {
-  Entity* variable = pattern.GetVariable();
-  Entity* stmt = pattern.GetStmt();
+void PatternTable::Populate(Pattern &pattern) {
+  Entity *variable = pattern.GetVariable();
+  Entity *stmt = pattern.GetStmt();
   std::string expression = pattern.GetExpr();
-  std::pair<Entity*, std::string> pair = std::pair<Entity*, std::string>(stmt, expression);
+  std::pair<Entity *, std::string> pair = std::pair<Entity *, std::string>(stmt, expression);
   if (this->pattern_table_.find(variable) == this->pattern_table_.end()) {
-    std::unordered_set<std::pair<Entity*, std::string>, StmtExprHashFunction> set =
-        std::unordered_set<std::pair<Entity*, std::string>, StmtExprHashFunction>();
+    EntityStringPairUnorderedSet set = EntityStringPairUnorderedSet();
     set.insert(pair);
     this->pattern_table_[variable] = set;
   } else {
     this->pattern_table_[variable].insert(pair);
   }
 }
-std::unordered_set<std::pair<Entity*, std::string>, StmtExprHashFunction> PatternTable::Get(Entity* variable) {
+EntityStringPairUnorderedSet PatternTable::Get(Entity *variable) {
   return this->pattern_table_[variable];
 }
-std::unordered_map<Entity*, std::unordered_set<std::pair<Entity*, std::string>, StmtExprHashFunction>,
-                   EntityHashFunction, EntityPointerEquality>
-PatternTable::GetTable() {
+PatternEntityUnorderedMap PatternTable::GetTable() {
   return this->pattern_table_;
 }

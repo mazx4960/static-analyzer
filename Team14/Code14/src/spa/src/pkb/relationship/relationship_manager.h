@@ -14,24 +14,14 @@
 class RelationshipManager {
  private:
   std::unordered_map<RsType, RelationshipTable *> relationship_table_map_;
-  std::unordered_set<Entity *,
-                     EntityHashFunction,
-                     EntityPointerEquality> getTraversal(RsType, Entity *, bool);
-  static std::unordered_set<Entity *,
-                     EntityHashFunction,
-                     EntityPointerEquality> traversalHelper(Entity *,
-                                                            std::unordered_map<Entity *,
-                                                               std::unordered_set<
-                                                                  Entity *,
-                                                                  EntityHashFunction,
-                                                                  EntityPointerEquality>,
-                                                           EntityHashFunction,
-                                                           EntityPointerEquality> *);
+
+  EntityPointerUnorderedSet getTraversal(RsType, Entity *, bool);
+  static EntityPointerUnorderedSet traversalHelper(Entity *, EntityPointerUnorderedMap *);
   void CreateTable(RsType);
 
  public:
   RelationshipManager() = default;
   RelationshipTable *GetTable(RsType rs_type);
   void Populate(std::vector<Relationship *> &relationships);
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Get(RsType, Entity *, bool);
+  EntityPointerUnorderedSet Get(RsType, Entity *, bool);
 };

@@ -8,6 +8,8 @@
 #include "qps/exceptions.h"
 #include "qps/pql/query_clause.h"
 
+using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
+
 class EvaluationStrategy {
  protected:
   IPKBQuerier *pkb_;
