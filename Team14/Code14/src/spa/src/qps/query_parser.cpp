@@ -128,7 +128,8 @@ PatternClause *QueryParser::parsePattern() {
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration *third = parseExpression();
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
-  spdlog::debug("Pattern parsed: " + first->toString() + "(" + second->toString() + ", " + third->toString() + ")");
+  spdlog::debug("Pattern parsed: " + first->toString() + "(" + second->toString() + ", " + third->toString() +
+  ") expression type: " + EntityTypeToString(third->getType()));
   return new AssignPatternClause(first, second, third);
 }
 SuchThatClause *QueryParser::parseSuchThat() {
@@ -150,10 +151,12 @@ SuchThatClause *QueryParser::parseFollows() {
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration *second = parseStmtRefDeclaration(true);;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
-  spdlog::debug("Follows parsed: " + first->toString() + ", " + second->toString());
+
   if (follows_all) {
+    spdlog::debug("Follows* parsed: " + first->toString() + ", " + second->toString());
     return new FollowsAllClause(first, second);
   }
+  spdlog::debug("Follows parsed: " + first->toString() + ", " + second->toString());
   return new FollowsClause(first, second);
 }
 SuchThatClause *QueryParser::parseParent() {
@@ -167,10 +170,12 @@ SuchThatClause *QueryParser::parseParent() {
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration *second = parseStmtRefDeclaration(true);;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
-  spdlog::debug("Parent parsed: " + first->toString() + ", " + second->toString());
+
   if (parent_all) {
+    spdlog::debug("Parent* parsed: " + first->toString() + ", " + second->toString());
     return new ParentAllClause(first, second);
   }
+  spdlog::debug("Parent parsed: " + first->toString() + ", " + second->toString());
   return new ParentClause(first, second);
 }
 SuchThatClause *QueryParser::parseUses() {

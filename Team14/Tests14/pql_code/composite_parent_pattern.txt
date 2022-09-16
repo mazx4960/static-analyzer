@@ -1,0 +1,2 @@
+assign a; while w;
+Select w such that Parent* (w, a) pattern a ("count", _)
