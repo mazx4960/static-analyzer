@@ -5,7 +5,7 @@
 build/
 
 # test results
-text_results/
+test_results/
 
 ### C++ ###
 # Prerequisites
