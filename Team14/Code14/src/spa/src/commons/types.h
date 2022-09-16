@@ -27,14 +27,12 @@ enum class EntityType {
 
 enum class RsType {
   kFollows,
-  kFollowsT,
+  kFollowsAll,
   kParent,
-  kParentT,
+  kParentAll,
   kUses,
   kModifies,
-  // Used by PQL
-  kParentAll,
-  kFollowsAll,
+  // Used by PQL,
   kAssignPattern,
 };
 

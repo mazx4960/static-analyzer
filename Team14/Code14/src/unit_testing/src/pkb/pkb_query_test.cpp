@@ -22,8 +22,8 @@ TEST(QueryTest, FollowsRelationship) {
   pkb.populate(relationships);
   auto result_inverse_false = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("8"), false);
   auto result_inverse_true = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("10"), true);
-  auto result_traverse_inverse_false = pkb.getByRelationship(RsType::kFollowsT, new AssignStmtEntity("1"), false);
-  auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kFollowsT, new AssignStmtEntity("4"), true);
+  auto result_traverse_inverse_false = pkb.getByRelationship(RsType::kFollowsAll, new AssignStmtEntity("1"), false);
+  auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kFollowsAll, new AssignStmtEntity("4"), true);
   auto result_no_preceding_statement = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("1"), true);
   auto result_no_subsequent_statement = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("10"), false);
   EntityPointerUnorderedSet expected_result_inverse_false = {new AssignStmtEntity("10")};
@@ -52,9 +52,9 @@ TEST(QueryTest, ParentRelationship) {
   pkb.populate(relationships);
   auto result_inverse_false = pkb.getByRelationship(RsType::kParent, new ProcedureEntity("Megatron"), false);
   auto result_inverse_true = pkb.getByRelationship(RsType::kParent, new AssignStmtEntity("10"), true);
-  auto result_traverse_inverse_false = pkb.getByRelationship(RsType::kParentT, new WhileStmtEntity("1"), false);
-  auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kParentT, new AssignStmtEntity("4"), true);
-  auto result_no_parent = pkb.getByRelationship(RsType::kParentT, new ProcedureEntity("main"), true);
+  auto result_traverse_inverse_false = pkb.getByRelationship(RsType::kParentAll, new WhileStmtEntity("1"), false);
+  auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kParentAll, new AssignStmtEntity("4"), true);
+  auto result_no_parent = pkb.getByRelationship(RsType::kParentAll, new ProcedureEntity("main"), true);
   auto result_no_child = pkb.getByRelationship(RsType::kParent, new AssignStmtEntity("10"), false);
   EntityPointerUnorderedSet expected_result_inverse_false = {new AssignStmtEntity("10")};
   EntityPointerUnorderedSet expected_result_inverse_true = {new ProcedureEntity("Megatron")};
