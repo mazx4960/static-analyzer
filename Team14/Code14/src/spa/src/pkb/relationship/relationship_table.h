@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_set>
 #include <unordered_map>
+#include <queue>
 
 #include "commons/types.h"
 #include "commons/entity.h"
@@ -24,22 +25,12 @@ class RelationshipTable {
 
  private:
   static std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Empty();
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getTraversal(Entity *, bool);
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> get(Entity *, bool);
-  std::unordered_set<Entity *,
-                     EntityHashFunction,
-                     EntityPointerEquality> traversalHelper(Entity *,
-                                                            std::unordered_map<Entity *,
-                                                                               std::unordered_set<
-                                                                                   Entity *,
-                                                                                   EntityHashFunction,
-                                                                                   EntityPointerEquality>,
-                                                                               EntityHashFunction,
-                                                                               EntityPointerEquality> *);
+
  public:
   std::unordered_map<Entity *,
                      std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
-                     EntityHashFunction, EntityPointerEquality> GetTable(bool inverse = true);
+                     EntityHashFunction, EntityPointerEquality> GetTable(bool inverse = false);
   void populate(Relationship &);
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> get(RsType, Entity *, bool);
 };

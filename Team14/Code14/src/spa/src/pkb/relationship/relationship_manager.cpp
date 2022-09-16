@@ -51,11 +51,51 @@ std::unordered_set<Entity *,
                                                                    bool is_inverse) {
   RsType temp_type;
   switch (rs_type) {
-    case RsType::kFollowsT: temp_type = RsType::kFollows;
-      break;
-    case RsType::kParentT: temp_type = RsType::kParent;
-      break;
+    case RsType::kFollowsT: temp_type = RsType::kFollows; return this->getTraversal(temp_type,
+                                                                                    entity,
+                                                                                    is_inverse);
+
+    case RsType::kParentT: temp_type = RsType::kParent; return this->getTraversal(temp_type,
+                                                                                  entity,
+                                                                                  is_inverse);
+
     default: temp_type = rs_type;
   }
   return this->relationship_table_map_[temp_type]->get(rs_type, entity, is_inverse);
+}
+
+std::unordered_set<Entity *,
+                   EntityHashFunction,
+                   EntityPointerEquality> RelationshipManager::getTraversal(RsType rs_type, Entity *query_entity,
+                                bool is_inverse) {
+  std::unordered_map<Entity *,
+                     std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
+                     EntityHashFunction, EntityPointerEquality> table_ptr;
+  table_ptr = this->relationship_table_map_[rs_type]->GetTable(is_inverse);
+  if (table_ptr.find(query_entity) == table_ptr.end()) {
+    return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> {};
+  }
+  return this->traversalHelper(query_entity, &table_ptr);
+}
+
+std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>
+RelationshipManager::traversalHelper(Entity *query_entity,
+                                   std::unordered_map<Entity *, std::unordered_set<Entity *,
+                                                                                   EntityHashFunction,
+                                                                                   EntityPointerEquality>,
+                                                      EntityHashFunction,
+                                                      EntityPointerEquality> *table_ptr) {
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> result = {};
+  std::queue<Entity *> queue;
+  queue.push(query_entity);
+  while (!queue.empty()) {
+    auto next_statement = (*table_ptr)[queue.front()];
+    if (!next_statement.empty()) {
+      auto *next_entity = *next_statement.begin();
+      result.insert(next_entity);
+      queue.push(next_entity);
+    }
+    queue.pop();
+  }
+  return result;
 }
