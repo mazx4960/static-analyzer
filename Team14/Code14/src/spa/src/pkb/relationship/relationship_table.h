@@ -39,10 +39,7 @@ class RelationshipTable {
  public:
   std::unordered_map<Entity *,
                      std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
-                     EntityHashFunction, EntityPointerEquality> GetTable();
-  std::unordered_map<Entity *,
-                     std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
-                     EntityHashFunction, EntityPointerEquality> GetInverseTable();
+                     EntityHashFunction, EntityPointerEquality> GetTable(bool inverse = true);
   void populate(Relationship &);
   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> get(RsType, Entity *, bool);
 };

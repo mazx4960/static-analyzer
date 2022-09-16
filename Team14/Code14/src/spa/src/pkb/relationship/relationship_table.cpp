@@ -15,21 +15,18 @@ std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Relation
 
 std::unordered_map<Entity *,
                    std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
-                   EntityHashFunction, EntityPointerEquality> RelationshipTable::GetTable() {
+                   EntityHashFunction, EntityPointerEquality> RelationshipTable::GetTable(bool inverse) {
+  if (inverse) {
+    return this->inverse_table_;
+  }
   return this->table_;
-}
-
-std::unordered_map<Entity *,
-                   std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
-                   EntityHashFunction, EntityPointerEquality> RelationshipTable::GetInverseTable() {
-  return this->inverse_table_;
 }
 
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> RelationshipTable::get(RsType type,
                                                                                                Entity *query_entity,
                                                                                                bool is_inverse) {
   switch (type) {
-    case RsType::kFollowsT:
+    case RsType::kFollowsT: // fallthrough
     case RsType::kParentT: return this->getTraversal(query_entity, is_inverse);
     default: return this->get(query_entity, is_inverse);
   }
