@@ -61,7 +61,7 @@ std::unordered_set<Entity *,
 
     default: temp_type = rs_type;
   }
-  return this->relationship_table_map_[temp_type]->get(rs_type, entity, is_inverse);
+  return this->relationship_table_map_[temp_type]->get(entity, is_inverse);
 }
 
 std::unordered_set<Entity *,

@@ -22,21 +22,6 @@ std::unordered_map<Entity *,
   return this->table_;
 }
 
-std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> RelationshipTable::get(RsType type,
-                                                                                               Entity *query_entity,
-                                                                                               bool is_inverse) {
-  return this->get(query_entity, is_inverse);
-}
-
-
-
-void RelationshipTable::populate(Relationship &relationship) {
-  Entity *first = relationship.GetFirst();
-  Entity *second = relationship.GetSecond();
-  this->table_[first].insert(second);
-  this->inverse_table_[second].insert(first);
-}
-
 std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> RelationshipTable::get(Entity *query_entity,
                                                                                                bool is_inverse) {
   if (is_inverse) {
@@ -49,4 +34,13 @@ std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Relation
     return this->Empty();
   }
   return this->table_[query_entity];
+}
+
+
+
+void RelationshipTable::populate(Relationship &relationship) {
+  Entity *first = relationship.GetFirst();
+  Entity *second = relationship.GetSecond();
+  this->table_[first].insert(second);
+  this->inverse_table_[second].insert(first);
 }

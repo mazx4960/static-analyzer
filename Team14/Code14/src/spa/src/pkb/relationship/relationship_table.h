@@ -25,14 +25,13 @@ class RelationshipTable {
 
  private:
   static std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> Empty();
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> get(Entity *, bool);
 
  public:
   std::unordered_map<Entity *,
                      std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>,
                      EntityHashFunction, EntityPointerEquality> GetTable(bool inverse = false);
   void populate(Relationship &);
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> get(RsType, Entity *, bool);
+  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> get(Entity *, bool);
 };
 
 class UsesTable : public RelationshipTable {
