@@ -12,8 +12,9 @@ Result *QPS::EvaluateQuery(std::ifstream &query_stream) {
   std::string token_string = "Tokens: ";
   for (auto *token : tokens) { token_string += token->ToString() + " "; }
   spdlog::debug(token_string);
-
+  
   QueryParser validator(tokens);
+  spdlog::info("Validating tokens...");
   validator.parse();
   spdlog::info("Tokens validated");
   QueryBuilder builder = QueryBuilder();
