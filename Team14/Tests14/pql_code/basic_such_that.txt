@@ -1,2 +1,2 @@
-stmt s1; stmt s2;
-Select s1 such that Parent(s1, s2)
+stmt s; stmt s2;
+Select s such that Follows*(s, s2)

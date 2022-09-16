@@ -16,22 +16,14 @@ RelationshipTable *RelationshipManager::GetTable(RsType rs_type) {
 void RelationshipManager::CreateTable(RsType rs_type) {
   RelationshipTable *table;
   switch (rs_type) {
-    case RsType::kFollows: // fallthrough
-    case RsType::kFollowsT:table = new FollowsTable();
-      break;
-    case RsType::kParent: // fallthrough
-    case RsType::kParentT:table = new ParentTable();
-      break;
-    case RsType::kModifies:table = new ModifiesTable();
-      break;
-    case RsType::kUses:table = new UsesTable();
-      break;
+    case RsType::kFollows: table = new FollowsTable(); break;
+    case RsType::kParent: table = new ParentTable(); break;
+    case RsType::kModifies: table = new ModifiesTable(); break;
+    case RsType::kUses: table = new UsesTable(); break;
     default: table = nullptr;
   }
 
-  if (table == nullptr) {
-    throw PKBException(RsTypeToString(rs_type) + " table could not be created");
-  }
+  if (table == nullptr) { throw PKBException(RsTypeToString(rs_type) + " table could not be created"); }
   this->relationship_table_map_[rs_type] = table;
 }
 
@@ -45,45 +37,45 @@ void RelationshipManager::Populate(std::vector<Relationship *> &relationships) {
 }
 
 EntityPointerUnorderedSet RelationshipManager::Get(RsType rs_type, Entity *entity, bool is_inverse) {
-  RsType temp_type;
+  spdlog::debug("Retrieving all entities that {} {}, inverse = {}", RsTypeToString(rs_type), entity->ToString(),
+                is_inverse);
+  auto matches = EntityPointerUnorderedSet();
   switch (rs_type) {
-    case RsType::kFollowsT: {
-      temp_type = RsType::kFollows;
-      return this->getTraversal(temp_type, entity, is_inverse);
+    case RsType::kFollowsAll: {
+      matches = this->GetAll(RsType::kFollows, entity, is_inverse);
+      break;
     }
-    case RsType::kParentT: {
-      temp_type = RsType::kParent;
-      return this->getTraversal(temp_type, entity, is_inverse);
+    case RsType::kParentAll: {
+      matches = this->GetAll(RsType::kParent, entity, is_inverse);
+      break;
     }
-
-    default: temp_type = rs_type;
+    default: {
+      auto *relationship_table = GetTable(rs_type);
+      matches = relationship_table->get(entity, is_inverse);
+    }
   }
-  return this->relationship_table_map_[temp_type]->get(entity, is_inverse);
+  std::string result_string;
+  for (auto *match : matches) { result_string += match->GetValue() + " "; }
+  spdlog::debug("Result: {}", result_string);
+  return matches;
 }
 
-EntityPointerUnorderedSet RelationshipManager::getTraversal(RsType rs_type, Entity *query_entity,
-                                                            bool is_inverse) {
-  EntityPointerUnorderedMap table_ptr;
-  table_ptr = this->relationship_table_map_[rs_type]->GetTable(is_inverse);
-  if (table_ptr.find(query_entity) == table_ptr.end()) {
-    return std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>{};
-  }
-  return traversalHelper(query_entity, &table_ptr);
-}
+EntityPointerUnorderedSet RelationshipManager::GetAll(RsType rs_type, Entity *entity, bool is_inverse) {
+  auto matches = EntityPointerUnorderedSet();
+  auto *relationship_table = GetTable(rs_type);
 
-EntityPointerUnorderedSet RelationshipManager::traversalHelper(
-    Entity *query_entity, EntityPointerUnorderedMap *table_ptr) {
-  EntityPointerUnorderedSet result = {};
   std::queue<Entity *> queue;
-  queue.push(query_entity);
+  queue.push(entity);
   while (!queue.empty()) {
-    auto next_statement = (*table_ptr)[queue.front()];
-    if (!next_statement.empty()) {
-      auto *next_entity = *next_statement.begin();
-      result.insert(next_entity);
-      queue.push(next_entity);
+    auto *current = queue.front();
+    auto sub_matches = relationship_table->get(current, is_inverse);
+    for (auto *sub_match : sub_matches) {
+      if (matches.find(sub_match) == matches.end()) {
+        matches.insert(sub_match);
+        queue.push(sub_match);
+      }
     }
     queue.pop();
   }
-  return result;
+  return matches;
 }
