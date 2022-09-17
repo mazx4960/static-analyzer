@@ -18,7 +18,8 @@ enum class EntityType {
   kPrintStmt,
   kReadStmt,
   // Used by PQL
-  kWildcard,
+  kWildcardStmt,
+  kWildcardEnt,
   kExpression,
   kWildcardExpression,
   kString,
@@ -48,7 +49,8 @@ inline std::string EntityTypeToString(EntityType type) {
     case EntityType::kWhileStmt: return "WhileStmt";
     case EntityType::kPrintStmt: return "PrintStmt";
     case EntityType::kReadStmt: return "ReadStmt";
-    case EntityType::kWildcard: return "Wildcard";
+    case EntityType::kWildcardEnt: return "EntWildcard";
+    case EntityType::kWildcardStmt: return "StmtWildcard";
     case EntityType::kExpression: return "Expression";
     case EntityType::kWildcardExpression: return "WildcardExpression";
     case EntityType::kString: return "String";

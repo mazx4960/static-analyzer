@@ -19,4 +19,5 @@ class EntityManager {
   EntityTable *GetTable(EntityType entity_type);
   void Populate(const std::vector<Entity *> &entities);
   EntityPointerUnorderedSet Get(EntityType entity_type);
+  EntityPointerUnorderedSet Get(std::string &entity_value);
 };

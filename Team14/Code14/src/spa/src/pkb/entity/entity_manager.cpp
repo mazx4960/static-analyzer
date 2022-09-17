@@ -66,7 +66,20 @@ EntityPointerUnorderedSet EntityManager::Get(EntityType entity_type) {
     matches = entity_table->get();
   }
   std::string result_string;
-  for (auto *match : matches) { result_string += match->GetValue() + " "; }
-  spdlog::debug("Result: {}", result_string);
+  for (auto *match : matches) { result_string += match->GetValue() + ", "; }
+  spdlog::debug("Results[{}]: {}", matches.size(), result_string);
   return matches;
+}
+
+EntityPointerUnorderedSet EntityManager::Get(std::string &entity_value) {
+  spdlog::debug("Retrieving all entities with {}", entity_value);
+  EntityPointerUnorderedSet result = {};
+  for (auto [k, v] : this->entity_table_map_) {
+    for (auto *entity : v->get()) {
+      if (entity->GetValue() == entity_value) {
+        result.insert(entity);
+      }
+    }
+  }
+  return result;
 }

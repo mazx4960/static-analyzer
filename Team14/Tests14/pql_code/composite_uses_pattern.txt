@@ -1,0 +1,2 @@
+assign a; variable v;
+Select a such that Uses (a, v) pattern a (v, _)

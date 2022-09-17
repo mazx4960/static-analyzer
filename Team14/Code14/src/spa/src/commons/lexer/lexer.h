@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <fstream>
+#include <istream>
 #include <unordered_set>
 #include <vector>
 
@@ -15,7 +15,7 @@ class Lexer {
 
   int column_number_;
 
-  std::ifstream *source_stream_;
+  std::istream *source_stream_;
 
   std::string tmp_;// temporary string to store a value
   const char semicolon_ = ';';
@@ -34,8 +34,7 @@ class Lexer {
 
   const char wild_card_ = '_';
 
-  std::unordered_set<std::string> valid_whitespace_ = {
-      " ", "\t", "\r", "\n"};
+  std::unordered_set<std::string> valid_whitespace_ = {" ", "\t", "\r", "\n"};
 
   virtual char peek();
   virtual char advance();
@@ -45,7 +44,7 @@ class Lexer {
   virtual void read_alphanumeric();
 
  public:
-  explicit Lexer(std::ifstream *source_stream);
+  explicit Lexer(std::istream *source_stream);
   virtual Token *next_token();
   virtual std::vector<Token *> lex();
 };

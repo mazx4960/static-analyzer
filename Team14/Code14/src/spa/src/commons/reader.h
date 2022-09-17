@@ -6,5 +6,6 @@
 
 class StreamReader {
  public:
-  static std::ifstream GetStreamFromFile(const std::string& filename);
+  static std::istream* GetStreamFromFile(const std::string& filename);
+  static std::istream* GetStreamFromString(const std::string& content);
 };

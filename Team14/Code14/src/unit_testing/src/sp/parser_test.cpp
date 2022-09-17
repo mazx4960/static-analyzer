@@ -4,6 +4,7 @@
 #include "commons/parser/expr_definition/expr_grammar.h"
 #include "commons/parser/node/node_type.h"
 #include "commons/parser/parser_exceptions.h"
+#include "commons/reader.h"
 #include "commons/types.h"
 #include "sp/simple_definition/simple_ast.h"
 #include "sp/simple_definition/simple_grammar.h"
@@ -12,9 +13,9 @@
 
 TEST(SimpleParserTest, TestBasic) {
   std::vector<Token *> input_tokens = {
-      new KeywordToken("procedure"), new SymbolToken("main"), new CurlyOpenBracketToken(),
-      new SymbolToken("x"), new OperatorToken("="), new LiteralToken("1"),
-      new SemicolonToken(), new CurlyCloseBracketToken(), new EndOfFileToken()};
+      new KeywordToken("procedure"), new SymbolToken("main"),      new CurlyOpenBracketToken(),
+      new SymbolToken("x"),          new OperatorToken("="),       new LiteralToken("1"),
+      new SemicolonToken(),          new CurlyCloseBracketToken(), new EndOfFileToken()};
   Node *program_node = SimpleParser::ParseProgram(input_tokens);
 
   ASSERT_EQ(NodeType::kProgram, program_node->GetNodeType());
@@ -43,7 +44,7 @@ TEST(SimpleParserTest, TestBasic) {
 }
 
 TEST(SimpleParserTestAssignment, AdvancedTest) {
-  auto *s = new std::ifstream("Team14/Tests14/simple_code/assignment1.txt");
+  std::istream *s = StreamReader::GetStreamFromFile("Team14/Tests14/simple_code/assignment1.txt");
   SimpleLexer simple_lexer(s);
   std::vector<Token *> tokens = simple_lexer.lex();
   // The main purpose of this test is to see if it can parse complex programs

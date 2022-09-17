@@ -8,8 +8,8 @@
 #include "spdlog/spdlog.h"
 
 void SP::SetPKB(IPKBPopulator *pkb) { this->pkb_ = pkb; }
-void SP::LoadSource(std::ifstream &source_stream) {
-  SimpleLexer lexer(&source_stream);
+void SP::LoadSource(std::istream *source_stream) {
+  SimpleLexer lexer(source_stream);
   auto tokens = lexer.lex();
   spdlog::info("Generated source tokens");
   std::string token_string = "Tokens: ";

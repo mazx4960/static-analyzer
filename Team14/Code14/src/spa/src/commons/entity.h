@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <string>
 #include <utility>
 
@@ -68,6 +69,11 @@ class IfStmtEntity : public Entity {
   explicit IfStmtEntity(std::string stmt_no) : Entity(EntityType::kIfStmt, std::move(stmt_no)) {}
 };
 
+class StmtEntity : public Entity {
+ public:
+  explicit StmtEntity(std::string stmt_no) : Entity(EntityType::kStatement, std::move(stmt_no)) {}
+};
+
 /**
  * Hash function for Entity
  *
@@ -82,4 +88,41 @@ struct EntityPointerEquality {
 struct EntityHashFunction {
   size_t operator()(const Entity &entity) const { return entity.GetHash(); }
   size_t operator()(const Entity *entity) const { return entity->GetHash(); }
+};
+
+struct EntityPointerComparator {
+  /**
+   * Order two entities by value (less than or equals to)
+   * @param lhs
+   * @param rhs
+   * @return true if lhs <= rhs
+   */
+  static bool le(const Entity *lhs, const Entity *rhs) {
+    std::string left_val = lhs->GetValue();
+    std::string right_val = rhs->GetValue();
+    if (isNumber(left_val) && isNumber(right_val)) {
+      return std::stoi(left_val) <= std::stoi(right_val);
+    }
+    return left_val < right_val;
+  }
+
+  /**
+   * Order two entities by value (strictly less than)
+   * @param lhs
+   * @param rhs
+   * @return true if lhs < rhs
+   */
+  static bool lt(const Entity *lhs, const Entity *rhs) {
+    std::string left_val = lhs->GetValue();
+    std::string right_val = rhs->GetValue();
+    if (isNumber(left_val) && isNumber(right_val)) {
+      return std::stoi(left_val) < std::stoi(right_val);
+    }
+    return left_val < right_val;
+  }
+
+ private:
+  static bool isNumber(const std::string &s) {
+    return std::all_of(s.begin(), s.end(), ::isdigit);
+  }
 };

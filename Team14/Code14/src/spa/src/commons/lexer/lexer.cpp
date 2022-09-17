@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-Lexer::Lexer(std::ifstream *s) {
+Lexer::Lexer(std::istream *s) {
   line_number_ = 1;
   column_number_ = 1;
   source_stream_ = s;
