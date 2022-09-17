@@ -1,10 +1,11 @@
 #include <gtest/gtest.h>
 
 #include "commons/lexer/token.h"
+#include "commons/reader.h"
 #include "qps/query_lexer.h"
 
 TEST(QueryLexerTest, TestBasic) {
-  auto* s = new std::ifstream("Team14/Tests14/pql_code/basic.txt");
+  std::istream* s = StreamReader::GetStreamFromFile("Team14/Tests14/pql_code/basic.txt");
   QueryLexer lexer(s);
 
   std::vector<Token*> tokens = lexer.lex();

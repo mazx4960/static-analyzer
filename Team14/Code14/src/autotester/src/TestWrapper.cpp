@@ -32,7 +32,7 @@ void TestWrapper::parse(std::string filename) {
 
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
-  this->ui_->SetQueryFile(query);
+  this->ui_->SetQueryString(query);
   auto* result = this->ui_->ExecuteQuery();
   if (result->is_empty()) { return; }
 

@@ -1,12 +1,12 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 #include "qps.h"
 
-#include "spdlog/spdlog.h"
 #include "query_builder.h"
+#include "spdlog/spdlog.h"
 
 void QPS::SetPKB(IPKBQuerier *pkb) { this->pkb_ = pkb; }
-Result *QPS::EvaluateQuery(std::ifstream &query_stream) {
-  QueryLexer lexer(&query_stream);
+Result *QPS::EvaluateQuery(std::istream *query_stream) {
+  QueryLexer lexer(query_stream);
   auto tokens = lexer.lex();
   spdlog::info("Generated query tokens");
   std::string token_string = "Tokens: ";

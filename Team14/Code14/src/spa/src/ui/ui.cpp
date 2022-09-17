@@ -7,9 +7,9 @@
 #include "commons/reader.h"
 #include "spdlog/spdlog.h"
 
-UI::UI(std::string source_file, std::string query_file, int mode = 0)
+UI::UI(std::string source_file, const std::string &query_file, int mode = 0)
     : source_file_(std::move(source_file)),
-      query_file_(std::move(query_file)) {
+      query_stream_(StreamReader::GetStreamFromFile(query_file)) {
   // Setup logging
   if (mode == 2) {
     spdlog::set_level(spdlog::level::debug);
@@ -23,7 +23,12 @@ UI::UI() { spdlog::set_level(spdlog::level::off); }
 void UI::SetSP(SP *sp) { this->sp_ = sp; }
 void UI::SetQPS(QPS *qps) { this->qps_ = qps; }
 void UI::SetSourceFile(std::string source_file) { this->source_file_ = std::move(source_file); }
-void UI::SetQueryFile(std::string query_file) { this->query_file_ = std::move(query_file); }
+void UI::SetQueryFile(const std::string &query_file) {
+  this->query_stream_ = StreamReader::GetStreamFromFile(query_file);
+}
+void UI::SetQueryString(const std::string &query_string) {
+  this->query_stream_ = StreamReader::GetStreamFromString(query_string);
+}
 void UI::Run() {
   if (this->sp_ == nullptr || this->qps_ == nullptr) {
     spdlog::error("SP or QPS not found! Exiting program...");
@@ -44,7 +49,7 @@ void UI::LoadSource() {
   }
   spdlog::info("Reading source file...");
   std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-  std::ifstream source_stream = StreamReader::GetStreamFromFile(this->source_file_);
+  std::istream *source_stream = StreamReader::GetStreamFromFile(this->source_file_);
   this->sp_->LoadSource(source_stream);
   std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
   spdlog::info("Source file loaded.");
@@ -52,7 +57,7 @@ void UI::LoadSource() {
                std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
 }
 Result *UI::ExecuteQuery() {
-  if (this->query_file_.empty()) {
+  if (this->query_stream_ == nullptr) {
     spdlog::error("Query file not found! Exiting program...");
     return Result::empty();
   }
@@ -62,8 +67,7 @@ Result *UI::ExecuteQuery() {
   }
   spdlog::info("Reading query file...");
   std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-  std::ifstream query_stream = StreamReader::GetStreamFromFile(this->query_file_);
-  Result *result = this->qps_->EvaluateQuery(query_stream);
+  Result *result = this->qps_->EvaluateQuery(query_stream_);
   std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
   spdlog::info("Query executed.");
   spdlog::info("Time taken to execute query:  {} ms",
