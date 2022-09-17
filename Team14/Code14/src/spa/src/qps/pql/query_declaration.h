@@ -113,9 +113,15 @@ class ProcedureDeclaration : public QueryDeclaration {
 };
 
 // Inline declaration of  Wildcard "_"
-class WildCardDeclaration : public QueryDeclaration {
+class EntWildCardDeclaration : public QueryDeclaration {
  public:
-  explicit WildCardDeclaration() : QueryDeclaration(EntityType::kWildcard) {}
+  explicit EntWildCardDeclaration() : QueryDeclaration(EntityType::kEntWildcard) {}
+};
+
+// Inline declaration of  Wildcard "_"
+class StmtWildCardDeclaration : public QueryDeclaration {
+ public:
+  explicit StmtWildCardDeclaration() : QueryDeclaration(EntityType::kStmtWildcard) {}
 };
 
 // Inline declaration of Expression "(x + (y * z))"

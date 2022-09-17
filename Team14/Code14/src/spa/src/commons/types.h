@@ -18,7 +18,8 @@ enum class EntityType {
   kPrintStmt,
   kReadStmt,
   // Used by PQL
-  kWildcard,
+  kStmtWildcard,
+  kEntWildcard,
   kExpression,
   kWildcardExpression,
   kString,
