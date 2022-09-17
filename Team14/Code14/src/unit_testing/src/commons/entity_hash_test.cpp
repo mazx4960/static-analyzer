@@ -61,8 +61,7 @@ TEST(EntityTypeHashTest, DifferentEntityTypeSameStr) {
   auto *e1 = new ProcedureEntity("123");
   auto *e2 = new VariableEntity("123");
   auto *e3 = new ConstantEntity("123");
-  std::unordered_set<size_t> hash_value_set = {EntityHashFunction().operator()(e1),
-                                               EntityHashFunction().operator()(e2),
+  std::unordered_set<size_t> hash_value_set = {EntityHashFunction().operator()(e1), EntityHashFunction().operator()(e2),
                                                EntityHashFunction().operator()(e3)};
   ASSERT_EQ(hash_value_set.size(), 3);// All distinct
   ASSERT_EQ((new EntityPointerUnorderedSet({e1, e2, e3}))->size(), 3);

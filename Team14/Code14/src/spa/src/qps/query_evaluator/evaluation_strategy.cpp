@@ -19,7 +19,33 @@ EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClaus
   }
 }
 
-// TODO(howtoosee) implement SuchThat strategy
+EntityPointerUnorderedSet EvaluationStrategy::getCandidates(QueryDeclaration *declaration) {
+  EntityPointerUnorderedSet candidates;
+  if (declaration->getType() == EntityType::kString) {
+    candidates.insert(new VariableEntity(declaration->toString()));
+  } else if (declaration->getType() == EntityType::kInteger) {// TODO: get entity from pkb
+    candidates.insert(new StmtEntity(declaration->toString()));
+  } else if (declaration->getType() == EntityType::kWildcard) {// TODO: change to wild stmt and wild variable
+    EntityPointerUnorderedSet all_variables = pkb_->getEntities(EntityType::kVariable);
+    for (auto *entity : all_variables) { candidates.insert(entity); }
+  } else {
+    candidates = declaration->getContext();
+  }
+  return candidates;
+}
+bool EvaluationStrategy::shouldIntersect(QueryDeclaration *declaration) {
+  return declaration->getType() != EntityType::kString && declaration->getType() != EntityType::kInteger
+      && declaration->getType() != EntityType::kWildcard;
+}
+EntityPointerUnorderedSet EvaluationStrategy::intersectContext(const EntityPointerUnorderedSet &first,
+                                                               EntityPointerUnorderedSet second) {
+  EntityPointerUnorderedSet result;
+  for (auto *entity : first) {
+    if (second.find(entity) != second.end()) { result.insert(entity); }
+  }
+  return result;
+}
+
 void SuchThatStrategy::evaluate() {
   RsType rs_type = this->clause_->getSuchThatType();
   spdlog::debug("Evaluating SuchThat clause with relationship {}", RsTypeToString(rs_type));
@@ -29,96 +55,75 @@ void SuchThatStrategy::evaluate() {
   EntityPointerUnorderedSet first_param_context = first_param->getContext();
   EntityPointerUnorderedSet second_param_context = second_param->getContext();
 
+  // Evaluate the first parameter first
   if (first_param_context.size() <= second_param_context.size()) {
-    // Intersect 2nd set first
-    intersectContext(first_param, second_param, rs_type, false);
-    // Then intersect 1st set
-    intersectContext(second_param, first_param, rs_type, true);
-
+    auto second_matches = this->evaluateParameter(first_param, rs_type, false);
+    if (this->shouldIntersect(second_param)) {
+      auto intersected = EvaluationStrategy::intersectContext(second_matches, second_param_context);
+      second_param->setContext(intersected);
+    }
+    auto first_matches = this->evaluateParameter(second_param, rs_type, true);
+    if (this->shouldIntersect(first_param)) {
+      auto intersected = EvaluationStrategy::intersectContext(first_matches, first_param_context);
+      first_param->setContext(intersected);
+    }
   } else {
-    // Intersect 1st set first
-    intersectContext(second_param, first_param, rs_type, true);
-    // Then intersect 2nd set
-    intersectContext(first_param, second_param, rs_type, false);
+    auto first_matches = this->evaluateParameter(second_param, rs_type, true);
+    if (this->shouldIntersect(first_param)) {
+      auto intersected = EvaluationStrategy::intersectContext(first_matches, first_param_context);
+      first_param->setContext(intersected);
+    }
+    auto second_matches = this->evaluateParameter(first_param, rs_type, false);
+    if (this->shouldIntersect(second_param)) {
+      auto intersected = EvaluationStrategy::intersectContext(second_matches, second_param_context);
+      second_param->setContext(intersected);
+    }
   }
 }
-
-void SuchThatStrategy::intersectContext(QueryDeclaration *param_to_send, QueryDeclaration *param_to_be_intersected,
-                                        RsType rs_type, bool invert_search) {
-  EntityPointerUnorderedSet valid_entities_for_other_param;
-  if (param_to_send->getType() != EntityType::kString && param_to_send->getType() != EntityType::kInteger) {
-    std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> context;
-    if (param_to_send->getType() == EntityType::kWildcard) {
-      // TODO(howtoosee) get context for wildcard
-      // context = wildcard context
-    } else {
-      context = param_to_send->getContext();
-    }
-    for (auto *context_entity : context) {
-      EntityPointerUnorderedSet valid_entities = this->pkb_->getByRelationship(rs_type, context_entity, invert_search);
-      if (valid_entities.empty()) {
-        param_to_send->removeEntityFromContext(context_entity);
-      } else {
-        for (auto *entity : valid_entities) { valid_entities_for_other_param.insert(entity); }
-      }
-    }
+EntityPointerUnorderedSet SuchThatStrategy::evaluateParameter(QueryDeclaration *param, RsType rs_type,
+                                                              bool invert_search) {
+  spdlog::debug("Evaluating SuchThat parameter {} for {}, inverse = {}", param->toString(), RsTypeToString(rs_type),
+                invert_search);
+  EntityPointerUnorderedSet candidates = this->getCandidates(param);
+  std::string candidate_string;
+  for (auto *candidate : candidates) { candidate_string += candidate->ToString() + ", "; }
+  spdlog::debug("Candidates: {}", candidate_string);
+  EntityPointerUnorderedSet results;
+  for (auto *entity : candidates) {
+    EntityPointerUnorderedSet valid_entities = this->pkb_->getByRelationship(rs_type, entity, invert_search);
+    for (auto *valid_entity : valid_entities) { results.insert(valid_entity); }
   }
-
-  // Parameter is declared in SIMPLE
-  if (param_to_send->getType() == EntityType::kString) {
-    EntityPointerUnorderedSet valid_entities = this->pkb_->getByRelationship(rs_type, new VariableEntity(param_to_send->toString()), invert_search);
-    for (auto *entity : valid_entities) { valid_entities_for_other_param.insert(entity); }
-  }
-
-  // Parameter is literal
-  if (param_to_send->getType() == EntityType::kInteger) {
-    EntityPointerUnorderedSet valid_entities = this->pkb_->getByRelationship(rs_type, new StmtEntity(param_to_send->toString()), invert_search);
-    for (auto *entity : valid_entities) { valid_entities_for_other_param.insert(entity); }
-  }
-  param_to_be_intersected->intersectContext(valid_entities_for_other_param);
+  spdlog::debug("Results: {}", results.size());
+  return results;
 }
 
 void PatternStrategy::evaluate() {
   spdlog::debug("Evaluating Pattern clause");
 
-  QueryDeclaration *first_param = this->clause_->getFirst();
-  QueryDeclaration *second_param = this->clause_->getSecond();
-  QueryDeclaration *third_param = this->clause_->getThird();
+  QueryDeclaration *stmt_param = this->clause_->getFirst();
+  QueryDeclaration *var_param = this->clause_->getSecond();
+  QueryDeclaration *expr_param = this->clause_->getThird();
 
-  intersectContext(first_param, second_param, third_param);
+  auto stmt_matches = this->evaluateParameter(var_param, expr_param);
+  auto intersected = EvaluationStrategy::intersectContext(stmt_matches, stmt_param->getContext());
+  stmt_param->setContext(intersected);
 }
-void PatternStrategy::intersectContext(QueryDeclaration *assign_param, QueryDeclaration *left_param,
-                                       QueryDeclaration *right_param) {
-  std::string pattern_substring = right_param->toString();
-  EntityPointerUnorderedSet assign_result;
-  EntityPointerUnorderedSet intersected_results;
-
-  // Assignment on the left is a Wildcard
-  if (left_param->getType() == EntityType::kWildcard) {
-    EntityPointerUnorderedSet all_variables = pkb_->getEntities(EntityType::kVariable);
-    for (auto *variable_entity : all_variables) {
-      assign_result.merge(pkb_->getByPattern(variable_entity, pattern_substring));
+EntityPointerUnorderedSet PatternStrategy::evaluateParameter(QueryDeclaration *var_param,
+                                                             QueryDeclaration *expr_param) {
+  spdlog::debug("Evaluating Pattern parameter {} for {}", var_param->toString(), expr_param->toString());
+  EntityPointerUnorderedSet candidates = this->getCandidates(var_param);
+  std::string candidate_string;
+  for (auto *candidate : candidates) { candidate_string += candidate->ToString() + ", "; }
+  spdlog::debug("Candidates: {}", candidate_string);
+  EntityPointerUnorderedSet results;
+  std::string expr = expr_param->toString();
+  for (auto *entity : candidates) {
+    EntityPointerUnorderedSet valid_entities = this->pkb_->getByPattern(entity, expr);
+    if (valid_entities.empty()) {
+      var_param->removeEntityFromContext(entity);
     }
-    assign_param->intersectContext(assign_result);
+    results.merge(valid_entities);
   }
-
-  // Assignment on the left is a SIMPLE entity
-  if (left_param->getType() == EntityType::kString) {
-    assign_param->intersectContext(pkb_->getByPattern(new VariableEntity(left_param->toString()), pattern_substring));
-  }
-
-  // Assignment on the left is a PQL declaration
-  if (left_param->getType() == EntityType::kVariable) {
-    for (auto *variable_entity : left_param->getContext()) {
-      EntityPointerUnorderedSet valid_entities = pkb_->getByPattern(variable_entity, pattern_substring);
-      if (valid_entities.empty()) {
-        left_param->removeEntityFromContext(variable_entity);
-      } else {
-        for (auto *assign_entity : valid_entities) { assign_result.insert(assign_entity); }
-      }
-    }
-    assign_param->intersectContext(assign_result);
-  }
-  spdlog::info("Pattern intersection executed...");
-  spdlog::debug("Intersected size: {}", assign_param->getContext().size());
+  spdlog::debug("Results: {}", results.size());
+  return results;
 }
