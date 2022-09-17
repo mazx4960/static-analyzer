@@ -8,9 +8,9 @@
 TEST(PopulatePatternTest, SingleStatementTest) {
   auto *stmt = new AssignStmtEntity("1"); 
   auto *v = new VariableEntity("v"); 
-  auto expr1 = "x + 1";
-  auto expr2 = "y + 1";
-  auto expr3 = "x + 1 + y + 1";  
+  const auto *expr1 = "x + 1";
+  const auto *expr2 = "y + 1";
+  const auto *expr3 = "x + 1 + y + 1";  
   std::vector<Pattern *> patterns({
       new Pattern(stmt, v, expr1),
       new Pattern(stmt, v, expr2),
@@ -30,7 +30,7 @@ TEST(PopulatePatternTest, RepeatedExpressionsTest) {
   auto *stmt2 = new AssignStmtEntity("2");
   auto *stmt3 = new AssignStmtEntity("3");
   auto *v = new VariableEntity("v");
-  auto expr = "x + 1";  
+  const auto *expr = "x + 1";  
   std::vector<Pattern *> patterns({
       new Pattern(stmt1, v, expr),
       new Pattern(stmt2, v, expr),
@@ -50,9 +50,9 @@ TEST(PopulatePatternTest, SingleVariableTest) {
   auto *stmt2 = new AssignStmtEntity("2");
   auto *stmt3 = new AssignStmtEntity("3");
   auto *v = new VariableEntity("v"); 
-  auto expr1 = "x + 1";
-  auto expr2 = "y + 2";
-  auto expr3 = "z + 3"; 
+  const auto *expr1 = "x + 1";
+  const auto *expr2 = "y + 2";
+  const auto *expr3 = "z + 3"; 
   std::vector<Pattern *> patterns({
       new Pattern(stmt1, v, expr1),
       new Pattern(stmt2, v, expr2),
@@ -74,10 +74,10 @@ TEST(PopulatePatternTest, MultipleVariablesTest) {
   auto *stmt4 = new AssignStmtEntity("4");
   auto *v1 = new VariableEntity("v1");
   auto *v2 = new VariableEntity("v2");
-  auto expr1 = "x + 1";
-  auto expr2 = "y + 2";
-  auto expr3 = "z + 3";
-  auto expr4 = "w + 4";
+  const auto *expr1 = "x + 1";
+  const auto *expr2 = "y + 2";
+  const auto *expr3 = "z + 3";
+  const auto *expr4 = "w + 4";
   std::vector<Pattern *> patterns({
       new Pattern(stmt1, v1, expr1),
       new Pattern(stmt2, v1, expr2), 
@@ -99,8 +99,8 @@ TEST(PopulatePatternTest, DuplicateTest) {
   auto *stmt2 = new AssignStmtEntity("2"); 
   auto *v1 = new VariableEntity("v1");
   auto *v2 = new VariableEntity("v2");
-  auto expr1 = "x + 1";
-  auto expr2 = "y + 1";
+  const auto *expr1 = "x + 1";
+  const auto *expr2 = "y + 1";
   std::vector<Pattern *> patterns({
       new Pattern(stmt1, v1, expr1),
       new Pattern(stmt1, v1, expr1),
@@ -122,10 +122,12 @@ TEST(PopulatePatternTest, BasicTest) {
   auto *stmt3 = new AssignStmtEntity("3");
   auto *v1 = new VariableEntity("v1");
   auto *v2 = new VariableEntity("v2");
+  const auto *expr1 = "x + 1";
+  const auto *expr2 = "y + 1";
   std::vector<Pattern *> patterns({
-      new Pattern(stmt1, v1, "x + 1"),
-      new Pattern(stmt2, v2, "x + 1"),
-      new Pattern(stmt3, v2, "y + 1"),
+      new Pattern(stmt1, v1, expr1),
+      new Pattern(stmt2, v2, expr1),
+      new Pattern(stmt3, v2, expr2),
   });
 
   auto *pattern_manager = new PatternManager();
@@ -138,5 +140,5 @@ TEST(PopulatePatternTest, BasicTest) {
   auto *stmt_actual = pattern_table->Get(v1).begin()->first;
   auto expr_actual = pattern_table->Get(v1).begin()->second;
   ASSERT_EQ(stmt_actual, stmt1);
-  ASSERT_EQ(expr_actual, "x + 1");
+  ASSERT_EQ(expr_actual, expr1);
 }
