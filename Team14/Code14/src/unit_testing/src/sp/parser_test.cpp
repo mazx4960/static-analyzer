@@ -370,3 +370,35 @@ TEST(StatementParser, WhileStatementBasicTest) {
   ASSERT_EQ(static_cast<StatementNode *>(node)->GetStmtType(), EntityType::kWhileStmt);
 }
 
+TEST(StatementParser, IfWhileAdvancedTest) {
+  auto* stmt_parser = new StatementGrammarRule();
+  std::vector<Token *> tokens{
+      new KeywordToken("if"), new RoundOpenBracketToken(), new LiteralToken("1"), new OperatorToken("<"), new SymbolToken("s"), new RoundCloseBracketToken(),
+      new KeywordToken("then"),  new CurlyOpenBracketToken(),
+            new KeywordToken("if"), new RoundOpenBracketToken(), new LiteralToken("2"), new OperatorToken("<"), new SymbolToken("s"), new RoundCloseBracketToken(),
+            new KeywordToken("then"),  new CurlyOpenBracketToken(),
+                new KeywordToken("if"), new RoundOpenBracketToken(), new LiteralToken("3"), new OperatorToken("<"), new SymbolToken("s"), new RoundCloseBracketToken(),
+                new KeywordToken("then"),  new CurlyOpenBracketToken(),
+                new SymbolToken("x"), new OperatorToken("="), new LiteralToken("4"), new SemicolonToken(),
+                new CurlyCloseBracketToken(), new KeywordToken("else"),  new CurlyOpenBracketToken(),
+                new KeywordToken("print"), new SymbolToken("a"), new SemicolonToken(),
+                new CurlyCloseBracketToken(),
+            new CurlyCloseBracketToken(), new KeywordToken("else"),  new CurlyOpenBracketToken(),
+            new KeywordToken("read"), new SymbolToken("a"), new SemicolonToken(),
+            new CurlyCloseBracketToken(),
+      new CurlyCloseBracketToken(), new KeywordToken("else"),  new CurlyOpenBracketToken(),
+          new KeywordToken("while"), new RoundOpenBracketToken(), new LiteralToken("5"), new OperatorToken("<"), new SymbolToken("s"), new RoundCloseBracketToken(),
+          new CurlyOpenBracketToken(),
+              new KeywordToken("while"), new RoundOpenBracketToken(), new LiteralToken("6"), new OperatorToken("<"), new SymbolToken("s"), new RoundCloseBracketToken(),
+              new CurlyOpenBracketToken(),
+              new KeywordToken("call"), new KeywordToken("a"), new SemicolonToken(),
+              new CurlyCloseBracketToken(),
+          new CurlyCloseBracketToken(),
+      new CurlyCloseBracketToken(), new EndOfFileToken()
+  };
+  auto token_stream = tokens.begin();
+  Node* node = stmt_parser->parseNode(token_stream);
+  ASSERT_EQ(node->GetNodeType(), NodeType::kStatement);
+  ASSERT_EQ(static_cast<StatementNode *>(node)->GetStmtType(), EntityType::kWhileStmt);
+}
+
