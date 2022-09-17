@@ -10,7 +10,7 @@ abstract class IPKBPopulator {
 }
 
 abstract class IPKBQuerier {
-	+Results query(Query)
+	+EntityPointerUnorderedSet get(Query)
 }
 
 class PKB {
@@ -18,7 +18,7 @@ class PKB {
     -PatternManager pattern_manager_
     -RelationshipManager relationship_manager_
     +void populate(Abstraction)
-    +Results query(Query)
+    +EntityPointerUnorderedSet get(Query)
 }
 
 class EntityManager {
@@ -26,7 +26,7 @@ class EntityManager {
     -void CreateTable(EntityType)
     +EntityTable* GetTable(EntityType) 
     +void populate(Entity)
-    +Results query(Query)
+    +EntityPointerUnorderedSet get(EntityType)
 }
 
 class RelationshipManager {
@@ -34,13 +34,13 @@ class RelationshipManager {
     -void CreateTable(RsType)
     +RelationshipTable* GetTable(RsType) 
     +void populate(Relationship)
-    +Results query(Query)
+    +EntityPointerUnorderedSet get(RsType)
 }
 
 class PatternManager {
     +PatternTable* GetTable()
     +void populate(Pattern)
-    +Results query(Query)
+    +EntityPointerUnorderedSet get(string)
 }
 
 class RelationshipTable {
@@ -48,6 +48,8 @@ class RelationshipTable {
     #EntityPointerUnorderedMap inverse_table_
     +void Populate(Relationship)
     +EntityPointerUnorderedMap GetTable(bool)
+    +EntityPointerUnorderedSet get()
+    +EntityPointerUnorderedSet getTraversal()
 }
 
 class EntityTable {
@@ -60,6 +62,7 @@ class PatternTable {
     #PatternEntityUnorderedMap pattern_table_
     +void Populate(Pattern)
     +PatternEntityUnorderedMap GetTable()
+    +EntityPointerUnorderedSet get()
 }
 
 abstract class "QueryPattern"
