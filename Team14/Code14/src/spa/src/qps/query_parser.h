@@ -31,7 +31,7 @@ class QueryParser {
   std::vector<QueryCall *> getQueryCalls();
   void parseDeclarations();
   void parseQueryCalls();
-  QueryDeclaration *parseDeclaration();
+  void parseDeclaration();
   QueryDeclaration *getDeclaration(const std::string &synonym);
   QuerySynonym *parseSynonym();
   QueryClause *parseClause();
