@@ -46,14 +46,34 @@ void SuchThatStrategy::evaluate() {
 void SuchThatStrategy::intersectContext(QueryDeclaration *param_to_send, QueryDeclaration *param_to_be_intersected,
                                         RsType rs_type, bool invert_search) {
   EntityPointerUnorderedSet valid_entities_for_other_param;
-
-  for (auto *context_entity : param_to_send->getContext()) {
-    EntityPointerUnorderedSet valid_entities = this->pkb_->getByRelationship(rs_type, context_entity, invert_search);
-    if (valid_entities.empty()) {
-      param_to_send->removeEntityFromContext(context_entity);
+  if (param_to_send->getType() != EntityType::kString && param_to_send->getType() != EntityType::kInteger) {
+    std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> context;
+    if (param_to_send->getType() == EntityType::kWildcard) {
+      // TODO(howtoosee) get context for wildcard
+      // context = wildcard context
     } else {
-      for (auto *entity : valid_entities) { valid_entities_for_other_param.insert(entity); }
+      context = param_to_send->getContext();
     }
+    for (auto *context_entity : context) {
+      EntityPointerUnorderedSet valid_entities = this->pkb_->getByRelationship(rs_type, context_entity, invert_search);
+      if (valid_entities.empty()) {
+        param_to_send->removeEntityFromContext(context_entity);
+      } else {
+        for (auto *entity : valid_entities) { valid_entities_for_other_param.insert(entity); }
+      }
+    }
+  }
+
+  // Parameter is declared in SIMPLE
+  if (param_to_send->getType() == EntityType::kString) {
+    EntityPointerUnorderedSet valid_entities = this->pkb_->getByRelationship(rs_type, new VariableEntity(param_to_send->toString()), invert_search);
+    for (auto *entity : valid_entities) { valid_entities_for_other_param.insert(entity); }
+  }
+
+  // Parameter is literal
+  if (param_to_send->getType() == EntityType::kInteger) {
+    EntityPointerUnorderedSet valid_entities = this->pkb_->getByRelationship(rs_type, new StmtEntity(param_to_send->toString()), invert_search);
+    for (auto *entity : valid_entities) { valid_entities_for_other_param.insert(entity); }
   }
   param_to_be_intersected->intersectContext(valid_entities_for_other_param);
 }
