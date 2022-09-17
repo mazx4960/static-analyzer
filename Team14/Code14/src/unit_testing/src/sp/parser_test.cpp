@@ -276,3 +276,67 @@ TEST(CondParser, NotCondTest) {
   ASSERT_EQ(static_cast<CondExprNode *>(node)->GetCondExprType(), CondExprType::kNot);
 }
 
+TEST(StatementParser, ReadTest) {
+  auto* stmt_parser = new StatementGrammarRule();
+  std::vector<Token *> tokens{
+      new KeywordToken("read"), new KeywordToken("a"), new SemicolonToken(), new EndOfFileToken()
+  };
+  auto token_stream = tokens.begin();
+  Node* node = stmt_parser->parseNode(token_stream);
+  ASSERT_EQ(node->GetNodeType(), NodeType::kStatement);
+  ASSERT_EQ(static_cast<StatementNode *>(node)->GetStmtType(), EntityType::kReadStmt);
+}
+
+TEST(StatementParser, PrintTest) {
+  auto* stmt_parser = new StatementGrammarRule();
+  std::vector<Token *> tokens{
+      new KeywordToken("print"), new KeywordToken("a"), new SemicolonToken(), new EndOfFileToken()
+  };
+  auto token_stream = tokens.begin();
+  Node* node = stmt_parser->parseNode(token_stream);
+  ASSERT_EQ(node->GetNodeType(), NodeType::kStatement);
+  ASSERT_EQ(static_cast<StatementNode *>(node)->GetStmtType(), EntityType::kPrintStmt);
+}
+
+
+TEST(StatementParser, CallTest) {
+  auto* stmt_parser = new StatementGrammarRule();
+  std::vector<Token *> tokens{
+      new KeywordToken("call"), new KeywordToken("a"), new SemicolonToken(), new EndOfFileToken()
+  };
+  auto token_stream = tokens.begin();
+  Node* node = stmt_parser->parseNode(token_stream);
+  ASSERT_EQ(node->GetNodeType(), NodeType::kStatement);
+  ASSERT_EQ(static_cast<StatementNode *>(node)->GetStmtType(), EntityType::kPrintStmt);
+}
+
+TEST(StatementParser, AssignTest) {
+  auto* stmt_parser = new StatementGrammarRule();
+  std::vector<Token *> tokens{
+      new SymbolToken("a"), new OperatorToken("="), new LiteralToken("12"), new SemicolonToken(), new EndOfFileToken()
+  };
+  auto token_stream = tokens.begin();
+  Node* node = stmt_parser->parseNode(token_stream);
+  ASSERT_EQ(node->GetNodeType(), NodeType::kStatement);
+  ASSERT_EQ(static_cast<StatementNode *>(node)->GetStmtType(), EntityType::kAssignStmt);
+}
+
+TEST(StatementParser, AssignKeywordTest) {
+  auto* stmt_parser = new StatementGrammarRule();
+  std::vector<Token *> keyword_tokens{
+      new KeywordToken("read"), new KeywordToken("print"), new KeywordToken("call"),
+      new KeywordToken("while"), new KeywordToken("if")
+  };
+  std::vector<Token *> tokens{
+      new KeywordToken("read"), new OperatorToken("="), new LiteralToken("12"), new SemicolonToken(), new EndOfFileToken()
+  };
+  for (auto *keyword : keyword_tokens) {
+    tokens[0] = keyword;
+    auto token_stream = tokens.begin();
+    Node *node = stmt_parser->parseNode(token_stream);
+    ASSERT_EQ(node->GetNodeType(), NodeType::kStatement);
+    ASSERT_EQ(static_cast<StatementNode *>(node)->GetStmtType(), EntityType::kAssignStmt);
+    ASSERT_EQ(static_cast<AssignNode *>(node)->GetVariable()->GetVariableName(), keyword->value);
+  }
+}
+
