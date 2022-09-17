@@ -4,14 +4,14 @@
 
 QuerySynonym *QueryDeclaration::getSynonym() const { return this->query_synonym_; }
 bool QueryDeclaration::operator==(const QueryDeclaration &other) const {
-  if (this->type_ == EntityType::kEntWildcard || other.getType() == EntityType::kEntWildcard ||
-  this->type_ == EntityType::kStmtWildcard || other.getType() == EntityType::kStmtWildcard) { return true; }
+  if (this->type_ == EntityType::kWildcardEnt || other.getType() == EntityType::kWildcardEnt ||
+  this->type_ == EntityType::kWildcardStmt || other.getType() == EntityType::kWildcardStmt) { return true; }
   return this->type_ == other.getType() && *(this->query_synonym_) == *(other.getSynonym())
       && this->string_ == other.toString();
 }
 bool QueryDeclaration::operator==(const QueryDeclaration *other) const {
-  if (this->type_ == EntityType::kEntWildcard || other->getType() == EntityType::kEntWildcard ||
-  this->type_ == EntityType::kStmtWildcard || other->getType() == EntityType::kStmtWildcard) { return true; }
+  if (this->type_ == EntityType::kWildcardEnt || other->getType() == EntityType::kWildcardEnt ||
+  this->type_ == EntityType::kWildcardStmt || other->getType() == EntityType::kWildcardStmt) { return true; }
   return this->type_ == other->getType() && this->query_synonym_ == other->getSynonym()
       && this->string_ == other->toString();
 }

@@ -24,10 +24,10 @@ EntityPointerUnorderedSet EvaluationStrategy::getCandidates(QueryDeclaration *de
   if (declaration->getType() == EntityType::kString || declaration->getType() == EntityType::kInteger) {
     std::basic_string<char> value = declaration->toString();
     candidates = pkb_->getEntitiesByString(value);
-  } else if (declaration->getType() == EntityType::kStmtWildcard) {
+  } else if (declaration->getType() == EntityType::kWildcardStmt) {
     EntityPointerUnorderedSet all_variables = pkb_->getEntities(EntityType::kStatement);
     for (auto *entity : all_variables) { candidates.insert(entity); }
-  } else if (declaration->getType() == EntityType::kEntWildcard) {
+  } else if (declaration->getType() == EntityType::kWildcardEnt) {
     EntityPointerUnorderedSet all_variables = pkb_->getEntities(EntityType::kVariable);
     for (auto *entity : all_variables) { candidates.insert(entity); }
   } else {
@@ -37,7 +37,7 @@ EntityPointerUnorderedSet EvaluationStrategy::getCandidates(QueryDeclaration *de
 }
 bool EvaluationStrategy::shouldIntersect(QueryDeclaration *declaration) {
   return declaration->getType() != EntityType::kString && declaration->getType() != EntityType::kInteger
-      && declaration->getType() != EntityType::kStmtWildcard;
+      && declaration->getType() != EntityType::kWildcardStmt;
 }
 EntityPointerUnorderedSet EvaluationStrategy::intersectContext(const EntityPointerUnorderedSet &first,
                                                                EntityPointerUnorderedSet second) {

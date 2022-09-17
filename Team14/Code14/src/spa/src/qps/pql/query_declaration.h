@@ -115,13 +115,13 @@ class ProcedureDeclaration : public QueryDeclaration {
 // Inline declaration of  Wildcard "_"
 class EntWildCardDeclaration : public QueryDeclaration {
  public:
-  explicit EntWildCardDeclaration() : QueryDeclaration(EntityType::kEntWildcard) {}
+  explicit EntWildCardDeclaration() : QueryDeclaration(EntityType::kWildcardEnt) {}
 };
 
 // Inline declaration of  Wildcard "_"
 class StmtWildCardDeclaration : public QueryDeclaration {
  public:
-  explicit StmtWildCardDeclaration() : QueryDeclaration(EntityType::kStmtWildcard) {}
+  explicit StmtWildCardDeclaration() : QueryDeclaration(EntityType::kWildcardStmt) {}
 };
 
 // Inline declaration of Expression "(x + (y * z))"
@@ -160,8 +160,8 @@ struct QueryDeclarationHashFunction {
 
 struct QueryDeclarationPointerEquality {
   bool operator()(const QueryDeclaration *lhs, const QueryDeclaration *rhs) const {
-    if (lhs->getType() == EntityType::kEntWildcard || rhs->getType() == EntityType::kEntWildcard ||
-    lhs->getType() == EntityType::kStmtWildcard || rhs->getType() == EntityType::kStmtWildcard) { return true; }
+    if (lhs->getType() == EntityType::kWildcardEnt || rhs->getType() == EntityType::kWildcardEnt ||
+    lhs->getType() == EntityType::kWildcardStmt || rhs->getType() == EntityType::kWildcardStmt) { return true; }
     return (*lhs) == (*rhs);
   }
 };
