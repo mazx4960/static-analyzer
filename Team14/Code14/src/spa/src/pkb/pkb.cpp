@@ -15,12 +15,14 @@ void PKB::populate(std::vector<Relationship *> relationships) { this->relationsh
 EntityPointerUnorderedSet PKB::getEntities(EntityType entity_type) {
   return this->entity_manager_->Get(entity_type);
 }
-EntityPointerUnorderedSet PKB::getByRelationship(
-    RsType rs_type, Entity *entity, bool is_inverse) {
+EntityPointerUnorderedSet PKB::getByRelationship(RsType rs_type, Entity *entity, bool is_inverse) {
   return this->relationship_manager_->Get(rs_type, entity, is_inverse);
 }
 
-EntityPointerUnorderedSet PKB::getByPattern(
-    Entity *entity, std::string &right_pattern) {
+EntityPointerUnorderedSet PKB::getByPattern(Entity *entity, std::string &right_pattern) {
   return this->pattern_manager_->Get(entity, right_pattern);
+}
+
+EntityPointerUnorderedSet PKB::getEntitiesByString(std::string &entity_value) {
+  return this->entity_manager_->Get(entity_value);
 }

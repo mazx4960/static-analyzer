@@ -70,3 +70,16 @@ EntityPointerUnorderedSet EntityManager::Get(EntityType entity_type) {
   spdlog::debug("Result: {}", result_string);
   return matches;
 }
+
+EntityPointerUnorderedSet EntityManager::Get(std::string &entity_value) {
+  spdlog::debug("Retrieving all entities with {}", entity_value);
+  EntityPointerUnorderedSet result = {};
+  for (auto [k, v]: this->entity_table_map_) {
+    for (auto *entity: v->get()) {
+      if (entity->GetValue() == entity_value) {
+        result.insert(entity);
+      }
+    }
+  }
+  return result;
+}
