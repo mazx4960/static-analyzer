@@ -129,6 +129,9 @@ class MockPKB : public IPKBQuerier {
   inline EntityPointerUnorderedSet getByPattern(Entity *entity, std::string &right_pattern) override {
     return EntityPointerUnorderedSet();
   };
+  inline EntityPointerUnorderedSet getEntitiesByString(std::string &entity_value) override {
+    return EntityPointerUnorderedSet();
+  }
 };
 
 TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
