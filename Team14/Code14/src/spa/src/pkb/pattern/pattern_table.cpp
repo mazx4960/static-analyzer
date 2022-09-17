@@ -5,6 +5,7 @@
 PatternTable::PatternTable() {
   this->pattern_table_ = PatternEntityUnorderedMap();
 }
+
 void PatternTable::Populate(Pattern &pattern) {
   Entity *variable = pattern.GetVariable();
   Entity *stmt = pattern.GetStmt();
@@ -18,9 +19,11 @@ void PatternTable::Populate(Pattern &pattern) {
     this->pattern_table_[variable].insert(pair);
   }
 }
+
 EntityStringPairUnorderedSet PatternTable::Get(Entity *variable) {
   return this->pattern_table_[variable];
 }
+
 PatternEntityUnorderedMap PatternTable::GetTable() {
   return this->pattern_table_;
 }
