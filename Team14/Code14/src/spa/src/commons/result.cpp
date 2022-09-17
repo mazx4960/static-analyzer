@@ -21,6 +21,6 @@ EntityPointerUnorderedSet Result::get_results_set() const { return this->results
 
 std::vector<Entity *> Result::get_sorted_results_list() const {
   auto result_vector = std::vector<Entity *>(this->results_.begin(), this->results_.end());
-  std::sort(result_vector.begin(), result_vector.end());
+  std::sort(result_vector.begin(), result_vector.end(), EntityPointerComparator::lt);
   return result_vector;
 }

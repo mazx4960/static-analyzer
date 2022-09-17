@@ -84,18 +84,20 @@ void SuchThatStrategy::evaluate() {
 }
 EntityPointerUnorderedSet SuchThatStrategy::evaluateParameter(QueryDeclaration *param, RsType rs_type,
                                                               bool invert_search) {
-  spdlog::debug("Evaluating SuchThat parameter {} for {}, inverse = {}", param->toString(), RsTypeToString(rs_type),
-                invert_search);
+  spdlog::debug("Evaluating SuchThat parameter {} for {}, inverse = {}",
+                param->toString(), RsTypeToString(rs_type), invert_search);
   EntityPointerUnorderedSet candidates = this->getCandidates(param);
   std::string candidate_string;
   for (auto *candidate : candidates) { candidate_string += candidate->ToString() + ", "; }
-  spdlog::debug("Candidates: {}", candidate_string);
+  spdlog::debug("Candidates[{}]: {}", candidates.size(), candidate_string);
   EntityPointerUnorderedSet results;
   for (auto *entity : candidates) {
     EntityPointerUnorderedSet valid_entities = this->pkb_->getByRelationship(rs_type, entity, invert_search);
     for (auto *valid_entity : valid_entities) { results.insert(valid_entity); }
   }
-  spdlog::debug("Results: {}", results.size());
+  std::string result_string;
+  for (auto *result : results) { result_string += result->ToString() + ", "; }
+  spdlog::debug("Results[{}]: {}", results.size(), result_string);
   return results;
 }
 
@@ -116,7 +118,7 @@ EntityPointerUnorderedSet PatternStrategy::evaluateParameter(QueryDeclaration *v
   EntityPointerUnorderedSet candidates = this->getCandidates(var_param);
   std::string candidate_string;
   for (auto *candidate : candidates) { candidate_string += candidate->ToString() + ", "; }
-  spdlog::debug("Candidates: {}", candidate_string);
+  spdlog::debug("Candidates[{}]: {}", candidates.size(), candidate_string);
   EntityPointerUnorderedSet results;
   std::string expr = expr_param->toString();
   for (auto *entity : candidates) {
@@ -126,6 +128,8 @@ EntityPointerUnorderedSet PatternStrategy::evaluateParameter(QueryDeclaration *v
     }
     results.merge(valid_entities);
   }
-  spdlog::debug("Results: {}", results.size());
+  std::string result_string;
+  for (auto *result : results) { result_string += result->ToString() + ", "; }
+  spdlog::debug("Results[{}]: {}", results.size(), result_string);
   return results;
 }
