@@ -30,9 +30,9 @@ Token *QueryParser::nextToken() { return tokens_[this->token_index_++]; }
 Token *QueryParser::peekToken() { return tokens_[this->token_index_]; }
 bool QueryParser::outOfTokens() { return this->tokens_.size() == this->token_index_; }
 void QueryParser::parseDeclarations() {
-  while (QueryKeywords::isValidDeclarationKeyword(peekToken()->value)) { query_declarations_.push_back(parseDeclaration()); }
+  while (QueryKeywords::isValidDeclarationKeyword(peekToken()->value)) { parseDeclaration(); }
 }
-QueryDeclaration *QueryParser::parseDeclaration() {
+void QueryParser::parseDeclaration() {
   Token *token = nextToken();
   QueryDeclaration *declaration = nullptr;
   if (*token == KeywordToken("stmt")) { declaration = new StatementDeclaration(parseSynonym()); }
@@ -46,8 +46,12 @@ QueryDeclaration *QueryParser::parseDeclaration() {
   if (*token == KeywordToken("if")) { declaration = new IfDeclaration(parseSynonym()); }
   if (*token == KeywordToken("assign")) { declaration = new AssignDeclaration(parseSynonym()); }
   if (declaration == nullptr) { throw ParseSyntaxError("Unknown declaration type: " + token->value); }
+  while (*peekToken() == CommaToken()) {
+    nextToken();
+    this->query_declarations_.push_back(new QueryDeclaration(declaration->getType(), parseSynonym()));
+  }
   if (!(*nextToken() == SemicolonToken())) { throw ParseSyntaxError("Missing `;` after declaration"); }
-  return declaration;
+  this->query_declarations_.push_back(declaration);
 }
 
 QueryDeclaration *QueryParser::parseStmtRefDeclaration(bool allowWild) {
