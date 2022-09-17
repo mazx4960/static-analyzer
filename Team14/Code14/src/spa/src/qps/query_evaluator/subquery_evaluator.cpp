@@ -4,6 +4,10 @@ SubQueryEvaluator::SubQueryEvaluator(IPKBQuerier *pkb, QueryClause *query_clause
   this->strategy_ = EvaluationStrategy::getStrategy(pkb, query_clause);
 }
 
-void SubQueryEvaluator::evaluate() {
-  this->strategy_->evaluate();
+/**
+ * Evaluate subquery clause.
+ * @return true if query clause has results, false otherwise.
+ */
+bool SubQueryEvaluator::evaluate() {
+  return this->strategy_->evaluate();
 }
