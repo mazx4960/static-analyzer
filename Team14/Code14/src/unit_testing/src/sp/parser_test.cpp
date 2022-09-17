@@ -1,9 +1,12 @@
 #include <gtest/gtest.h>
 
 #include "commons/lexer/token.h"
+#include "commons/parser/expr_definition/expr_grammar.h"
 #include "commons/parser/node/node_type.h"
+#include "commons/parser/parser_exceptions.h"
 #include "commons/types.h"
 #include "sp/simple_definition/simple_ast.h"
+#include "sp/simple_definition/simple_grammar.h"
 #include "sp/simple_lexer.h"
 #include "sp/simple_parser.h"
 
@@ -47,3 +50,51 @@ TEST(SimpleParserTestAssignment, AdvancedTest) {
   Node *program_node = SimpleParser::ParseProgram(tokens);
   ASSERT_EQ(NodeType::kProgram, program_node->GetNodeType());
 }
+
+TEST(ReferenceParser, ConstReferenceTest) {
+  std::vector<Token *> const_token = {new LiteralToken("87")};
+  auto const_token_stream = const_token.begin();
+  Node* const_node = (new ReferenceGrammarRule())->parseNode(const_token_stream);
+  ASSERT_EQ(const_node->GetNodeType(), NodeType::kConstant);
+  ASSERT_EQ(87, static_cast<ConstantNode *>(const_node)->GetValue());
+}
+
+TEST(ReferenceParser, VarReferenceTest) {
+  std::vector<Token *> var_token = {new SymbolToken("qwerty")};
+  auto var_token_stream = var_token.begin();
+  Node* var_node = (new ReferenceGrammarRule())->parseNode(var_token_stream);
+  ASSERT_EQ(var_node->GetNodeType(), NodeType::kVariable);
+  ASSERT_EQ("qwerty", static_cast<VariableNode *>(var_node)->GetVariableName());
+}
+
+TEST(ReferenceParser, InvalidReferenceTest) {
+  auto* parser = new ReferenceGrammarRule();
+  auto operator_stream = (std::vector<Token *>{new OperatorToken("<")}).begin();
+  ASSERT_THROW(parser->parseNode(operator_stream),ParseSyntaxError);
+  auto quote_stream = (std::vector<Token *>{new QuoteToken()}).begin();
+  ASSERT_THROW(parser->parseNode(quote_stream),ParseSyntaxError);
+  auto semicolon_stream = (std::vector<Token *>{new SemicolonToken()}).begin();
+  ASSERT_THROW(parser->parseNode(semicolon_stream),ParseSyntaxError);
+  auto eof_stream = (std::vector<Token *>{new EndOfFileToken()}).begin();
+  ASSERT_THROW(parser->parseNode(eof_stream),ParseSyntaxError);
+}
+
+TEST(CondParser, BasicCondTest) {
+  std::vector<Token *> cond1_tokens = {
+      new LiteralToken("9"),
+      new OperatorToken(">="),
+      new SymbolToken("l"),
+      new EndOfFileToken()
+  };
+  auto iter1 = cond1_tokens.begin();
+  ASSERT_NO_THROW(static_cast<CondExprNode *>((new CondExprGrammarRule())->parseNode(iter1)));
+  std::vector<Token *> cond2_tokens = {
+      new LiteralToken("9"),
+      new OperatorToken(">="),
+      new SymbolToken("l"),
+      new EndOfFileToken()
+  };
+  auto iter2 = cond2_tokens.begin();
+  ASSERT_NO_THROW(static_cast<CondExprNode *>((new CondExprGrammarRule())->parseNode(iter2)));
+}
+
