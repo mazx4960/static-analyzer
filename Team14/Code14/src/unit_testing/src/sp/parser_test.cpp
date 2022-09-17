@@ -79,6 +79,102 @@ TEST(ReferenceParser, InvalidReferenceTest) {
   ASSERT_THROW(parser->parseNode(eof_stream),ParseSyntaxError);
 }
 
+TEST(ExprParser, RefExprTest) {
+  auto* expr_parser = new ExprGrammarRule();
+  std::vector<Token *> const_token = {new LiteralToken("87"), new EndOfFileToken()};
+  auto const_token_stream = const_token.begin();
+  Node* const_node = expr_parser->parseNode(const_token_stream);
+  ASSERT_EQ(const_node->GetNodeType(), NodeType::kConstant);
+  ASSERT_EQ(87, static_cast<ConstantNode *>(const_node)->GetValue());
+  std::vector<Token *> var_token = {new SymbolToken("qwerty"), new EndOfFileToken()};
+  auto var_token_stream = var_token.begin();
+  Node* var_node = expr_parser->parseNode(var_token_stream);
+  ASSERT_EQ(var_node->GetNodeType(), NodeType::kVariable);
+  ASSERT_EQ("qwerty", static_cast<VariableNode *>(var_node)->GetVariableName());
+}
+
+TEST(ExprParser, BasicExprTest) {
+  auto* expr_parser = new ExprGrammarRule();
+  std::vector<std::vector<Token *>> token_sets = {
+      {new LiteralToken("9"), new OperatorToken("+"), new SymbolToken("aasdf"), new EndOfFileToken()},
+      {new LiteralToken("8"), new OperatorToken("-"), new LiteralToken("4"), new EndOfFileToken()},
+      {new SymbolToken("rfv"), new OperatorToken("*"), new LiteralToken("55"), new EndOfFileToken()},
+      {new SymbolToken("ed"), new OperatorToken("/"), new SymbolToken("aasdf"), new EndOfFileToken()},
+      {new LiteralToken("9"), new OperatorToken("%"), new SymbolToken("aasdf"), new EndOfFileToken()},
+  };
+  std::vector<ExprType> expected_expr_types = {
+      ExprType::kPlus, ExprType::kMinus, ExprType::kTimes, ExprType::kDiv, ExprType::kMod
+  };
+  for (int i = 0; i < token_sets.size(); ++i) {
+    auto token_stream = token_sets[i].begin();
+    Node* node = expr_parser->parseNode(token_stream);
+    ASSERT_EQ(node->GetNodeType(), NodeType::kExpr);
+    ASSERT_EQ(static_cast<ExprNode *>(node)->GetExprType(), expected_expr_types[i]);
+  }
+}
+
+TEST(ExprParser, LongExprTest) {
+  auto* expr_parser = new ExprGrammarRule();
+  std::vector<Token *> long_plus_minus_tokens = {
+      new SymbolToken("aaa"), new OperatorToken("+"),
+      new LiteralToken("44"), new OperatorToken("+"),
+      new SymbolToken("aaa"), new OperatorToken("-"),
+      new SymbolToken("aaa"), new OperatorToken("-"),
+      new LiteralToken("44"), new OperatorToken("+"),
+      new LiteralToken("44"), new OperatorToken("-"),
+      new LiteralToken("44"), new EndOfFileToken()
+  };
+  std::vector<ExprType> expr_types = {ExprType::kMinus, ExprType::kPlus,
+    ExprType::kMinus, ExprType::kMinus, ExprType::kPlus, ExprType::kPlus};
+  std::vector<NodeType> node_types = {NodeType::kConstant, NodeType::kConstant, NodeType::kConstant,
+    NodeType::kVariable, NodeType::kVariable, NodeType::kConstant, NodeType::kVariable};
+  auto token_stream = long_plus_minus_tokens.begin();
+  Node* node = expr_parser->parseNode(token_stream);
+  for (int i = 0; i < 6; i++) {
+    ASSERT_EQ(node->GetNodeType(), NodeType::kExpr);
+    ASSERT_EQ(static_cast<ExprNode *>(node)->GetExprType(), expr_types[i]);
+    std::vector<Node *> children = node->GetChildren();
+    ASSERT_EQ(children.size(), 2);
+    ASSERT_EQ(children[1]->GetNodeType(), node_types[i]);
+    node = children[0];
+  }
+  ASSERT_EQ(node->GetNodeType(), node_types[6]);
+}
+
+TEST(ExprParser, MixedExprTest) {
+  auto* expr_parser = new ExprGrammarRule();
+  std::vector<Token *> plus_times_expr_tokens = {
+      new SymbolToken("aaa"), new OperatorToken("+"),
+      new LiteralToken("44"), new OperatorToken("*"),
+      new SymbolToken("aaa"), new EndOfFileToken()
+  };
+  auto pt_token_stream = plus_times_expr_tokens.begin();
+  Node* pt_node = expr_parser->parseNode(pt_token_stream);
+  ASSERT_EQ(pt_node->GetNodeType(), NodeType::kExpr);
+  ASSERT_EQ(static_cast<ExprNode *>(pt_node)->GetExprType(), ExprType::kPlus);
+  std::vector<Token *> times_plus_expr_tokens = {
+      new SymbolToken("aaa"), new OperatorToken("+"),
+      new LiteralToken("44"), new OperatorToken("*"),
+      new SymbolToken("aaa"), new EndOfFileToken()
+  };
+  auto tp_token_stream = times_plus_expr_tokens.begin();
+  Node* tp_node = expr_parser->parseNode(tp_token_stream);
+  ASSERT_EQ(tp_node->GetNodeType(), NodeType::kExpr);
+  ASSERT_EQ(static_cast<ExprNode *>(tp_node)->GetExprType(), ExprType::kPlus);
+}
+
+TEST(ExprParser, BracketedExprTest) {
+  auto* expr_parser = new ExprGrammarRule();
+  std::vector<Token *> tokens = {
+      new RoundOpenBracketToken(), new LiteralToken("9"),
+      new OperatorToken("+"), new SymbolToken("aasdf"),
+      new RoundCloseBracketToken(), new EndOfFileToken()};
+  auto token_stream = tokens.begin();
+  Node* node = expr_parser->parseNode(token_stream);
+  ASSERT_EQ(node->GetNodeType(), NodeType::kExpr);
+  ASSERT_EQ(static_cast<ExprNode *>(node)->GetExprType(), ExprType::kPlus);
+}
+
 TEST(CondParser, BasicCondTest) {
   std::vector<Token *> cond1_tokens = {
       new LiteralToken("9"),

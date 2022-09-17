@@ -28,6 +28,7 @@ std::string ExprNode::ToString() {
   }
   return "";
 }
+ExprType ExprNode::GetExprType() { return expr_type_; }
 ReferenceNode::ReferenceNode(NodeType nodeType) : RelFactorNode(nodeType) {}
 std::vector<Node*> ReferenceNode::GetChildren() { return std::vector<Node*>{}; }
 
