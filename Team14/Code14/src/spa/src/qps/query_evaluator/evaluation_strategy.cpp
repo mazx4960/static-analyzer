@@ -21,11 +21,13 @@ EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClaus
 
 EntityPointerUnorderedSet EvaluationStrategy::getCandidates(QueryDeclaration *declaration) {
   EntityPointerUnorderedSet candidates;
-  if (declaration->getType() == EntityType::kString) {
-    candidates.insert(new VariableEntity(declaration->toString()));
-  } else if (declaration->getType() == EntityType::kInteger) {// TODO: get entity from pkb
-    candidates.insert(new StmtEntity(declaration->toString()));
-  } else if (declaration->getType() == EntityType::kWildcard) {// TODO: change to wild stmt and wild variable
+  if (declaration->getType() == EntityType::kString || declaration->getType() == EntityType::kInteger) {
+    std::basic_string<char> value = declaration->toString();
+    candidates = pkb_->getEntitiesByString(value);
+  } else if (declaration->getType() == EntityType::kStmtWildcard) {
+    EntityPointerUnorderedSet all_variables = pkb_->getEntities(EntityType::kStatement);
+    for (auto *entity : all_variables) { candidates.insert(entity); }
+  } else if (declaration->getType() == EntityType::kEntWildcard) {
     EntityPointerUnorderedSet all_variables = pkb_->getEntities(EntityType::kVariable);
     for (auto *entity : all_variables) { candidates.insert(entity); }
   } else {
@@ -35,7 +37,7 @@ EntityPointerUnorderedSet EvaluationStrategy::getCandidates(QueryDeclaration *de
 }
 bool EvaluationStrategy::shouldIntersect(QueryDeclaration *declaration) {
   return declaration->getType() != EntityType::kString && declaration->getType() != EntityType::kInteger
-      && declaration->getType() != EntityType::kWildcard;
+      && declaration->getType() != EntityType::kStmtWildcard;
 }
 EntityPointerUnorderedSet EvaluationStrategy::intersectContext(const EntityPointerUnorderedSet &first,
                                                                EntityPointerUnorderedSet second) {

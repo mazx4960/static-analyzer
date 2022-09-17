@@ -49,7 +49,8 @@ inline std::string EntityTypeToString(EntityType type) {
     case EntityType::kWhileStmt: return "WhileStmt";
     case EntityType::kPrintStmt: return "PrintStmt";
     case EntityType::kReadStmt: return "ReadStmt";
-    case EntityType::kWildcard: return "Wildcard";
+    case EntityType::kEntWildcard: return "EntWildcard";
+    case EntityType::kStmtWildcard: return "StmtWildcard";
     case EntityType::kExpression: return "Expression";
     case EntityType::kWildcardExpression: return "WildcardExpression";
     case EntityType::kString: return "String";

@@ -160,7 +160,8 @@ struct QueryDeclarationHashFunction {
 
 struct QueryDeclarationPointerEquality {
   bool operator()(const QueryDeclaration *lhs, const QueryDeclaration *rhs) const {
-    if (lhs->getType() == EntityType::kWildcard || rhs->getType() == EntityType::kWildcard) { return true; }
+    if (lhs->getType() == EntityType::kEntWildcard || rhs->getType() == EntityType::kEntWildcard ||
+    lhs->getType() == EntityType::kStmtWildcard || rhs->getType() == EntityType::kStmtWildcard) { return true; }
     return (*lhs) == (*rhs);
   }
 };

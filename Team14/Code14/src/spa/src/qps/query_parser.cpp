@@ -248,5 +248,5 @@ QueryDeclaration *QueryParser::parseExpression() {
     }
     return new ExpressionDeclaration(expression);
   }
-  return new WildCardDeclaration();
+  return new StmtWildCardDeclaration();
 }
