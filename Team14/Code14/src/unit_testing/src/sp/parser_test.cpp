@@ -222,7 +222,8 @@ TEST(CondParser, BasicCondTest) {
       new EndOfFileToken()
   };
   auto iter1 = cond1_tokens.begin();
-  ASSERT_NO_THROW(static_cast<CondExprNode *>((new CondExprGrammarRule())->parseNode(iter1)));
+  Node* node = static_cast<CondExprNode *>((new CondExprGrammarRule())->parseNode(iter1));
+  ASSERT_EQ(node->GetNodeType(), NodeType::kCondExpr);
   std::vector<Token *> cond2_tokens = {
       new LiteralToken("9"),
       new OperatorToken(">="),
@@ -230,6 +231,48 @@ TEST(CondParser, BasicCondTest) {
       new EndOfFileToken()
   };
   auto iter2 = cond2_tokens.begin();
-  ASSERT_NO_THROW(static_cast<CondExprNode *>((new CondExprGrammarRule())->parseNode(iter2)));
+  node = static_cast<CondExprNode *>((new CondExprGrammarRule())->parseNode(iter2));
+  ASSERT_EQ(node->GetNodeType(), NodeType::kCondExpr);
+}
+
+TEST(CondParser, AndCondTest) {
+  auto* cond_parser = new CondExprGrammarRule();
+  std::vector<Token *> tokens = {
+    new RoundOpenBracketToken(), new LiteralToken("6"), new OperatorToken("<"), new SymbolToken("a"), new RoundCloseBracketToken(),
+    new OperatorToken("&&"),
+    new RoundOpenBracketToken(), new LiteralToken("6"), new OperatorToken(">"), new SymbolToken("a"), new RoundCloseBracketToken(),
+    new EndOfFileToken()
+  };
+  auto token_stream = tokens.begin();
+  Node* node = cond_parser->parseNode(token_stream);
+  ASSERT_EQ(node->GetNodeType(), NodeType::kCondExpr);
+  ASSERT_EQ(static_cast<CondExprNode *>(node)->GetCondExprType(), CondExprType::kAnd);
+}
+
+TEST(CondParser, OrCondTest) {
+  auto* cond_parser = new CondExprGrammarRule();
+  std::vector<Token *> tokens = {
+    new RoundOpenBracketToken(), new LiteralToken("6"), new OperatorToken("<"), new SymbolToken("a"), new RoundCloseBracketToken(),
+    new OperatorToken("||"),
+    new RoundOpenBracketToken(), new LiteralToken("6"), new OperatorToken(">"), new SymbolToken("a"), new RoundCloseBracketToken(),
+    new EndOfFileToken()
+  };
+  auto token_stream = tokens.begin();
+  Node* node = cond_parser->parseNode(token_stream);
+  ASSERT_EQ(node->GetNodeType(), NodeType::kCondExpr);
+  ASSERT_EQ(static_cast<CondExprNode *>(node)->GetCondExprType(), CondExprType::kOr);
+}
+
+TEST(CondParser, NotCondTest) {
+  auto* cond_parser = new CondExprGrammarRule();
+  std::vector<Token *> tokens = {
+    new OperatorToken("!"),
+    new RoundOpenBracketToken(), new LiteralToken("6"), new OperatorToken("<"), new SymbolToken("a"), new RoundCloseBracketToken(),
+    new EndOfFileToken()
+  };
+  auto token_stream = tokens.begin();
+  Node* node = cond_parser->parseNode(token_stream);
+  ASSERT_EQ(node->GetNodeType(), NodeType::kCondExpr);
+  ASSERT_EQ(static_cast<CondExprNode *>(node)->GetCondExprType(), CondExprType::kNot);
 }
 
