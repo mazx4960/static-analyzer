@@ -11,7 +11,8 @@ TEST(QueryParserTest, AssignDeclarationParseTest) {
       new KeywordToken("assign"), new SymbolToken("a"), new SemicolonToken()
   };
   QueryParser parser = QueryParser(assign_tokens);
-  QueryDeclaration *assign_declaration = parser.parseDeclaration();
+  parser.parseDeclaration();
+  QueryDeclaration *assign_declaration = parser.getDeclarations().front();
   ASSERT_EQ(*assign_declaration, AssignDeclaration(new QuerySynonym("a")));
 }
 
@@ -20,7 +21,8 @@ TEST(QueryParserTest, StmtDeclarationParseTest) {
       new KeywordToken("stmt"), new SymbolToken("s"), new SemicolonToken()
   };
   QueryParser parser = QueryParser(stmt_tokens);
-  QueryDeclaration *stmt_declaration = parser.parseDeclaration();
+  parser.parseDeclaration();
+  QueryDeclaration *stmt_declaration = parser.getDeclarations().front();
   ASSERT_EQ(*stmt_declaration, StatementDeclaration(new QuerySynonym("s")));
 }
 
@@ -29,7 +31,8 @@ TEST(QueryParserTest, VariableDeclarationParseTest) {
       new KeywordToken("variable"), new SymbolToken("v"), new SemicolonToken()
   };
   QueryParser parser = QueryParser(var_tokens);
-  QueryDeclaration *var_declaration = parser.parseDeclaration();
+  parser.parseDeclaration();
+  QueryDeclaration *var_declaration = parser.getDeclarations().front();
   ASSERT_EQ(*var_declaration, VariableDeclaration(new QuerySynonym("v")));
 }
 
@@ -38,7 +41,8 @@ TEST(QueryParserTest, ConstantDeclarationParseTest) {
       new KeywordToken("constant"), new SymbolToken("c"), new SemicolonToken()
   };
   QueryParser parser = QueryParser(const_tokens);
-  QueryDeclaration *const_declaration = parser.parseDeclaration();
+  parser.parseDeclaration();
+  QueryDeclaration *const_declaration = parser.getDeclarations().front();
   ASSERT_EQ(*const_declaration, ConstantDeclaration(new QuerySynonym("c")));
 }
 
@@ -47,7 +51,8 @@ TEST(QueryParserTest, ProcedureDeclarationParseTest) {
       new KeywordToken("procedure"), new SymbolToken("p"), new SemicolonToken()
   };
   QueryParser parser = QueryParser(proc_tokens);
-  QueryDeclaration *proc_declaration = parser.parseDeclaration();
+  parser.parseDeclaration();
+  QueryDeclaration *proc_declaration = parser.getDeclarations().front();
   ASSERT_EQ(*proc_declaration, ProcedureDeclaration(new QuerySynonym("p")));
 }
 
@@ -56,7 +61,8 @@ TEST(QueryParserTest, ReadDeclarationParseTest) {
       new KeywordToken("read"), new SymbolToken("r"), new SemicolonToken()
   };
   QueryParser parser = QueryParser(read_tokens);
-  QueryDeclaration *read_declaration = parser.parseDeclaration();
+  parser.parseDeclaration();
+  QueryDeclaration *read_declaration = parser.getDeclarations().front();
   ASSERT_EQ(*read_declaration, ReadDeclaration(new QuerySynonym("r")));
 }
 
@@ -65,7 +71,8 @@ TEST(QueryParserTest, PrintDeclarationParseTest) {
       new KeywordToken("print"), new SymbolToken("pr"), new SemicolonToken()
   };
   QueryParser parser = QueryParser(print_tokens);
-  QueryDeclaration *print_declaration = parser.parseDeclaration();
+  parser.parseDeclaration();
+  QueryDeclaration *print_declaration = parser.getDeclarations().front();
   ASSERT_EQ(*print_declaration, PrintDeclaration(new QuerySynonym("pr")));
 }
 
@@ -74,7 +81,8 @@ TEST(QueryParserTest, CallDeclarationParseTest) {
       new KeywordToken("call"), new SymbolToken("cl"), new SemicolonToken()
   };
   QueryParser parser = QueryParser(call_tokens);
-  QueryDeclaration *call_declaration = parser.parseDeclaration();
+  parser.parseDeclaration();
+  QueryDeclaration *call_declaration = parser.getDeclarations().front();
   ASSERT_EQ(*call_declaration, CallDeclaration(new QuerySynonym("cl")));
 }
 
@@ -83,7 +91,8 @@ TEST(QueryParserTest, WhileDeclarationParseTest) {
       new KeywordToken("while"), new SymbolToken("wh"), new SemicolonToken()
   };
   QueryParser parser = QueryParser(while_tokens);
-  QueryDeclaration *while_declaration = parser.parseDeclaration();
+  parser.parseDeclaration();
+  QueryDeclaration *while_declaration = parser.getDeclarations().front();
   ASSERT_EQ(*while_declaration, WhileDeclaration(new QuerySynonym("wh")));
 }
 
@@ -92,7 +101,8 @@ TEST(QueryParserTest, IfDeclarationParseTest) {
       new KeywordToken("if"), new SymbolToken("wh"), new SemicolonToken()
   };
   QueryParser parser = QueryParser(if_tokens);
-  QueryDeclaration *if_declaration = parser.parseDeclaration();
+  parser.parseDeclaration();
+  QueryDeclaration *if_declaration = parser.getDeclarations().front();
   ASSERT_EQ(*if_declaration, IfDeclaration(new QuerySynonym("wh")));
 }
 
@@ -101,6 +111,7 @@ TEST(QueryParserTest, IntegerStmtRefDeclarationParseTest) {
       new LiteralToken("1")
   };
   QueryParser parser = QueryParser(stmt_ref_tokens);
+  parser.parseDeclaration();
   QueryDeclaration *stmt_ref_declaration = parser.parseStmtRefDeclaration(false);
   ASSERT_EQ(*stmt_ref_declaration, IntegerDeclaration("1"));
 }
