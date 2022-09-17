@@ -307,7 +307,7 @@ TEST(StatementParser, CallTest) {
   auto token_stream = tokens.begin();
   Node* node = stmt_parser->parseNode(token_stream);
   ASSERT_EQ(node->GetNodeType(), NodeType::kStatement);
-  ASSERT_EQ(static_cast<StatementNode *>(node)->GetStmtType(), EntityType::kPrintStmt);
+  ASSERT_EQ(static_cast<StatementNode *>(node)->GetStmtType(), EntityType::kCallStmt);
 }
 
 TEST(StatementParser, AssignTest) {
@@ -338,5 +338,35 @@ TEST(StatementParser, AssignKeywordTest) {
     ASSERT_EQ(static_cast<StatementNode *>(node)->GetStmtType(), EntityType::kAssignStmt);
     ASSERT_EQ(static_cast<AssignNode *>(node)->GetVariable()->GetVariableName(), keyword->value);
   }
+}
+
+TEST(StatementParser, IfStatementBasicTest) {
+  auto* stmt_parser = new StatementGrammarRule();
+  std::vector<Token *> tokens{
+      new KeywordToken("if"), new RoundOpenBracketToken(), new LiteralToken("12"), new OperatorToken("<"), new SymbolToken("s"), new RoundCloseBracketToken(),
+      new KeywordToken("then"),  new CurlyOpenBracketToken(),
+      new SymbolToken("x"), new OperatorToken("="), new LiteralToken("12"), new SemicolonToken(),
+      new CurlyCloseBracketToken(), new KeywordToken("else"),  new CurlyOpenBracketToken(),
+      new KeywordToken("print"), new SymbolToken("a"), new SemicolonToken(),
+      new CurlyCloseBracketToken(), new EndOfFileToken()
+  };
+  auto token_stream = tokens.begin();
+  Node* node = stmt_parser->parseNode(token_stream);
+  ASSERT_EQ(node->GetNodeType(), NodeType::kStatement);
+  ASSERT_EQ(static_cast<StatementNode *>(node)->GetStmtType(), EntityType::kIfStmt);
+}
+
+TEST(StatementParser, WhileStatementBasicTest) {
+  auto* stmt_parser = new StatementGrammarRule();
+  std::vector<Token *> tokens{
+      new KeywordToken("while"), new RoundOpenBracketToken(), new LiteralToken("12"), new OperatorToken("<"), new SymbolToken("s"), new RoundCloseBracketToken(),
+      new CurlyOpenBracketToken(),
+      new KeywordToken("call"), new KeywordToken("a"), new SemicolonToken(),
+      new CurlyCloseBracketToken(), new EndOfFileToken()
+  };
+  auto token_stream = tokens.begin();
+  Node* node = stmt_parser->parseNode(token_stream);
+  ASSERT_EQ(node->GetNodeType(), NodeType::kStatement);
+  ASSERT_EQ(static_cast<StatementNode *>(node)->GetStmtType(), EntityType::kWhileStmt);
 }
 
