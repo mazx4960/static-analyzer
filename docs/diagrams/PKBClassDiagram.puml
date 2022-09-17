@@ -13,21 +13,6 @@ abstract class IPKBQuerier {
 	+Results query(Query)
 }
 
-class EntityManager {
-    -unordered_map entity_map_
-    +void populate(Entity)
-    +Results query(Query)
-}
-class RelationshipManager {
-    -unordered_map relationship_map_
-    +void populate(Relationship)
-    +Results query(Query)
-}
-class PatternManager {
-    +void populate(Pattern)
-    +Results query(Query)
-}
-
 class PKB {
     -EntityManager entity_manager_
     -PatternManager pattern_manager_
@@ -36,74 +21,87 @@ class PKB {
     +Results query(Query)
 }
 
-abstract class "SIMPLEAbstraction"
-abstract class "SIMPLEEntity"
+class EntityManager {
+    -unordered_map entity_map_ 
+    -void CreateTable(EntityType)
+    +EntityTable* GetTable(EntityType) 
+    +void populate(Entity)
+    +Results query(Query)
+}
+
+class RelationshipManager {
+    -unordered_map relationship_map_
+    -void CreateTable(RsType)
+    +RelationshipTable* GetTable(RsType) 
+    +void populate(Relationship)
+    +Results query(Query)
+}
+
+class PatternManager {
+    +PatternTable* GetTable()
+    +void populate(Pattern)
+    +Results query(Query)
+}
+
+class RelationshipTable {
+    #EntityPointerUnorderedMap table_
+    #EntityPointerUnorderedMap inverse_table_
+    +void Populate(Relationship)
+    +EntityPointerUnorderedMap GetTable(bool)
+}
+
+class EntityTable {
+    #EntityPointerUnorderedSet table_
+    +void Populate(Entity)
+    +EntityPointerUnorderedSet get()
+}
+
+class PatternTable {
+    #PatternEntityUnorderedMap pattern_table_
+    +void Populate(Pattern)
+    +PatternEntityUnorderedMap GetTable()
+}
+
 abstract class "QueryPattern"
 
-class Variable {
-	-variableTable
+class VariableTable {
 }
 
-class Read {
-	-readTable
+class ReadTable {
 }
 
-class Print {
-	-printTable
+class PrintTable {
 }
 
-class Call {
-	-callTable
+class CallTable {
 }
 
-class If {
-	-ifTable
+class IfTable {
 }
 
-class While {
-	-whileTable
+class WhileTable {
 }
 
-class Constant {
-	-constantTable
+class ConstantTable {
 }
 
-class Procedure{
-	-procedureTable
+class ProcedureTable {
 }
 
-class Assign {
-	-assignTable
+class AssignTable {
 }
 
-class Pattern {
-	-patternTable
+class ModifiesTable {
 }
 
-class Modifies {
-	-modifiesTable
+class FollowsTable {
+}  
+
+class UsesTable {
 }
 
-class Follows {
-	-followsTable
-}
-
-class FollowsT {
-	-followsTable
-}
-
-class Uses {
-	-usesTable
-}
-
-class Parent{
-	-parentTable
-}
-
-class ParentT {
-	-parentTable
-}
-
+class ParentTable {
+} 
 
 IPKBPopulator *-down- PKB
 IPKBQuerier *-down- PKB
@@ -114,42 +112,26 @@ PKB <|.down EntityManager
 PKB <|.down.  PatternManager
 PKB <|.down.. RelationshipManager
 
-Variable -up-* EntityManager
-Read -up-* EntityManager
-Print  -up-* EntityManager
-Call -up-* EntityManager
-If -up-* EntityManager
-While -up-* EntityManager
-Constant -up-* EntityManager
-Procedure -up-* EntityManager
-Assign -up-* EntityManager
+EntityTable -up-* EntityManager
 
-Variable -down-|> SIMPLEEntity
-Read -down-|> SIMPLEEntity
-Print -down-|> SIMPLEEntity
-Call -down-|> SIMPLEEntity
-If -down-|> SIMPLEEntity
-While -down-|> SIMPLEEntity
-Constant -down-|> SIMPLEEntity
-Procedure -down-|> SIMPLEEntity
-Assign -down-|> SIMPLEEntity
+VariableTable -up-|> EntityTable
+ReadTable -up-|> EntityTable
+PrintTable -up-|> EntityTable
+CallTable -up-|> EntityTable
+IfTable -up-|> EntityTable
+WhileTable -up-|> EntityTable
+ConstantTable -up-|> EntityTable
+ProcedureTable -up-|> EntityTable
+AssignTable -up-|> EntityTable
 
-Modifies -up-* RelationshipManager
-Follows -up-* RelationshipManager
-FollowsT -up-* RelationshipManager
-Uses -up-* RelationshipManager
-Parent -up-* RelationshipManager
-ParentT -up-* RelationshipManager
+RelationshipTable -up-* RelationshipManager 
 
+ModifiesTable -up-|> RelationshipTable
+FollowsTable -up-|> RelationshipTable 
+UsesTable -up-|> RelationshipTable
+ParentTable -up-|> RelationshipTable 
 
-Modifies -down-|> SIMPLEAbstraction
-Follows -down-|> SIMPLEAbstraction
-FollowsT -down-|> SIMPLEAbstraction
-Uses -down-|> SIMPLEAbstraction
-Parent -down-|> SIMPLEAbstraction
-ParentT -down-|> SIMPLEAbstraction
-
-Pattern -up-* PatternManager
-Pattern -down-|> QueryPattern
+PatternTable -up-* PatternManager
+PatternTable -down-|> QueryPattern
 
 @enduml
