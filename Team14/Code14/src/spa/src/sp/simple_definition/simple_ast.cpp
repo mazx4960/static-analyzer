@@ -118,6 +118,7 @@ CondExprNode::CondExprNode(CondExprType cond_expr_type) : Node(NodeType::kCondEx
   this->cond_expr_type_ = cond_expr_type;
 }
 std::string CondExprNode::ToString() { return ""; }
+CondExprType CondExprNode::GetCondExprType() { return cond_expr_type_; }
 
 NotExprNode::NotExprNode(CondExprNode *negatedConditional)
     : CondExprNode(CondExprType::kNot),

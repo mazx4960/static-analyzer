@@ -175,6 +175,45 @@ TEST(ExprParser, BracketedExprTest) {
   ASSERT_EQ(static_cast<ExprNode *>(node)->GetExprType(), ExprType::kPlus);
 }
 
+TEST(RelExprParser, BasicRelExprTest) {
+  auto* expr_parser = new RelExprGrammarRule();
+  std::vector<std::vector<Token *>> token_sets = {
+      {new LiteralToken("9"), new OperatorToken("<"), new SymbolToken("aasdf"), new EndOfFileToken()},
+      {new LiteralToken("8"), new OperatorToken("<="), new LiteralToken("4"), new EndOfFileToken()},
+      {new SymbolToken("rfv"), new OperatorToken(">"), new LiteralToken("55"), new EndOfFileToken()},
+      {new SymbolToken("ed"), new OperatorToken(">="), new SymbolToken("aasdf"), new EndOfFileToken()},
+      {new LiteralToken("9"), new OperatorToken("=="), new SymbolToken("aasdf"), new EndOfFileToken()},
+      {new LiteralToken("9"), new OperatorToken("!="), new SymbolToken("aasdf"), new EndOfFileToken()},
+  };
+  std::vector<CondExprType> expected_expr_types = {
+     CondExprType::kLt, CondExprType::kLte, CondExprType::kGt, CondExprType::kGte, CondExprType::kEq, CondExprType::kNeq
+  };
+  for (int i = 0; i < token_sets.size(); ++i) {
+    auto token_stream = token_sets[i].begin();
+    Node* node = expr_parser->parseNode(token_stream);
+    ASSERT_EQ(node->GetNodeType(), NodeType::kCondExpr);
+    ASSERT_EQ(static_cast<CondExprNode *>(node)->GetCondExprType(), expected_expr_types[i]);
+  }
+}
+
+TEST(RelExprParser, LongRelExprTest) {
+  auto* expr_parser = new RelExprGrammarRule();
+  std::vector<Token *> tokens = {
+      new LiteralToken("9"), new OperatorToken("+"), new SymbolToken("aasdf"), new OperatorToken("<="),
+      new LiteralToken("8"), new OperatorToken("-"), new LiteralToken("4"), new EndOfFileToken(),
+  };
+  auto token_stream = tokens.begin();
+  Node* node = expr_parser->parseNode(token_stream);
+  ASSERT_EQ(node->GetNodeType(), NodeType::kCondExpr);
+  ASSERT_EQ(static_cast<CondExprNode *>(node)->GetCondExprType(), CondExprType::kLte);
+  std::vector<Node *> children = node->GetChildren();
+  ASSERT_EQ(children.size(), 2);
+  ASSERT_EQ(children[0]->GetNodeType(), NodeType::kExpr);
+  ASSERT_EQ(static_cast<ExprNode *>(children[0])->GetExprType(), ExprType::kPlus);
+  ASSERT_EQ(children[1]->GetNodeType(), NodeType::kExpr);
+  ASSERT_EQ(static_cast<ExprNode *>(children[1])->GetExprType(), ExprType::kMinus);
+}
+
 TEST(CondParser, BasicCondTest) {
   std::vector<Token *> cond1_tokens = {
       new LiteralToken("9"),

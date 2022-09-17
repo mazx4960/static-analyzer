@@ -155,6 +155,7 @@ class CondExprNode : public Node {
 
  public:
   explicit CondExprNode(CondExprType cond_expr_type);
+  CondExprType GetCondExprType();
   std::string ToString() override;
 };
 
