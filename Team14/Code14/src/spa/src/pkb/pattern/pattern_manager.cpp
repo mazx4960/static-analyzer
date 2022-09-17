@@ -17,7 +17,7 @@ EntityPointerUnorderedSet PatternManager::Get(Entity *variable, const std::strin
     if (full_expr.find(expr) != std::string::npos) { matches.insert(pair.first); }
   }
   std::string result_string;
-  for (auto *match : matches) { result_string += match->GetValue() + " "; }
-  spdlog::debug("Result: {}", result_string);
+  for (auto *match : matches) { result_string += match->GetValue() + ", "; }
+  spdlog::debug("Results[{}]: {}", matches.size(), result_string);
   return matches;
 }

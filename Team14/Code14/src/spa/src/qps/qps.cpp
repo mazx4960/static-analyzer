@@ -9,24 +9,25 @@ Result *QPS::EvaluateQuery(std::istream *query_stream) {
   QueryLexer lexer(query_stream);
   auto tokens = lexer.lex();
   spdlog::info("Generated query tokens");
-  std::string token_string = "Tokens: ";
+  std::string token_string;
   for (auto *token : tokens) { token_string += token->ToString() + " "; }
-  spdlog::debug(token_string);
+  spdlog::debug("Tokens[{}]: ", tokens.size(), token_string);
 
   QueryParser parser(tokens);
   spdlog::info("Parsing tokens...");
   parser.parse();
   QueryBuilder builder = QueryBuilder();
-  builder.withDeclarations(parser.getDeclarations());
-  builder.withQueryCalls(parser.getQueryCalls());
-  std::string declaration_string = "Declaration: ";
+  std::vector<QueryDeclaration *> query_declarations = parser.getDeclarations();
+  std::vector<QueryCall *> query_calls = parser.getQueryCalls();
+  builder.withDeclarations(query_declarations);
+  builder.withQueryCalls(query_calls);
+  std::string declaration_string;
   for (auto *declaration : parser.getDeclarations()) {
     declaration_string += EntityTypeToString(declaration->getType()) + ":" + declaration->toString() + " ";
   }
-  spdlog::debug(declaration_string);
+  spdlog::debug("Declarations[{}]: {}", query_declarations.size(), declaration_string);
   Query query = builder.build();
   spdlog::info("Tokens parsed");
-
   Result *result = (new QueryEvaluator(this->pkb_, query))->evaluate();
   return result;
 }
