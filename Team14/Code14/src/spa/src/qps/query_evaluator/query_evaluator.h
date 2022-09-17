@@ -19,7 +19,8 @@ class QueryEvaluator {
 
   IPKBQuerier *pkb_;
 
-  std::vector<Result> partial_results_list_;
+  // Used to check if subquery clauses have any results, initially assumed to be true
+  bool has_result_ = true;
 
   QueryDeclarationPointerUnorderedSet declarations_;
 
