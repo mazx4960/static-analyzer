@@ -19,8 +19,8 @@ Select v
 none
 5000
 5 - select all constants
-constant v;
-Select v
+constant c;
+Select c
 1
 5000
 6 - select variables with false subquery

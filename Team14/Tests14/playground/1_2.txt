@@ -1,2 +1,2 @@
 stmt s; assign a; variable v;
-Select a such that Parent(s, a) pattern a(_, _"10"_)
+Select v such that Parent(s, a) pattern a(v, _"10"_)

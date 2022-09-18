@@ -70,13 +70,17 @@ TEST(ReferenceParser, VarReferenceTest) {
 
 TEST(ReferenceParser, InvalidReferenceTest) {
   auto *parser = new ReferenceGrammarRule();
-  auto operator_stream = (std::vector<Token *>{new OperatorToken("<")}).begin();
+  std::vector<Token *> operator_tokens = {new OperatorToken("<"), new EndOfFileToken()};
+  auto operator_stream = operator_tokens.begin();
   ASSERT_THROW(parser->parseNode(operator_stream), ParseSyntaxError);
-  auto quote_stream = (std::vector<Token *>{new QuoteToken()}).begin();
+  std::vector<Token *> quote_tokens = {new QuoteToken(), new EndOfFileToken()};
+  auto quote_stream = quote_tokens.begin();
   ASSERT_THROW(parser->parseNode(quote_stream), ParseSyntaxError);
-  auto semicolon_stream = (std::vector<Token *>{new SemicolonToken()}).begin();
+  std::vector<Token *> semicolon_tokens = {new SemicolonToken(), new EndOfFileToken()};
+  auto semicolon_stream = semicolon_tokens.begin();
   ASSERT_THROW(parser->parseNode(semicolon_stream), ParseSyntaxError);
-  auto eof_stream = (std::vector<Token *>{new EndOfFileToken()}).begin();
+  std::vector<Token *> eof_tokens = {new EndOfFileToken(), new EndOfFileToken()};
+  auto eof_stream = eof_tokens.begin();
   ASSERT_THROW(parser->parseNode(eof_stream), ParseSyntaxError);
 }
 
@@ -360,5 +364,5 @@ TEST(StatementParser, IfWhileAdvancedTest) {
   auto token_stream = tokens.begin();
   Node *node = stmt_parser->parseNode(token_stream);
   ASSERT_EQ(node->GetNodeType(), NodeType::kStatement);
-  ASSERT_EQ(static_cast<StatementNode *>(node)->GetStmtType(), EntityType::kWhileStmt);
+  ASSERT_EQ(static_cast<StatementNode *>(node)->GetStmtType(), EntityType::kIfStmt);
 }
