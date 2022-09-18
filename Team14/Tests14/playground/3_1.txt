@@ -1,0 +1,2 @@
+assign a;
+Select a pattern a(_, _"num3"_)

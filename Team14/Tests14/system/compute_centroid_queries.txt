@@ -153,12 +153,3 @@ while w;
 Select w such that Uses(w, "y")
 14
 5000
-
-
-
-
-
-
-
-
-

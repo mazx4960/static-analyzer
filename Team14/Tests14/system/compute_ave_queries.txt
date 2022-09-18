@@ -116,8 +116,3 @@ assign a;
 Select a pattern a("sum", _)
 4
 5000
-
-
-
-
-
