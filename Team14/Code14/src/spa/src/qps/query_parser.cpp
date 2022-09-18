@@ -200,9 +200,9 @@ SuchThatClause *QueryParser::parseUses() {
   if (!(*nextToken() == RoundOpenBracketToken())) { throw ParseSyntaxError("Missing '(' before parameters"); }
   QueryDeclaration *first;
   if (*peekToken() == QuoteToken()) {
-    first = parseStmtRefDeclaration(false);
-  } else {
     first = parseEntRefDeclaration(false);
+  } else {
+    first = parseStmtRefDeclaration(false);
   }
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration *second = parseEntRefDeclaration(false);
