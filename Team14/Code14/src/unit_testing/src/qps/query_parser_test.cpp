@@ -111,7 +111,6 @@ TEST(QueryParserTest, IntegerStmtRefDeclarationParseTest) {
       new LiteralToken("1")
   };
   QueryParser parser = QueryParser(stmt_ref_tokens);
-  parser.parseDeclaration();
   QueryDeclaration *stmt_ref_declaration = parser.parseStmtRefDeclaration(false);
   ASSERT_EQ(*stmt_ref_declaration, IntegerDeclaration("1"));
 }
@@ -122,7 +121,7 @@ TEST(QueryParserTest, SymbolStmtRefDeclarationParseTest) {
   };
   QueryParser parser = QueryParser(stmt_ref_tokens);
   parser.parseDeclarations();
-  QueryDeclaration *stmt_ref_declaration = parser.parseStmtRefDeclaration(false);
+  QueryDeclaration *stmt_ref_declaration = parser.parseEntRefDeclaration(false);
   ASSERT_EQ(*stmt_ref_declaration, VariableDeclaration(new QuerySynonym("v")));
 }
 
