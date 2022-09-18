@@ -148,7 +148,11 @@ if ifs;
 Select ifs such that Modifies(ifs, "x")
 none
 5000
-
+30 - select while statements that uses "y"
+while w;
+Select w such that Uses(w, "y")
+14
+5000
 
 
 
