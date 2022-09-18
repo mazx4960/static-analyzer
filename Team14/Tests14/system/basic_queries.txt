@@ -19,7 +19,7 @@ Select v
 none
 5000
 5 - select all constants
-const v;
+constant v;
 Select v
 1
 5000
