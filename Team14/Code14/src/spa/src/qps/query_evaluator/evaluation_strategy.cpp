@@ -34,10 +34,10 @@ EntityPointerUnorderedSet EvaluationStrategy::getCandidates(QueryDeclaration *de
     candidates = pkb_->getEntitiesByString(value);
   } else if (declaration->getType() == EntityType::kWildcardStmt) {
     EntityPointerUnorderedSet all_variables = pkb_->getEntities(EntityType::kStatement);
-    for (auto *entity : all_variables) { candidates.insert(entity); }
+    candidates = all_variables;
   } else if (declaration->getType() == EntityType::kWildcardEnt) {
     EntityPointerUnorderedSet all_variables = pkb_->getEntities(EntityType::kVariable);
-    for (auto *entity : all_variables) { candidates.insert(entity); }
+    candidates = all_variables;
   } else {
     candidates = declaration->getContext();
   }

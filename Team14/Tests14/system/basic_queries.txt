@@ -163,16 +163,3 @@ variable v; assign a;
 Select v pattern a(_, _"1+x"_)
 none
 5000
-
-
-
-
-
-
-
-
-
-
-
-
-
