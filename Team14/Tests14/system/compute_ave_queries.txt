@@ -36,7 +36,7 @@ num1, num2, num3, ave, sum
 8 - select variables with Parent
 variable v; stmt s1, s2;
 Select v such that Parent(s1, s2)
-num1, num2, num3, ave, sum
+none
 5000
 9 - select all statements that have other statements following directly
 stmt s1, s2;
@@ -92,10 +92,12 @@ num1, num2, num3
 variable v; assign a;
 Select v pattern a(v, _"+"_)
 sum
+5000
 20 - select all variables modified with sum
 variable v; assign a;
 Select v such that Uses(a, v) pattern a(_, _"+"_)
 sum
+5000
 21 - select all variables that appear on both left and right side of equals
 variable v; assign a;
 Select v such that Uses(a, v) pattern a(v, _)
