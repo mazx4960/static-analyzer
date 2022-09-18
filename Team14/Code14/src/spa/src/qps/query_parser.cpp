@@ -68,7 +68,10 @@ QueryDeclaration *QueryParser::parseStmtRefDeclaration(bool allowWild) {
                              + EntityTypeToString(declaration->getType()));
   }
   if (peekToken()->type == TokenType::kWildCard) {
-    if (allowWild) { return new StmtWildCardDeclaration(); }
+    if (allowWild) {
+      nextToken();
+      return new StmtWildCardDeclaration();
+    }
     throw ParseSemanticError("Wildcard '_' is not allowed here");
   }
   throw ParseSyntaxError("Unknown StmtRef: " + peekToken()->value);
@@ -208,7 +211,7 @@ SuchThatClause *QueryParser::parseUses() {
     first = parseStmtRefDeclaration(false);
   }
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
-  QueryDeclaration *second = parseEntRefDeclaration(false);
+  QueryDeclaration *second = parseEntRefDeclaration(true);
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
   spdlog::debug("Uses parsed: " + first->toString() + ", " + second->toString());
   return new UsesClause(first, second);
@@ -222,7 +225,7 @@ SuchThatClause *QueryParser::parseModifies() {
     first = parseStmtRefDeclaration(false);
   }
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
-  QueryDeclaration *second = parseEntRefDeclaration(false);
+  QueryDeclaration *second = parseEntRefDeclaration(true);
   ;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
   spdlog::debug("Modifies parsed: " + first->toString() + ", " + second->toString());

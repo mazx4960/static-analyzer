@@ -19,7 +19,7 @@ Select v
 none
 5000
 5 - select all constants
-const v;
+constant c;
 Select c
 1
 5000
@@ -82,7 +82,7 @@ x
 variable v; stmt s;
 Select v such that Modifies(s, v)
 x
-
+5000
 17 - select variables modified in non-existent line
 variable v;
 Select v such that Modifies(2, v)
@@ -151,14 +151,14 @@ Select a pattern a("x", _"x+1"_)
 30 - select variables that match pattern right with spaces
 variable v; assign a;
 Select v pattern a(_, _"       x        +      1     "_)
-v
+x
 5000
-31 - select variables that don't match pattern right
+31 - select variables that match pattern right
 variable v; assign a;
 Select v pattern a(_, _"x+2"_)
 none
 5000
-32 - select variables that don't match pattern right
+32 - select variables that match pattern right
 variable v; assign a;
 Select v pattern a(_, _"1+x"_)
 none

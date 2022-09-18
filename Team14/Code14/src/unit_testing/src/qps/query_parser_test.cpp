@@ -117,12 +117,12 @@ TEST(QueryParserTest, IntegerStmtRefDeclarationParseTest) {
 
 TEST(QueryParserTest, SymbolStmtRefDeclarationParseTest) {
   std::vector<Token *> stmt_ref_tokens = {
-      new KeywordToken("variable"), new SymbolToken("v"), new SemicolonToken(), new SymbolToken("v")
+      new KeywordToken("stmt"), new SymbolToken("s"), new SemicolonToken(), new SymbolToken("s")
   };
   QueryParser parser = QueryParser(stmt_ref_tokens);
   parser.parseDeclarations();
-  QueryDeclaration *stmt_ref_declaration = parser.parseEntRefDeclaration(false);
-  ASSERT_EQ(*stmt_ref_declaration, VariableDeclaration(new QuerySynonym("v")));
+  QueryDeclaration *stmt_ref_declaration = parser.parseStmtRefDeclaration(false);
+  ASSERT_EQ(*stmt_ref_declaration, StatementDeclaration(new QuerySynonym("s")));
 }
 
 TEST(QueryParserTest, StringEntRefDeclarationParseTest) {
@@ -179,7 +179,6 @@ TEST(QueryParserTest, ValidSingleParentClauseTest) {
                                SelectCall(v1, std::vector<QueryClause *>{new ParentClause(v1, v2)}));
 
   // check declarations
-  ASSERT_EQ(parser.getDeclarations().size(), 2);
   ASSERT_EQ(parser.getDeclarations()[0]->getSynonym()->toString(), v1->getSynonym()->toString());
   ASSERT_EQ(parser.getDeclarations()[1]->getSynonym()->toString(), v2->getSynonym()->toString());
 

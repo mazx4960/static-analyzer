@@ -21,8 +21,8 @@ class EvaluationStrategy {
   virtual bool evaluate() = 0;
   EntityPointerUnorderedSet getCandidates(QueryDeclaration *);
   static bool shouldIntersect(QueryDeclaration *);
-  static EntityPointerUnorderedSet intersectContext(const EntityPointerUnorderedSet &,
-                                                    const EntityPointerUnorderedSet &);
+  static EntityPointerUnorderedSet intersect(const EntityPointerUnorderedSet &first,
+                                             const EntityPointerUnorderedSet &second);
 };
 
 /*
