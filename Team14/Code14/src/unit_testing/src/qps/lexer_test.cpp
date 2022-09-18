@@ -5,7 +5,7 @@
 #include "qps/query_lexer.h"
 
 TEST(QueryLexerTest, TestBasic) {
-  std::istream* s = StreamReader::GetStreamFromFile("Team14/Tests14/pql_code/basic.txt");
+  std::istream* s = StreamReader::GetStreamFromFile("../Tests14/pql_code/basic.txt");
   QueryLexer lexer(s);
 
   std::vector<Token*> tokens = lexer.lex();
