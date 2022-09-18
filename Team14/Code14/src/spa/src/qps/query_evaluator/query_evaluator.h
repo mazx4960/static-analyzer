@@ -26,7 +26,6 @@ class QueryEvaluator {
 
   QueryDeclarationPointerUnorderedSet copyDeclarations();
   QueryDeclarationPointerUnorderedSet fetchContext();
-  QueryDeclarationPointerUnorderedSet evaluateSubQueries();
   QueryDeclarationPointerUnorderedSet getDeclarationAsSet();
 
  public:
