@@ -1,2 +1,2 @@
-assign a;
-Select a pattern a(_, _"num3"_)
+variable v; stmt s1, s2;
+Select v such that Parent(s1, s2)
