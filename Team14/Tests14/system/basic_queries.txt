@@ -153,12 +153,12 @@ variable v; assign a;
 Select v pattern a(_, _"       x        +      1     "_)
 v
 5000
-31 - select variables that don't match pattern right
+31 - select variables that match pattern right
 variable v; assign a;
 Select v pattern a(_, _"x+2"_)
 none
 5000
-32 - select variables that don't match pattern right
+32 - select variables that match pattern right
 variable v; assign a;
 Select v pattern a(_, _"1+x"_)
 none
