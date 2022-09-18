@@ -68,7 +68,10 @@ QueryDeclaration *QueryParser::parseEntRefDeclaration(bool allowWild) {
   if (peekToken()->type == TokenType::kQuote) { return parseQuotedDeclaration(); }
   if (peekToken()->type == TokenType::kSymbol) { return getDeclaration(nextToken()->value); }
   if (peekToken()->type == TokenType::kWildCard) {
-    if (allowWild) { return new EntWildCardDeclaration(); }
+    if (allowWild) {
+      nextToken();
+      return new EntWildCardDeclaration();
+    }
     throw ParseSemanticError("Wildcard '_' is not allowed here");
   }
   throw ParseSyntaxError("Unknown EntRef: " + peekToken()->value);
