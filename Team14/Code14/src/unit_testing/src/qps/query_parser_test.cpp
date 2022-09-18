@@ -436,7 +436,7 @@ TEST(QueryParserTest, ValidSingleUsesClauseSynonymSynonymTest) {
   QueryDeclaration *v1 = new AssignDeclaration(new QuerySynonym("v1"));
   QueryDeclaration *v2 = new VariableDeclaration(new QuerySynonym("v2"));
   Query expected_query = Query(std::vector<QueryDeclaration *>{v1, v2},
-                               SelectCall(v1, std::vector<QueryClause *>{new FollowsClause(v1, v2)}));
+                               SelectCall(v1, std::vector<QueryClause *>{new UsesClause(v1, v2)}));
 
   // check declarations
   ASSERT_EQ(parser.getDeclarations().size(), 2);
@@ -473,7 +473,7 @@ TEST(QueryParserTest, ValidSingleUsesClauseSynonymStringTest) {
   QueryDeclaration *v1 = new AssignDeclaration(new QuerySynonym("v1"));
   QueryDeclaration *i2 = new StringDeclaration("west");
   Query expected_query = Query(std::vector<QueryDeclaration *>{v1, i2},
-                               SelectCall(v1, std::vector<QueryClause *>{new FollowsClause(v1, i2)}));
+                               SelectCall(v1, std::vector<QueryClause *>{new UsesClause(v1, i2)}));
 
   // check declarations
   ASSERT_EQ(parser.getDeclarations().size(), 1);
@@ -509,7 +509,44 @@ TEST(QueryParserTest, ValidSingleUsesClauseSynonymWildcardTest) {
   QueryDeclaration *v1 = new AssignDeclaration(new QuerySynonym("v1"));
   QueryDeclaration *w2 = new EntWildCardDeclaration();
   Query expected_query = Query(std::vector<QueryDeclaration *>{v1, w2},
-                               SelectCall(v1, std::vector<QueryClause *>{new FollowsClause(v1, w2)}));
+                               SelectCall(v1, std::vector<QueryClause *>{new UsesClause(v1, w2)}));
+
+  // check declarations
+  ASSERT_EQ(parser.getDeclarations().size(), 1);
+  ASSERT_EQ(parser.getDeclarations()[0]->getSynonym()->toString(), v1->getSynonym()->toString());
+
+  // check call
+  ASSERT_EQ(parser.getQueryCalls()[0]->getType(), expected_query.getQueryCall().getType());
+
+  // check clause
+  ASSERT_EQ(parser.getQueryCalls()[0]->getClauseVector()[0]->getClauseType(),
+            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+
+  ASSERT_EQ(static_cast<FollowsClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
+                ->getFirst()->getSynonym()->toString(),
+            static_cast<FollowsClause *>(expected_query.getQueryCall().getClauseVector()[0])
+                ->getFirst()->getSynonym()->toString());
+
+  ASSERT_EQ(static_cast<FollowsClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
+                ->getSecond()->getSynonym()->toString(),
+            static_cast<FollowsClause *>(expected_query.getQueryCall().getClauseVector()[0])
+                ->getSecond()->getSynonym()->toString());
+}
+
+TEST(QueryParserTest, ValidSingleUsesClauseIntegerWildcardTest) {
+  std::vector<Token *> single_clause_parent_query = {
+      new KeywordToken("assign"), new SymbolToken("v1"), new SemicolonToken(), new KeywordToken("Select"), new SymbolToken("v1"),
+      new SymbolToken("such"), new SymbolToken("that"), new KeywordToken("Uses"), new RoundOpenBracketToken(),
+      new LiteralToken("1"), new CommaToken(), new WildCardToken(), new RoundCloseBracketToken(),
+      new EndOfFileToken()};
+  QueryParser parser = QueryParser(single_clause_parent_query);
+  parser.parse();
+
+  QueryDeclaration *v1 = new AssignDeclaration(new QuerySynonym("v1"));
+  QueryDeclaration *i1 = new IntegerDeclaration("1");
+  QueryDeclaration *w2 = new EntWildCardDeclaration();
+  Query expected_query = Query(std::vector<QueryDeclaration *>{i1, w2},
+                               SelectCall(v1, std::vector<QueryClause *>{new UsesClause(i1, w2)}));
 
   // check declarations
   ASSERT_EQ(parser.getDeclarations().size(), 1);
@@ -546,7 +583,7 @@ TEST(QueryParserTest, ValidSingleUsesClauseIntegerSynonymTest) {
   QueryDeclaration *i1 = new IntegerDeclaration("1");
   QueryDeclaration *v1 = new VariableDeclaration(new QuerySynonym("v1"));
   Query expected_query = Query(std::vector<QueryDeclaration *>{i1, v1},
-                               SelectCall(v1, std::vector<QueryClause *>{new FollowsClause(i1, v1)}));
+                               SelectCall(v1, std::vector<QueryClause *>{new UsesClause(i1, v1)}));
 
   // check declarations
   ASSERT_EQ(parser.getDeclarations().size(), 1);
@@ -583,7 +620,7 @@ TEST(QueryParserTest, ValidSingleUsesClauseIntegerStringTest) {
   QueryDeclaration *i1 = new IntegerDeclaration("1");
   QueryDeclaration *i2 = new StringDeclaration("t");
   Query expected_query = Query(std::vector<QueryDeclaration *>{i1, i2},
-                               SelectCall(i1, std::vector<QueryClause *>{new FollowsClause(i1, i2)}));
+                               SelectCall(i1, std::vector<QueryClause *>{new UsesClause(i1, i2)}));
 
   // check declarations
   ASSERT_EQ(parser.getDeclarations().size(), 1);
