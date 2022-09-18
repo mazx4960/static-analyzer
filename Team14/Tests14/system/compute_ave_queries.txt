@@ -91,7 +91,7 @@ num1, num2, num3
 19 - select all variables modified with sum
 variable v; assign a;
 Select v pattern a(v, _"num1 + num2"_)
-sum
+num3 num2 num1 sum
 5000
 20 - select all variables modified with sum
 variable v; assign a;
