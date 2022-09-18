@@ -68,7 +68,10 @@ QueryDeclaration *QueryParser::parseStmtRefDeclaration(bool allowWild) {
                              + EntityTypeToString(declaration->getType()));
   }
   if (peekToken()->type == TokenType::kWildCard) {
-    if (allowWild) { return new StmtWildCardDeclaration(); }
+    if (allowWild) {
+      nextToken();
+      return new StmtWildCardDeclaration();
+    }
     throw ParseSemanticError("Wildcard '_' is not allowed here");
   }
   throw ParseSyntaxError("Unknown StmtRef: " + peekToken()->value);
