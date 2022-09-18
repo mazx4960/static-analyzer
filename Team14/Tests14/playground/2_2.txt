@@ -1,2 +1,2 @@
-stmt s;
-Select s such that Follows(2, 1)
+stmt s, s2;
+Select s2 such that Follows(s, s2)
