@@ -134,6 +134,9 @@ EntityPointerUnorderedSet SuchThatStrategy::evaluateParameter(QueryDeclaration *
   EntityPointerUnorderedSet results;
   for (auto *entity : candidates) {
     EntityPointerUnorderedSet valid_entities = this->pkb_->getByRelationship(rs_type, entity, invert_search);
+    if (valid_entities.empty()) {
+      param->removeEntityFromContext(entity);
+    }
     for (auto *valid_entity : valid_entities) { results.insert(valid_entity); }
   }
   std::string result_string;
