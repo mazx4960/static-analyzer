@@ -1,5 +1,7 @@
 #include "simple_grammar.h"
 
+#include <spdlog/spdlog.h>
+
 #include "commons/lexer/token.h"
 #include "commons/parser/expr_definition/expr_grammar_producer.h"
 #include "simple_grammar_producer.h"
@@ -122,7 +124,7 @@ AssignNode* AssignGrammarRule::assembleNode(std::vector<Node*> childNodes) {
 
 CondExprGrammarRule::CondExprGrammarRule()
     : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
-        std::make_pair([](TokenIterator tokenStream) -> bool { return (**tokenStream).type == TokenType::kSymbol; },
+        std::make_pair([](TokenIterator tokenStream) -> bool { return (**tokenStream).type == TokenType::kSymbol || (**tokenStream).type == TokenType::kLiteral; },
                        new RelExprGrammarProducer()),
         std::make_pair([](TokenIterator tokenStream) -> bool { return **tokenStream == OperatorToken("!"); },
                        new NotExprGrammarProducer()),

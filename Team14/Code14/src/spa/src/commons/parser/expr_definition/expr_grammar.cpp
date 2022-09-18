@@ -2,6 +2,8 @@
 
 #include "expr_grammar.h"
 
+#include <spdlog/spdlog.h>
+
 #include "commons/parser/parser_exceptions.h"
 #include "expr_grammar_producer.h"
 
@@ -49,16 +51,16 @@ TermGrammarRule::TermGrammarRule()
 
 FactorGrammarRule::FactorGrammarRule()
     : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
-        std::make_pair([](TokenIterator tokenStream) -> bool { return **tokenStream == RoundOpenBracketToken(); },
+        std::make_pair([](TokenIterator tokenStream) -> bool { spdlog::debug("Checking parenthesized expression"); return **tokenStream == RoundOpenBracketToken(); },
                        new ParenthesizedGrammarProducer(new ExprGrammarProducer())),
         std::make_pair([](TokenIterator /*tokenStream*/) -> bool { return true; }, new ReferenceGrammarProducer()),
     }) {}
 
 ReferenceGrammarRule::ReferenceGrammarRule()
     : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
-        std::make_pair([](TokenIterator tokenStream) -> bool { return (*tokenStream)->type == TokenType::kSymbol; },
+        std::make_pair([](TokenIterator tokenStream) -> bool { spdlog::debug("Checking symbol"); return (*tokenStream)->type == TokenType::kSymbol; },
                        new VariableGrammarProducer()),
-        std::make_pair([](TokenIterator tokenStream) -> bool { return (*tokenStream)->type == TokenType::kLiteral; },
+        std::make_pair([](TokenIterator tokenStream) -> bool { spdlog::debug("Checking literal"); return (*tokenStream)->type == TokenType::kLiteral; },
                        new ConstantGrammarProducer()),
     }) {}
 
