@@ -153,3 +153,8 @@ while w;
 Select w such that Uses(w, "y")
 14
 5000
+31 - select all variables in assign statements that have "cenX" on the left of equals
+variable v; assign a;
+Select v such that Uses(a, v) pattern a("cenX", _)
+cenX, x, count
+5000
