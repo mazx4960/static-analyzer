@@ -88,15 +88,15 @@ variable v; read re;
 Select v such that Modifies(re, v)
 num1, num2, num3
 5000
-19 - select all variables modified with sum
+19 - select all variables modified with with "num1 + num2" on the right side of equals
 variable v; assign a;
 Select v pattern a(v, _"num1 + num2"_)
-num3 num2 num1 sum
+sum
 5000
-20 - select all variables modified with sum
+20 - select all variables in assignment stmt that has ""num1 + num2" on the right side of equals
 variable v; assign a;
 Select v such that Uses(a, v) pattern a(_, _"num1 + num2"_)
-sum
+num1, num2, num3, sum
 5000
 21 - select all variables that appear on both left and right side of equals
 variable v; assign a;
