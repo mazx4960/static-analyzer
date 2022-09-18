@@ -106,8 +106,10 @@ SubqueryResult SubqueryResult::Join(SubqueryResult other) {
       ? second_decl_ : first_decl_;
   QueryDeclaration* third = (common_synonym->getType() == other.first_decl_->getType() && common_synonym->getSynonym() == other.first_decl_->getSynonym())
       ? other.second_decl_ : other.first_decl_;
-  EntityPointerUnorderedMap& first_table = (*common_synonym == *first_decl_) ? table_inv_ : table_;
-  EntityPointerUnorderedMap& second_table = (*common_synonym == *other.first_decl_) ? other.table_ : other.table_inv_;
+  EntityPointerUnorderedMap& first_table = (common_synonym->getType() == first_decl_->getType() && common_synonym->getSynonym() == first_decl_->getSynonym())
+      ? table_inv_ : table_;
+  EntityPointerUnorderedMap& second_table = (common_synonym->getType() == other.first_decl_->getType() && common_synonym->getSynonym() == other.first_decl_->getSynonym())
+      ? other.table_ : other.table_inv_;
   EntityPointerUnorderedMap join{};
   spdlog::debug("Making result from {} to {}", first->toString(), third->toString());
   for (auto [key, values] : first_table) {
@@ -115,6 +117,7 @@ SubqueryResult SubqueryResult::Join(SubqueryResult other) {
     spdlog::debug("Processing {}", key->ToString());
     for (auto *value_key : values) {
       if (second_table.find(value_key) != second_table.end()) {
+        spdlog::debug("Found common element {}", value_key->ToString());
         for (auto *value : second_table[value_key]) {
           spdlog::debug("Adding {}", value->ToString());
           join[key].insert(value);
