@@ -118,3 +118,8 @@ assign a;
 Select a pattern a("sum", _)
 4
 5000
+25 - select all variables in assign statements that have "sum" on the left of equals
+variable v; assign a;
+Select v such that Uses(a, v) pattern a("sum", _)
+num1, num2, num3
+5000
