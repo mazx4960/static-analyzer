@@ -56,7 +56,12 @@ void QueryParser::parseDeclaration() {
 
 QueryDeclaration *QueryParser::parseStmtRefDeclaration(bool allowWild) {
   if (peekToken()->type == TokenType::kLiteral) { return parseLiteralDeclaration(); }
-  if (peekToken()->type == TokenType::kSymbol) { return getDeclaration(nextToken()->value); }
+  if (peekToken()->type == TokenType::kSymbol) {
+    QueryDeclaration *declaration = getDeclaration(nextToken()->value);
+    if (declaration->getType() == EntityType::kProcedure) { return declaration; }
+    for (auto type:GetAllStmtTypes()) { if (type == declaration->getType()) { return declaration; } }
+    throw ParseSemanticError("Parameter given is not a statement/procedure: " + EntityTypeToString(declaration->getType()));
+  }
   if (peekToken()->type == TokenType::kWildCard) {
     if (allowWild) { return new StmtWildCardDeclaration(); }
     throw ParseSemanticError("Wildcard '_' is not allowed here");
@@ -66,7 +71,13 @@ QueryDeclaration *QueryParser::parseStmtRefDeclaration(bool allowWild) {
 
 QueryDeclaration *QueryParser::parseEntRefDeclaration(bool allowWild) {
   if (peekToken()->type == TokenType::kQuote) { return parseQuotedDeclaration(); }
-  if (peekToken()->type == TokenType::kSymbol) { return getDeclaration(nextToken()->value); }
+  if (peekToken()->type == TokenType::kSymbol) {
+    QueryDeclaration *declaration = getDeclaration(nextToken()->value);
+    if (declaration->getType() == EntityType::kVariable) {
+      return getDeclaration(nextToken()->value);
+    }
+    throw ParseSemanticError("Parameter given is not a variable: " + EntityTypeToString(declaration->getType()));
+  }
   if (peekToken()->type == TokenType::kWildCard) {
     if (allowWild) {
       nextToken();
@@ -128,7 +139,7 @@ QueryClause *QueryParser::parseClause() {
   throw ParseSyntaxError("Unknown clause: " + token->value);
 }
 PatternClause *QueryParser::parsePattern() {
-  if (peekToken()->type != TokenType::kSymbol) { throw ParseSyntaxError("Missing synonym"); }
+  if (peekToken()->type != TokenType::kSymbol) { throw ParseSyntaxError("Missing assign synonym"); }
   QueryDeclaration *first = getDeclaration(nextToken()->value);
   if (!(*nextToken() == RoundOpenBracketToken())) { throw ParseSyntaxError("Missing '(' before parameters"); }
   QueryDeclaration *second = parseEntRefDeclaration(true);
@@ -189,9 +200,9 @@ SuchThatClause *QueryParser::parseUses() {
   if (!(*nextToken() == RoundOpenBracketToken())) { throw ParseSyntaxError("Missing '(' before parameters"); }
   QueryDeclaration *first;
   if (*peekToken() == QuoteToken()) {
-    first = parseStmtRefDeclaration(false);
-  } else {
     first = parseEntRefDeclaration(false);
+  } else {
+    first = parseStmtRefDeclaration(false);
   }
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration *second = parseEntRefDeclaration(false);
@@ -232,14 +243,14 @@ QueryDeclaration *QueryParser::parseExpression() {
         if (tmp->type == TokenType::kSymbol || tmp->type == TokenType::kLiteral) {
           expr_tokens.push_back(tmp);
         } else {
-          throw ParseSyntaxError("Unexpected symbol in expression" + tmp->value);
+          throw ParseSyntaxError("Unexpected symbol in expression: " + tmp->value);
         }
         toggle = false;
       } else {
         if (tmp->type == TokenType::kOperator) {
           expr_tokens.push_back(tmp);
         } else {
-          throw ParseSyntaxError("Unexpected operator in expression" + tmp->value);
+          throw ParseSyntaxError("Unexpected operator in expression: " + tmp->value);
         }
         toggle = true;
       }
