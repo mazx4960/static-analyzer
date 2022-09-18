@@ -1,0 +1,55 @@
+1 - select all procedures
+procedure p;
+Select p
+main
+5000
+2 - select all WHILE statements
+while w;
+Select w
+2, 6, 10
+5000
+3 - select all IF statements
+if ifs;
+Select ifs
+4, 8
+5000
+4 - select all WHILE statements that have an if statement as a direct child
+while w; if ifs;
+Select w such that Parent(w, ifs)
+2, 6
+5000
+5 - select all WHILE statements that have a parent
+while w; stmt s;
+Select w such that Parent(s, w)
+6, 10
+5000
+6 - select all WHILE statements that have a WHILE statement as a direct child
+while w, w1;
+Select w such that Parent(w, w1)
+none
+5000
+7 - select all WHILE statements that have a WHILE statement as a direct or indirect child
+while w, w1;
+Select w such that Parent*(w, w1)
+2, 6
+5000
+8 - select all IF statements that uses "x"
+if ifs;
+Select ifs such that Uses(ifs, "x")
+4
+5000
+9 - select all WHILE statements that modifies "y"
+while w;
+Select w such that Modifies(w, "y")
+2
+5000
+10 - select all WHILE statements that modifies "d"
+while w;
+Select w such that Modifies(w, "d")
+2
+5000
+11 - select all IF statements that modifies "c"
+if ifs;
+Select ifs such that Modifies(ifs, "c")
+4, 8
+5000

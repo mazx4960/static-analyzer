@@ -3,7 +3,7 @@
 # run system tests
 mkdir -p test_results
 
-test_names=("basic" "compute_ave" "compute_centroid")
+test_names=("basic" "compute_ave" "compute_centroid" "extreme_nesting")
 
 for test_name in "${test_names[@]}"; do
     echo "Running test $test_name"
