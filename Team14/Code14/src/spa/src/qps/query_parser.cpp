@@ -74,7 +74,7 @@ QueryDeclaration *QueryParser::parseEntRefDeclaration(bool allowWild) {
   if (peekToken()->type == TokenType::kSymbol) {
     QueryDeclaration *declaration = getDeclaration(nextToken()->value);
     if (declaration->getType() == EntityType::kVariable) {
-      return getDeclaration(nextToken()->value);
+      return declaration;
     }
     throw ParseSemanticError("Parameter given is not a variable: " + EntityTypeToString(declaration->getType()));
   }
