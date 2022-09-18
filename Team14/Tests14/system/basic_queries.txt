@@ -82,7 +82,7 @@ x
 variable v; stmt s;
 Select v such that Modifies(s, v)
 x
-
+5000
 17 - select variables modified in non-existent line
 variable v;
 Select v such that Modifies(2, v)
