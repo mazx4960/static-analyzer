@@ -2,8 +2,9 @@
 
 #include <algorithm>
 #include <utility>
-#include "qps/pql/query_keywords.h"
+
 #include "commons/parser/parser.h"
+#include "qps/pql/query_keywords.h"
 #include "spdlog/spdlog.h"
 
 QueryParser::QueryParser(std::vector<Token *> tokens) { this->tokens_ = std::move(tokens); }
@@ -59,8 +60,12 @@ QueryDeclaration *QueryParser::parseStmtRefDeclaration(bool allowWild) {
   if (peekToken()->type == TokenType::kSymbol) {
     QueryDeclaration *declaration = getDeclaration(nextToken()->value);
     if (declaration->getType() == EntityType::kProcedure) { return declaration; }
-    for (auto type:GetAllStmtTypes()) { if (type == declaration->getType()) { return declaration; } }
-    throw ParseSemanticError("Parameter given is not a statement/procedure: " + EntityTypeToString(declaration->getType()));
+    for (auto type : GetAllStmtTypes()) {
+      if (type == declaration->getType()) { return declaration; }
+    }
+    if (declaration->getType() == EntityType::kStatement) { return declaration; }
+    throw ParseSemanticError("Parameter given is not a statement/procedure: "
+                             + EntityTypeToString(declaration->getType()));
   }
   if (peekToken()->type == TokenType::kWildCard) {
     if (allowWild) { return new StmtWildCardDeclaration(); }
@@ -73,9 +78,7 @@ QueryDeclaration *QueryParser::parseEntRefDeclaration(bool allowWild) {
   if (peekToken()->type == TokenType::kQuote) { return parseQuotedDeclaration(); }
   if (peekToken()->type == TokenType::kSymbol) {
     QueryDeclaration *declaration = getDeclaration(nextToken()->value);
-    if (declaration->getType() == EntityType::kVariable) {
-      return declaration;
-    }
+    if (declaration->getType() == EntityType::kVariable) { return declaration; }
     throw ParseSemanticError("Parameter given is not a variable: " + EntityTypeToString(declaration->getType()));
   }
   if (peekToken()->type == TokenType::kWildCard) {
@@ -88,9 +91,7 @@ QueryDeclaration *QueryParser::parseEntRefDeclaration(bool allowWild) {
   throw ParseSyntaxError("Unknown EntRef: " + peekToken()->value);
 }
 
-IntegerDeclaration *QueryParser::parseLiteralDeclaration() {
-  return new IntegerDeclaration(nextToken()->value);
-}
+IntegerDeclaration *QueryParser::parseLiteralDeclaration() { return new IntegerDeclaration(nextToken()->value); }
 
 StringDeclaration *QueryParser::parseStringDeclaration() { return new StringDeclaration(nextToken()->value); }
 
@@ -146,8 +147,8 @@ PatternClause *QueryParser::parsePattern() {
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
   QueryDeclaration *third = parseExpression();
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
-  spdlog::debug("Pattern parsed: " + first->toString() + "(" + second->toString() + ", " + third->toString() +
-  ") expression type: " + EntityTypeToString(third->getType()));
+  spdlog::debug("Pattern parsed: " + first->toString() + "(" + second->toString() + ", " + third->toString()
+                + ") expression type: " + EntityTypeToString(third->getType()));
   return new AssignPatternClause(first, second, third);
 }
 SuchThatClause *QueryParser::parseSuchThat() {
@@ -167,7 +168,8 @@ SuchThatClause *QueryParser::parseFollows() {
   if (!(*nextToken() == RoundOpenBracketToken())) { throw ParseSyntaxError("Missing '(' before parameters"); }
   QueryDeclaration *first = parseStmtRefDeclaration(true);
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
-  QueryDeclaration *second = parseStmtRefDeclaration(true);;
+  QueryDeclaration *second = parseStmtRefDeclaration(true);
+  ;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
 
   if (follows_all) {
@@ -186,7 +188,8 @@ SuchThatClause *QueryParser::parseParent() {
   if (!(*nextToken() == RoundOpenBracketToken())) { throw ParseSyntaxError("Missing '(' before parameters"); }
   QueryDeclaration *first = parseStmtRefDeclaration(true);
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
-  QueryDeclaration *second = parseStmtRefDeclaration(true);;
+  QueryDeclaration *second = parseStmtRefDeclaration(true);
+  ;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
 
   if (parent_all) {
@@ -219,7 +222,8 @@ SuchThatClause *QueryParser::parseModifies() {
     first = parseEntRefDeclaration(false);
   }
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
-  QueryDeclaration *second = parseEntRefDeclaration(false);;
+  QueryDeclaration *second = parseEntRefDeclaration(false);
+  ;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
   spdlog::debug("Modifies parsed: " + first->toString() + ", " + second->toString());
   return new ModifiesClause(first, second);
@@ -259,9 +263,7 @@ QueryDeclaration *QueryParser::parseExpression() {
     expr_tokens.push_back(new EndOfFileToken());
     expression = Parser::ParseExpression(expr_tokens)->ToString();
     if (wild_expression) {
-      if (nextToken()->type != TokenType::kWildCard) {
-        throw ParseSyntaxError("Invalid wildcard expression");
-      }
+      if (nextToken()->type != TokenType::kWildCard) { throw ParseSyntaxError("Invalid wildcard expression"); }
       return new WildCardExpressionDeclaration(expression);
     }
     return new ExpressionDeclaration(expression);
