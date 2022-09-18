@@ -255,6 +255,7 @@ QueryDeclaration *QueryParser::parseExpression() {
         toggle = true;
       }
     }
+    if (toggle) { throw ParseSyntaxError("Missing symbol in expression"); }
     nextToken();
     expr_tokens.push_back(new EndOfFileToken());
     expression = Parser::ParseExpression(expr_tokens)->ToString();
