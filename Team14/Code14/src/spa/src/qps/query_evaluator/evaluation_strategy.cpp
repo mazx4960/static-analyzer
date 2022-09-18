@@ -58,8 +58,8 @@ bool EvaluationStrategy::shouldIntersect(QueryDeclaration *declaration) { return
  * @param second second set of Entity pointers.
  * @return intersection of sets of Entity pointers.
  */
-EntityPointerUnorderedSet EvaluationStrategy::intersectContext(const EntityPointerUnorderedSet &first,
-                                                               const EntityPointerUnorderedSet &second) {
+EntityPointerUnorderedSet EvaluationStrategy::intersect(const EntityPointerUnorderedSet &first,
+                                                        const EntityPointerUnorderedSet &second) {
   EntityPointerUnorderedSet result;
   for (auto *entity : first) {
     if (second.find(entity) != second.end()) { result.insert(entity); }
@@ -116,7 +116,7 @@ EntityPointerUnorderedSet SuchThatStrategy::evaluateParameter(QueryDeclaration *
   EntityPointerUnorderedSet results;
   for (auto *entity : candidates) {
     EntityPointerUnorderedSet valid_entities = this->pkb_->getByRelationship(rs_type, entity, invert_search);
-    auto intersected = EvaluationStrategy::intersectContext(valid_entities, potential_matches);
+    auto intersected = EvaluationStrategy::intersect(valid_entities, potential_matches);
     if (intersected.empty()) {
       param->removeEntityFromContext(entity);
     } else {
@@ -163,7 +163,7 @@ EntityPointerUnorderedSet PatternStrategy::evaluateParameter(QueryDeclaration *v
   std::string expr = expr_param->toString();
   for (auto *entity : candidates) {
     EntityPointerUnorderedSet valid_entities = this->pkb_->getByPattern(entity, expr);
-    auto intersected = EvaluationStrategy::intersectContext(valid_entities, potential_matches);
+    auto intersected = EvaluationStrategy::intersect(valid_entities, potential_matches);
     if (intersected.empty()) {
       var_param->removeEntityFromContext(entity);
     } else {
