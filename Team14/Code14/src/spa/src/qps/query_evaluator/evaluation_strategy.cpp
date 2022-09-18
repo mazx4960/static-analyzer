@@ -137,7 +137,7 @@ SubqueryResult PatternStrategy::evaluate() {
   EntityPointerUnorderedSet stmt_param_context = stmt_param->getContext();
 
   auto stmt_matches = this->evaluateParameter(var_param, expr_param, stmt_param_context);
-  return SubqueryResult(stmt_matches, stmt_param, var_param);
+  return SubqueryResult(stmt_matches, var_param, stmt_param);
 }
 
 /**
