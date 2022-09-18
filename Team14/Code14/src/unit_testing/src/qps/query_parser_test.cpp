@@ -422,7 +422,7 @@ TEST(QueryParserTest, ValidSingleFollowsClauseWildcardIntegerTest) {
                 ->getSecond()->getSynonym()->toString());
 }
 
-TEST(QueryParserTest, ValidSinglePatternClauseTest) {
+TEST(QueryParserTest, ValidSinglePatternClauseSymbolExprTest) {
   std::vector<Token *> single_clause_parent_query = {
       new KeywordToken("assign"), new SymbolToken("a"), new SemicolonToken(), new KeywordToken("Select"),
       new SymbolToken("a"), new KeywordToken("pattern"), new SymbolToken("a"), new RoundOpenBracketToken(),
@@ -441,7 +441,199 @@ TEST(QueryParserTest, ValidSinglePatternClauseTest) {
                                                    new ExpressionDeclaration("((x)+(y))"))}));
 
   // check declarations
+  ASSERT_EQ(parser.getDeclarations().size(), 1);
   ASSERT_EQ(parser.getDeclarations()[0]->getSynonym()->toString(), a->getSynonym()->toString());
+
+  // check call
+  ASSERT_EQ(parser.getQueryCalls()[0]->getType(), expected_query.getQueryCall().getType());
+
+  // check clause
+  ASSERT_EQ(parser.getQueryCalls()[0]->getClauseVector()[0]->getClauseType(),
+            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+
+  ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
+                ->getFirst()->getSynonym()->toString(),
+            static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
+                ->getFirst()->getSynonym()->toString());
+
+  ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
+                ->getSecond()->toString(),
+            static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
+                ->getSecond()->toString());
+
+  ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
+                ->getThird()->toString(),
+            static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
+                ->getThird()->toString());
+}
+
+TEST(QueryParserTest, ValidSinglePatternClauseWildcardExprTest) {
+  std::vector<Token *> single_clause_parent_query = {
+      new KeywordToken("assign"), new SymbolToken("a"), new SemicolonToken(), new KeywordToken("Select"),
+      new SymbolToken("a"), new KeywordToken("pattern"), new SymbolToken("a"), new RoundOpenBracketToken(),
+      new WildCardToken(), new CommaToken(),
+      new QuoteToken(), new SymbolToken("x"), new OperatorToken("+"), new SymbolToken("y"),
+      new QuoteToken(), new RoundCloseBracketToken(), new EndOfFileToken()};
+  QueryParser parser = QueryParser(single_clause_parent_query);
+  parser.parse();
+
+  QueryDeclaration *a = new AssignDeclaration(new QuerySynonym("a"));
+
+  Query expected_query =
+      Query(std::vector<QueryDeclaration *>{a},
+            SelectCall(a, {new AssignPatternClause(a,
+                                                   new EntWildCardDeclaration(),
+                                                   new ExpressionDeclaration("((x)+(y))"))}));
+
+  // check declarations
+  ASSERT_EQ(parser.getDeclarations().size(), 1);
+  ASSERT_EQ(parser.getDeclarations()[0]->getSynonym()->toString(), a->getSynonym()->toString());
+
+  // check call
+  ASSERT_EQ(parser.getQueryCalls()[0]->getType(), expected_query.getQueryCall().getType());
+
+  // check clause
+  ASSERT_EQ(parser.getQueryCalls()[0]->getClauseVector()[0]->getClauseType(),
+            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+
+  ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
+                ->getFirst()->getSynonym()->toString(),
+            static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
+                ->getFirst()->getSynonym()->toString());
+
+  ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
+                ->getSecond()->toString(),
+            static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
+                ->getSecond()->toString());
+
+  ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
+                ->getThird()->toString(),
+            static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
+                ->getThird()->toString());
+}
+
+TEST(QueryParserTest, ValidSinglePatternClauseSynonymExprTest) {
+  std::vector<Token *> single_clause_parent_query = {
+      new KeywordToken("assign"), new SymbolToken("a"), new SemicolonToken(),
+      new KeywordToken("variable"), new SymbolToken("v"), new SemicolonToken(),
+      new KeywordToken("Select"),
+      new SymbolToken("a"), new KeywordToken("pattern"), new SymbolToken("a"), new RoundOpenBracketToken(),
+      new SymbolToken("v"), new CommaToken(),
+      new QuoteToken(), new SymbolToken("x"), new OperatorToken("+"), new SymbolToken("y"),
+      new QuoteToken(), new RoundCloseBracketToken(), new EndOfFileToken()};
+  QueryParser parser = QueryParser(single_clause_parent_query);
+  parser.parse();
+
+  QueryDeclaration *a = new AssignDeclaration(new QuerySynonym("a"));
+  QueryDeclaration *v = new VariableDeclaration(new QuerySynonym("v"));
+
+  Query expected_query =
+      Query(std::vector<QueryDeclaration *>{a, v},
+            SelectCall(a, {new AssignPatternClause(a,
+                                                   v,
+                                                   new ExpressionDeclaration("((x)+(y))"))}));
+
+  // check declarations
+  ASSERT_EQ(parser.getDeclarations().size(), 2);
+  ASSERT_EQ(parser.getDeclarations()[0]->getSynonym()->toString(), a->getSynonym()->toString());
+  ASSERT_EQ(parser.getDeclarations()[1]->getSynonym()->toString(), v->getSynonym()->toString());
+
+  // check call
+  ASSERT_EQ(parser.getQueryCalls()[0]->getType(), expected_query.getQueryCall().getType());
+
+  // check clause
+  ASSERT_EQ(parser.getQueryCalls()[0]->getClauseVector()[0]->getClauseType(),
+            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+
+  ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
+                ->getFirst()->getSynonym()->toString(),
+            static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
+                ->getFirst()->getSynonym()->toString());
+
+  ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
+                ->getSecond()->toString(),
+            static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
+                ->getSecond()->toString());
+
+  ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
+                ->getThird()->toString(),
+            static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
+                ->getThird()->toString());
+}
+
+TEST(QueryParserTest, ValidSinglePatternClauseSynonymWildcardExprTest) {
+  std::vector<Token *> single_clause_parent_query = {
+      new KeywordToken("assign"), new SymbolToken("a"), new SemicolonToken(),
+      new KeywordToken("variable"), new SymbolToken("v"), new SemicolonToken(),
+      new KeywordToken("Select"),
+      new SymbolToken("a"), new KeywordToken("pattern"), new SymbolToken("a"), new RoundOpenBracketToken(),
+      new SymbolToken("v"), new CommaToken(), new WildCardToken(),
+      new QuoteToken(), new SymbolToken("x"), new OperatorToken("+"), new SymbolToken("y"),
+      new QuoteToken(), new WildCardToken(), new RoundCloseBracketToken(), new EndOfFileToken()};
+  QueryParser parser = QueryParser(single_clause_parent_query);
+  parser.parse();
+
+  QueryDeclaration *a = new AssignDeclaration(new QuerySynonym("a"));
+  QueryDeclaration *v = new VariableDeclaration(new QuerySynonym("v"));
+
+  Query expected_query =
+      Query(std::vector<QueryDeclaration *>{a, v},
+            SelectCall(a, {new AssignPatternClause(a,
+                                                   v,
+                                                   new WildCardExpressionDeclaration("((x)+(y))"))}));
+
+  // check declarations
+  ASSERT_EQ(parser.getDeclarations().size(), 2);
+  ASSERT_EQ(parser.getDeclarations()[0]->getSynonym()->toString(), a->getSynonym()->toString());
+  ASSERT_EQ(parser.getDeclarations()[1]->getSynonym()->toString(), v->getSynonym()->toString());
+
+  // check call
+  ASSERT_EQ(parser.getQueryCalls()[0]->getType(), expected_query.getQueryCall().getType());
+
+  // check clause
+  ASSERT_EQ(parser.getQueryCalls()[0]->getClauseVector()[0]->getClauseType(),
+            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+
+  ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
+                ->getFirst()->getSynonym()->toString(),
+            static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
+                ->getFirst()->getSynonym()->toString());
+
+  ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
+                ->getSecond()->toString(),
+            static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
+                ->getSecond()->toString());
+
+  ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCalls()[0]->getClauseVector()[0])
+                ->getThird()->toString(),
+            static_cast<AssignPatternClause *>(expected_query.getQueryCall().getClauseVector()[0])
+                ->getThird()->toString());
+}
+
+TEST(QueryParserTest, ValidSinglePatternClauseSynonymWildcardTest) {
+  std::vector<Token *> single_clause_parent_query = {
+      new KeywordToken("assign"), new SymbolToken("a"), new SemicolonToken(),
+      new KeywordToken("variable"), new SymbolToken("v"), new SemicolonToken(),
+      new KeywordToken("Select"),
+      new SymbolToken("a"), new KeywordToken("pattern"), new SymbolToken("a"), new RoundOpenBracketToken(),
+      new SymbolToken("v"), new CommaToken(),
+      new WildCardToken(), new RoundCloseBracketToken(), new EndOfFileToken()};
+  QueryParser parser = QueryParser(single_clause_parent_query);
+  parser.parse();
+
+  QueryDeclaration *a = new AssignDeclaration(new QuerySynonym("a"));
+  QueryDeclaration *v = new VariableDeclaration(new QuerySynonym("v"));
+
+  Query expected_query =
+      Query(std::vector<QueryDeclaration *>{a, v},
+            SelectCall(a, {new AssignPatternClause(a,
+                                                   v,
+                                                   new WildCardExpressionDeclaration(""))}));
+
+  // check declarations
+  ASSERT_EQ(parser.getDeclarations().size(), 2);
+  ASSERT_EQ(parser.getDeclarations()[0]->getSynonym()->toString(), a->getSynonym()->toString());
+  ASSERT_EQ(parser.getDeclarations()[1]->getSynonym()->toString(), v->getSynonym()->toString());
 
   // check call
   ASSERT_EQ(parser.getQueryCalls()[0]->getType(), expected_query.getQueryCall().getType());
