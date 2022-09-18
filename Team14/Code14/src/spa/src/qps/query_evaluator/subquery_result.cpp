@@ -3,10 +3,12 @@
 //
 #include "subquery_result.h"
 
-SubqueryResult::SubqueryResult(EntityPointerUnorderedMap table, QueryDeclaration* first, QueryDeclaration* second)
-    : table_(table), table_inv_(), first_decl_(first), second_decl_(second) {
+#include <utility>
+
+SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap& table, QueryDeclaration* first, QueryDeclaration* second)
+    : table_(table), first_decl_(first), second_decl_(second) {
   for (auto [entity, entity_set] : table) {
-    for (auto other_entity : entity_set) {
+    for (auto *other_entity : entity_set) {
       if (table_inv_.find(other_entity) == table_inv_.end()) {
         table_inv_[other_entity] = EntityPointerUnorderedSet();
       }
@@ -17,7 +19,7 @@ SubqueryResult::SubqueryResult(EntityPointerUnorderedMap table, QueryDeclaration
 
 SubqueryResult::SubqueryResult(EntityPointerUnorderedMap table, EntityPointerUnorderedMap table_inv,
                                QueryDeclaration* first, QueryDeclaration* second)
-    : table_(table), table_inv_(table_inv), first_decl_(first), second_decl_(second) {}
+    : table_(std::move(table)), table_inv_(std::move(table_inv)), first_decl_(first), second_decl_(second) {}
 
 bool SubqueryResult::empty() {
   return table_.empty() || table_inv_.empty();
@@ -31,7 +33,7 @@ bool SubqueryResult::uses(QueryDeclaration* decl) {
   return *decl == *first_decl_ || *decl == *second_decl_;
 }
 
-std::vector<QueryDeclaration *> SubqueryResult::getCommonSynonyms(SubqueryResult other) {
+std::vector<QueryDeclaration *> SubqueryResult::getCommonSynonyms(const SubqueryResult& other) {
   std::vector<QueryDeclaration *> common_synonyms;
   if (first_decl_->getSynonym() != QuerySynonym::empty() &&
       (*first_decl_ == *other.first_decl_ || *first_decl_ == *other.second_decl_)) {
@@ -71,7 +73,7 @@ SubqueryResult SubqueryResult::Intersect(SubqueryResult other) {
   EntityPointerUnorderedMap intersection{};
   for (auto [key, values] : table_) {
     intersection[key] = EntityPointerUnorderedSet{};
-    for (auto value : values) {
+    for (auto *value : values) {
       if (other.table_.find(key) != other.table_.end()
           && other.table_[key].find(value) != other.table_[key].end()) {
         intersection[key].insert(value);
@@ -86,17 +88,17 @@ SubqueryResult SubqueryResult::Join(SubqueryResult other) {
   if (common_synonyms.size() != 1) {
     return SubqueryResult(EntityPointerUnorderedMap(), first_decl_, second_decl_);
   }
-  auto common_synonym = common_synonyms[0];
+  auto *common_synonym = common_synonyms[0];
   QueryDeclaration* first = (*common_synonym == *first_decl_) ? second_decl_ : first_decl_;
   QueryDeclaration* third = (*common_synonym == *other.first_decl_) ? other.second_decl_ : other.first_decl_;
   EntityPointerUnorderedMap& first_table = (*common_synonym == *first_decl_) ? table_ : table_inv_;
-  EntityPointerUnorderedMap& second_table = (*common_synonym == *other.first_decl_) ? other.table_inv_ : other.table_inv_;
+  EntityPointerUnorderedMap& second_table = (*common_synonym == *other.first_decl_) ? other.table_inv_ : other.table_;
   EntityPointerUnorderedMap join{};
   for (auto [key, values] : first_table) {
     join[key] = EntityPointerUnorderedSet{};
-    for (auto value_key : values) {
+    for (auto *value_key : values) {
       if (second_table.find(value_key) != second_table.end()) {
-        for (auto value : second_table[value_key]) { join[key].insert(value); }
+        for (auto *value : second_table[value_key]) { join[key].insert(value); }
       }
     }
   }

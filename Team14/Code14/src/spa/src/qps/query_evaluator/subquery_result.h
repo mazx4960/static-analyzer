@@ -14,11 +14,11 @@ class SubqueryResult {
   QueryDeclaration* second_decl_;
   SubqueryResult(EntityPointerUnorderedMap, EntityPointerUnorderedMap, QueryDeclaration*, QueryDeclaration*);
  public:
-  SubqueryResult(EntityPointerUnorderedMap, QueryDeclaration*, QueryDeclaration*);
+  SubqueryResult(const EntityPointerUnorderedMap&, QueryDeclaration*, QueryDeclaration*);
   [[nodiscard]] bool empty();
   SubqueryResult invert();
   bool uses(QueryDeclaration* decl);
-  std::vector<QueryDeclaration *> getCommonSynonyms(SubqueryResult other);
+  std::vector<QueryDeclaration *> getCommonSynonyms(const SubqueryResult& other);
   EntityPointerUnorderedSet GetColumn(QuerySynonym*);
   SubqueryResult Intersect(SubqueryResult other);
   SubqueryResult Join(SubqueryResult other);
