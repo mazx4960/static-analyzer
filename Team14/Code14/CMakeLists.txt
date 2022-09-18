@@ -52,5 +52,6 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
+enable_testing()
 add_test(NAME unit_testing COMMAND unit_testing WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
 add_test(NAME integration_testing COMMAND integration_testing WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
