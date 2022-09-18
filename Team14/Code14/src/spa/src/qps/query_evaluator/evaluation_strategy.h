@@ -18,7 +18,7 @@ class EvaluationStrategy {
 
  public:
   static EvaluationStrategy *getStrategy(IPKBQuerier *, QueryClause *);
-  virtual bool evaluate() = 0;
+  virtual EntityPointerUnorderedMap evaluate() = 0;
   EntityPointerUnorderedSet getCandidates(QueryDeclaration *);
   static bool shouldIntersect(QueryDeclaration *);
   static EntityPointerUnorderedSet intersect(const EntityPointerUnorderedSet &first,
@@ -34,8 +34,8 @@ class SuchThatStrategy : public EvaluationStrategy {
 
  public:
   SuchThatStrategy(IPKBQuerier *pkb, SuchThatClause *query_clause) : EvaluationStrategy(pkb), clause_(query_clause){};
-  bool evaluate() override;
-  EntityPointerUnorderedSet evaluateParameter(QueryDeclaration *, RsType, bool, const EntityPointerUnorderedSet &);
+  EntityPointerUnorderedMap evaluate() override;
+  EntityPointerUnorderedMap evaluateParameter(QueryDeclaration *, RsType, bool, const EntityPointerUnorderedSet &);
 };
 
 /*
@@ -46,7 +46,7 @@ class PatternStrategy : public EvaluationStrategy {
 
  public:
   PatternStrategy(IPKBQuerier *pkb, PatternClause *query_clause) : EvaluationStrategy(pkb), clause_(query_clause){};
-  bool evaluate() override;
-  EntityPointerUnorderedSet evaluateParameter(QueryDeclaration *, QueryDeclaration *,
+  EntityPointerUnorderedMap evaluate() override;
+  EntityPointerUnorderedMap evaluateParameter(QueryDeclaration *, QueryDeclaration *,
                                               const EntityPointerUnorderedSet &);
 };

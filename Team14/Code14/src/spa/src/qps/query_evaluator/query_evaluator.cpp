@@ -54,7 +54,7 @@ QueryDeclarationPointerUnorderedSet QueryEvaluator::evaluateSubQueries() {
 
   for (auto *subquery_clause : subquery_clauses) {
     SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, subquery_clause);
-    bool subquery_has_results = subquery_evaluator.evaluate();
+    bool subquery_has_results = subquery_evaluator.evaluate().empty();
     // If subquery has no results, then overall query has no results, terminate early
     if (!subquery_has_results) {
       this->has_result_ = false;

@@ -8,6 +8,6 @@ SubQueryEvaluator::SubQueryEvaluator(IPKBQuerier *pkb, QueryClause *query_clause
  * Evaluate subquery clause.
  * @return true if query clause has results, false otherwise.
  */
-bool SubQueryEvaluator::evaluate() {
+EntityPointerUnorderedMap SubQueryEvaluator::evaluate() {
   return this->strategy_->evaluate();
 }
