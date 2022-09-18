@@ -34,7 +34,10 @@ void TestWrapper::parse(std::string filename) {
 void TestWrapper::evaluate(std::string query, std::list<std::string>& results) {
   this->ui_->SetQueryString(query);
   auto* result = this->ui_->ExecuteQuery();
-  if (result->is_empty()) { return; }
+  if (result->is_empty()) {
+    results.emplace_back("none");
+    return;
+  }
 
   // store the answers to the query in the results list (it is initially empty)
   // each result must be a string.

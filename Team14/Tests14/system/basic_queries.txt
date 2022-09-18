@@ -151,7 +151,7 @@ Select a pattern a("x", _"x+1"_)
 30 - select variables that match pattern right with spaces
 variable v; assign a;
 Select v pattern a(_, _"       x        +      1     "_)
-v
+x
 5000
 31 - select variables that don't match pattern right
 variable v; assign a;
