@@ -111,19 +111,18 @@ TEST(QueryParserTest, IntegerStmtRefDeclarationParseTest) {
       new LiteralToken("1")
   };
   QueryParser parser = QueryParser(stmt_ref_tokens);
-  parser.parseDeclaration();
   QueryDeclaration *stmt_ref_declaration = parser.parseStmtRefDeclaration(false);
   ASSERT_EQ(*stmt_ref_declaration, IntegerDeclaration("1"));
 }
 
 TEST(QueryParserTest, SymbolStmtRefDeclarationParseTest) {
   std::vector<Token *> stmt_ref_tokens = {
-      new KeywordToken("variable"), new SymbolToken("v"), new SemicolonToken(), new SymbolToken("v")
+      new KeywordToken("stmt"), new SymbolToken("s"), new SemicolonToken(), new SymbolToken("s")
   };
   QueryParser parser = QueryParser(stmt_ref_tokens);
   parser.parseDeclarations();
   QueryDeclaration *stmt_ref_declaration = parser.parseStmtRefDeclaration(false);
-  ASSERT_EQ(*stmt_ref_declaration, VariableDeclaration(new QuerySynonym("v")));
+  ASSERT_EQ(*stmt_ref_declaration, StatementDeclaration(new QuerySynonym("s")));
 }
 
 TEST(QueryParserTest, StringEntRefDeclarationParseTest) {
