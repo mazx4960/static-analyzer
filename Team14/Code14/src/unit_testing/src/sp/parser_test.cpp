@@ -360,5 +360,5 @@ TEST(StatementParser, IfWhileAdvancedTest) {
   auto token_stream = tokens.begin();
   Node *node = stmt_parser->parseNode(token_stream);
   ASSERT_EQ(node->GetNodeType(), NodeType::kStatement);
-  ASSERT_EQ(static_cast<StatementNode *>(node)->GetStmtType(), EntityType::kWhileStmt);
+  ASSERT_EQ(static_cast<StatementNode *>(node)->GetStmtType(), EntityType::kIfStmt);
 }
