@@ -32,17 +32,20 @@ SubqueryResult SubqueryResult::invert() {
 }
 
 bool SubqueryResult::uses(QueryDeclaration* decl) {
-  return *decl == *first_decl_ || *decl == *second_decl_;
+  return (decl->getType() == first_decl_->getType() && decl->getSynonym() == first_decl_->getSynonym())
+      || (decl->getType() == second_decl_->getType() && decl->getSynonym() == second_decl_->getSynonym());
 }
 
 std::vector<QueryDeclaration *> SubqueryResult::getCommonSynonyms(const SubqueryResult& other) {
   std::vector<QueryDeclaration *> common_synonyms;
   if (first_decl_->getSynonym() != QuerySynonym::empty() &&
-      (*first_decl_ == *other.first_decl_ || *first_decl_ == *other.second_decl_)) {
+      ((first_decl_->getType() == other.first_decl_->getType() && first_decl_->getSynonym() == other.first_decl_->getSynonym())
+      || (first_decl_->getType() == other.second_decl_->getType() && first_decl_->getSynonym() == other.second_decl_->getSynonym()))) {
     common_synonyms.push_back(first_decl_);
   }
   if (second_decl_->getSynonym() != QuerySynonym::empty() &&
-      (*second_decl_ == *other.first_decl_ || *second_decl_ == *other.second_decl_)) {
+      ((second_decl_->getType() == other.first_decl_->getType() && second_decl_->getSynonym() == other.first_decl_->getSynonym())
+          || (second_decl_->getType() == other.second_decl_->getType() && second_decl_->getSynonym() == other.second_decl_->getSynonym()))) {
     common_synonyms.push_back(second_decl_);
   }
   return common_synonyms;
@@ -99,8 +102,10 @@ SubqueryResult SubqueryResult::Join(SubqueryResult other) {
     return SubqueryResult(EntityPointerUnorderedMap(), first_decl_, second_decl_);
   }
   auto *common_synonym = common_synonyms[0];
-  QueryDeclaration* first = (*common_synonym == *first_decl_) ? second_decl_ : first_decl_;
-  QueryDeclaration* third = (*common_synonym == *other.first_decl_) ? other.second_decl_ : other.first_decl_;
+  QueryDeclaration* first = (common_synonym->getType() == first_decl_->getType() && common_synonym->getSynonym() == first_decl_->getSynonym())
+      ? second_decl_ : first_decl_;
+  QueryDeclaration* third = (common_synonym->getType() == other.first_decl_->getType() && common_synonym->getSynonym() == other.first_decl_->getSynonym())
+      ? other.second_decl_ : other.first_decl_;
   EntityPointerUnorderedMap& first_table = (*common_synonym == *first_decl_) ? table_inv_ : table_;
   EntityPointerUnorderedMap& second_table = (*common_synonym == *other.first_decl_) ? other.table_ : other.table_inv_;
   EntityPointerUnorderedMap join{};

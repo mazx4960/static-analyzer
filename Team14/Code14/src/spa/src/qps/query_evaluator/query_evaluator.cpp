@@ -68,18 +68,18 @@ Result *QueryEvaluator::evaluate() {
       return Result::empty();
     }
   }
+  EntityPointerUnorderedSet candidates = called_declaration->getContext();
   switch (subquery_results.size()) {
     case 0:
       // Just return all possible results
-      return new Result(synonym, called_declaration->getContext());
+      return new Result(synonym, candidates);
     case 1:
       if (subquery_results[0].uses(called_declaration)) {
         return new Result(synonym, subquery_results[0].GetColumn(synonym));
       }
-      return new Result(synonym, called_declaration->getContext());
+      return new Result(synonym, candidates);
     case 2:
       std::vector<QueryDeclaration *> common_synonyms = subquery_results[0].getCommonSynonyms(subquery_results[1]);
-      EntityPointerUnorderedSet candidates = called_declaration->getContext();
       switch (common_synonyms.size()) {
         case 0: {
           for (auto res : subquery_results) {
