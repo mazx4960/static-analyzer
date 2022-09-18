@@ -5,7 +5,7 @@
 #include "sp/simple_lexer.h"
 
 TEST(LexerTest, TestBasic) {
-  std::istream* s = StreamReader::GetStreamFromFile("Team14/Tests14/simple_code/basic.txt");
+  std::istream* s = StreamReader::GetStreamFromFile("../Tests14/simple_code/basic.txt");
   SimpleLexer simple_lexer(s);
 
   std::vector<Token*> tokens = simple_lexer.lex();
