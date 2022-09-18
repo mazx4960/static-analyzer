@@ -11,5 +11,5 @@ class SubQueryEvaluator {
  public:
   SubQueryEvaluator(IPKBQuerier *pkb, QueryClause *query_clause);
 
-  EntityPointerUnorderedMap evaluate();
+  SubqueryResult evaluate();
 };

@@ -71,7 +71,7 @@ EntityPointerUnorderedSet EvaluationStrategy::intersect(const EntityPointerUnord
  * Evaluate the SuchThat clause.
  * @return true if query clause has results, false otherwise.
  */
-EntityPointerUnorderedMap SuchThatStrategy::evaluate() {
+SubqueryResult SuchThatStrategy::evaluate() {
   RsType rs_type = this->clause_->getSuchThatType();
   spdlog::debug("Evaluating SuchThat clause with relationship {}", RsTypeToString(rs_type));
 
@@ -96,7 +96,7 @@ EntityPointerUnorderedMap SuchThatStrategy::evaluate() {
   }
 
   auto matches = this->evaluateParameter(first_param, rs_type, false, second_param_candidates);
-  return matches;
+  return SubqueryResult(matches, first_param, second_param);
 }
 
 /**
@@ -128,7 +128,7 @@ EntityPointerUnorderedMap SuchThatStrategy::evaluateParameter(QueryDeclaration *
  * Evaluate the Pattern clause.
  * @return true if query clause has results, false otherwise.
  */
-EntityPointerUnorderedMap PatternStrategy::evaluate() {
+SubqueryResult PatternStrategy::evaluate() {
   spdlog::debug("Evaluating Pattern clause");
 
   QueryDeclaration *stmt_param = this->clause_->getFirst();
@@ -137,7 +137,7 @@ EntityPointerUnorderedMap PatternStrategy::evaluate() {
   EntityPointerUnorderedSet stmt_param_context = stmt_param->getContext();
 
   auto stmt_matches = this->evaluateParameter(var_param, expr_param, stmt_param_context);
-  return stmt_matches;
+  return SubqueryResult(stmt_matches, stmt_param, var_param);
 }
 
 /**
