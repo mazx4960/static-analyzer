@@ -12,6 +12,8 @@ changelog:
     - title: Bug Fixes 🐛
       labels:
         - bug
+        - misc
     - title: Other Changes
       labels:
         - task
+        - documentation
