@@ -82,19 +82,12 @@ SubqueryResult SuchThatStrategy::evaluate() {
   EntityPointerUnorderedSet first_param_candidates = this->getCandidates(first_param);
   EntityPointerUnorderedSet second_param_candidates = this->getCandidates(second_param);
 
-  bool has_results;
-
   // Evaluate the first parameter first
   if (first_param_context.size() <= second_param_context.size()) {
     auto second_matches = this->evaluateParameter(first_param, rs_type, false, second_param_candidates);
-    //if (this->shouldIntersect(second_param)) { second_param->setContext(second_matches); }
-    has_results = !second_matches.empty();
   } else {
     auto first_matches = this->evaluateParameter(second_param, rs_type, true, first_param_candidates);
-    //if (this->shouldIntersect(first_param)) { first_param->setContext(first_matches); }
-    has_results = !first_matches.empty();
   }
-
   auto matches = this->evaluateParameter(first_param, rs_type, false, second_param_candidates);
   return SubqueryResult(matches, first_param, second_param);
 }
