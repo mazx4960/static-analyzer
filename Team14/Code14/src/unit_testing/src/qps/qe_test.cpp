@@ -97,11 +97,6 @@ class QueryEvaluatorMock : public QueryEvaluator {
                      QueryDeclarationPointerEquality> mockFetchContext() {
     return this->fetchContext();
   };
-  std::unordered_set<QueryDeclaration *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> mockEvaluateSubQueries() {
-    return this->evaluateSubQueries();
-  };
 };
 
 class MockPKB : public IPKBQuerier {

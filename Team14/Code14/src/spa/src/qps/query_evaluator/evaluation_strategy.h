@@ -7,6 +7,7 @@
 #include "pkb/pkb.h"
 #include "qps/exceptions.h"
 #include "qps/pql/query_clause.h"
+#include "qps/query_evaluator/subquery_result.h"
 
 using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
 
@@ -18,7 +19,7 @@ class EvaluationStrategy {
 
  public:
   static EvaluationStrategy *getStrategy(IPKBQuerier *, QueryClause *);
-  virtual bool evaluate() = 0;
+  virtual SubqueryResult evaluate() = 0;
   EntityPointerUnorderedSet getCandidates(QueryDeclaration *);
   static bool shouldIntersect(QueryDeclaration *);
   static EntityPointerUnorderedSet intersect(const EntityPointerUnorderedSet &first,
@@ -34,8 +35,8 @@ class SuchThatStrategy : public EvaluationStrategy {
 
  public:
   SuchThatStrategy(IPKBQuerier *pkb, SuchThatClause *query_clause) : EvaluationStrategy(pkb), clause_(query_clause){};
-  bool evaluate() override;
-  EntityPointerUnorderedSet evaluateParameter(QueryDeclaration *, RsType, bool, const EntityPointerUnorderedSet &);
+  SubqueryResult evaluate() override;
+  EntityPointerUnorderedMap evaluateParameter(QueryDeclaration *, RsType, bool, const EntityPointerUnorderedSet &);
 };
 
 /*
@@ -46,7 +47,7 @@ class PatternStrategy : public EvaluationStrategy {
 
  public:
   PatternStrategy(IPKBQuerier *pkb, PatternClause *query_clause) : EvaluationStrategy(pkb), clause_(query_clause){};
-  bool evaluate() override;
-  EntityPointerUnorderedSet evaluateParameter(QueryDeclaration *, QueryDeclaration *,
+  SubqueryResult evaluate() override;
+  EntityPointerUnorderedMap evaluateParameter(QueryDeclaration *, QueryDeclaration *,
                                               const EntityPointerUnorderedSet &);
 };

@@ -96,17 +96,17 @@ sum
 20 - select all variables in assignment stmt that has ""num1 + num2" on the right side of equals
 variable v; assign a;
 Select v such that Uses(a, v) pattern a(_, _"num1 + num2"_)
-num1, num2, num3, sum
+num1, num2, num3
 5000
 21 - select all variables that appear on both left and right side of equals
 variable v; assign a;
 Select v such that Uses(a, v) pattern a(v, _)
-sum
+none
 5000
 22 - select all statements with variables that appear on both left and right side of equals
 variable v; assign a;
 Select a such that Uses(a, v) pattern a(v, _)
-4
+none
 5000
 23 - select all assign statements that have "num3" on the right
 assign a;
