@@ -7,7 +7,7 @@
 
 #include "spdlog/spdlog.h"
 
-SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap& table, QueryDeclaration* first, QueryDeclaration* second)
+SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDeclaration *first, QueryDeclaration *second)
     : table_(table), first_decl_(first), second_decl_(second) {
   for (auto [entity, entity_set] : table) {
     for (auto *other_entity : entity_set) {
@@ -20,7 +20,7 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap& table, QueryDecl
 }
 
 SubqueryResult::SubqueryResult(EntityPointerUnorderedMap table, EntityPointerUnorderedMap table_inv,
-                               QueryDeclaration* first, QueryDeclaration* second)
+                               QueryDeclaration *first, QueryDeclaration *second)
     : table_(std::move(table)), table_inv_(std::move(table_inv)), first_decl_(first), second_decl_(second) {}
 
 bool SubqueryResult::empty() {
@@ -31,16 +31,16 @@ SubqueryResult SubqueryResult::invert() {
   return SubqueryResult(table_inv_, table_, second_decl_, first_decl_);
 }
 
-bool SubqueryResult::uses(QueryDeclaration* decl) {
+bool SubqueryResult::uses(QueryDeclaration *decl) {
   return (decl->getType() == first_decl_->getType() && decl->getSynonym() == first_decl_->getSynonym())
       || (decl->getType() == second_decl_->getType() && decl->getSynonym() == second_decl_->getSynonym());
 }
 
-std::vector<QueryDeclaration *> SubqueryResult::getCommonSynonyms(const SubqueryResult& other) {
+std::vector<QueryDeclaration *> SubqueryResult::getCommonSynonyms(const SubqueryResult &other) {
   std::vector<QueryDeclaration *> common_synonyms;
   if (first_decl_->getSynonym() != QuerySynonym::empty() &&
       ((first_decl_->getType() == other.first_decl_->getType() && first_decl_->getSynonym() == other.first_decl_->getSynonym())
-      || (first_decl_->getType() == other.second_decl_->getType() && first_decl_->getSynonym() == other.second_decl_->getSynonym()))) {
+          || (first_decl_->getType() == other.second_decl_->getType() && first_decl_->getSynonym() == other.second_decl_->getSynonym()))) {
     common_synonyms.push_back(first_decl_);
   }
   if (second_decl_->getSynonym() != QuerySynonym::empty() &&
@@ -50,7 +50,7 @@ std::vector<QueryDeclaration *> SubqueryResult::getCommonSynonyms(const Subquery
   }
   return common_synonyms;
 }
-EntityPointerUnorderedSet SubqueryResult::GetColumn(QuerySynonym* synonym) {
+EntityPointerUnorderedSet SubqueryResult::GetColumn(QuerySynonym *synonym) {
   if (*first_decl_->getSynonym() == *synonym) {
     EntityPointerUnorderedSet entities{};
     for (auto [key, values] : table_) {
@@ -69,7 +69,7 @@ EntityPointerUnorderedSet SubqueryResult::GetColumn(QuerySynonym* synonym) {
   return EntityPointerUnorderedSet();
 }
 
-SubqueryResult SubqueryResult::Intersect(SubqueryResult other) {
+SubqueryResult SubqueryResult::Intersect(SubqueryResult &other) {
   if (this->getCommonSynonyms(other).size() != 2) {
     return SubqueryResult(EntityPointerUnorderedMap(), first_decl_, second_decl_);
   }
@@ -85,7 +85,7 @@ SubqueryResult SubqueryResult::Intersect(SubqueryResult other) {
     if (other.table_.find(key) != other.table_.end()) {
       spdlog::debug("Adding key for entity: {}", key->ToString());
       intersection[key] = EntityPointerUnorderedSet{};
-      for (auto* value : values) {
+      for (auto *value : values) {
         if (other.table_[key].find(value) != other.table_[key].end()) {
           spdlog::debug("Adding entity: {}", value->ToString());
           intersection[key].insert(value);
@@ -96,20 +96,20 @@ SubqueryResult SubqueryResult::Intersect(SubqueryResult other) {
   return SubqueryResult(intersection, first_decl_, second_decl_);
 }
 
-SubqueryResult SubqueryResult::Join(SubqueryResult other) {
+SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
   auto common_synonyms = this->getCommonSynonyms(other);
   if (common_synonyms.size() != 1) {
     return SubqueryResult(EntityPointerUnorderedMap(), first_decl_, second_decl_);
   }
   auto *common_synonym = common_synonyms[0];
-  QueryDeclaration* first = (common_synonym->getType() == first_decl_->getType() && common_synonym->getSynonym() == first_decl_->getSynonym())
-      ? second_decl_ : first_decl_;
-  QueryDeclaration* third = (common_synonym->getType() == other.first_decl_->getType() && common_synonym->getSynonym() == other.first_decl_->getSynonym())
-      ? other.second_decl_ : other.first_decl_;
-  EntityPointerUnorderedMap& first_table = (common_synonym->getType() == first_decl_->getType() && common_synonym->getSynonym() == first_decl_->getSynonym())
-      ? table_inv_ : table_;
-  EntityPointerUnorderedMap& second_table = (common_synonym->getType() == other.first_decl_->getType() && common_synonym->getSynonym() == other.first_decl_->getSynonym())
-      ? other.table_ : other.table_inv_;
+  QueryDeclaration *first = (common_synonym->getType() == first_decl_->getType() && common_synonym->getSynonym() == first_decl_->getSynonym())
+                            ? second_decl_ : first_decl_;
+  QueryDeclaration *third = (common_synonym->getType() == other.first_decl_->getType() && common_synonym->getSynonym() == other.first_decl_->getSynonym())
+                            ? other.second_decl_ : other.first_decl_;
+  EntityPointerUnorderedMap &first_table = (common_synonym->getType() == first_decl_->getType() && common_synonym->getSynonym() == first_decl_->getSynonym())
+                                           ? table_inv_ : table_;
+  EntityPointerUnorderedMap &second_table = (common_synonym->getType() == other.first_decl_->getType() && common_synonym->getSynonym() == other.first_decl_->getSynonym())
+                                            ? other.table_ : other.table_inv_;
   EntityPointerUnorderedMap join{};
   spdlog::debug("Making result from {} to {}", first->toString(), third->toString());
   for (auto [key, values] : first_table) {
