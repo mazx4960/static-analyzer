@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <string>
 #include <utility>
 
 #include "query_declaration.h"
@@ -10,6 +11,14 @@ enum class ClauseType {
   kSuchThat,
   kPattern,
 };
+
+inline std::string ClauseTypeToString(ClauseType type) {
+  switch (type) {
+    case ClauseType::kSuchThat:return "SuchThat-clause";
+    case ClauseType::kPattern:return "Pattern-clause";
+    default:return "unknown clause type";
+  }
+}
 
 class QueryClause {
  protected:
