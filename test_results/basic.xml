@@ -1,239 +1,0 @@
-<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
-<test_results>
-<info>
-<name>22s1-cp-spa-team-14</name><parsing_time_taken>0.740000</parsing_time_taken>
-</info>
-<queries>
-<query>
-<id ReturnTuple="1" CondNum="1" RelNum="0" comment="select all variables">1</id><querystr><![CDATA[variable v; Select v]]></querystr>
-<stuans>x</stuans>
-<correct>x</correct>
-<time_taken>2.668000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" CondNum="1" RelNum="0" comment="select all procedures">2</id><querystr><![CDATA[procedure v; Select v]]></querystr>
-<stuans>main</stuans>
-<correct>main</correct>
-<time_taken>2.661000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" CondNum="1" RelNum="0" comment="select all if statements">3</id><querystr><![CDATA[if v; Select v]]></querystr>
-<stuans>none</stuans>
-<correct>none</correct>
-<time_taken>1.555000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" CondNum="1" RelNum="0" comment="select all while statements">4</id><querystr><![CDATA[while v; Select v]]></querystr>
-<stuans>none</stuans>
-<correct>none</correct>
-<time_taken>2.579000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" CondNum="1" RelNum="0" comment="select all constants">5</id><querystr><![CDATA[constant c; Select c]]></querystr>
-<stuans>1</stuans>
-<correct>1</correct>
-<time_taken>2.662000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables with false subquery">6</id><querystr><![CDATA[variable v; Select v such that Follows(1, 2)]]></querystr>
-<stuans>none</stuans>
-<correct>none</correct>
-<time_taken>2.643000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="select statements with false subquery">7</id><querystr><![CDATA[stmt v; Select v such that Follows*(123, 456)]]></querystr>
-<stuans>none</stuans>
-<correct>none</correct>
-<time_taken>2.373000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="select ifs with false subquery">8</id><querystr><![CDATA[if v; Select v such that Parent(1, 2)]]></querystr>
-<stuans>none</stuans>
-<correct>none</correct>
-<time_taken>2.458000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="select while statements with false subquery">9</id><querystr><![CDATA[while v; Select v such that Parent*(1, 2)]]></querystr>
-<stuans>none</stuans>
-<correct>none</correct>
-<time_taken>2.556000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables being used in line 1">10</id><querystr><![CDATA[variable v; Select v such that Uses(1, v)]]></querystr>
-<stuans>x</stuans>
-<correct>x</correct>
-<time_taken>2.415000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables used in non-existent line">11</id><querystr><![CDATA[variable v; Select v such that Uses(2, v)]]></querystr>
-<stuans>none</stuans>
-<correct>none</correct>
-<time_taken>2.687000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables used in any line">12</id><querystr><![CDATA[variable v; stmt s; Select v such that Uses(s, v)]]></querystr>
-<stuans>x</stuans>
-<correct>x</correct>
-<time_taken>2.382000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables used in procedure "main"">13</id><querystr><![CDATA[variable v; Select v such that Uses("main", v)]]></querystr>
-<stuans>x</stuans>
-<correct>x</correct>
-<time_taken>2.439000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables used in any procedure">13</id><querystr><![CDATA[variable v; procedure p; Select v such that Uses(p, v)]]></querystr>
-<stuans>x</stuans>
-<correct>x</correct>
-<time_taken>2.530000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables used in non-existent procedure">14</id><querystr><![CDATA[variable v; Select v such that Uses("main2", v)]]></querystr>
-<stuans>none</stuans>
-<correct>none</correct>
-<time_taken>2.450000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables modified in line 1">15</id><querystr><![CDATA[variable v; Select v such that Modifies(1, v)]]></querystr>
-<stuans>x</stuans>
-<correct>x</correct>
-<time_taken>2.537000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables modified in any line">16</id><querystr><![CDATA[variable v; stmt s; Select v such that Modifies(s, v)]]></querystr>
-<stuans>x</stuans>
-<correct>x</correct>
-<time_taken>2.556000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables modified in non-existent line">17</id><querystr><![CDATA[variable v; Select v such that Modifies(2, v)]]></querystr>
-<stuans>none</stuans>
-<correct>none</correct>
-<time_taken>2.717000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables modified in procedure "main"">18</id><querystr><![CDATA[variable v; Select v such that Modifies("main", v)]]></querystr>
-<stuans>x</stuans>
-<correct>x</correct>
-<time_taken>2.621000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables modified in any procedure">19</id><querystr><![CDATA[variable v; procedure p; Select v such that Modifies(p, v)]]></querystr>
-<stuans>x</stuans>
-<correct>x</correct>
-<time_taken>2.507000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables modified in non-existent procedure">20</id><querystr><![CDATA[variable v; Select v such that Modifies("main2", v)]]></querystr>
-<stuans>none</stuans>
-<correct>none</correct>
-<time_taken>2.418000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables given valid Modifies relationship, procedure">21</id><querystr><![CDATA[variable v; Select v such that Modifies("main", "x")]]></querystr>
-<stuans>x</stuans>
-<correct>x</correct>
-<time_taken>2.381000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables given valid Uses relationship, line">22</id><querystr><![CDATA[variable v; Select v such that Uses(1, "x")]]></querystr>
-<stuans>x</stuans>
-<correct>x</correct>
-<time_taken>2.494000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="select assignments that match pattern left">23</id><querystr><![CDATA[assign a; Select a pattern a("x", _)]]></querystr>
-<stuans>1</stuans>
-<correct>1</correct>
-<time_taken>1.383000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="select variables that match pattern left">24</id><querystr><![CDATA[variable v; assign a; Select v pattern a(v, _)]]></querystr>
-<stuans>x</stuans>
-<correct>x</correct>
-<time_taken>2.552000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="select assignments that match pattern right">25</id><querystr><![CDATA[variable v; assign a; Select a pattern a(v, _)]]></querystr>
-<stuans>1</stuans>
-<correct>1</correct>
-<time_taken>2.815000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="select variables that match pattern right">26</id><querystr><![CDATA[variable v; assign a; Select v pattern a(_, _"1"_)]]></querystr>
-<stuans>x</stuans>
-<correct>x</correct>
-<time_taken>2.469000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="select assignments that match pattern right">27</id><querystr><![CDATA[variable v; assign a; Select v pattern a(_, _"x"_)]]></querystr>
-<stuans>x</stuans>
-<correct>x</correct>
-<time_taken>2.521000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="select assignments that match pattern right">28</id><querystr><![CDATA[variable v; assign a; Select v pattern a(_, _"x+1"_)]]></querystr>
-<stuans>x</stuans>
-<correct>x</correct>
-<time_taken>2.493000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="select assignments that match pattern both">29</id><querystr><![CDATA[variable v; assign a; Select a pattern a("x", _"x+1"_)]]></querystr>
-<stuans>1</stuans>
-<correct>1</correct>
-<time_taken>2.408000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" UnnamedVar="3" Pattern="1" CondNum="5" RelNum="0" comment="select variables that match pattern right with spaces">30</id><querystr><![CDATA[variable v; assign a; Select v pattern a(_, _"       x        +      1     "_)]]></querystr>
-<stuans>x</stuans>
-<correct>x</correct>
-<time_taken>2.379000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="select variables that match pattern right">31</id><querystr><![CDATA[variable v; assign a; Select v pattern a(_, _"x+2"_)]]></querystr>
-<stuans>none</stuans>
-<correct>none</correct>
-<time_taken>2.427000</time_taken>
-<passed/>
-</query>
-<query>
-<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="select variables that match pattern right">32</id><querystr><![CDATA[variable v; assign a; Select v pattern a(_, _"1+x"_)]]></querystr>
-<stuans>none</stuans>
-<correct>none</correct>
-<time_taken>2.472000</time_taken>
-<passed/>
-</query>
-</queries>
-</test_results>
