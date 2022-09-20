@@ -1,8 +1,17 @@
 @startuml
+!include Style.puml
 
 [User Interface] as UI
 
-package "Query Processing System" {
+package "Source Processor"<<SP>> {
+    port ISp
+    [Source Processor] as SP
+    [SimpleLexer]
+    [SimpleParser]
+    [Extractor]
+}
+
+package "Query Processing System"<<QPS>> {
     port IQps
     [Query Processing System] as QPS
     [QueryLexer]
@@ -11,36 +20,13 @@ package "Query Processing System" {
     [QueryEvaluator]
 }
 
-package "Source Processor" {
-    port ISp
-    [Source Processor] as SP
-    [SimpleLexer]
-    [SimpleParser]
-    [Extractor]
-}
-
-database "Program Knowledge Base" {
-  [Program Knowledge Base] as PKB
+database "Program Knowledge Base"<<PKB>> {
   port IPkbPopulator
   port IPkbQuerier
-  [Entity Manager] --> [Entity Stores]
-  folder "Entity Stores" {
-    [VariableStore]
-    [ConstantStore]
-    [ProcedureStore]
-    [StatementStore]
-  }
-  [Relationship Manager] --> [Relationship Tables]
-  folder "Relationship Tables" {
-    [UsesTable]
-    [ModifiesTable]
-    [CallsTable]
-    [ParentTable]
-    [FollowsTable]
-  }
-  [Pattern Manager] --> [Pattern Store]
-  folder "Pattern Store" {
-  }
+  [Program Knowledge Base] as PKB
+  [Entity Manager]
+  [Relationship Manager]
+  [Pattern Manager]
 }
 
 [UI] --down--> [ISp] : LoadSource
