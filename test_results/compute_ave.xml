@@ -1,0 +1,176 @@
+<?xml-stylesheet type="text/xsl" href="analysis.xsl"?>
+<test_results>
+<info>
+<name>22s1-cp-spa-team-14</name><parsing_time_taken>0.682000</parsing_time_taken>
+</info>
+<queries>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="select all variables">1</id><querystr><![CDATA[variable v; Select v]]></querystr>
+<stuans>ave,num3,num2,sum,num1</stuans>
+<correct>num1,num2,num3,ave,sum</correct>
+<time_taken>2.538000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="select all procedures">2</id><querystr><![CDATA[procedure v; Select v]]></querystr>
+<stuans>computeAverage</stuans>
+<correct>computeAverage</correct>
+<time_taken>2.557000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="select all if statements">3</id><querystr><![CDATA[if v; Select v]]></querystr>
+<stuans>none</stuans>
+<correct>none</correct>
+<time_taken>2.447000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="select all while statements">4</id><querystr><![CDATA[while w; Select w]]></querystr>
+<stuans>none</stuans>
+<correct>none</correct>
+<time_taken>2.496000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" CondNum="1" RelNum="0" comment="select all constants">5</id><querystr><![CDATA[constant c; Select c]]></querystr>
+<stuans>3</stuans>
+<correct>3</correct>
+<time_taken>2.527000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables with Follows">6</id><querystr><![CDATA[variable v; stmt s1, s2; Select v such that Follows(s1, s2)]]></querystr>
+<stuans>ave,num3,num2,sum,num1</stuans>
+<correct>num1,num2,num3,ave,sum</correct>
+<time_taken>2.695000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables with Follows*">7</id><querystr><![CDATA[variable v; stmt s1, s2; Select v such that Follows*(s1, s2)]]></querystr>
+<stuans>ave,num3,num2,sum,num1</stuans>
+<correct>num1,num2,num3,ave,sum</correct>
+<time_taken>1.628000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="select variables with Parent">8</id><querystr><![CDATA[variable v; stmt s1, s2; Select v such that Parent(s1, s2)]]></querystr>
+<stuans>none</stuans>
+<correct>none</correct>
+<time_taken>1.343000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="select all statements that have other statements following directly">9</id><querystr><![CDATA[stmt s1, s2; Select s1 such that Follows(s1, s2)]]></querystr>
+<stuans>1,2,3,4,5</stuans>
+<correct>1,2,3,4,5</correct>
+<time_taken>2.601000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="select all statements that have other statements following directly or indirectly">10</id><querystr><![CDATA[stmt s1, s2; Select s1 such that Follows(s1, s2)]]></querystr>
+<stuans>1,2,3,4,5</stuans>
+<correct>1,2,3,4,5</correct>
+<time_taken>1.282000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Follows="1" SuchThat="1" CondNum="3" RelNum="1" comment="select all statements that have another statement before it">11</id><querystr><![CDATA[stmt s1, s2; Select s2 such that Follows(s1, s2)]]></querystr>
+<stuans>6,5,4,3,2</stuans>
+<correct>2,3,4,5,6</correct>
+<time_taken>2.924000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Followsstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="select all statements that have another statement before it or indirectly">12</id><querystr><![CDATA[stmt s1, s2; Select s2 such that Follows*(s1, s2)]]></querystr>
+<stuans>6,5,4,3,2</stuans>
+<correct>2,3,4,5,6</correct>
+<time_taken>2.679000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="select all statements that have direct children">13</id><querystr><![CDATA[stmt s1, s2; Select s1 such that Parent(s1, s2)]]></querystr>
+<stuans>none</stuans>
+<correct>none</correct>
+<time_taken>1.700000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="select all statements that have direct or indirect children">14</id><querystr><![CDATA[stmt s1, s2; Select s1 such that Parent*(s1, s2)]]></querystr>
+<stuans>none</stuans>
+<correct>none</correct>
+<time_taken>2.548000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parent="1" SuchThat="1" CondNum="3" RelNum="1" comment="select all statements that have direct parents">15</id><querystr><![CDATA[stmt s1, s2; Select s2 such that Parent(s1, s2)]]></querystr>
+<stuans>none</stuans>
+<correct>none</correct>
+<time_taken>2.513000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Parentstar="1" SuchThat="1" CondNum="3" RelNum="1" comment="select all statements that have direct or indirect parents">16</id><querystr><![CDATA[stmt s1, s2; Select s2 such that Parent*(s1, s2)]]></querystr>
+<stuans>none</stuans>
+<correct>none</correct>
+<time_taken>1.770000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Uses="1" SuchThat="1" CondNum="3" RelNum="1" comment="select all variables that are used in a print statement">17</id><querystr><![CDATA[variable v; print p; Select v such that Uses(p, v)]]></querystr>
+<stuans>ave</stuans>
+<correct>ave</correct>
+<time_taken>2.658000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" Modifies="1" SuchThat="1" CondNum="3" RelNum="1" comment="select all variables that are modified in a read statement">18</id><querystr><![CDATA[variable v; read re; Select v such that Modifies(re, v)]]></querystr>
+<stuans>num1,num2,num3</stuans>
+<correct>num1,num2,num3</correct>
+<time_taken>1.541000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="select all variables modified with sum">19</id><querystr><![CDATA[variable v; assign a; Select v pattern a(v, _"num1 + num2"_)]]></querystr>
+<stuans>sum</stuans>
+<correct>sum</correct>
+<time_taken>2.644000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="3" Uses="1" Pattern="1" SuchThat="1" CondNum="7" RelNum="1" comment="select all variables modified with sum">20</id><querystr><![CDATA[variable v; assign a; Select v such that Uses(a, v) pattern a(_, _"num1 + num2"_)]]></querystr>
+<stuans>num3,num2,num1,sum</stuans>
+<correct>num1,num2,num3,sum</correct>
+<time_taken>1.475000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Uses="1" Pattern="1" SuchThat="1" CondNum="5" RelNum="1" comment="select all variables that appear on both left and right side of equals">21</id><querystr><![CDATA[variable v; assign a; Select v such that Uses(a, v) pattern a(v, _)]]></querystr>
+<stuans>sum</stuans>
+<correct>sum</correct>
+<time_taken>2.411000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Uses="1" Pattern="1" SuchThat="1" CondNum="5" RelNum="1" comment="select all statements with variables that appear on both left and right side of equals">22</id><querystr><![CDATA[variable v; assign a; Select a such that Uses(a, v) pattern a(v, _)]]></querystr>
+<stuans>4</stuans>
+<correct>4</correct>
+<time_taken>1.742000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="2" Pattern="1" CondNum="4" RelNum="0" comment="select all assign statements that have "num3" on the right">23</id><querystr><![CDATA[assign a; Select a pattern a(_, _"num3"_)]]></querystr>
+<stuans>4</stuans>
+<correct>4</correct>
+<time_taken>2.172000</time_taken>
+<passed/>
+</query>
+<query>
+<id ReturnTuple="1" UnnamedVar="1" Pattern="1" CondNum="3" RelNum="0" comment="select all assign statements that have "sum" on the left">24</id><querystr><![CDATA[assign a; Select a pattern a("sum", _)]]></querystr>
+<stuans>4</stuans>
+<correct>4</correct>
+<time_taken>2.613000</time_taken>
+<passed/>
+</query>
+</queries>
+</test_results>
