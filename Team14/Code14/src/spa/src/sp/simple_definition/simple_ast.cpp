@@ -69,6 +69,7 @@ CallNode::CallNode(std::string procedureName)
       procedureName_(std::move(procedureName)) {}
 
 std::vector<Node *> CallNode::GetChildren() { return std::vector<Node *>{}; }
+std::string CallNode::GetProcedureName() { return this->procedureName_; }
 std::string CallNode::ToString() { return "call"; }
 
 WhileNode::WhileNode(CondExprNode *conditional, StatementListNode *statementList)
@@ -120,15 +121,20 @@ CondExprNode::CondExprNode(CondExprType cond_expr_type) : Node(NodeType::kCondEx
 std::string CondExprNode::ToString() { return ""; }
 CondExprType CondExprNode::GetCondExprType() { return cond_expr_type_; }
 
+UnaryCondExprNode::UnaryCondExprNode(UnaryCondExprType unary_cond_expr_type, CondExprNode *conditional)
+    : CondExprNode(CondExprType::kUnaryCondExpr),
+      unary_cond_expr_type_(unary_cond_expr_type),
+      conditional_(conditional) {}
+
+std::vector<Node *> UnaryCondExprNode::GetChildren() { return std::vector<Node *>{conditional_}; }
+
 NotExprNode::NotExprNode(CondExprNode *negatedConditional)
-    : CondExprNode(CondExprType::kNot),
-      negatedConditional_(negatedConditional) {}
+    : UnaryCondExprNode(UnaryCondExprType::kNot, negatedConditional) {}
 
-std::vector<Node *> NotExprNode::GetChildren() { return std::vector<Node *>{negatedConditional_}; }
-
-BinaryCondExprNode::BinaryCondExprNode(CondExprType cond_expr_type, CondExprNode *firstConditional,
+BinaryCondExprNode::BinaryCondExprNode(BinaryCondExprType binary_cond_expr_type, CondExprNode *firstConditional,
                                        CondExprNode *secondConditional)
-    : CondExprNode(cond_expr_type),
+    : CondExprNode(CondExprType::kBinaryCondExpr),
+      binary_cond_expr_type_(binary_cond_expr_type),
       firstConditional_(firstConditional),
       secondConditional_(secondConditional) {}
 
@@ -137,33 +143,36 @@ std::vector<Node *> BinaryCondExprNode::GetChildren() {
 }
 
 AndExprNode::AndExprNode(CondExprNode *firstConditional, CondExprNode *secondConditional)
-    : BinaryCondExprNode(CondExprType::kAnd, firstConditional, secondConditional) {}
+    : BinaryCondExprNode(BinaryCondExprType::kAnd, firstConditional, secondConditional) {}
 
 OrExprNode::OrExprNode(CondExprNode *firstConditional, CondExprNode *secondConditional)
-    : BinaryCondExprNode(CondExprType::kOr, firstConditional, secondConditional) {}
+    : BinaryCondExprNode(BinaryCondExprType::kOr, firstConditional, secondConditional) {}
 
-RelExprNode::RelExprNode(CondExprType cond_expr_type, RelFactorNode *leftFactor, RelFactorNode *rightFactor)
-    : CondExprNode(cond_expr_type),
+RelExprNode::RelExprNode(RelCondExprType rel_expr_type, RelFactorNode *leftFactor, RelFactorNode *rightFactor)
+    : CondExprNode(CondExprType::kRelCondExpr),
+      rel_expr_type_(rel_expr_type),
       leftFactor_(leftFactor),
       rightFactor_(rightFactor) {}
 
 std::vector<Node *> RelExprNode::GetChildren() { return std::vector<Node *>{leftFactor_, rightFactor_}; }
+RelFactorNode *RelExprNode::GetLeftFactor() { return this->leftFactor_; }
+RelFactorNode *RelExprNode::GetRightFactor() { return this->rightFactor_; }
 std::string RelExprNode::ToString() { return std::string(); }
 
 GreaterThanNode::GreaterThanNode(RelFactorNode *leftFactor, RelFactorNode *rightFactor)
-    : RelExprNode(CondExprType::kGt, leftFactor, rightFactor) {}
+    : RelExprNode(RelCondExprType::kGt, leftFactor, rightFactor) {}
 
 GreaterThanEqualNode::GreaterThanEqualNode(RelFactorNode *leftFactor, RelFactorNode *rightFactor)
-    : RelExprNode(CondExprType::kGte, leftFactor, rightFactor) {}
+    : RelExprNode(RelCondExprType::kGte, leftFactor, rightFactor) {}
 
 LessThanNode::LessThanNode(RelFactorNode *leftFactor, RelFactorNode *rightFactor)
-    : RelExprNode(CondExprType::kLt, leftFactor, rightFactor) {}
+    : RelExprNode(RelCondExprType::kLt, leftFactor, rightFactor) {}
 
 LessThanEqualNode::LessThanEqualNode(RelFactorNode *leftFactor, RelFactorNode *rightFactor)
-    : RelExprNode(CondExprType::kLte, leftFactor, rightFactor) {}
+    : RelExprNode(RelCondExprType::kLte, leftFactor, rightFactor) {}
 
 EqualNode::EqualNode(RelFactorNode *leftFactor, RelFactorNode *rightFactor)
-    : RelExprNode(CondExprType::kEq, leftFactor, rightFactor) {}
+    : RelExprNode(RelCondExprType::kEq, leftFactor, rightFactor) {}
 
 NotEqualNode::NotEqualNode(RelFactorNode *leftFactor, RelFactorNode *rightFactor)
-    : RelExprNode(CondExprType::kNeq, leftFactor, rightFactor) {}
+    : RelExprNode(RelCondExprType::kNeq, leftFactor, rightFactor) {}

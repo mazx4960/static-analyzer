@@ -9,7 +9,7 @@
 class EntityExtractor {
  public:
   static std::vector<Entity *> ExtractAll(Node *node);
-  static std::vector<Entity *> ExtractVariables(Node *node);
+  static std::vector<Entity *> ExtractAllVariables(Node *node);
   static void ExtractProcedure(std::vector<Entity *> &entities, Node *node);
   static void ExtractStatement(std::vector<Entity *> &entities, Node *node);
   static void ExtractVariable(std::vector<Entity *> &entities, Node *node);
