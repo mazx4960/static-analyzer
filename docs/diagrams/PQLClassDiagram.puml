@@ -1,0 +1,67 @@
+@startuml
+
+class Query {
+    QueryDeclaration[] getDeclarations()
+    QueryCall getCall
+}
+
+class QueryDeclaration{
+}
+
+class QuerySynonym{
+}
+class QueryCall {
+    CallType getType()
+    QueryDeclaration getDeclaration()
+    QueryClause[] getClauseVector()
+}
+
+abstract class QueryClause {
+    ClauseType getClauseType()
+}
+
+abstract class SuchThatClause {
+    QueryDeclaration getFirst()
+    QueryDeclaration getSecond()
+}
+class ParentClause {
+}
+class ParentAllClause {
+}
+class FollowsClause {
+}
+class FollowsAllClause {
+}
+class UsesClause {
+}
+class ModifiesClause {
+}
+
+abstract class PatternClause {
+    QueryDeclaration getFirst()
+    QueryDeclaration getSecond()
+    QueryDeclaration getThird()
+}
+class AssignPatternClause {
+}
+
+Query *-down- QueryDeclaration
+Query *-down- QueryCall
+
+QueryDeclaration *-down- QuerySynonym
+
+QueryCall *-down- QueryClause
+
+QueryClause -right- QueryDeclaration
+QueryClause <|-down- SuchThatClause
+QueryClause <|-down- PatternClause
+
+SuchThatClause <|-down- ParentClause
+SuchThatClause <|-down- ParentAllClause
+SuchThatClause <|-down- FollowsClause
+SuchThatClause <|-down- FollowsAllClause
+SuchThatClause <|-down- UsesClause
+SuchThatClause <|-down- ModifiesClause
+
+PatternClause <|-down- AssignPatternClause
+@enduml
