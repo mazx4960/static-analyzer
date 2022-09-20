@@ -275,45 +275,28 @@ void RelationshipExtractor::ExtractModifiesHelper(std::vector<Relationship *> &r
  * @param node
  */
 void RelationshipExtractor::ExtractCalls(std::vector<Relationship *> &relationships, Node *node) {
-  if (node->GetNodeType() == NodeType::kProcedure) {
-    auto *proc = static_cast<ProcedureNode *>(node);
-    Entity *parent = new ProcedureEntity(proc->GetProcName());
-    auto *stmt_list = proc->GetStatementList();
-    ExtractCallsHelper(relationships, parent, stmt_list);
-  }
+  if (node->GetNodeType() != NodeType::kProcedure) { return; }
+  auto *proc = static_cast<ProcedureNode *>(node);
+  Entity *parent = new ProcedureEntity(proc->GetProcName());
+  auto *stmt_list = proc->GetStatementList();
+  ExtractCallsHelper(relationships, parent, stmt_list);
 }
 void RelationshipExtractor::ExtractCallsHelper(std::vector<Relationship *> &relationships, Entity *parent, Node *node) {
-  switch (node->GetNodeType()) {
-    case NodeType::kStatementList: {
-      auto *stmt_list = static_cast<StatementListNode *>(node);
-      for (auto *stmt : stmt_list->GetStatements()) { ExtractCallsHelper(relationships, parent, stmt); }
-      break;
-    }
-    case NodeType::kStatement: {
+  if (node->GetNodeType() != NodeType::kStatementList) { return; }
+  // Get all children entities
+  std::vector<Entity *> children;
+  auto const op = [&children](Node *node) {
+    if (node->GetNodeType() == NodeType::kStatement) {
       auto *stmt = static_cast<StatementNode *>(node);
-      auto stmt_type = stmt->GetStmtType();
-      switch (stmt_type) {
-        case EntityType::kIfStmt: {
-          auto *if_node = static_cast<IfNode *>(node);
-          ExtractCallsHelper(relationships, parent, if_node->GetThenStatementList());
-          ExtractCallsHelper(relationships, parent, if_node->GetElseStatementList());
-          break;
-        }
-        case EntityType::kWhileStmt: {
-          auto *while_node = static_cast<WhileNode *>(node);
-          ExtractCallsHelper(relationships, parent, while_node->GetStatementList());
-          break;
-        }
-        case EntityType::kCallStmt: {
-          auto *call_node = static_cast<CallNode *>(node);
-          Entity *child = new ProcedureEntity(call_node->GetProcedureName());
-          relationships.push_back(new Relationship(RsType::kCalls, parent, child));
-        }
-        default: break;
+      if (stmt->GetStmtType() == EntityType::kCallStmt) {
+        auto *call = static_cast<CallNode *>(stmt);
+        children.push_back(new ProcedureEntity(call->GetProcedureName()));
       }
     }
-    default: break;// other node types are ignored.
-  }
+  };
+  node->VisitAll(op);
+  // Match the child with the procedure entity
+  Match(relationships, RsType::kCalls, parent, children);
 }
 /**
  * Extracts all immediate next relationships from a given AST node.
