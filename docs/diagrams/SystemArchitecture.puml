@@ -3,6 +3,7 @@
 [User Interface] as UI
 
 package "Query Processing System" {
+    port IQps
     [Query Processing System] as QPS
     [QueryLexer]
     [QueryParser]
@@ -11,6 +12,7 @@ package "Query Processing System" {
 }
 
 package "Source Processor" {
+    port ISp
     [Source Processor] as SP
     [SimpleLexer]
     [SimpleParser]
@@ -19,42 +21,48 @@ package "Source Processor" {
 
 database "Program Knowledge Base" {
   [Program Knowledge Base] as PKB
-  [Entity Manager] --> [Entity]
-  folder "Entity" {
-    [Variable]
-    [Constant]
-    [Procedure]
-    [Statement]
+  port IPkbPopulator
+  port IPkbQuerier
+  [Entity Manager] --> [Entity Stores]
+  folder "Entity Stores" {
+    [VariableStore]
+    [ConstantStore]
+    [ProcedureStore]
+    [StatementStore]
   }
-  [Relationship Manager] --> [Relationship]
-  folder "Relationship" {
-    [Uses]
-    [Modifies]
-    [Calls]
-    [Parent]
-    [Follows]
+  [Relationship Manager] --> [Relationship Tables]
+  folder "Relationship Tables" {
+    [UsesTable]
+    [ModifiesTable]
+    [CallsTable]
+    [ParentTable]
+    [FollowsTable]
   }
-  [Pattern Manager] --> [Pattern]
-  folder "Pattern" {
+  [Pattern Manager] --> [Pattern Store]
+  folder "Pattern Store" {
   }
 }
 
-[UI] --left--> [SP] : LoadSource
-[UI] --down--> [QPS] : EvaluateQuery
+[UI] --down--> [ISp] : LoadSource
+[UI] --down--> [IQps] : EvaluateQuery
 
+[IPkbPopulator] -down-> [PKB]
+[IPkbQuerier] -down-> [PKB]
 [PKB] -down-> [Entity Manager]
 [PKB] -down-> [Relationship Manager]
 [PKB] -down-> [Pattern Manager]
 
+[ISp] -down-> [SP]
 [SP] -down-> [SimpleLexer]
 [SP] -down-> [SimpleParser]
 [SP] -down-> [Extractor]
-[SP] -down--> [PKB]
+[SP] -down--> IPkbPopulator
 
+[IQps] -down-> [QPS]
 [QPS] -down-> [QueryLexer]
 [QPS] -down-> [QueryParser]
 [QPS] -down-> [QueryBuilder]
 [QPS] -down-> [QueryEvaluator]
-[QueryEvaluator] -left-> [PKB]
+[QueryEvaluator] -down-> IPkbQuerier
 
 @enduml
