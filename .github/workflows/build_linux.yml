@@ -33,8 +33,9 @@ jobs:
         shell: bash
         run: |
           sudo apt install lcov
+          src=$(pwd)/Team14/Code14
           lcov --capture --directory . --output-file coverage.info
-          lcov --remove coverage.info '/usr/*' 'Team14/Code14/lib/*' 'Team14/Code14/src/unit_testing/*' --output-file coverage.info
+          lcov --extract coverage.info "$src/*" --output-file coverage.info
           lcov --list coverage.info
 #      - name: Upload Coverage to Codecov
 #        uses: codecov/codecov-action@v3

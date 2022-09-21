@@ -3,9 +3,8 @@
 
 # Build files
 build/
-
-# test results
 test_results/
+coverage/
 
 ### C++ ###
 # Prerequisites
