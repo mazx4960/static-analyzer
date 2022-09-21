@@ -1,0 +1,62 @@
+@startuml
+!include Style.puml
+!include SequenceStyle.puml
+
+box SP SP_COLOR_LIGHT
+participant ":SP" as SP<<SP>>
+end box
+
+box QPS QPS_COLOR_LIGHT
+participant ":QPS" as QPS<<QPS>>
+end box
+
+box PKB PKB_COLOR_LIGHT
+participant ":PKB" as PKB<<PKB>>
+participant ":EntityManager" as EntityManager<<PKB>>
+participant ":RelationshipManager" as RelationshipManager<<PKB>>
+participant ":PatternManager" as PatternManager<<PKB>>
+end box
+
+
+SP -> PKB: populate(Entity)
+activate SP
+PKB -> EntityManager: populate(Entity)
+activate EntityManager
+deactivate EntityManager
+
+SP -> PKB: populate(Relationship)
+PKB -> RelationshipManager: populate(Relationship)
+activate RelationshipManager
+deactivate RelationshipManager
+SP -> PKB: populate(Pattern)
+PKB -> PatternManager: populate(Pattern)
+activate PatternManager
+deactivate PatternManager
+deactivate SP
+
+
+QPS -> PKB: getEntities(EntityType)
+activate QPS
+PKB -> EntityManager: get(EntityType)
+activate EntityManager
+EntityManager --> PKB: Entity[]
+deactivate EntityManager
+PKB --> QPS: Entity[]
+
+QPS -> PKB: getByRelationship(RsType, Entity)
+PKB -> RelationshipManager: get(RsType, Entity)
+activate RelationshipManager
+RelationshipManager --> PKB: Entity[]
+deactivate RelationshipManager
+PKB --> QPS: Entity[]
+
+QPS -> PKB: getByPattern(Pattern)
+PKB -> PatternManager: get(Pattern)
+activate PatternManager
+PatternManager --> PKB: Entity[]
+deactivate PatternManager
+PKB --> QPS: Entity[]
+deactivate QPS
+
+
+@enduml
