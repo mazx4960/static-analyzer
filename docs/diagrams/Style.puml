@@ -1,0 +1,105 @@
+/'
+ 'Commonly used styles and colors across diagrams.
+ 'Refer to https://plantuml-documentation.readthedocs.io/en/latest for a more
+ 'comprehensive list of skinparams.
+ '/
+
+!theme materia-outline
+
+'T1 through T4 are shades of the original color from lightest to darkest
+
+!define UI_COLOR #1D8900
+!define UI_COLOR_T1 #BDECB1
+!define UI_COLOR_T2 #3FC71B
+!define UI_COLOR_T3 #166800
+!define UI_COLOR_T4 #0E4100
+!define UI_COLOR_LIGHT #DDFCD1
+
+!define SP_COLOR #3333C4
+!define SP_COLOR_T1 #C8C8FA
+!define SP_COLOR_T2 #6A6ADC
+!define SP_COLOR_T3 #1616B0
+!define SP_COLOR_T4 #101086
+!define SP_COLOR_LIGHT #DEDEFF
+
+!define QPS_COLOR #9D0012
+!define QPS_COLOR_T1 #F97181
+!define QPS_COLOR_T2 #E41F36
+!define QPS_COLOR_T3 #7B000E
+!define QPS_COLOR_T4 #51000A
+!define QPS_COLOR_LIGHT #FFD1D3
+
+!define PKB_COLOR #A38300
+!define PKB_COLOR_T1 #FFE374
+!define PKB_COLOR_T2 #EDC520
+!define PKB_COLOR_T3 #806600
+!define PKB_COLOR_T4 #544400
+!define PKB_COLOR_LIGHT #FACAA0
+
+!define USER_COLOR #000000
+
+skinparam BackgroundColor #FFFFFFF
+
+skinparam Arrow {
+    Color #000000
+    FontSize 13
+    Thickness 1.1
+}
+
+!procedure classTitleOnly($stereotype, $color)
+    skinparam Class {
+        FontColor<<$stereotype>> $color
+        StereotypeFontColor<<$stereotype>> $color
+        BorderColor<<$stereotype>> $color
+    }
+    hide <<$stereotype>> stereotype
+!endprocedure
+
+!procedure packageTitleOnly($stereotype, $color)
+    skinparam Package {
+        FontColor<<$stereotype>> $color
+        StereotypeFontColor<<$stereotype>> $color
+        BorderColor<<$stereotype>> $color
+    }
+    hide <<$stereotype>> stereotype
+!endprocedure
+
+classTitleOnly(Hidden, "#FFFFFF")
+classTitleOnly(SP, SP_COLOR)
+classTitleOnly(UI, UI_COLOR)
+classTitleOnly(QPS, QPS_COLOR)
+classTitleOnly(PKB, PKB_COLOR)
+skinparam Class {
+    FontName Arial
+    FontSize 15
+    StereotypeFontSize 13
+    BorderThickness 1.1
+}
+
+packageTitleOnly(SP, SP_COLOR)
+packageTitleOnly(UI, UI_COLOR)
+packageTitleOnly(QPS, QPS_COLOR)
+packageTitleOnly(PKB, PKB_COLOR)
+skinparam Package {
+    Style Rectangle
+}
+
+SKINPARAM MINCLASSWIDTH 50
+SKINPARAM SHADOWING FALSE
+SKINPARAM DEFAULTTEXTALIGNMENT CENTER
+SKINPARAM TITLEFONTSIZE 25
+
+SKINPARAM TITLEFONTCOLOR<<SP>> SP_COLOR
+SKINPARAM TITLEFONTCOLOR<<UI>>    UI_COLOR
+SKINPARAM TITLEFONTCOLOR<<QPS>> QPS_COLOR
+SKINPARAM TITLEFONTCOLOR<<PKB>> PKB_COLOR
+
+'Procedure to override colors and styles for class diagrams
+!procedure $OverrideTheme($theme_color)
+    skinparam TitleFontColor $theme_color
+    skinparam ArrowColor $theme_color
+!endprocedure
+
+hide footbox
+hide members
+hide circle

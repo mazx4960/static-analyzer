@@ -1,0 +1,78 @@
+@startuml
+!include Style.puml
+!include SequenceStyle.puml
+
+box QPS QPS_COLOR_LIGHT
+participant ":QPS" as QPS<<QPS>>
+participant ":QueryLexer" as QueryLexer<<QPS>>
+participant ":QueryParser" as QueryParser<<QPS>>
+participant ":QueryBuilder" as QueryBuilder<<QPS>>
+participant ":QueryEvaluator" as QueryEvaluator<<QPS>>
+
+end box
+
+box PKB PKB_COLOR_LIGHT
+participant ":PKB" as PKB<<PKB>>
+end box
+
+[-> QPS : ExecuteQuery()
+activate QPS
+
+QPS -> QueryLexer : lex()
+activate QueryLexer
+QueryLexer -> QueryLexer : next_token()
+QueryLexer --> QPS : tokens
+deactivate QueryLexer
+
+QPS -> QueryParser : parse(Token[])
+activate QueryParser
+QueryParser --> QPS
+deactivate QueryParser
+
+QPS -> QueryParser : getDeclarations()
+activate QueryParser
+QueryParser --> QPS : QueryDeclrations[]
+deactivate QueryParser
+
+QPS -> QueryParser : getQueryCall()
+activate QueryParser
+QueryParser --> QPS : QueryCall
+deactivate QueryParser
+
+QPS -> QueryBuilder : withDeclarations()
+activate QueryBuilder
+QueryBuilder --> QPS
+deactivate QueryBuilder
+
+QPS -> QueryBuilder : withQueryCall()
+activate QueryBuilder
+QueryBuilder --> QPS
+deactivate QueryBuilder
+
+QPS -> QueryBuilder : build()
+activate QueryBuilder
+QueryBuilder --> QPS : Query
+deactivate QueryBuilder
+
+QPS -> QueryEvaluator : evaluate(Query)
+activate QueryEvaluator
+QueryEvaluator --> PKB : getEntities(EntityType)
+activate PKB
+PKB --> QueryEvaluator : Entity[]
+deactivate PKB
+QueryEvaluator --> PKB : getByRelationship(RsType, Entity)
+activate PKB
+PKB --> QueryEvaluator : Entity[]
+deactivate PKB
+QueryEvaluator --> PKB : getByPattern(Pattern)
+activate PKB
+PKB --> QueryEvaluator : Entity[]
+deactivate PKB
+QueryEvaluator --> QPS : Result
+deactivate QueryEvaluator
+
+
+[<-- QPS : Result
+deactivate QPS
+
+@enduml

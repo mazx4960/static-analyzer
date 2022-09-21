@@ -1,0 +1,52 @@
+skinparam Actor {
+    BorderColor USER_COLOR
+    Color USER_COLOR
+    FontName Arial
+}
+
+skinparam Sequence {
+    MessageAlign center
+
+    BoxFontSize 15
+    BoxPadding 0
+    BoxFontColor #FFFFFF
+    BoxBorderColor #FFFFFF
+
+    GroupFontColor #DF7800
+    GroupBackgroundColor #FF980032
+    GroupBorderColor #FF9800
+    GroupBorderThickness 1.8
+    GroupHeaderFontColor #DF7800
+    GroupHeaderFontStyle bold
+
+    ReferenceFontColor #DF7800
+    ReferenceBackgroundColor #FF9C0532
+    ReferenceHeaderBackgroundColor #FF980032
+    ReferenceBorderColor #FF9800
+    ReferenceBorderThickness 1.8
+    ReferenceHeaderFontColor #DF7800
+    ReferenceHeaderFontColor #DF7800
+    ReferenceHeaderFontStyle bold
+
+    LifelineBackgroundColor #FFFFFF
+    LifelineBorderColor #000000
+}
+
+skinparam Participant {
+    FontColor #FFFFFFF
+    Padding 10
+    BorderColor #000000
+}
+
+!procedure styleParticipant($stereotype, $color, $bg_color)
+    skinparam Participant {
+        FontColor<<$stereotype>> $color
+        BorderColor<<$stereotype>> $color
+        BackgroundColor<<$stereotype>> $bg_color
+    }
+!endprocedure
+
+styleParticipant(SP, SP_COLOR, SP_COLOR_T1)
+styleParticipant(UI, UI_COLOR, UI_COLOR_T1)
+styleParticipant(QPS, QPS_COLOR, QPS_COLOR_T1)
+styleParticipant(PKB, PKB_COLOR, PKB_COLOR_T1)
