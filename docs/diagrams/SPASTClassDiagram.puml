@@ -1,14 +1,8 @@
 @startuml
 
-abstract class TNode {
-    bool isEqual(TNode other);
-    string toString();
-}
-class AST
+abstract class Node
 class SymbolNode
 class LiteralNode
-class CondNode
-class OpNode
 class CallNode
 class AssignNode
 class ReadNode
@@ -18,27 +12,38 @@ class WhileNode
 class ProcedureNode
 class StmtListNode
 
-'root node
-AST .down.|> TNode
+'base nodes
+ProgramNode .up.|> Node
+ProcedureNode .up.|> Node
+StmtListNode .up.|> Node
+StatementNode .up.|> Node
+CondExprNode .up.|> Node
+RelFactorNode .up.|> Node
 
 'atomic nodes
-SymbolNode .up.|> TNode
-LiteralNode .up.|> TNode
+ReferenceNode ..up.|> RelFactorNode
+SymbolNode .up.|> ReferenceNode
+LiteralNode .up.|> ReferenceNode
 
 'expression nodes
-CondNode .up.|> TNode
-OpNode .up.|> TNode
+ExprNode ..up.|> RelFactorNode
+PlusNode .up.|> ExprNode
+MinusNode .up.|> ExprNode
+TimesNode .up.|> ExprNode
+DivNode .up.|> ExprNode
+ModNode .up.|> ExprNode
 
-'method calls
-CallNode .up.|> TNode
-AssignNode .up.|> TNode
-ReadNode .up.|> TNode
-PrintNode .up.|> TNode
+'cond expr nodes
+NotExprNode .up.|> CondExprNode
+BinaryCondExprNode .up.|> CondExprNode
+RelExprNode .up.|> CondExprNode
 
 'statements
-IfNode .up.|> TNode
-WhileNode .up.|> TNode
-ProcedureNode .up.|> TNode
-StmtListNode .up.|> TNode
+CallNode ..up..|> StatementNode
+AssignNode ..up..|> StatementNode
+ReadNode ..up..|> StatementNode
+PrintNode ..up..|> StatementNode
+IfNode ..up..|> StatementNode
+WhileNode ..up..|> StatementNode
 
 @enduml

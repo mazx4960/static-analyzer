@@ -1,8 +1,18 @@
 @startuml
+!include Style.puml
 
 [User Interface] as UI
 
-package "Query Processing System" {
+package "Source Processor"<<SP>> {
+    port ISp
+    [Source Processor] as SP
+    [SimpleLexer]
+    [SimpleParser]
+    [Extractor]
+}
+
+package "Query Processing System"<<QPS>> {
+    port IQps
     [Query Processing System] as QPS
     [QueryLexer]
     [QueryParser]
@@ -10,51 +20,35 @@ package "Query Processing System" {
     [QueryEvaluator]
 }
 
-package "Source Processor" {
-    [Source Processor] as SP
-    [SimpleLexer]
-    [SimpleParser]
-    [Extractor]
-}
-
-database "Program Knowledge Base" {
+database "Program Knowledge Base"<<PKB>> {
+  port IPkbPopulator
+  port IPkbQuerier
   [Program Knowledge Base] as PKB
-  [Entity Manager] --> [Entity]
-  folder "Entity" {
-    [Variable]
-    [Constant]
-    [Procedure]
-    [Statement]
-  }
-  [Relationship Manager] --> [Relationship]
-  folder "Relationship" {
-    [Uses]
-    [Modifies]
-    [Calls]
-    [Parent]
-    [Follows]
-  }
-  [Pattern Manager] --> [Pattern]
-  folder "Pattern" {
-  }
+  [Entity Manager]
+  [Relationship Manager]
+  [Pattern Manager]
 }
 
-[UI] --left--> [SP] : LoadSource
-[UI] --down--> [QPS] : EvaluateQuery
+[UI] --down--> [ISp] : LoadSource
+[UI] --down--> [IQps] : EvaluateQuery
 
+[IPkbPopulator] -down-> [PKB]
+[IPkbQuerier] -down-> [PKB]
 [PKB] -down-> [Entity Manager]
 [PKB] -down-> [Relationship Manager]
 [PKB] -down-> [Pattern Manager]
 
+[ISp] -down-> [SP]
 [SP] -down-> [SimpleLexer]
 [SP] -down-> [SimpleParser]
 [SP] -down-> [Extractor]
-[SP] -down--> [PKB]
+[SP] -down--> IPkbPopulator
 
+[IQps] -down-> [QPS]
 [QPS] -down-> [QueryLexer]
 [QPS] -down-> [QueryParser]
 [QPS] -down-> [QueryBuilder]
 [QPS] -down-> [QueryEvaluator]
-[QueryEvaluator] -left-> [PKB]
+[QueryEvaluator] -down-> IPkbQuerier
 
 @enduml

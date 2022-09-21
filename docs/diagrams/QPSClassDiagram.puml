@@ -1,79 +1,115 @@
 @startuml
 
-abstract class  "Parser" {
+abstract class  "Token" {
+    TokenType type
+    String value
 }
 
-abstract class  "Token" {}
+class Symbol
+class Literal
+class Keyword
+class Operator
+class Separator
+class Wildcard
 
-abstract class  "Visitor" {
-	preview()
-}
-
-abstract class  "Evaluator" {
+abstract class  "PQL" {
 }
 
 abstract class "EvaluationStrategy" {
+    EvaluationStrategy getStrategy()
+    SubqueryResult evaluate()
+    Entity[] getCandidates()
+    Entity[] intersect()
 }
 
-class UIInterface {
+class "SuchThatStrategy" {
+    Entity[] evaluateParameter()
+}
+class "PatternStrategy" {
+    Entity[] evaluateParameter()
 }
 
-class PKBInterface {
+interface UIInterface {
+    void SetQueryString(String)
+    Result ExecuteQuery()
+}
+
+interface PKBInterface {
+    Entity[] getEntities(EntityType)
+    Entity[] getByRelationship(RsType, Entity)
+    Entity[] getEntitiesByString(String)
 }
 
 class QPS {
-	string[] process(String query)
+    void SetPKB()
+	Result *EvaluateQuery()
 }
 
 class QueryParser {
-	Token[] parse(String query)
-	validateTokens(Token[] tokens)
+
+	void parse(String)
+	QueryDeclaration[] getDeclarations(QueryDeclarations[])
+	QueryCall[] getQueryCalls(QueryCall[])
 }
 
-class PQLTokeniser {
-	Token[] tokenize(String query)
+class QueryBuilder {
+	Query build()
+	void withDeclarations(QueryDeclarations[])
+	void withQueryCalls(QueryCall[])
 }
 
-class QueryToken {
-    bool validate(String tokenString)
+class Lexer {
+	Token getNext()
+    Token[] lex()
 }
 
-class PQLValidator {
-	bool validateToken(Token[] tokens)
+class QueryLexer {
+	Token getNext()
 }
 
 class QueryEvaluator {
-	string[] evaluate(Token[] tokens)
+	Result evaluate()
 }
 
-Evaluator <|.down. QueryEvaluator
+class SubqueryEvaluator {
+	SubqueryResult evaluate()
+}
 
-Parser <|.down. QueryParser
+class SubqueryEvaluator {
+	SubqueryResult evaluate()
+}
 
-Token <|.down. QueryToken
+class SubqueryResult {
+	SubqueryResult Join()
+	SubqueryResult Intersect()
+}
 
-Visitor <|.down. PQLVisitor
-PQLVisitor <|-down- PQLValidator
+Token <|.down. Symbol
+Token <|.down. Literal
+Token <|.down. Keyword
+Token <|.down. Operator
+Token <|.down. Separator
+Token <|.down. Wildcard
+
 
 UI -down- UIInterface
 PKB -down- PKBInterface
 
 QPS *-up- UIInterface
 QPS *-up- PKBInterface
+QPS *-down- QueryLexer
 QPS *-down- QueryParser
 QPS *-down- QueryEvaluator
+QPS *-down- QueryBuilder
 
-QueryParser *-down- PQLTokeniser
-QueryParser *-down- PQLValidator
+Lexer <|-down- QueryLexer
 
-PQLTokeniser *-down- QueryToken
-PQLTokeniser -down- SyntaxValidator
+QueryLexer *-down- Token
 
-PQLValidator *-down- SyntaxValidator
-PQLValidator *-down- SemanticsValidator
+QueryBuilder *-down- PQL
 
 QueryEvaluator *-down- SubqueryEvaluator
-QueryEvaluator *-down- ResultAggregator
+QueryEvaluator *-down- SubqueryResult
 
 EvaluationStrategy <|.down. SuchThatStrategy
 EvaluationStrategy <|.down.PatternStrategy
@@ -83,6 +119,5 @@ PatternEvaluator *-down- PatternStrategy
 
 SubqueryEvaluator <|-down- SuchThatEvaluator
 SubqueryEvaluator <|-down- PatternEvaluator
-SubqueryEvaluator -right- ResultAggregator
-
+SubqueryEvaluator -right- SubqueryResult
 @enduml
