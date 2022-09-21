@@ -14,21 +14,9 @@ enum class NodeType {
 };
 
 enum class CondExprType {
-  kUnaryCondExpr,
-  kBinaryCondExpr,
-  kRelCondExpr,
-};
-
-enum class UnaryCondExprType {
   kNot,
-};
-
-enum class BinaryCondExprType {
   kAnd,
   kOr,
-};
-
-enum class RelCondExprType {
   kGt,
   kGte,
   kLt,

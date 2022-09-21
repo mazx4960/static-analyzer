@@ -160,30 +160,23 @@ class CondExprNode : public Node {
   std::string ToString() override;
 };
 
-class UnaryCondExprNode : public CondExprNode {
+class NotExprNode : public CondExprNode {
  private:
-  UnaryCondExprType unary_cond_expr_type_;
-  CondExprNode *conditional_;
+  CondExprNode *negatedConditional_;
 
- public:
-  UnaryCondExprNode(UnaryCondExprType unary_cond_expr_type, CondExprNode *conditional);
-  std::vector<Node *> GetChildren() override;
-};
-
-class NotExprNode : public UnaryCondExprNode {
  public:
   explicit NotExprNode(CondExprNode *negatedConditional);
+  std::vector<Node *> GetChildren() override;
 };
 
 class BinaryCondExprNode : public CondExprNode {
  private:
-  BinaryCondExprType binary_cond_expr_type_;
   CondExprNode *firstConditional_;
+
   CondExprNode *secondConditional_;
 
  public:
-  BinaryCondExprNode(BinaryCondExprType binary_cond_expr_type, CondExprNode *firstConditional,
-                     CondExprNode *secondConditional);
+  BinaryCondExprNode(CondExprType cond_expr_type, CondExprNode *firstConditional, CondExprNode *secondConditional);
   std::vector<Node *> GetChildren() override;
 };
 
@@ -199,15 +192,13 @@ class OrExprNode : public BinaryCondExprNode {
 
 class RelExprNode : public CondExprNode {
  private:
-  RelCondExprType rel_expr_type_;
   RelFactorNode *leftFactor_;
+
   RelFactorNode *rightFactor_;
 
  public:
-  RelExprNode(RelCondExprType cond_expr_type, RelFactorNode *leftFactor, RelFactorNode *rightFactor);
+  RelExprNode(CondExprType cond_expr_type, RelFactorNode *leftFactor, RelFactorNode *rightFactor);
   std::vector<Node *> GetChildren() override;
-  RelFactorNode *GetLeftFactor();
-  RelFactorNode *GetRightFactor();
   std::string ToString() override;
 };
 
