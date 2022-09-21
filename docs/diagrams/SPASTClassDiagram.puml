@@ -39,11 +39,11 @@ BinaryCondExprNode .up.|> CondExprNode
 RelExprNode .up.|> CondExprNode
 
 'statements
-CallNode .up.|> StatementNode
-AssignNode .up.|> StatementNode
-ReadNode .up.|> StatementNode
-PrintNode .up.|> StatementNode
-IfNode .up.|> StatementNode
-WhileNode .up.|> StatementNode
+CallNode ..up..|> StatementNode
+AssignNode ..up..|> StatementNode
+ReadNode ..up..|> StatementNode
+PrintNode ..up..|> StatementNode
+IfNode ..up..|> StatementNode
+WhileNode ..up..|> StatementNode
 
 @enduml
