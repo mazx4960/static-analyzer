@@ -68,46 +68,5 @@ Result *QueryEvaluator::evaluate() {
       return Result::empty();
     }
   }
-  EntityPointerUnorderedSet candidates = called_declaration->getContext();
-  switch (subquery_results.size()) {
-    case 0:
-      // Just return all possible results
-      return new Result(synonym, candidates);
-    case 1:
-      if (subquery_results[0].uses(called_declaration)) {
-        return new Result(synonym, subquery_results[0].GetColumn(synonym));
-      }
-      return new Result(synonym, candidates);
-    case 2:
-      std::vector<QueryDeclaration *> common_synonyms = subquery_results[0].getCommonSynonyms(subquery_results[1]);
-      switch (common_synonyms.size()) {
-        case 0: {
-          for (auto res : subquery_results) {
-            if (res.uses(called_declaration)) {
-              candidates = EvaluationStrategy::intersect(candidates, res.GetColumn(synonym));
-            }
-          }
-          return new Result(synonym, candidates);
-        }
-        case 1: {
-          if (*common_synonyms[0]->getSynonym() == *synonym) {
-            for (auto res : subquery_results) {
-              if (res.uses(called_declaration)) {
-                candidates = EvaluationStrategy::intersect(candidates, res.GetColumn(synonym));
-              }
-            }
-            return new Result(synonym, candidates);
-          }
-          SubqueryResult join = subquery_results[0].Join(subquery_results[1]);
-          if (join.uses(called_declaration)) { return new Result(synonym, join.GetColumn(synonym)); }
-          return new Result(synonym, called_declaration->getContext());
-        }
-        case 2: {
-          SubqueryResult intersection = subquery_results[0].Intersect(subquery_results[1]);
-          if (intersection.uses(called_declaration)) { return new Result(synonym, intersection.GetColumn(synonym)); }
-          return new Result(synonym, candidates);
-        }
-      }
-  }
-  return Result::empty();
+  return (new ResultProjector(called_declaration, subquery_results))->project();
 }

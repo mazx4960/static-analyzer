@@ -7,6 +7,7 @@
 
 #include "evaluation_strategy.h"
 #include "qps/pql/query.h"
+#include "result_projector.h"
 #include "subquery_evaluator.h"
 
 using QueryDeclarationPointerUnorderedSet = std::unordered_set<QueryDeclaration *,
