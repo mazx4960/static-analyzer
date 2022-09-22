@@ -14,25 +14,32 @@ EntityPointerUnorderedSet ResultProjector::intersect(const EntityPointerUnordere
   return result;
 }
 
-Result *ResultProjector::project() {
+/**
+ * Project results from list of subquery results.
+ * @return set of Entity pointers of final result.
+ */
+EntityPointerUnorderedSet ResultProjector::project() {
   if (std::any_of(subquery_results_.begin(), subquery_results_.end(),
                   [](SubqueryResult subquery_result) { return subquery_result.empty(); })) {
-    return Result::empty();
+    return EntityPointerUnorderedSet();
   }
 
   EntityPointerUnorderedSet candidates = this->called_declaration_->getContext();
   QuerySynonym *synonym = this->called_declaration_->getSynonym();
 
   switch (this->subquery_results_.size()) {
-    case 0:
+    case 0: {
       // Just return all possible results
-      return new Result(synonym, candidates);
-    case 1:
+      return candidates;
+    }
+    case 1: {
       if (this->subquery_results_[0].uses(this->called_declaration_)) {
-        return new Result(synonym, this->subquery_results_[0].GetColumn(synonym));
+        return this->subquery_results_[0].GetColumn(synonym);
       }
-      return new Result(synonym, candidates);
-    case 2:std::vector<QueryDeclaration *> common_synonyms = this->subquery_results_[0].getCommonSynonyms(this->subquery_results_[1]);
+      return candidates;
+    }
+    case 2: {
+      std::vector<QueryDeclaration *> common_synonyms = this->subquery_results_[0].getCommonSynonyms(this->subquery_results_[1]);
       switch (common_synonyms.size()) {
         case 0: {
           for (auto res : this->subquery_results_) {
@@ -40,7 +47,7 @@ Result *ResultProjector::project() {
               candidates = ResultProjector::intersect(candidates, res.GetColumn(synonym));
             }
           }
-          return new Result(synonym, candidates);
+          return candidates;
         }
         case 1: {
           if (*common_synonyms[0]->getSynonym() == *synonym) {
@@ -49,18 +56,19 @@ Result *ResultProjector::project() {
                 candidates = ResultProjector::intersect(candidates, res.GetColumn(synonym));
               }
             }
-            return new Result(synonym, candidates);
+            return candidates;
           }
           SubqueryResult join = this->subquery_results_[0].Join(this->subquery_results_[1]);
-          if (join.uses(this->called_declaration_)) { return new Result(synonym, join.GetColumn(synonym)); }
-          return new Result(synonym, this->called_declaration_->getContext());
+          if (join.uses(this->called_declaration_)) { return join.GetColumn(synonym); }
+          return this->called_declaration_->getContext();
         }
         case 2: {
           SubqueryResult intersection = this->subquery_results_[0].Intersect(this->subquery_results_[1]);
-          if (intersection.uses(this->called_declaration_)) { return new Result(synonym, intersection.GetColumn(synonym)); }
-          return new Result(synonym, candidates);
+          if (intersection.uses(this->called_declaration_)) { return intersection.GetColumn(synonym); }
+          return candidates;
         }
       }
+    }
   }
-  return Result::empty();
+  return EntityPointerUnorderedSet();
 }
