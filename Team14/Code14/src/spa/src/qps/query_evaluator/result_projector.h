@@ -18,6 +18,5 @@ class ResultProjector {
   ResultProjector(QueryDeclaration *declaration, std::vector<SubqueryResult> subquery_results)
       : called_declaration_(declaration), subquery_results_(std::move(subquery_results)) {};
 
-  EntityPointerUnorderedSet intersect(const EntityPointerUnorderedSet &first, const EntityPointerUnorderedSet &second);
-  Result *project();
+  EntityPointerUnorderedSet project();
 };
