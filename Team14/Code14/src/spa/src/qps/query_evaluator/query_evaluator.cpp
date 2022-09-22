@@ -71,6 +71,8 @@ Result *QueryEvaluator::evaluate() {
   QuerySynonym *synonym = called_declaration->getSynonym();
 
   std::vector<SubqueryResult> subquery_results = this->evaluateSubqueries();
-  return (new ResultProjector(called_declaration, subquery_results))->project();
+  auto *result_projector = new ResultProjector(called_declaration, subquery_results);
+  EntityPointerUnorderedSet result_context = result_projector->project();
+  
+  return new Result(synonym, result_context);
 }
-
