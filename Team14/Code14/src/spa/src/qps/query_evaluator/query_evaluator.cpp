@@ -45,6 +45,21 @@ QueryDeclarationPointerUnorderedSet QueryEvaluator::fetchContext() {
 }
 
 /**
+ * Evaluate sub-queries.
+ * @return vector of SubqueryResults.
+ */
+std::vector<SubqueryResult> QueryEvaluator::evaluateSubqueries() {
+  std::vector<QueryClause *> subquery_clauses = this->query_.getQueryCall().getClauseVector();
+  std::vector<SubqueryResult> subquery_results_list;
+  for (auto *subquery_clause : subquery_clauses) {
+    SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, subquery_clause);
+    SubqueryResult subquery_result = subquery_evaluator.evaluate();
+    subquery_results_list.push_back(subquery_result);
+  }
+  return subquery_results_list;
+}
+
+/**
  * Evaluate query.
  * @return Result of query with set of Entity instances.
  */
@@ -55,18 +70,7 @@ Result *QueryEvaluator::evaluate() {
   QueryDeclaration *called_declaration = this->query_.getQueryCall().getDeclaration();
   QuerySynonym *synonym = called_declaration->getSynonym();
 
-  std::vector<QueryClause *> subquery_clauses = this->query_.getQueryCall().getClauseVector();
-
-  std::vector<SubqueryResult> subquery_results;
-  for (auto *subquery_clause : subquery_clauses) {
-    SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, subquery_clause);
-    SubqueryResult subquery_result = subquery_evaluator.evaluate();
-    subquery_results.push_back(subquery_result);
-    // If subquery has no subquery_results, then overall query has no subquery_results, terminate early
-    if (subquery_result.empty()) {
-      this->has_result_ = false;
-      return Result::empty();
-    }
-  }
+  std::vector<SubqueryResult> subquery_results = this->evaluateSubqueries();
   return (new ResultProjector(called_declaration, subquery_results))->project();
 }
+
