@@ -51,8 +51,8 @@ QueryDeclarationPointerUnorderedSet QueryEvaluator::fetchContext() {
 std::vector<SubqueryResult> QueryEvaluator::evaluateSubqueries() {
   std::vector<QueryClause *> subquery_clauses = this->query_.getQueryCall().getClauseVector();
   std::vector<SubqueryResult> subquery_results_list;
-  for (auto *subquery_clause : subquery_clauses) {
-    SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, subquery_clause);
+  for (auto *clause : subquery_clauses) {
+    SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, clause);
     SubqueryResult subquery_result = subquery_evaluator.evaluate();
     subquery_results_list.push_back(subquery_result);
   }
@@ -73,6 +73,6 @@ Result *QueryEvaluator::evaluate() {
   std::vector<SubqueryResult> subquery_results = this->evaluateSubqueries();
   auto *result_projector = new ResultProjector(called_declaration, subquery_results);
   EntityPointerUnorderedSet result_context = result_projector->project();
-  
+
   return new Result(synonym, result_context);
 }
