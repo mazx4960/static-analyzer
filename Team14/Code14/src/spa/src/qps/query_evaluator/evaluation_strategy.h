@@ -3,7 +3,7 @@
 #include <iterator>
 #include <unordered_set>
 
-#include "commons/result.h"
+#include "qps/result.h"
 #include "pkb/pkb.h"
 #include "qps/exceptions.h"
 #include "qps/pql/query_clause.h"

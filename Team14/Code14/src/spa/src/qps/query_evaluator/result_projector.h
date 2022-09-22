@@ -2,7 +2,7 @@
 
 #include "evaluation_strategy.h"
 #include "commons/entity.h"
-#include "commons/result.h"
+#include "qps/result.h"
 #include "qps/pql/query_declaration.h"
 #include "subquery_result.h"
 
