@@ -15,6 +15,11 @@ EntityPointerUnorderedSet ResultProjector::intersect(const EntityPointerUnordere
 }
 
 Result *ResultProjector::project() {
+  if (std::any_of(subquery_results_.begin(), subquery_results_.end(),
+                  [](SubqueryResult subquery_result) { return subquery_result.empty(); })) {
+    return Result::empty();
+  }
+
   EntityPointerUnorderedSet candidates = this->called_declaration_->getContext();
   QuerySynonym *synonym = this->called_declaration_->getSynonym();
 
