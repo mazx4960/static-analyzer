@@ -45,6 +45,21 @@ QueryDeclarationPointerUnorderedSet QueryEvaluator::fetchContext() {
 }
 
 /**
+ * Evaluate sub-queries.
+ * @return vector of SubqueryResults.
+ */
+std::vector<SubqueryResult> QueryEvaluator::evaluateSubqueries() {
+  std::vector<QueryClause *> subquery_clauses = this->query_.getQueryCall().getClauseVector();
+  std::vector<SubqueryResult> subquery_results_list;
+  for (auto *clause : subquery_clauses) {
+    SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, clause);
+    SubqueryResult subquery_result = subquery_evaluator.evaluate();
+    subquery_results_list.push_back(subquery_result);
+  }
+  return subquery_results_list;
+}
+
+/**
  * Evaluate query.
  * @return Result of query with set of Entity instances.
  */
@@ -55,59 +70,9 @@ Result *QueryEvaluator::evaluate() {
   QueryDeclaration *called_declaration = this->query_.getQueryCall().getDeclaration();
   QuerySynonym *synonym = called_declaration->getSynonym();
 
-  std::vector<QueryClause *> subquery_clauses = this->query_.getQueryCall().getClauseVector();
+  std::vector<SubqueryResult> subquery_results = this->evaluateSubqueries();
+  auto *result_projector = new ResultProjector(called_declaration, subquery_results);
+  EntityPointerUnorderedSet result_context = result_projector->project();
 
-  std::vector<SubqueryResult> subquery_results;
-  for (auto *subquery_clause : subquery_clauses) {
-    SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, subquery_clause);
-    SubqueryResult subquery_result = subquery_evaluator.evaluate();
-    subquery_results.push_back(subquery_result);
-    // If subquery has no subquery_results, then overall query has no subquery_results, terminate early
-    if (subquery_result.empty()) {
-      this->has_result_ = false;
-      return Result::empty();
-    }
-  }
-  EntityPointerUnorderedSet candidates = called_declaration->getContext();
-  switch (subquery_results.size()) {
-    case 0:
-      // Just return all possible results
-      return new Result(synonym, candidates);
-    case 1:
-      if (subquery_results[0].uses(called_declaration)) {
-        return new Result(synonym, subquery_results[0].GetColumn(synonym));
-      }
-      return new Result(synonym, candidates);
-    case 2:
-      std::vector<QueryDeclaration *> common_synonyms = subquery_results[0].getCommonSynonyms(subquery_results[1]);
-      switch (common_synonyms.size()) {
-        case 0: {
-          for (auto res : subquery_results) {
-            if (res.uses(called_declaration)) {
-              candidates = EvaluationStrategy::intersect(candidates, res.GetColumn(synonym));
-            }
-          }
-          return new Result(synonym, candidates);
-        }
-        case 1: {
-          if (*common_synonyms[0]->getSynonym() == *synonym) {
-            for (auto res : subquery_results) {
-              if (res.uses(called_declaration)) {
-                candidates = EvaluationStrategy::intersect(candidates, res.GetColumn(synonym));
-              }
-            }
-            return new Result(synonym, candidates);
-          }
-          SubqueryResult join = subquery_results[0].Join(subquery_results[1]);
-          if (join.uses(called_declaration)) { return new Result(synonym, join.GetColumn(synonym)); }
-          return new Result(synonym, called_declaration->getContext());
-        }
-        case 2: {
-          SubqueryResult intersection = subquery_results[0].Intersect(subquery_results[1]);
-          if (intersection.uses(called_declaration)) { return new Result(synonym, intersection.GetColumn(synonym)); }
-          return new Result(synonym, candidates);
-        }
-      }
-  }
-  return Result::empty();
+  return new Result(synonym, result_context);
 }

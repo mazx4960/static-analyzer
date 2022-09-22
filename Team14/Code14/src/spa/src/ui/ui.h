@@ -4,7 +4,7 @@
 #include <istream>
 #include <string>
 
-#include "commons/result.h"
+#include "qps/result.h"
 #include "qps/qps.h"
 #include "sp/sp.h"
 

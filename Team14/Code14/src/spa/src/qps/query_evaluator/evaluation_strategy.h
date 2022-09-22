@@ -3,7 +3,7 @@
 #include <iterator>
 #include <unordered_set>
 
-#include "commons/result.h"
+#include "qps/result.h"
 #include "pkb/pkb.h"
 #include "qps/exceptions.h"
 #include "qps/pql/query_clause.h"
@@ -15,15 +15,14 @@ class EvaluationStrategy {
  protected:
   IPKBQuerier *pkb_;
 
-  explicit EvaluationStrategy(IPKBQuerier *pkb) : pkb_(pkb){};
+  explicit EvaluationStrategy(IPKBQuerier *pkb) : pkb_(pkb) {};
 
  public:
   static EvaluationStrategy *getStrategy(IPKBQuerier *, QueryClause *);
   virtual SubqueryResult evaluate() = 0;
   EntityPointerUnorderedSet getCandidates(QueryDeclaration *);
   static bool shouldIntersect(QueryDeclaration *);
-  static EntityPointerUnorderedSet intersect(const EntityPointerUnorderedSet &first,
-                                             const EntityPointerUnorderedSet &second);
+  static EntityPointerUnorderedSet intersect(const EntityPointerUnorderedSet &first, const EntityPointerUnorderedSet &second);
 };
 
 /*
@@ -34,7 +33,7 @@ class SuchThatStrategy : public EvaluationStrategy {
   SuchThatClause *clause_;
 
  public:
-  SuchThatStrategy(IPKBQuerier *pkb, SuchThatClause *query_clause) : EvaluationStrategy(pkb), clause_(query_clause){};
+  SuchThatStrategy(IPKBQuerier *pkb, SuchThatClause *query_clause) : EvaluationStrategy(pkb), clause_(query_clause) {};
   SubqueryResult evaluate() override;
   EntityPointerUnorderedMap evaluateParameter(QueryDeclaration *, RsType, bool, const EntityPointerUnorderedSet &);
 };
@@ -46,8 +45,7 @@ class PatternStrategy : public EvaluationStrategy {
   PatternClause *clause_;
 
  public:
-  PatternStrategy(IPKBQuerier *pkb, PatternClause *query_clause) : EvaluationStrategy(pkb), clause_(query_clause){};
+  PatternStrategy(IPKBQuerier *pkb, PatternClause *query_clause) : EvaluationStrategy(pkb), clause_(query_clause) {};
   SubqueryResult evaluate() override;
-  EntityPointerUnorderedMap evaluateParameter(QueryDeclaration *, QueryDeclaration *,
-                                              const EntityPointerUnorderedSet &);
+  EntityPointerUnorderedMap evaluateParameter(QueryDeclaration *, QueryDeclaration *, const EntityPointerUnorderedSet &);
 };

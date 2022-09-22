@@ -58,8 +58,7 @@ bool EvaluationStrategy::shouldIntersect(QueryDeclaration *declaration) { return
  * @param second second set of Entity pointers.
  * @return intersection of sets of Entity pointers.
  */
-EntityPointerUnorderedSet EvaluationStrategy::intersect(const EntityPointerUnorderedSet &first,
-                                                        const EntityPointerUnorderedSet &second) {
+EntityPointerUnorderedSet EvaluationStrategy::intersect(const EntityPointerUnorderedSet &first, const EntityPointerUnorderedSet &second) {
   EntityPointerUnorderedSet result;
   for (auto *entity : first) {
     if (second.find(entity) != second.end()) { result.insert(entity); }
@@ -102,8 +101,7 @@ SubqueryResult SuchThatStrategy::evaluate() {
 EntityPointerUnorderedMap SuchThatStrategy::evaluateParameter(QueryDeclaration *param, RsType rs_type,
                                                               bool invert_search,
                                                               const EntityPointerUnorderedSet &potential_matches) {
-  spdlog::debug("Evaluating SuchThat parameter {} for {}, inverse = {}", param->toString(), RsTypeToString(rs_type),
-                invert_search);
+  spdlog::debug("Evaluating SuchThat parameter {} for {}, inverse = {}", param->toString(), RsTypeToString(rs_type), invert_search);
   EntityPointerUnorderedSet candidates = this->getCandidates(param);
   std::string candidate_string;
   for (auto *candidate : candidates) { candidate_string += candidate->ToString() + ", "; }
