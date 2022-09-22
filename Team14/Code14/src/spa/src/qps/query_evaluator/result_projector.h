@@ -14,6 +14,8 @@ class ResultProjector {
 
   std::vector<SubqueryResult> subquery_results_;
 
+  static EntityPointerUnorderedSet intersect(const EntityPointerUnorderedSet &first, const EntityPointerUnorderedSet &second);
+
  public:
   ResultProjector(QueryDeclaration *declaration, std::vector<SubqueryResult> subquery_results)
       : called_declaration_(declaration), subquery_results_(std::move(subquery_results)) {};
