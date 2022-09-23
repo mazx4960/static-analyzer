@@ -16,7 +16,7 @@ class CFGNode {
   Entity *GetStmt();
   void AddChild(CFGNode *child);
   void SetChildren(std::vector<CFGNode *> children);
-  bool IsValid();
+  bool IsTerminal();
   std::vector<CFGNode *> GetChildren();
   std::string ToString();
   void VisitAll(const std::function<void(CFGNode *)> &op);

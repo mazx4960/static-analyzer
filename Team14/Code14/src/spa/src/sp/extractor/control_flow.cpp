@@ -13,7 +13,7 @@ CFGNode::CFGNode(Entity *stmt) : stmt_(stmt) {}
 Entity *CFGNode::GetStmt() { return this->stmt_; }
 void CFGNode::AddChild(CFGNode *child) { this->children_.push_back(child); }
 void CFGNode::SetChildren(std::vector<CFGNode *> children) { this->children_ = std::move(children); }
-bool CFGNode::IsValid() { return this->stmt_->GetValue() != "-1"; }
+bool CFGNode::IsTerminal() { return this->stmt_->GetValue() == "-1"; }
 std::vector<CFGNode *> CFGNode::GetChildren() { return this->children_; }
 std::string CFGNode::ToString() { return stmt_->ToString(); }
 /**
@@ -62,7 +62,7 @@ void CFGBuilder::Clean() {
   auto const op = [](CFGNode *node) {
     if (node->GetChildren().size() != 1) { return; }
     auto *immediate_child = static_cast<CFGNode *>(node->GetChildren()[0]);
-    if (immediate_child->IsValid()) { return; }
+    if (!immediate_child->IsTerminal()) { return; }
     if (immediate_child->GetChildren().size() != 1) {
       spdlog::debug("CFGBuilder::Clean: terminal node encountered {}", node->ToString());
       return;

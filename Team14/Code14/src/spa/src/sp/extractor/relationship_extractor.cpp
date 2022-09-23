@@ -315,12 +315,12 @@ void RelationshipExtractor::ExtractNext(std::vector<Relationship *> &relationshi
   auto *cfg = cfg_builder->Build(proc);
 
   auto const op = [&relationships](CFGNode *node) {
-    if (!node->IsValid()) { return; }
+    if (node->IsTerminal()) { return; }
     auto *parent = node->GetStmt();
     std::vector<Entity *> children;
     for (auto *child : node->GetChildren()) {
       auto *child_node = static_cast<CFGNode *>(child);
-      if (child_node->IsValid()) { children.push_back(child_node->GetStmt()); }
+      if (!child_node->IsTerminal()) { children.push_back(child_node->GetStmt()); }
     }
     Match(relationships, RsType::kNext, parent, children);
   };
