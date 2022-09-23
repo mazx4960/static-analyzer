@@ -53,3 +53,13 @@ class ParentTable : public RelationshipTable {
  public:
   ParentTable() = default;
 };
+
+class CallsTable : public RelationshipTable {
+ public:
+  CallsTable() = default;
+};
+
+class NextTable : public RelationshipTable {
+ public:
+     NextTable() = default;
+};

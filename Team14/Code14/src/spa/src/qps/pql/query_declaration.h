@@ -9,6 +9,8 @@
 #include "qps/exceptions.h"
 #include "query_synonym.h"
 
+using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
+
 class QueryDeclaration {
  private:
   EntityType type_;
@@ -18,26 +20,26 @@ class QueryDeclaration {
   std::string string_;
 
  protected:
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> context_;
+  EntityPointerUnorderedSet context_;
 
  public:
-  explicit QueryDeclaration(EntityType type) : type_(std::move(type)){};
+  explicit QueryDeclaration(EntityType type) : type_(std::move(type)) {};
   QueryDeclaration(EntityType type, QuerySynonym *query_synonym)
       : type_(std::move(type)),
         query_synonym_(std::move(query_synonym)),
-        string_(query_synonym->toString()){};
+        string_(query_synonym->toString()) {};
   QueryDeclaration(EntityType type, std::string string)
       : type_(std::move(type)),
         string_(std::move(string)),
-        query_synonym_(QuerySynonym::empty()){};
+        query_synonym_(QuerySynonym::empty()) {};
 
   [[nodiscard]] EntityType getType() const;
   [[nodiscard]] QuerySynonym *getSynonym() const;
   [[nodiscard]] std::string toString() const;
-  [[nodiscard]] std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getContext() const;
+  [[nodiscard]] EntityPointerUnorderedSet getContext() const;
   void removeEntityFromContext(Entity *entity);
-  void intersectContext(const std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> &other_context);
-  void setContext(std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>);
+  void intersectContext(const EntityPointerUnorderedSet &other_context);
+  void setContext(EntityPointerUnorderedSet);
   bool operator==(const QueryDeclaration &) const;
   bool operator==(const QueryDeclaration *) const;
 };
@@ -161,7 +163,7 @@ struct QueryDeclarationHashFunction {
 struct QueryDeclarationPointerEquality {
   bool operator()(const QueryDeclaration *lhs, const QueryDeclaration *rhs) const {
     if (lhs->getType() == EntityType::kWildcardEnt || rhs->getType() == EntityType::kWildcardEnt ||
-    lhs->getType() == EntityType::kWildcardStmt || rhs->getType() == EntityType::kWildcardStmt) { return true; }
+        lhs->getType() == EntityType::kWildcardStmt || rhs->getType() == EntityType::kWildcardStmt) { return true; }
     return (*lhs) == (*rhs);
   }
 };

@@ -1,70 +1,35 @@
 @startuml
 
-class SPManager
-class UI
-class PKB
+interface UI
+interface IPKBPopulator
 
-class UIInterface {
-    string readSourceFile()
-}
-
-class Lexer {
-    Token getNext()
-    Token[] lex()
-}
-
-abstract class Token {
-}
-class Symbol
-class Literal
-class Keyword
-class Operator
-class Separator
-
-class Parser
-class GrammarRule
-
-class AST
-
-class DesignExtractor {
-    DesignAbstraction[] extractDesign(AST)
-}
-abstract class AbstractExtractor {
-    DesignAbstraction extract(AST)
-}
-class EntityExtractor {
-}
-class PatternExtractor {
-}
-class RelationshipExtractor {
-}
-
-class PKBInterface
-
-SPManager *-left- UIInterface
-SPManager *-up- PKBInterface
-SPManager *-down- Lexer
-SPManager *-down- Parser
-SPManager *-right- DesignExtractor
-PKBInterface -right- PKB
-UIInterface -up- UI
-
+class SP
+class Lexer
+abstract class Token
 Token <|.. Symbol
 Token <|.. Literal
 Token <|.. Keyword
 Token <|.. Operator
 Token <|.. Separator
 
+class Parser
+class EntityExtractor
+class PatternExtractor
+class RelationshipExtractor
+
+SP -up-> IPKBPopulator
+SP <-up- UI: LoadSource
+
+SP -down-> Lexer: lex()
+SP -down-> Parser: ParseProgram()
+SP -down-> Extractor: ExtractAll()
+
 Lexer o-- Token
-Parser .left.> Lexer: getNext()
-Parser -down-> GrammarRule : check()
-Parser *-down-> AST
+Parser -down-> ProgramGrammarRule: parseNode()
 
-AbstractExtractor <|.. EntityExtractor
-AbstractExtractor <|.. PatternExtractor
-AbstractExtractor <|.. RelationshipExtractor
-
-DesignExtractor --> AbstractExtractor : extract()
+Extractor <|.. EntityExtractor
+Extractor <|.. PatternExtractor
+Extractor <|.. RelationshipExtractor
 
 @enduml
 

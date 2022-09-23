@@ -1,6 +1,10 @@
 name: Windows Build
 
-on: [ push ]
+on:
+  workflow_dispatch: { }
+  push:
+    paths:
+      - 'Team14/**'
 
 # If you are doing triggering your workflow from pushes or merging more than twice a day on average,
 # please execute your workflow on a schedule instead.

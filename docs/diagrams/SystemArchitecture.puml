@@ -1,0 +1,54 @@
+@startuml
+!include Style.puml
+
+[User Interface] as UI
+
+package "Source Processor"<<SP>> {
+    port ISp
+    [Source Processor] as SP
+    [SimpleLexer]
+    [SimpleParser]
+    [Extractor]
+}
+
+package "Query Processing System"<<QPS>> {
+    port IQps
+    [Query Processing System] as QPS
+    [QueryLexer]
+    [QueryParser]
+    [QueryBuilder]
+    [QueryEvaluator]
+}
+
+database "Program Knowledge Base"<<PKB>> {
+  port IPkbPopulator
+  port IPkbQuerier
+  [Program Knowledge Base] as PKB
+  [Entity Manager]
+  [Relationship Manager]
+  [Pattern Manager]
+}
+
+[UI] --down--> [ISp] : LoadSource
+[UI] --down--> [IQps] : EvaluateQuery
+
+[IPkbPopulator] -down-> [PKB]
+[IPkbQuerier] -down-> [PKB]
+[PKB] -down-> [Entity Manager]
+[PKB] -down-> [Relationship Manager]
+[PKB] -down-> [Pattern Manager]
+
+[ISp] -down-> [SP]
+[SP] -down-> [SimpleLexer]
+[SP] -down-> [SimpleParser]
+[SP] -down-> [Extractor]
+[SP] -down--> IPkbPopulator
+
+[IQps] -down-> [QPS]
+[QPS] -down-> [QueryLexer]
+[QPS] -down-> [QueryParser]
+[QPS] -down-> [QueryBuilder]
+[QPS] -down-> [QueryEvaluator]
+[QueryEvaluator] -down-> IPkbQuerier
+
+@enduml

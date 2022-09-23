@@ -7,6 +7,7 @@
 
 #include "evaluation_strategy.h"
 #include "qps/pql/query.h"
+#include "result_projector.h"
 #include "subquery_evaluator.h"
 
 using QueryDeclarationPointerUnorderedSet = std::unordered_set<QueryDeclaration *,
@@ -27,6 +28,7 @@ class QueryEvaluator {
   QueryDeclarationPointerUnorderedSet copyDeclarations();
   QueryDeclarationPointerUnorderedSet fetchContext();
   QueryDeclarationPointerUnorderedSet getDeclarationAsSet();
+  std::vector<SubqueryResult> evaluateSubqueries();
 
  public:
   QueryEvaluator(IPKBQuerier *pkb, Query &query) : pkb_(pkb), query_(query) {};
