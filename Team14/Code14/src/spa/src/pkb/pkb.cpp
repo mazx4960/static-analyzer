@@ -20,7 +20,7 @@ EntityPointerUnorderedSet PKB::getByRelationship(RsType rs_type, Entity *entity,
 }
 
 EntityPointerUnorderedSet PKB::getByPattern(Entity *entity, std::string &right_pattern, bool isWildcard) {
-  return this->pattern_manager_->Get(entity, right_pattern);
+  return this->pattern_manager_->Get(entity, right_pattern, isWildcard);
 }
 
 EntityPointerUnorderedSet PKB::getEntitiesByString(std::string &entity_value) {

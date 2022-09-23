@@ -8,16 +8,24 @@ PatternTable *PatternManager::GetTable() { return this->pattern_table_; }
 void PatternManager::Populate(const std::vector<Pattern *> &patterns) {
   for (Pattern *pattern : patterns) { this->pattern_table_->Populate(*pattern); }
 }
-EntityPointerUnorderedSet PatternManager::Get(Entity *variable, const std::string &expr) {
+EntityPointerUnorderedSet PatternManager::Get(Entity *variable, const std::string &expr, bool isWildcard) {
   spdlog::debug("Retrieving all statements that matches {} = {}", variable->GetValue(), expr);
   auto matches = EntityPointerUnorderedSet();
   auto set = this->pattern_table_->Get(variable);
   for (const auto &pair : set) {
-    auto full_expr = pair.second;
-    if (full_expr.find(expr) != std::string::npos) { matches.insert(pair.first); }
+    auto full_expr = pair.second; // RHS of the statement
+    if (isWildcard) {
+      if (expr.empty() || full_expr.find(expr) != std::string::npos) {
+        matches.insert(pair.first);
+      }
+    } else if (full_expr == expr) {
+      matches.insert(pair.first);
+    }
   }
   std::string result_string;
-  for (auto *match : matches) { result_string += match->GetValue() + ", "; }
+  for (auto *match : matches) {
+    result_string += match->GetValue() + ", ";
+  }
   spdlog::debug("Results[{}]: {}", matches.size(), result_string);
   return matches;
 }
