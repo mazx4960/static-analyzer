@@ -20,6 +20,8 @@ void RelationshipManager::CreateTable(RsType rs_type) {
     case RsType::kParent: table = new ParentTable(); break;
     case RsType::kModifies: table = new ModifiesTable(); break;
     case RsType::kUses: table = new UsesTable(); break;
+    case RsType::kCalls: table = new CallsTable(); break;
+    case RsType::kNext: table = new NextTable(); break;
     default: table = nullptr;
   }
 
