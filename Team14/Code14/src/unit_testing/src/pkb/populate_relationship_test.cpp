@@ -106,7 +106,7 @@ TEST(PopulateRelationshipTest, NextTest) {
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
-        new CallsRelationship(new AssignStmtEntity(next[i].first), new AssignStmtEntity(next[i].second)));
+        new NextRelationship(new AssignStmtEntity(next[i].first), new AssignStmtEntity(next[i].second)));
   }
 
   auto *relationship_manager = new RelationshipManager();
