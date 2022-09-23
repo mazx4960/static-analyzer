@@ -33,6 +33,10 @@ enum class RsType {
   kParentAll,
   kUses,
   kModifies,
+  kCalls,
+  kCallsAll,
+  kNext,
+  kNextAll,
   // Used by PQL,
   kAssignPattern,
 };
@@ -68,6 +72,10 @@ inline std::string RsTypeToString(RsType type) {
     case RsType::kParentAll: return "Parent*";
     case RsType::kFollowsAll: return "Follows*";
     case RsType::kAssignPattern: return "pattern";
+    case RsType::kCalls: return "Calls";
+    case RsType::kCallsAll: return "Calls*";
+    case RsType::kNext: return "Next";
+    case RsType::kNextAll: return "Next*";
     default: return "Unknown";
   }
 }

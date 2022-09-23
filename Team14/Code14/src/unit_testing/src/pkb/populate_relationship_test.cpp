@@ -72,6 +72,58 @@ TEST(PopulateRelationshipTest, MultipleKeysTest) {
   ASSERT_EQ(inverse_key_count, 4);
 }
 
+TEST(PopulateRelationshipTest, CallsTest) {
+  std::vector<std::pair<std::string, std::string>> calls = {{"First", "Second"}, {"Second", "Third"}, {"First", "Third"}, {"Third", "Fourth"}};
+  std::vector<Relationship *> relationships;
+  int length = calls.size();
+  relationships.reserve(length);
+
+  for (int i = 0; i < length; i++) {
+    relationships.push_back(
+        new CallsRelationship(new ProcedureEntity(calls[i].first), new ProcedureEntity(calls[i].second)));
+  }
+
+  auto *relationship_manager = new RelationshipManager();
+  relationship_manager->Populate(relationships);
+  auto *relationship_table = relationship_manager->GetTable(RsType::kCalls);
+
+  int count = 0;
+  int inverse_count = 0;
+
+  for (auto &key : relationship_table->GetTable()) { count += key.second.size(); }
+
+  for (auto &inverse_key : relationship_table->GetTable(true)) { inverse_count += inverse_key.second.size(); }
+
+  ASSERT_EQ(count, length);
+  ASSERT_EQ(inverse_count, length);
+}
+
+TEST(PopulateRelationshipTest, NextTest) {
+  std::vector<std::pair<std::string, std::string>> next = {{"1", "2"}, {"2", "3"}, {"3", "8"}, {"8", "9"}};
+  std::vector<Relationship *> relationships;
+  int length = next.size();
+  relationships.reserve(length);
+
+  for (int i = 0; i < length; i++) {
+    relationships.push_back(
+        new CallsRelationship(new AssignStmtEntity(next[i].first), new AssignStmtEntity(next[i].second)));
+  }
+
+  auto *relationship_manager = new RelationshipManager();
+  relationship_manager->Populate(relationships);
+  auto *relationship_table = relationship_manager->GetTable(RsType::kNext);
+
+  int count = 0;
+  int inverse_count = 0;
+
+  for (auto &key : relationship_table->GetTable()) { count += key.second.size(); }
+
+  for (auto &inverse_key : relationship_table->GetTable(true)) { inverse_count += inverse_key.second.size(); }
+
+  ASSERT_EQ(count, length);
+  ASSERT_EQ(inverse_count, length);
+}
+
 TEST(PopulateRelationshipTest, FollowsTest) {
   std::vector<std::pair<std::string, std::string>> follows = {{"1", "2"}, {"2", "3"}, {"3", "4"}, {"4", "5"}};
   std::vector<Relationship *> relationships;

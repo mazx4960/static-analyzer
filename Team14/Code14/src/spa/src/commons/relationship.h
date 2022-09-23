@@ -43,3 +43,15 @@ class ModifiesRelationship : public Relationship {
   ModifiesRelationship(Entity *first, Entity *second)
       : Relationship(RsType::kModifies, std::move(first), std::move(second)) {}
 };
+
+class CallsRelationship : public Relationship {
+ public:
+  CallsRelationship(Entity *first, Entity *second)
+      : Relationship(RsType::kCalls, std::move(first), std::move(second)) {}
+};
+
+class NextRelationship : public Relationship {
+ public:
+  NextRelationship(Entity *first, Entity *second)
+      : Relationship(RsType::kNext, std::move(first), std::move(second)) {}
+};
