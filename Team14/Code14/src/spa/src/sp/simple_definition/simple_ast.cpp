@@ -69,6 +69,7 @@ CallNode::CallNode(std::string procedureName)
       procedureName_(std::move(procedureName)) {}
 
 std::vector<Node *> CallNode::GetChildren() { return std::vector<Node *>{}; }
+std::string CallNode::GetProcedureName() { return this->procedureName_; }
 std::string CallNode::ToString() { return "call"; }
 
 WhileNode::WhileNode(CondExprNode *conditional, StatementListNode *statementList)

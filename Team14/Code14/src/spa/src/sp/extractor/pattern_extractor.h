@@ -10,4 +10,7 @@
 class PatternExtractor {
  public:
   static std::vector<Pattern *> ExtractAll(Node *node);
+  static void ExtractAssign(std::vector<Pattern *> &patterns, Node *node);
+  static void ExtractIf(std::vector<Pattern *> &patterns, Node *node);
+  static void ExtractWhile(std::vector<Pattern *> &patterns, Node *node);
 };
