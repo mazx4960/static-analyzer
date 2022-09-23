@@ -44,9 +44,9 @@ CFGBuilder::CFGBuilder() { this->start_node_ = new CFGNode(new StmtEntity("-1"))
  * @param node procedure node
  * @return start node for the control flow graph
  */
-CFGNode *CFGBuilder::BuildCFG(Node *node) {
+CFGNode *CFGBuilder::Build(Node *node) {
   if (node->GetNodeType() != NodeType::kProcedure) {
-    spdlog::error("CFGBuilder::BuildCFG: node is not a procedure node");
+    spdlog::error("CFGBuilder::Build: node is not a procedure node");
     return nullptr;
   }
   auto *proc_node = static_cast<ProcedureNode *>(node);
@@ -54,21 +54,21 @@ CFGNode *CFGBuilder::BuildCFG(Node *node) {
   auto *terminal_node = new CFGNode(new StmtEntity("-1"));
   BuildBlock(stmt_list_node, start_node_, terminal_node);
   spdlog::debug("Control flow graph for procedure {} built", proc_node->GetProcName());
-  CleanCFG();
+  Clean();
   spdlog::debug("Cleaned up loose ends in control flow graph...");
   return this->start_node_;
 }
-void CFGBuilder::CleanCFG() {
+void CFGBuilder::Clean() {
   auto const op = [](CFGNode *node) {
     if (node->GetChildren().size() != 1) { return; }
     auto *immediate_child = static_cast<CFGNode *>(node->GetChildren()[0]);
     if (immediate_child->IsValid()) { return; }
     if (immediate_child->GetChildren().size() != 1) {
-      spdlog::debug("CFGBuilder::CleanCFG: terminal node encountered {}", node->ToString());
+      spdlog::debug("CFGBuilder::Clean: terminal node encountered {}", node->ToString());
       return;
     }
     auto *grand_child = immediate_child->GetChildren()[0];
-    spdlog::debug("CFGBuilder::CleanCFG: removing temp terminal node between {} and {}", node->ToString(),
+    spdlog::debug("CFGBuilder::Clean: removing temp terminal node between {} and {}", node->ToString(),
                   grand_child->ToString());
     node->SetChildren({grand_child});
   };

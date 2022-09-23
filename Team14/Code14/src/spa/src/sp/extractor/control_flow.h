@@ -33,6 +33,6 @@ class CFGBuilder {
 
  public:
   explicit CFGBuilder();
-  CFGNode *BuildCFG(Node *node);
-  void CleanCFG();
+  CFGNode *Build(Node *node);
+  void Clean();
 };

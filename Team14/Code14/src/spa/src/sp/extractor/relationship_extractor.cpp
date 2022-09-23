@@ -312,7 +312,7 @@ void RelationshipExtractor::ExtractNext(std::vector<Relationship *> &relationshi
   auto *proc = static_cast<ProcedureNode *>(node);
   spdlog::debug("Building control flow graph for procedure {}", proc->GetProcName());
   auto *cfg_builder = new CFGBuilder();
-  auto *cfg = cfg_builder->BuildCFG(proc);
+  auto *cfg = cfg_builder->Build(proc);
 
   auto const op = [&relationships](CFGNode *node) {
     if (!node->IsValid()) { return; }
