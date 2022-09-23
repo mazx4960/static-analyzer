@@ -31,6 +31,10 @@ std::string Relationship::ToString() {
       break;
     case RsType::kModifies:type_string = "Modifies";
       break;
+    case RsType::kCalls: type_string = "Calls"; 
+      break;
+    case RsType::kNext: type_string = "Next"; 
+      break;
     default:type_string = "unknown";
       break;
   }
