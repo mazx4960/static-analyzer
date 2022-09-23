@@ -146,7 +146,8 @@ EntityPointerUnorderedMap PatternStrategy::evaluateParameter(QueryDeclaration *v
   spdlog::debug("Candidates[{}]: {}", candidates.size(), candidate_string);
   EntityPointerUnorderedMap results;
   std::string expr = expr_param->toString();
-  bool is_wildcard_expression = expr_param->getType() == EntityType::kWildcardExpression;
+  bool is_wildcard_expression = expr_param->getType() == EntityType::kWildcardExpression
+      || expr_param->getType() == EntityType::kWildcardStmt;
   for (auto *entity : candidates) {
     EntityPointerUnorderedSet valid_entities = this->pkb_->getByPattern(entity, expr, is_wildcard_expression);
     auto intersected = EvaluationStrategy::intersect(valid_entities, potential_matches);
