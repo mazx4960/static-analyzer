@@ -2,6 +2,9 @@
 
 #include "relationship_extractor.h"
 
+#include <spdlog/spdlog.h>
+
+#include "control_flow.h"
 #include "entity_extractor.h"
 #include "sp/simple_definition/simple_ast.h"
 
@@ -304,9 +307,22 @@ void RelationshipExtractor::ExtractCallsHelper(std::vector<Relationship *> &rela
  * @param relationships vector to populate
  * @param node
  */
-void RelationshipExtractor::ExtractNext(std::vector<Relationship *> & /*relationships*/, Node *node) {
+void RelationshipExtractor::ExtractNext(std::vector<Relationship *> &relationships, Node *node) {
   if (node->GetNodeType() != NodeType::kProcedure) { return; }
   auto *proc = static_cast<ProcedureNode *>(node);
-  // TODO: generate control flow graph
-  // TODO: extract next relationships from control flow graph
+  spdlog::debug("Building control flow graph for procedure {}", proc->GetProcName());
+  auto *cfg_builder = new CFGBuilder();
+  auto *cfg = cfg_builder->Build(proc);
+
+  auto const op = [&relationships](CFGNode *node) {
+    if (node->IsTerminal()) { return; }
+    auto *parent = node->GetStmt();
+    std::vector<Entity *> children;
+    for (auto *child : node->GetChildren()) {
+      auto *child_node = static_cast<CFGNode *>(child);
+      if (!child_node->IsTerminal()) { children.push_back(child_node->GetStmt()); }
+    }
+    Match(relationships, RsType::kNext, parent, children);
+  };
+  cfg->VisitAll(op);
 }
