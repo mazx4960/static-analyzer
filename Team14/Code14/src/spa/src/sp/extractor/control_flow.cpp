@@ -12,6 +12,10 @@
 CFGNode::CFGNode(Entity *stmt) : stmt_(stmt) {}
 Entity *CFGNode::GetStmt() { return this->stmt_; }
 void CFGNode::AddChild(CFGNode *child) { this->children_.push_back(child); }
+void CFGNode::SetChild(CFGNode *child, int pos) {
+  if (pos >= this->children_.size()) { return; }
+  this->children_[pos] = child;
+}
 void CFGNode::SetChildren(std::vector<CFGNode *> children) { this->children_ = std::move(children); }
 bool CFGNode::IsTerminal() { return this->stmt_->GetValue() == "-1"; }
 std::vector<CFGNode *> CFGNode::GetChildren() { return this->children_; }
@@ -60,17 +64,24 @@ CFGNode *CFGBuilder::Build(Node *node) {
 }
 void CFGBuilder::Clean() {
   auto const op = [](CFGNode *node) {
-    if (node->GetChildren().size() != 1) { return; }
-    auto *immediate_child = static_cast<CFGNode *>(node->GetChildren()[0]);
-    if (!immediate_child->IsTerminal()) { return; }
-    if (immediate_child->GetChildren().size() != 1) {
-      spdlog::debug("CFGBuilder::Clean: terminal node encountered {}", node->ToString());
-      return;
+    for (int i = 0; i < node->GetChildren().size(); i++) {
+      bool should_collapse = false;
+      auto *immediate_child = node->GetChildren()[i];
+      while (immediate_child->IsTerminal() && immediate_child->GetChildren().size() == 1) {
+        auto *grand_child = immediate_child->GetChildren()[0];
+        immediate_child = grand_child;
+        should_collapse = true;
+      }
+      if (should_collapse) {
+        spdlog::debug("CFGBuilder::Clean: removing temp terminal node between {} and {}", node->ToString(),
+                      immediate_child->ToString());
+        node->SetChild(immediate_child, i);
+      }
+      if (immediate_child->IsTerminal()) {
+        spdlog::debug("CFGBuilder::Clean: terminal node encountered {}", node->ToString());
+        return;
+      }
     }
-    auto *grand_child = immediate_child->GetChildren()[0];
-    spdlog::debug("CFGBuilder::Clean: removing temp terminal node between {} and {}", node->ToString(),
-                  grand_child->ToString());
-    node->SetChildren({grand_child});
   };
   this->start_node_->VisitAll(op);
 }

@@ -15,6 +15,7 @@ class CFGNode {
   explicit CFGNode(Entity *stmt);
   Entity *GetStmt();
   void AddChild(CFGNode *child);
+  void SetChild(CFGNode *child, int pos);
   void SetChildren(std::vector<CFGNode *> children);
   bool IsTerminal();
   std::vector<CFGNode *> GetChildren();
