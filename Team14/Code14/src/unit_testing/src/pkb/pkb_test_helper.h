@@ -1,5 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
+#include <unordered_set>
+
 #include "commons/pattern.h"
 
 using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
