@@ -5,39 +5,19 @@
 #include <spdlog/spdlog.h>
 
 #include <unordered_set>
-#include <utility>
 
 #include "sp/simple_definition/simple_ast.h"
 
-CFGNode::CFGNode(Entity *stmt) : stmt_(stmt) {}
+CFGNode::CFGNode(Entity *stmt) : Node(NodeType::kStatement), stmt_(stmt) {}
 Entity *CFGNode::GetStmt() { return this->stmt_; }
-void CFGNode::AddChild(CFGNode *child) { this->children_.push_back(child); }
-void CFGNode::SetChild(CFGNode *child, int pos) {
+void CFGNode::AddChild(Node *child) { this->children_.push_back(child); }
+void CFGNode::SetChild(Node *child, int pos) {
   if (pos >= this->children_.size()) { return; }
   this->children_[pos] = child;
 }
-void CFGNode::SetChildren(std::vector<CFGNode *> children) { this->children_ = std::move(children); }
 bool CFGNode::IsTerminal() { return this->stmt_->GetValue() == "-1"; }
-std::vector<CFGNode *> CFGNode::GetChildren() { return this->children_; }
+std::vector<Node *> CFGNode::GetChildren() { return this->children_; }
 std::string CFGNode::ToString() { return stmt_->ToString(); }
-/**
- * DFS to visit all nodes
- * prevents infinite loop by keeping track of visited nodes
- * @param op
- */
-void CFGNode::VisitAll(const std::function<void(CFGNode *)> &op) {
-  std::unordered_map<CFGNode *, bool> visited;
-  std::vector<CFGNode *> stack;
-  stack.push_back(this);
-  while (!stack.empty()) {
-    CFGNode *node = stack.back();
-    stack.pop_back();
-    if (visited[node]) { continue; }
-    visited[node] = true;
-    op(node);
-    for (CFGNode *child : node->GetChildren()) { stack.push_back(child); }
-  }
-}
 
 /**
  * Builder class for control flow graph
@@ -63,19 +43,20 @@ CFGNode *CFGBuilder::Build(Node *node) {
   return this->start_node_;
 }
 void CFGBuilder::Clean() {
-  auto const op = [](CFGNode *node) {
+  auto const op = [](Node *node) {
+    auto *cfg_node = static_cast<CFGNode *>(node);
     for (int i = 0; i < node->GetChildren().size(); i++) {
       bool should_collapse = false;
-      auto *immediate_child = node->GetChildren()[i];
+      auto *immediate_child = static_cast<CFGNode *>(cfg_node->GetChildren()[i]);
       while (immediate_child->IsTerminal() && immediate_child->GetChildren().size() == 1) {
-        auto *grand_child = immediate_child->GetChildren()[0];
+        auto *grand_child = static_cast<CFGNode *>(immediate_child->GetChildren()[0]);
         immediate_child = grand_child;
         should_collapse = true;
       }
       if (should_collapse) {
         spdlog::debug("CFGBuilder::Clean: removing temp terminal node between {} and {}", node->ToString(),
                       immediate_child->ToString());
-        node->SetChild(immediate_child, i);
+        cfg_node->SetChild(immediate_child, i);
       }
       if (immediate_child->IsTerminal()) {
         spdlog::debug("CFGBuilder::Clean: terminal node encountered {}", node->ToString());

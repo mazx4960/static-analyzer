@@ -314,9 +314,10 @@ void RelationshipExtractor::ExtractNext(std::vector<Relationship *> &relationshi
   auto *cfg_builder = new CFGBuilder();
   auto *cfg = cfg_builder->Build(proc);
 
-  auto const op = [&relationships](CFGNode *node) {
-    if (node->IsTerminal()) { return; }
-    auto *parent = node->GetStmt();
+  auto const op = [&relationships](Node *node) {
+    auto *cfg_node = static_cast<CFGNode *>(node);
+    if (cfg_node->IsTerminal()) { return; }
+    auto *parent = cfg_node->GetStmt();
     std::vector<Entity *> children;
     for (auto *child : node->GetChildren()) {
       auto *child_node = static_cast<CFGNode *>(child);
