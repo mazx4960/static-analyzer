@@ -8,13 +8,13 @@ PatternTable *PatternManager::GetTable() { return this->pattern_table_; }
 void PatternManager::Populate(const std::vector<Pattern *> &patterns) {
   for (Pattern *pattern : patterns) { this->pattern_table_->Populate(*pattern); }
 }
-EntityPointerUnorderedSet PatternManager::Get(Entity *variable, const std::string &expr, bool isWildcard) {
+EntityPointerUnorderedSet PatternManager::Get(Entity *variable, const std::string &expr, bool isSubmatch) {
   spdlog::debug("Retrieving all statements that matches {} = {}", variable->GetValue(), expr);
   auto matches = EntityPointerUnorderedSet();
   auto set = this->pattern_table_->Get(variable);
   for (const auto &pair : set) {
     auto full_expr = pair.second; // RHS of the statement
-    if (isWildcard) {
+    if (isSubmatch) {
       if (expr.empty() || full_expr.find(expr) != std::string::npos) {
         matches.insert(pair.first);
       }

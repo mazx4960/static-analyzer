@@ -3,6 +3,9 @@
 #include "commons/pattern.h"
 #include "gtest/gtest.h"
 #include "pkb/pattern/pattern_manager.h"
+#include "pkb_test_helper.h"
+
+using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
 
 TEST(QueryPatternTest, BasicTest) {
   std::vector<Pattern *> patterns({
@@ -26,10 +29,17 @@ TEST(QueryPatternTest, BasicTest) {
   auto result_exact_success = pattern_manager->Get(new VariableEntity("Y"), "x + y + z", false);
   auto result_exact_failure = pattern_manager->Get(new VariableEntity("X"), "east", false);
 
-  ASSERT_EQ(result_empty.size(), 0);
-  ASSERT_EQ(result_expr_constant.size(), 1);
-  ASSERT_EQ(result_expr_variable.size(), 2);
-  ASSERT_EQ(result_multi_stmt.size(), 3);
-  ASSERT_EQ(result_exact_success.size(), 1);
-  ASSERT_EQ(result_exact_failure.size(), 0);
+  EntityPointerUnorderedSet expected_result_empty = {};
+  EntityPointerUnorderedSet expected_result_expr_constant = {new AssignStmtEntity("3")};
+  EntityPointerUnorderedSet expected_result_expr_variable = {new AssignStmtEntity("4"), new AssignStmtEntity("5")};
+  EntityPointerUnorderedSet expected_result_multi_stmt = {new AssignStmtEntity("1"), new AssignStmtEntity("2"),
+                                                          new AssignStmtEntity("7")};
+  EntityPointerUnorderedSet expected_result_exact_success = {new AssignStmtEntity("8")};
+
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_empty, expected_result_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_expr_constant, expected_result_expr_constant));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_expr_variable, expected_result_expr_variable));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_multi_stmt, expected_result_multi_stmt));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_exact_success, expected_result_exact_success));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_exact_failure, expected_result_empty));
 }

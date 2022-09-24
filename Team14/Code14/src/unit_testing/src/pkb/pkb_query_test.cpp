@@ -3,13 +3,9 @@
 #include "gtest/gtest.h"
 #include "pkb/pkb.h"
 #include "pkb/relationship/relationship_table.h"
+#include "pkb_test_helper.h"
 
 using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
-
-bool set_compare(EntityPointerUnorderedSet const &lhs, EntityPointerUnorderedSet const &rhs) {
-  if (lhs.size() != rhs.size()) { return false; }
-  return std::all_of(lhs.begin(), lhs.end(), [&rhs](Entity *entity) { return rhs.find(entity) != rhs.end(); });
-}
 
 TEST(QueryTest, FollowsRelationship) {
   std::vector<Relationship *> relationships = {
@@ -33,12 +29,12 @@ TEST(QueryTest, FollowsRelationship) {
   EntityPointerUnorderedSet expected_result_traverse_inverse_true = {
       new AssignStmtEntity("1"), new AssignStmtEntity("2"), new AssignStmtEntity("3")};
   EntityPointerUnorderedSet expected_empty = {};
-  ASSERT_TRUE(set_compare(result_inverse_false, expected_result_inverse_false));
-  ASSERT_TRUE(set_compare(result_inverse_true, expected_result_inverse_true));
-  ASSERT_TRUE(set_compare(result_traverse_inverse_false, expected_result_traverse_inverse_false));
-  ASSERT_TRUE(set_compare(result_traverse_inverse_true, expected_result_traverse_inverse_true));
-  ASSERT_TRUE(set_compare(result_no_preceding_statement, expected_empty));
-  ASSERT_TRUE(set_compare(result_no_subsequent_statement, expected_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_inverse_false, expected_result_inverse_false));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_inverse_true, expected_result_inverse_true));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_traverse_inverse_false, expected_result_traverse_inverse_false));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_traverse_inverse_true, expected_result_traverse_inverse_true));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_no_preceding_statement, expected_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_no_subsequent_statement, expected_empty));
 }
 TEST(QueryTest, ParentRelationship) {
   std::vector<Relationship *> relationships = {
@@ -63,12 +59,12 @@ TEST(QueryTest, ParentRelationship) {
   EntityPointerUnorderedSet expected_result_traverse_inverse_true = {new WhileStmtEntity("3"), new IfStmtEntity("2"),
                                                                      new WhileStmtEntity("1")};
   EntityPointerUnorderedSet expected_result_empty = {};
-  ASSERT_TRUE(set_compare(result_inverse_false, expected_result_inverse_false));
-  ASSERT_TRUE(set_compare(result_inverse_true, expected_result_inverse_true));
-  ASSERT_TRUE(set_compare(result_traverse_inverse_false, expected_result_traverse_inverse_false));
-  ASSERT_TRUE(set_compare(result_traverse_inverse_true, expected_result_traverse_inverse_true));
-  ASSERT_TRUE(set_compare(result_no_parent, expected_result_empty));
-  ASSERT_TRUE(set_compare(result_no_child, expected_result_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_inverse_false, expected_result_inverse_false));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_inverse_true, expected_result_inverse_true));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_traverse_inverse_false, expected_result_traverse_inverse_false));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_traverse_inverse_true, expected_result_traverse_inverse_true));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_no_parent, expected_result_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_no_child, expected_result_empty));
 }
 TEST(QueryTest, ModifiesRelationship) {
   std::vector<Relationship *> relationships = {
@@ -89,11 +85,11 @@ TEST(QueryTest, ModifiesRelationship) {
   EntityPointerUnorderedSet expected_result_empty = {};
   EntityPointerUnorderedSet expected_result_multiple_inverse_true = {new AssignStmtEntity("1"),
                                                                      new AssignStmtEntity("2")};
-  ASSERT_TRUE(set_compare(result_single_inverse_false, expected_result_single_inverse_false));
-  ASSERT_TRUE(set_compare(result_single_inverse_true, expected_result_single_inverse_true));
-  ASSERT_TRUE(set_compare(result_invalid_procedure, expected_result_empty));
-  ASSERT_TRUE(set_compare(result_invalid_variable, expected_result_empty));
-  ASSERT_TRUE(set_compare(result_multiple_inverse_true, expected_result_multiple_inverse_true));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_single_inverse_false, expected_result_single_inverse_false));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_single_inverse_true, expected_result_single_inverse_true));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_invalid_procedure, expected_result_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_invalid_variable, expected_result_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_multiple_inverse_true, expected_result_multiple_inverse_true));
 }
 TEST(QueryTest, UsesRelationship) {
   std::vector<Relationship *> relationships = {
@@ -117,10 +113,10 @@ TEST(QueryTest, UsesRelationship) {
   EntityPointerUnorderedSet expected_result_multiple_inverse_true = {new AssignStmtEntity("1"),
                                                                      new AssignStmtEntity("2")};
   EntityPointerUnorderedSet expected_result_empty = {};
-  ASSERT_TRUE(set_compare(result_single_inverse_false, expected_result_single_inverse_false));
-  ASSERT_TRUE(set_compare(result_single_inverse_true, expected_result_single_inverse_true));
-  ASSERT_TRUE(set_compare(result_invalid_procedure, expected_result_empty));
-  ASSERT_TRUE(set_compare(result_invalid_variable, expected_result_empty));
-  ASSERT_TRUE(set_compare(result_multiple_inverse_false, expected_result_multiple_inverse_false));
-  ASSERT_TRUE(set_compare(result_multiple_inverse_true, expected_result_multiple_inverse_true));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_single_inverse_false, expected_result_single_inverse_false));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_single_inverse_true, expected_result_single_inverse_true));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_invalid_procedure, expected_result_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_invalid_variable, expected_result_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_multiple_inverse_false, expected_result_multiple_inverse_false));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_multiple_inverse_true, expected_result_multiple_inverse_true));
 }

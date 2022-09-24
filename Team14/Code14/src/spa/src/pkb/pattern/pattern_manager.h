@@ -18,5 +18,5 @@ class PatternManager {
   PatternManager();
   PatternTable *GetTable();
   void Populate(const std::vector<Pattern *> &patterns);
-  EntityPointerUnorderedSet Get(Entity *variable, const std::string &expr, bool isWildcard);
+  EntityPointerUnorderedSet Get(Entity *variable, const std::string &expr, bool isSubmatch);
 };
