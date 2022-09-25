@@ -49,6 +49,14 @@ EntityPointerUnorderedSet RelationshipManager::Get(RsType rs_type, Entity *entit
       matches = this->GetAll(RsType::kParent, entity, is_inverse);
       break;
     }
+    case RsType::kCallsAll: {
+      matches = this->GetAll(RsType::kCalls, entity, is_inverse);
+      break;
+    }
+    case RsType::kNextAll: {
+      matches = this->GetAll(RsType::kNext, entity, is_inverse);
+      break;
+    }
     default: {
       auto *relationship_table = GetTable(rs_type);
       matches = relationship_table->get(entity, is_inverse);

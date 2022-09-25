@@ -124,3 +124,77 @@ TEST(QueryTest, UsesRelationship) {
   ASSERT_TRUE(set_compare(result_multiple_inverse_false, expected_result_multiple_inverse_false));
   ASSERT_TRUE(set_compare(result_multiple_inverse_true, expected_result_multiple_inverse_true));
 }
+
+TEST(QueryTest, CallsRelationship) {
+  std::vector<Relationship *> relationships = {
+    new CallsRelationship(new ProcedureEntity("main"), new ProcedureEntity("one")),
+    new CallsRelationship(new ProcedureEntity("one"), new ProcedureEntity("two")),
+    new CallsRelationship(new ProcedureEntity("two"), new ProcedureEntity("three")),
+    new CallsRelationship(new ProcedureEntity("three"), new ProcedureEntity("four")),
+    new CallsRelationship(new ProcedureEntity("Autobots"), new ProcedureEntity("Megatron"))
+  };
+
+  PKB pkb;
+  pkb.populate(relationships);
+
+  auto result_single_inverse_false = pkb.getByRelationship(RsType::kCalls, new ProcedureEntity("main"), false);
+  auto result_single_inverse_true = pkb.getByRelationship(RsType::kCalls, new ProcedureEntity("Megatron"), true);
+  auto result_invalid_procedure = pkb.getByRelationship(RsType::kCalls, new ProcedureEntity("Bumblebee"), false);
+  auto result_traverse_inverse_false = pkb.getByRelationship(RsType::kCallsAll, new ProcedureEntity("main"), false);
+  auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kCallsAll, new ProcedureEntity("four"), true);
+  auto result_no_preceding_procedure = pkb.getByRelationship(RsType::kCalls, new ProcedureEntity("main"), true);
+  auto result_no_subsequent_procedure = pkb.getByRelationship(RsType::kCalls, new ProcedureEntity("four"), false);
+
+  EntityPointerUnorderedSet expected_result_single_inverse_false = {new ProcedureEntity("one")};
+  EntityPointerUnorderedSet expected_result_single_inverse_true = {new ProcedureEntity("Autobots")};
+  EntityPointerUnorderedSet expected_result_traverse_inverse_false = {new ProcedureEntity("one"), new ProcedureEntity("two"),
+                                                                      new ProcedureEntity("three"), new ProcedureEntity("four")};
+  EntityPointerUnorderedSet expected_result_traverse_inverse_true = {new ProcedureEntity("three"), new ProcedureEntity("two"),
+                                                                     new ProcedureEntity("one"), new ProcedureEntity("main")};
+  EntityPointerUnorderedSet expected_result_empty = {};
+
+  ASSERT_TRUE(set_compare(result_single_inverse_false, expected_result_single_inverse_false));
+  ASSERT_TRUE(set_compare(result_single_inverse_true, expected_result_single_inverse_true));
+  ASSERT_TRUE(set_compare(result_invalid_procedure, expected_result_empty));
+  ASSERT_TRUE(set_compare(result_traverse_inverse_false, expected_result_traverse_inverse_false));
+  ASSERT_TRUE(set_compare(result_traverse_inverse_true, expected_result_traverse_inverse_true));
+  ASSERT_TRUE(set_compare(result_no_preceding_procedure, expected_result_empty));
+  ASSERT_TRUE(set_compare(result_no_subsequent_procedure, expected_result_empty));
+}
+
+TEST(QueryTest, NextRelationship) {
+  std::vector<Relationship *> relationship = {
+    new NextRelationship(new AssignStmtEntity("1"), new AssignStmtEntity("2")),
+    new NextRelationship(new AssignStmtEntity("2"), new AssignStmtEntity("3")),
+    new NextRelationship(new AssignStmtEntity("3"), new AssignStmtEntity("4")),
+    new NextRelationship(new AssignStmtEntity("4"), new AssignStmtEntity("5")),
+    new NextRelationship(new AssignStmtEntity("8"), new AssignStmtEntity("10")),
+  };
+
+  PKB pkb;
+  pkb.populate(relationship);
+
+  auto result_single_inverse_false = pkb.getByRelationship(RsType::kNext, new AssignStmtEntity("1"), false);
+  auto result_single_inverse_true = pkb.getByRelationship(RsType::kNext, new AssignStmtEntity("4"), true);
+  auto result_invalid_assignment_statement = pkb.getByRelationship(RsType::kNext, new AssignStmtEntity("7"), false);
+  auto result_traverse_inverse_false = pkb.getByRelationship(RsType::kNextAll, new AssignStmtEntity("1"), false);
+  auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kNextAll, new AssignStmtEntity("5"), true);
+  auto result_no_preceding_statement = pkb.getByRelationship(RsType::kNext, new AssignStmtEntity("1"), true);
+  auto result_no_subsequent_statement = pkb.getByRelationship(RsType::kNext, new AssignStmtEntity("10"), false);
+
+  EntityPointerUnorderedSet expected_result_single_inverse_false = {new AssignStmtEntity("2")};
+  EntityPointerUnorderedSet expected_result_single_inverse_true = {new AssignStmtEntity("3")};
+  EntityPointerUnorderedSet expected_result_traverse_inverse_false = {new AssignStmtEntity("2"), new AssignStmtEntity("3"),
+                                                                      new AssignStmtEntity("4"), new AssignStmtEntity("5")};
+  EntityPointerUnorderedSet expected_result_traverse_inverse_true = {new AssignStmtEntity("4"), new AssignStmtEntity("3"),
+                                                                     new AssignStmtEntity("2"), new AssignStmtEntity("1")};
+  EntityPointerUnorderedSet expected_result_empty = {};
+
+  ASSERT_TRUE(set_compare(result_single_inverse_false, expected_result_single_inverse_false));
+  ASSERT_TRUE(set_compare(result_single_inverse_true, expected_result_single_inverse_true));
+  ASSERT_TRUE(set_compare(result_invalid_assignment_statement, expected_result_empty));
+  ASSERT_TRUE(set_compare(result_traverse_inverse_false, expected_result_traverse_inverse_false));
+  ASSERT_TRUE(set_compare(result_traverse_inverse_true, expected_result_traverse_inverse_true));
+  ASSERT_TRUE(set_compare(result_no_preceding_statement, expected_result_empty));
+  ASSERT_TRUE(set_compare(result_no_subsequent_statement, expected_result_empty));
+}
