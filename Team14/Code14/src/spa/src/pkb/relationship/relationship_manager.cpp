@@ -16,16 +16,20 @@ RelationshipTable *RelationshipManager::GetTable(RsType rs_type) {
 void RelationshipManager::CreateTable(RsType rs_type) {
   RelationshipTable *table;
   switch (rs_type) {
-    case RsType::kFollows: table = new FollowsTable(); break;
-    case RsType::kParent: table = new ParentTable(); break;
-    case RsType::kModifies: table = new ModifiesTable(); break;
-    case RsType::kUses: table = new UsesTable(); break;
-    case RsType::kCalls: table = new CallsTable(); break;
-    case RsType::kNext: table = new NextTable(); break;
-    default: table = nullptr;
+    case RsType::kFollows: table = new FollowsTable();
+      break;
+    case RsType::kParent: table = new ParentTable();
+      break;
+    case RsType::kModifies: table = new ModifiesTable();
+      break;
+    case RsType::kUses: table = new UsesTable();
+      break;
+    case RsType::kCalls: table = new CallsTable();
+      break;
+    case RsType::kNext: table = new NextTable();
+      break;
+    default: throw PKBException(RsTypeToString(rs_type) + " table could not be created");
   }
-
-  if (table == nullptr) { throw PKBException(RsTypeToString(rs_type) + " table could not be created"); }
   this->relationship_table_map_[rs_type] = table;
 }
 

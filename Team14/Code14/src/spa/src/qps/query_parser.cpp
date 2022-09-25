@@ -65,7 +65,7 @@ QueryDeclaration *QueryParser::parseStmtRefDeclaration(bool allowWild) {
     }
     if (declaration->getType() == EntityType::kStatement) { return declaration; }
     throw ParseSemanticError("Parameter given is not a statement/procedure: "
-                             + EntityTypeToString(declaration->getType()));
+                                 + EntityTypeToString(declaration->getType()));
   }
   if (peekToken()->type == TokenType::kWildCard) {
     if (allowWild) {
@@ -151,7 +151,7 @@ PatternClause *QueryParser::parsePattern() {
   QueryDeclaration *third = parseExpression();
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
   spdlog::debug("Pattern parsed: " + first->toString() + "(" + second->toString() + ", " + third->toString()
-                + ") expression type: " + EntityTypeToString(third->getType()));
+                    + ") expression type: " + EntityTypeToString(third->getType()));
   return new AssignPatternClause(first, second, third);
 }
 SuchThatClause *QueryParser::parseSuchThat() {
@@ -171,8 +171,7 @@ SuchThatClause *QueryParser::parseFollows() {
   if (!(*nextToken() == RoundOpenBracketToken())) { throw ParseSyntaxError("Missing '(' before parameters"); }
   QueryDeclaration *first = parseStmtRefDeclaration(true);
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
-  QueryDeclaration *second = parseStmtRefDeclaration(true);
-  ;
+  QueryDeclaration *second = parseStmtRefDeclaration(true);;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
 
   if (follows_all) {
@@ -191,8 +190,7 @@ SuchThatClause *QueryParser::parseParent() {
   if (!(*nextToken() == RoundOpenBracketToken())) { throw ParseSyntaxError("Missing '(' before parameters"); }
   QueryDeclaration *first = parseStmtRefDeclaration(true);
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
-  QueryDeclaration *second = parseStmtRefDeclaration(true);
-  ;
+  QueryDeclaration *second = parseStmtRefDeclaration(true);;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
 
   if (parent_all) {
@@ -225,8 +223,7 @@ SuchThatClause *QueryParser::parseModifies() {
     first = parseStmtRefDeclaration(false);
   }
   if (!(*nextToken() == CommaToken())) { throw ParseSyntaxError("Missing ',' between parameters"); }
-  QueryDeclaration *second = parseEntRefDeclaration(true);
-  ;
+  QueryDeclaration *second = parseEntRefDeclaration(true);;
   if (!(*nextToken() == RoundCloseBracketToken())) { throw ParseSyntaxError("Missing ')' after parameters"); }
   spdlog::debug("Modifies parsed: " + first->toString() + ", " + second->toString());
   return new ModifiesClause(first, second);

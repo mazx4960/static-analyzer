@@ -8,8 +8,12 @@ Entity::Entity(EntityType type, std::string value) {
   this->type_ = type;
   this->value_ = std::move(value);
 }
-EntityType Entity::GetType() const { return this->type_; }
-std::string Entity::GetValue() const { return this->value_; }
+EntityType Entity::GetType() const {
+  return this->type_;
+}
+std::string Entity::GetValue() const {
+  return this->value_;
+}
 bool Entity::operator==(const Entity &other) const {
   return this->type_ == other.GetType() && this->value_ == other.GetValue();
 }

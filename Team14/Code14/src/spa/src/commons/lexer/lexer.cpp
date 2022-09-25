@@ -57,7 +57,7 @@ Token *Lexer::next_token() {
   char c = advance();
   tmp_ = c;
   if (isalpha(c) || isdigit(c)) {
-    // Symbol
+    // create symbol token
     read_alphanumeric();
     return new SymbolToken(tmp_);
   }
