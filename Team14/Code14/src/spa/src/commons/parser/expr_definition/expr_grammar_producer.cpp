@@ -2,23 +2,38 @@
 
 #include "expr_grammar_producer.h"
 
-ParenthesizedGrammarProducer::ParenthesizedGrammarProducer(GrammarRuleProducer* producer)
-    : parenthesized_rule_(producer) {}
+ParenthesizedGrammarProducer::ParenthesizedGrammarProducer(GrammarRuleProducer *producer)
+    : parenthesized_rule_(producer) {
+}
 
-ParenthesizedGrammarRule* ParenthesizedGrammarProducer::produce() {
+ParenthesizedGrammarRule *ParenthesizedGrammarProducer::produce() {
   return new ParenthesizedGrammarRule(parenthesized_rule_);
 }
 
-RelFactorGrammarRule* RelFactorGrammarProducer::produce() { return new RelFactorGrammarRule(); }
+RelFactorGrammarRule *RelFactorGrammarProducer::produce() {
+  return new RelFactorGrammarRule();
+}
 
-ExprGrammarRule* ExprGrammarProducer::produce() { return new ExprGrammarRule(); }
+ExprGrammarRule *ExprGrammarProducer::produce() {
+  return new ExprGrammarRule();
+}
 
-TermGrammarRule* TermGrammarProducer::produce() { return new TermGrammarRule(); }
+TermGrammarRule *TermGrammarProducer::produce() {
+  return new TermGrammarRule();
+}
 
-FactorGrammarRule* FactorGrammarProducer::produce() { return new FactorGrammarRule(); }
+FactorGrammarRule *FactorGrammarProducer::produce() {
+  return new FactorGrammarRule();
+}
 
-ReferenceGrammarRule* ReferenceGrammarProducer::produce() { return new ReferenceGrammarRule(); }
+ReferenceGrammarRule *ReferenceGrammarProducer::produce() {
+  return new ReferenceGrammarRule();
+}
 
-VariableGrammarRule* VariableGrammarProducer::produce() { return new VariableGrammarRule(); }
+VariableGrammarRule *VariableGrammarProducer::produce() {
+  return new VariableGrammarRule();
+}
 
-ConstantGrammarRule* ConstantGrammarProducer::produce() { return new ConstantGrammarRule(); }
+ConstantGrammarRule *ConstantGrammarProducer::produce() {
+  return new ConstantGrammarRule();
+}

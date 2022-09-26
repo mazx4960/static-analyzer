@@ -16,4 +16,6 @@ Query QueryBuilder::build() {
 void QueryBuilder::withDeclarations(std::vector<QueryDeclaration *> query_declarations) {
   this->query_declarations_ = std::move(query_declarations);
 }
-void QueryBuilder::withQueryCalls(std::vector<QueryCall *> query_calls) { this->query_calls_ = std::move(query_calls); }
+void QueryBuilder::withQueryCalls(std::vector<QueryCall *> query_calls) {
+  this->query_calls_ = std::move(query_calls);
+}

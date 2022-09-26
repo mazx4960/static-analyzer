@@ -7,5 +7,6 @@
 
 class PKBException : public std::runtime_error {
  public:
-  explicit PKBException(const std::string &message) : std::runtime_error("PKB exception: " + message) {}
+  explicit PKBException(const std::string &message) : std::runtime_error("PKB exception: " + message) {
+  }
 };

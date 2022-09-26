@@ -22,7 +22,8 @@ inline std::string ClauseTypeToString(ClauseType type) {
 
 class QueryClause {
  protected:
-  explicit QueryClause(ClauseType clauseType) : clause_type_(clauseType) {};
+  explicit QueryClause(ClauseType clauseType) : clause_type_(clauseType) {
+  };
 
   ClauseType clause_type_;
 
@@ -33,7 +34,8 @@ class QueryClause {
 class SuchThatClause : public QueryClause {
  public:
   explicit SuchThatClause(RsType type, QueryDeclaration *first, QueryDeclaration *second)
-      : QueryClause(ClauseType::kSuchThat), type_(type), first_(first), second_(second) {};
+      : QueryClause(ClauseType::kSuchThat), type_(type), first_(first), second_(second) {
+  };
 
   RsType type_;
 
@@ -49,7 +51,8 @@ class SuchThatClause : public QueryClause {
 class PatternClause : public QueryClause {
  public:
   explicit PatternClause(RsType type, QueryDeclaration *first, QueryDeclaration *second, QueryDeclaration *third)
-      : QueryClause(ClauseType::kPattern), type_(type), first_(first), second_(second), third_(third) {};
+      : QueryClause(ClauseType::kPattern), type_(type), first_(first), second_(second), third_(third) {
+  };
 
   RsType type_;
 
@@ -68,41 +71,48 @@ class PatternClause : public QueryClause {
 class ParentClause : public SuchThatClause {
  public:
   explicit ParentClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(RsType::kParent, first, second) {}
+      : SuchThatClause(RsType::kParent, first, second) {
+  }
 };
 
 class ParentAllClause : public SuchThatClause {
  public:
   explicit ParentAllClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(RsType::kParentAll, first, second) {}
+      : SuchThatClause(RsType::kParentAll, first, second) {
+  }
 };
 
 class FollowsClause : public SuchThatClause {
  public:
   explicit FollowsClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(RsType::kFollows, first, second) {}
+      : SuchThatClause(RsType::kFollows, first, second) {
+  }
 };
 
 class FollowsAllClause : public SuchThatClause {
  public:
   explicit FollowsAllClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(RsType::kFollowsAll, first, second) {}
+      : SuchThatClause(RsType::kFollowsAll, first, second) {
+  }
 };
 
 class UsesClause : public SuchThatClause {
  public:
   explicit UsesClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(RsType::kUses, first, second) {}
+      : SuchThatClause(RsType::kUses, first, second) {
+  }
 };
 
 class ModifiesClause : public SuchThatClause {
  public:
   explicit ModifiesClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(RsType::kModifies, first, second) {}
+      : SuchThatClause(RsType::kModifies, first, second) {
+  }
 };
 
 class AssignPatternClause : public PatternClause {
  public:
   explicit AssignPatternClause(QueryDeclaration *first, QueryDeclaration *second, QueryDeclaration *third)
-      : PatternClause(RsType::kAssignPattern, first, second, third) {}
+      : PatternClause(RsType::kAssignPattern, first, second, third) {
+  }
 };

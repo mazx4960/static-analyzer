@@ -25,7 +25,9 @@ std::vector<Entity *> EntityExtractor::ExtractAll(Node *node) {
  */
 std::vector<Entity *> EntityExtractor::ExtractAllVariables(Node *node) {
   std::vector<Entity *> entities;
-  auto const op = [&entities](Node *node) { ExtractVariable(entities, node); };
+  auto const op = [&entities](Node *node) {
+    ExtractVariable(entities, node);
+  };
   node->VisitAll(op);
   return entities;
 }

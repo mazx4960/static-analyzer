@@ -26,52 +26,62 @@ class Entity {
 
 class ProcedureEntity : public Entity {
  public:
-  explicit ProcedureEntity(std::string name) : Entity(EntityType::kProcedure, std::move(name)) {}
+  explicit ProcedureEntity(std::string name) : Entity(EntityType::kProcedure, std::move(name)) {
+  }
 };
 
 class VariableEntity : public Entity {
  public:
-  explicit VariableEntity(std::string name) : Entity(EntityType::kVariable, std::move(name)) {}
+  explicit VariableEntity(std::string name) : Entity(EntityType::kVariable, std::move(name)) {
+  }
 };
 
 class ConstantEntity : public Entity {
  public:
-  explicit ConstantEntity(std::string name) : Entity(EntityType::kConstant, std::move(name)) {}
+  explicit ConstantEntity(std::string name) : Entity(EntityType::kConstant, std::move(name)) {
+  }
 };
 
 class ReadStmtEntity : public Entity {
  public:
-  explicit ReadStmtEntity(std::string stmt_no) : Entity(EntityType::kReadStmt, std::move(stmt_no)) {}
+  explicit ReadStmtEntity(std::string stmt_no) : Entity(EntityType::kReadStmt, std::move(stmt_no)) {
+  }
 };
 
 class PrintStmtEntity : public Entity {
  public:
-  explicit PrintStmtEntity(std::string stmt_no) : Entity(EntityType::kPrintStmt, std::move(stmt_no)) {}
+  explicit PrintStmtEntity(std::string stmt_no) : Entity(EntityType::kPrintStmt, std::move(stmt_no)) {
+  }
 };
 
 class AssignStmtEntity : public Entity {
  public:
-  explicit AssignStmtEntity(std::string stmt_no) : Entity(EntityType::kAssignStmt, std::move(stmt_no)) {}
+  explicit AssignStmtEntity(std::string stmt_no) : Entity(EntityType::kAssignStmt, std::move(stmt_no)) {
+  }
 };
 
 class CallStmtEntity : public Entity {
  public:
-  explicit CallStmtEntity(std::string stmt_no) : Entity(EntityType::kCallStmt, std::move(stmt_no)) {}
+  explicit CallStmtEntity(std::string stmt_no) : Entity(EntityType::kCallStmt, std::move(stmt_no)) {
+  }
 };
 
 class WhileStmtEntity : public Entity {
  public:
-  explicit WhileStmtEntity(std::string stmt_no) : Entity(EntityType::kWhileStmt, std::move(stmt_no)) {}
+  explicit WhileStmtEntity(std::string stmt_no) : Entity(EntityType::kWhileStmt, std::move(stmt_no)) {
+  }
 };
 
 class IfStmtEntity : public Entity {
  public:
-  explicit IfStmtEntity(std::string stmt_no) : Entity(EntityType::kIfStmt, std::move(stmt_no)) {}
+  explicit IfStmtEntity(std::string stmt_no) : Entity(EntityType::kIfStmt, std::move(stmt_no)) {
+  }
 };
 
 class StmtEntity : public Entity {
  public:
-  explicit StmtEntity(std::string stmt_no) : Entity(EntityType::kStatement, std::move(stmt_no)) {}
+  explicit StmtEntity(std::string stmt_no) : Entity(EntityType::kStatement, std::move(stmt_no)) {
+  }
 };
 
 /**
@@ -86,8 +96,12 @@ struct EntityPointerEquality {
 };
 
 struct EntityHashFunction {
-  size_t operator()(const Entity &entity) const { return entity.GetHash(); }
-  size_t operator()(const Entity *entity) const { return entity->GetHash(); }
+  size_t operator()(const Entity &entity) const {
+    return entity.GetHash();
+  }
+  size_t operator()(const Entity *entity) const {
+    return entity->GetHash();
+  }
 };
 
 struct EntityPointerComparator {

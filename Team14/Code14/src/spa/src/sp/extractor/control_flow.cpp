@@ -9,17 +9,32 @@
 
 #include "sp/simple_definition/simple_ast.h"
 
-CFGNode::CFGNode(Entity *stmt) : stmt_(stmt) {}
-Entity *CFGNode::GetStmt() { return this->stmt_; }
-void CFGNode::AddChild(CFGNode *child) { this->children_.push_back(child); }
+CFGNode::CFGNode(Entity *stmt) : stmt_(stmt) {
+}
+Entity *CFGNode::GetStmt() {
+  return this->stmt_;
+}
+void CFGNode::AddChild(CFGNode *child) {
+  this->children_.push_back(child);
+}
 void CFGNode::SetChild(CFGNode *child, int pos) {
-  if (pos >= this->children_.size()) { return; }
+  if (pos >= this->children_.size()) {
+    return;
+  }
   this->children_[pos] = child;
 }
-void CFGNode::SetChildren(std::vector<CFGNode *> children) { this->children_ = std::move(children); }
-bool CFGNode::IsTerminal() { return this->stmt_->GetValue() == "-1"; }
-std::vector<CFGNode *> CFGNode::GetChildren() { return this->children_; }
-std::string CFGNode::ToString() { return stmt_->ToString(); }
+void CFGNode::SetChildren(std::vector<CFGNode *> children) {
+  this->children_ = std::move(children);
+}
+bool CFGNode::IsTerminal() {
+  return this->stmt_->GetValue() == "-1";
+}
+std::vector<CFGNode *> CFGNode::GetChildren() {
+  return this->children_;
+}
+std::string CFGNode::ToString() {
+  return stmt_->ToString();
+}
 /**
  * DFS to visit all nodes
  * prevents infinite loop by keeping track of visited nodes
@@ -42,7 +57,9 @@ void CFGNode::VisitAll(const std::function<void(CFGNode *)> &op) {
 /**
  * Builder class for control flow graph
  */
-CFGBuilder::CFGBuilder() { this->start_node_ = new CFGNode(new StmtEntity("-1")); }
+CFGBuilder::CFGBuilder() {
+  this->start_node_ = new CFGNode(new StmtEntity("-1"));
+}
 /**
  * Build the control flow graph for a given procedure node
  * @param node procedure node
@@ -98,7 +115,9 @@ CFGNode *CFGBuilder::ToCFGNode(Node *node) {
  * @param parent
  * @param child
  */
-void CFGBuilder::ConnectNode(CFGNode *parent, CFGNode *child) { parent->AddChild(child); }
+void CFGBuilder::ConnectNode(CFGNode *parent, CFGNode *child) {
+  parent->AddChild(child);
+}
 /**
  * Build a block of statements
  * @param node statement list node
@@ -117,9 +136,12 @@ CFGNode *CFGBuilder::BuildBlock(Node *node, CFGNode *parent, CFGNode *terminal) 
     auto *stmt_node = static_cast<StatementNode *>(node);
     ConnectNode(parent, child);
     switch (stmt_node->GetStmtType()) {
-      case EntityType::kIfStmt: parent = BuildIf(node, child); break;
-      case EntityType::kWhileStmt: parent = BuildWhile(node, child); break;
-      default: parent = child; break;
+      case EntityType::kIfStmt: parent = BuildIf(node, child);
+        break;
+      case EntityType::kWhileStmt: parent = BuildWhile(node, child);
+        break;
+      default: parent = child;
+        break;
     }
   };
   node->VisitChildren(op);

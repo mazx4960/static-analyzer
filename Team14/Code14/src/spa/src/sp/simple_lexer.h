@@ -12,15 +12,18 @@
 class SimpleLexer : Lexer {
  private:
   std::unordered_set<std::string> valid_single_operators_ = {"+", "-", "*", "/", "%", "<", ">", "&", "|", "!", "="};
+
   std::unordered_set<std::string> valid_operators_ = {
       "+", "-", "*", "/", "%", "<", ">", ">=", "<=", "&&", "||", "!=", "==", "=", "!"};
-  std::unordered_set<std::string> valid_keywords_ = {"procedure", "if",   "then",  "else",
-                                                     "while",     "read", "print", "call"};
+
+  std::unordered_set<std::string> valid_keywords_ = {"procedure", "if", "then", "else",
+                                                     "while", "read", "print", "call"};
 
   void read_operators();
 
  public:
-  explicit SimpleLexer(std::istream* source_stream) : Lexer(source_stream){};
-  Token* next_token() override;
-  std::vector<Token*> lex() override;
+  explicit SimpleLexer(std::istream *source_stream) : Lexer(source_stream) {
+  };
+  Token *next_token() override;
+  std::vector<Token *> lex() override;
 };

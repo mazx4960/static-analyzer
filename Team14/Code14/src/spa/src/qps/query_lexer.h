@@ -11,6 +11,7 @@
 
 class QueryLexer : public Lexer {
  public:
-  explicit QueryLexer(std::istream *source_stream) : Lexer(source_stream){};
+  explicit QueryLexer(std::istream *source_stream) : Lexer(source_stream) {
+  };
   Token *next_token() override;
 };

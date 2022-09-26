@@ -9,6 +9,7 @@
 class CFGNode {
  private:
   Entity *stmt_;
+
   std::vector<CFGNode *> children_;
 
  public:
@@ -26,6 +27,7 @@ class CFGNode {
 class CFGBuilder {
  private:
   CFGNode *start_node_;
+
   static CFGNode *ToCFGNode(Node *node);
   static void ConnectNode(CFGNode *parent, CFGNode *child);
   static CFGNode *BuildBlock(Node *node, CFGNode *parent, CFGNode *terminal);

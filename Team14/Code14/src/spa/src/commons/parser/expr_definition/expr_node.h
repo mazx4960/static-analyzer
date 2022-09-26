@@ -21,12 +21,14 @@ class RelFactorNode : public Node {
 class ExprNode : public RelFactorNode {
  private:
   ExprType expr_type_;
-  RelFactorNode* leftExpression_;
-  RelFactorNode* rightExpression_;
+
+  RelFactorNode *leftExpression_;
+
+  RelFactorNode *rightExpression_;
 
  public:
-  ExprNode(ExprType expr_type, RelFactorNode* leftExpression, RelFactorNode* rightExpression);
-  std::vector<Node*> GetChildren() override;
+  ExprNode(ExprType expr_type, RelFactorNode *leftExpression, RelFactorNode *rightExpression);
+  std::vector<Node *> GetChildren() override;
   std::string ToString() override;
   ExprType GetExprType();
 };
@@ -34,38 +36,43 @@ class ExprNode : public RelFactorNode {
 class PlusNode : public ExprNode {
 
  public:
-  PlusNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression)
-      : ExprNode(ExprType::kPlus, leftExpression, rightExpression){};
+  PlusNode(RelFactorNode *leftExpression, RelFactorNode *rightExpression)
+      : ExprNode(ExprType::kPlus, leftExpression, rightExpression) {
+  };
 };
 
 class MinusNode : public ExprNode {
  public:
-  MinusNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression)
-      : ExprNode(ExprType::kMinus, leftExpression, rightExpression){};
+  MinusNode(RelFactorNode *leftExpression, RelFactorNode *rightExpression)
+      : ExprNode(ExprType::kMinus, leftExpression, rightExpression) {
+  };
 };
 
 class TimesNode : public ExprNode {
  public:
-  TimesNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression)
-      : ExprNode(ExprType::kTimes, leftExpression, rightExpression){};
+  TimesNode(RelFactorNode *leftExpression, RelFactorNode *rightExpression)
+      : ExprNode(ExprType::kTimes, leftExpression, rightExpression) {
+  };
 };
 
 class DivNode : public ExprNode {
  public:
-  DivNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression)
-      : ExprNode(ExprType::kDiv, leftExpression, rightExpression){};
+  DivNode(RelFactorNode *leftExpression, RelFactorNode *rightExpression)
+      : ExprNode(ExprType::kDiv, leftExpression, rightExpression) {
+  };
 };
 
 class ModNode : public ExprNode {
  public:
-  ModNode(RelFactorNode* leftExpression, RelFactorNode* rightExpression)
-      : ExprNode(ExprType::kMod, leftExpression, rightExpression){};
+  ModNode(RelFactorNode *leftExpression, RelFactorNode *rightExpression)
+      : ExprNode(ExprType::kMod, leftExpression, rightExpression) {
+  };
 };
 
 class ReferenceNode : public RelFactorNode {
  public:
   explicit ReferenceNode(NodeType nodeType);
-  std::vector<Node*> GetChildren() override;
+  std::vector<Node *> GetChildren() override;
 };
 
 class VariableNode : public ReferenceNode {

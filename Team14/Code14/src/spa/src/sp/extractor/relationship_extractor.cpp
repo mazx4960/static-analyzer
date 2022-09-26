@@ -111,10 +111,14 @@ void RelationshipExtractor::ExtractParent(std::vector<Relationship *> &relations
  */
 void RelationshipExtractor::ExtractParentHelper(std::vector<Relationship *> &relationships, Entity *parent,
                                                 Node *node) {
-  if (node->GetNodeType() != NodeType::kStatementList) { return; }
+  if (node->GetNodeType() != NodeType::kStatementList) {
+    return;
+  }
   // Get all children entities
   std::vector<Entity *> children;
-  auto const op = [&children](Node *node) { EntityExtractor::ExtractStatement(children, node); };
+  auto const op = [&children](Node *node) {
+    EntityExtractor::ExtractStatement(children, node);
+  };
   node->VisitChildren(op);
   // Match the child with the parent entity
   Match(relationships, RsType::kParent, parent, children);

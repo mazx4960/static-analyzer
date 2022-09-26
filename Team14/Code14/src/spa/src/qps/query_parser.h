@@ -12,6 +12,7 @@
 class QueryParser {
  private:
   std::vector<Token *> tokens_;
+
   std::vector<QueryDeclaration *> query_declarations_;
 
   std::unordered_set<std::string> synonyms_;

@@ -19,4 +19,6 @@ SPA::SPA(std::string source_file, const std::string &query_file, int mode) {
   sp->SetPKB(pkb);
   qps->SetPKB(pkb);
 }
-void SPA::Run() { this->ui_->Run(); }
+void SPA::Run() {
+  this->ui_->Run();
+}

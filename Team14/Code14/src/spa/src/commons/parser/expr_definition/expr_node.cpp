@@ -2,14 +2,18 @@
 
 #include "expr_node.h"
 
-RelFactorNode::RelFactorNode(NodeType nodeType) : Node(nodeType) {}
+RelFactorNode::RelFactorNode(NodeType nodeType) : Node(nodeType) {
+}
 
-ExprNode::ExprNode(ExprType expr_type, RelFactorNode* leftExpression, RelFactorNode* rightExpression)
+ExprNode::ExprNode(ExprType expr_type, RelFactorNode *leftExpression, RelFactorNode *rightExpression)
     : RelFactorNode(NodeType::kExpr),
       expr_type_(expr_type),
       leftExpression_(leftExpression),
-      rightExpression_(rightExpression) {}
-std::vector<Node*> ExprNode::GetChildren() { return std::vector<Node*>{leftExpression_, rightExpression_}; }
+      rightExpression_(rightExpression) {
+}
+std::vector<Node *> ExprNode::GetChildren() {
+  return std::vector<Node *>{leftExpression_, rightExpression_};
+}
 std::string ExprNode::ToString() {
   if (this->expr_type_ == ExprType::kPlus) {
     return "(" + leftExpression_->ToString() + "+" + rightExpression_->ToString() + ")";
@@ -28,16 +32,31 @@ std::string ExprNode::ToString() {
   }
   return "";
 }
-ExprType ExprNode::GetExprType() { return expr_type_; }
-ReferenceNode::ReferenceNode(NodeType nodeType) : RelFactorNode(nodeType) {}
-std::vector<Node*> ReferenceNode::GetChildren() { return std::vector<Node*>{}; }
+ExprType ExprNode::GetExprType() {
+  return expr_type_;
+}
+ReferenceNode::ReferenceNode(NodeType nodeType) : RelFactorNode(nodeType) {
+}
+std::vector<Node *> ReferenceNode::GetChildren() {
+  return std::vector<Node *>{};
+}
 
 VariableNode::VariableNode(std::string variableName)
     : ReferenceNode(NodeType::kVariable),
-      variableName_(std::move(variableName)) {}
-std::string VariableNode::GetVariableName() { return this->variableName_; }
-std::string VariableNode::ToString() { return "(" + this->variableName_ + ")"; }
+      variableName_(std::move(variableName)) {
+}
+std::string VariableNode::GetVariableName() {
+  return this->variableName_;
+}
+std::string VariableNode::ToString() {
+  return "(" + this->variableName_ + ")";
+}
 
-ConstantNode::ConstantNode(int value) : ReferenceNode(NodeType::kConstant), value_(value) {}
-int ConstantNode::GetValue() const { return this->value_; }
-std::string ConstantNode::ToString() { return "(" + std::to_string(this->value_) + ")"; }
+ConstantNode::ConstantNode(int value) : ReferenceNode(NodeType::kConstant), value_(value) {
+}
+int ConstantNode::GetValue() const {
+  return this->value_;
+}
+std::string ConstantNode::ToString() {
+  return "(" + std::to_string(this->value_) + ")";
+}
