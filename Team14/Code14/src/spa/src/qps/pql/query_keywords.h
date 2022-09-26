@@ -10,21 +10,26 @@
 
 class QueryKeywords {
  private:
-  inline static const std::unordered_set<std::string> kCallKeywords {"Select"};
-  inline static const std::unordered_set<std::string> kDeclarationKeywords {
+  inline static const std::unordered_set<std::string> kCallKeywords{"Select"};
+
+  inline static const std::unordered_set<std::string> kDeclarationKeywords{
       "stmt", "read", "print", "call", "while", "if", "assign", "variable", "constant", "procedure"};
-  inline static const std::unordered_set<std::string> kSuchThatKeywords {
+
+  inline static const std::unordered_set<std::string> kSuchThatKeywords{
       "such", "that"};
-  inline static const std::unordered_set<std::string> kClauseKeywords {
+
+  inline static const std::unordered_set<std::string> kClauseKeywords{
       "Follows", "Parent", "Uses", "Modifies", "pattern"};
+
   inline static const std::unordered_set<std::string> kAssignOperators = {
       "+", "-", "*", "/", "%", "<", ">"};
+
  public:
-  static bool isValidKeyword(const std::string& keyword);
-  static bool isValidSuchThatKeyword(const std::string& keyword);
-  static bool isValidDeclarationKeyword(const std::string& keyword);
-  static bool isValidCallKeyword(const std::string& keyword);
-  static bool isValidClauseKeyword(const std::string& keyword);
-  static bool isValidAssignOperator(const std::string& keyword);
+  static bool isValidKeyword(const std::string &keyword);
+  static bool isValidSuchThatKeyword(const std::string &keyword);
+  static bool isValidDeclarationKeyword(const std::string &keyword);
+  static bool isValidCallKeyword(const std::string &keyword);
+  static bool isValidClauseKeyword(const std::string &keyword);
+  static bool isValidAssignOperator(const std::string &keyword);
 
 };

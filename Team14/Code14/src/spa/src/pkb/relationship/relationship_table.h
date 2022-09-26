@@ -61,5 +61,5 @@ class CallsTable : public RelationshipTable {
 
 class NextTable : public RelationshipTable {
  public:
-     NextTable() = default;
+  NextTable() = default;
 };

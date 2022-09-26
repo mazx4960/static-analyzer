@@ -10,6 +10,6 @@
 
 class Parser {
  public:
-  static Node* Parse(GrammarRule* grammar_rule, std::vector<Token*> tokens);
-  static Node* ParseExpression(const std::vector<Token*>& tokens);
+  static Node *Parse(GrammarRule *grammar_rule, std::vector<Token *> tokens);
+  static Node *ParseExpression(const std::vector<Token *> &tokens);
 };

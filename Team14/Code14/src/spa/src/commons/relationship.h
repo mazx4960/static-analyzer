@@ -8,7 +8,9 @@
 class Relationship {
  private:
   RsType type_;
+
   Entity *first_;
+
   Entity *second_;
 
  public:
@@ -23,35 +25,41 @@ class Relationship {
 class FollowsRelationship : public Relationship {
  public:
   FollowsRelationship(Entity *first, Entity *second)
-      : Relationship(RsType::kFollows, std::move(first), std::move(second)) {}
+      : Relationship(RsType::kFollows, std::move(first), std::move(second)) {
+  }
 };
 
 class ParentRelationship : public Relationship {
  public:
   ParentRelationship(Entity *first, Entity *second)
-      : Relationship(RsType::kParent, std::move(first), std::move(second)) {}
+      : Relationship(RsType::kParent, std::move(first), std::move(second)) {
+  }
 };
 
 class UsesRelationship : public Relationship {
  public:
   UsesRelationship(Entity *first, Entity *second)
-      : Relationship(RsType::kUses, std::move(first), std::move(second)) {}
+      : Relationship(RsType::kUses, std::move(first), std::move(second)) {
+  }
 };
 
 class ModifiesRelationship : public Relationship {
  public:
   ModifiesRelationship(Entity *first, Entity *second)
-      : Relationship(RsType::kModifies, std::move(first), std::move(second)) {}
+      : Relationship(RsType::kModifies, std::move(first), std::move(second)) {
+  }
 };
 
 class CallsRelationship : public Relationship {
  public:
   CallsRelationship(Entity *first, Entity *second)
-      : Relationship(RsType::kCalls, std::move(first), std::move(second)) {}
+      : Relationship(RsType::kCalls, std::move(first), std::move(second)) {
+  }
 };
 
 class NextRelationship : public Relationship {
  public:
   NextRelationship(Entity *first, Entity *second)
-      : Relationship(RsType::kNext, std::move(first), std::move(second)) {}
+      : Relationship(RsType::kNext, std::move(first), std::move(second)) {
+  }
 };

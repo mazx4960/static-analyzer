@@ -2,8 +2,11 @@
 
 #include "node.h"
 
-Node::Node(NodeType nodeType) : nodeType_(nodeType) {}
-NodeType Node::GetNodeType() const { return nodeType_; }
+Node::Node(NodeType nodeType) : nodeType_(nodeType) {
+}
+NodeType Node::GetNodeType() const {
+  return nodeType_;
+}
 /**
  * Visit all nodes in the tree.
  *
@@ -11,7 +14,9 @@ NodeType Node::GetNodeType() const { return nodeType_; }
  */
 void Node::VisitAll(const std::function<void(Node *)> &op) {
   op(this);
-  for (auto *child : this->GetChildren()) { child->VisitAll(op); }
+  for (auto *child : this->GetChildren()) {
+    child->VisitAll(op);
+  }
 }
 /**
  * Visit all children of this node.

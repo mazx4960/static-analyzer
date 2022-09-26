@@ -3,7 +3,9 @@
 
 #include <spdlog/spdlog.h>
 
-PatternManager::PatternManager() { this->pattern_table_ = new PatternTable(); }
+PatternManager::PatternManager() {
+  this->pattern_table_ = new PatternTable();
+}
 PatternTable *PatternManager::GetTable() {
   return this->pattern_table_;
 }

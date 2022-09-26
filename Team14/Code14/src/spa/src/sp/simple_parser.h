@@ -7,5 +7,5 @@
 
 class SimpleParser : public Parser {
  public:
-  static Node* ParseProgram(const std::vector<Token*>& tokens);
+  static Node *ParseProgram(const std::vector<Token *> &tokens);
 };

@@ -21,11 +21,11 @@ QueryDeclarationPointerUnorderedSet QueryEvaluator::getDeclarationAsSet() {
 QueryDeclarationPointerUnorderedSet QueryEvaluator::copyDeclarations() {
   Query &query = this->query_;
   std::vector<QueryDeclaration *> query_declarations = query.getDeclarations();
-  this->declarations_ = std::unordered_set<QueryDeclaration *,
-                                           QueryDeclarationHashFunction,
-                                           QueryDeclarationPointerEquality>(
-      query_declarations.begin(), query_declarations.end()
-  );
+  this->declarations_ = std::unordered_set < QueryDeclaration *,
+      QueryDeclarationHashFunction,
+      QueryDeclarationPointerEquality > (
+          query_declarations.begin(), query_declarations.end()
+      );
   return this->getDeclarationAsSet();
 }
 
