@@ -88,7 +88,7 @@ void UI::DisplayResults(const Result *result) {
 
   spdlog::info("====================BEGIN QUERY RESULTS====================");
   std::string result_string;
-  for (const std::string &curr : results_string_list) {
+  for (const auto &curr : results_string_list) {
     result_string += curr + ", ";
   }
   spdlog::info("Results for '{}'[{}]: {}", result->get_synonym()->toString(), results_string_list.size(), result_string);

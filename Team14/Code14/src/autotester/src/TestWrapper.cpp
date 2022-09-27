@@ -31,7 +31,7 @@ void TestWrapper::parse(std::string filename) {
 }
 
 // method to evaluating a query
-void TestWrapper::evaluate(std::string query, std::list<std::string> &final_results_list) {
+void TestWrapper::evaluate(std::string query, std::list<std::string> &results) {
   this->ui_->SetQueryString(query);
   auto *result = this->ui_->ExecuteQuery();
 
@@ -42,5 +42,5 @@ void TestWrapper::evaluate(std::string query, std::list<std::string> &final_resu
   // store the answers to the query in the results list (it is initially empty)
   // each result must be a string.
   std::unordered_set<std::string> results_set = result->get_results_set();
-  std::copy(results_set.begin(), results_set.end(), std::back_inserter(final_results_list));
+  std::copy(results_set.begin(), results_set.end(), std::back_inserter(results));
 }
