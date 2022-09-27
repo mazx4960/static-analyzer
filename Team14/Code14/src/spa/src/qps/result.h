@@ -18,18 +18,22 @@ class Result {
  private:
   QuerySynonym *synonym_;
 
-  std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> results_;
+  std::unordered_set<std::string> results_;
 
  public:
-  explicit Result(QuerySynonym *synonym, EntityPointerUnorderedSet results_set)
-      : synonym_(std::move(synonym)), results_(std::move(results_set)) {
-  };
+  Result(QuerySynonym *, const EntityPointerUnorderedSet &);
+
+  Result(QuerySynonym *, std::unordered_set<std::string>);
 
   static Result *empty();
-  static Result *empty(QuerySynonym *synonym);
+  static Result *empty(QuerySynonym *);
+
+  static Result *semanticError();
+  static Result *syntacticError();
 
   [[nodiscard]] bool is_empty() const;
   [[nodiscard]] QuerySynonym *get_synonym() const;
-  [[nodiscard]] EntityPointerUnorderedSet get_results_set() const;
-  [[nodiscard]] std::vector<Entity *> get_sorted_results_list() const;
+  [[nodiscard]] std::unordered_set<std::string> get_results_set() const;
+  [[nodiscard]] std::vector<std::string> get_sorted_results_string_list() const;
+  int size() const;
 };
