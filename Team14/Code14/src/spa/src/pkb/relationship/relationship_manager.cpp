@@ -16,14 +16,20 @@ RelationshipTable *RelationshipManager::GetTable(RsType rs_type) {
 void RelationshipManager::CreateTable(RsType rs_type) {
   RelationshipTable *table;
   switch (rs_type) {
-    case RsType::kFollows: table = new FollowsTable(); break;
-    case RsType::kParent: table = new ParentTable(); break;
-    case RsType::kModifies: table = new ModifiesTable(); break;
-    case RsType::kUses: table = new UsesTable(); break;
-    default: table = nullptr;
+    case RsType::kFollows: table = new FollowsTable();
+      break;
+    case RsType::kParent: table = new ParentTable();
+      break;
+    case RsType::kModifies: table = new ModifiesTable();
+      break;
+    case RsType::kUses: table = new UsesTable();
+      break;
+    case RsType::kCalls: table = new CallsTable();
+      break;
+    case RsType::kNext: table = new NextTable();
+      break;
+    default: throw PKBException(RsTypeToString(rs_type) + " table could not be created");
   }
-
-  if (table == nullptr) { throw PKBException(RsTypeToString(rs_type) + " table could not be created"); }
   this->relationship_table_map_[rs_type] = table;
 }
 
@@ -45,6 +51,14 @@ EntityPointerUnorderedSet RelationshipManager::Get(RsType rs_type, Entity *entit
     }
     case RsType::kParentAll: {
       matches = this->GetAll(RsType::kParent, entity, is_inverse);
+      break;
+    }
+    case RsType::kCallsAll: {
+      matches = this->GetAll(RsType::kCalls, entity, is_inverse);
+      break;
+    }
+    case RsType::kNextAll: {
+      matches = this->GetAll(RsType::kNext, entity, is_inverse);
       break;
     }
     default: {

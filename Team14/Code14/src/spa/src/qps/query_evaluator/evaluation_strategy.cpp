@@ -50,7 +50,9 @@ EntityPointerUnorderedSet EvaluationStrategy::getCandidates(QueryDeclaration *de
  * @param declaration query declaration.
  * @return true if the context should be intersected, false otherwise.
  */
-bool EvaluationStrategy::shouldIntersect(QueryDeclaration *declaration) { return !declaration->getContext().empty(); }
+bool EvaluationStrategy::shouldIntersect(QueryDeclaration *declaration) {
+  return !declaration->getContext().empty();
+}
 
 /**
  * Intersect the context of two QueryDeclarations.

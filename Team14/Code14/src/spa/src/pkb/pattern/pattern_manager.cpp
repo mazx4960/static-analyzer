@@ -3,10 +3,16 @@
 
 #include <spdlog/spdlog.h>
 
-PatternManager::PatternManager() { this->pattern_table_ = new PatternTable(); }
-PatternTable *PatternManager::GetTable() { return this->pattern_table_; }
+PatternManager::PatternManager() {
+  this->pattern_table_ = new PatternTable();
+}
+PatternTable *PatternManager::GetTable() {
+  return this->pattern_table_;
+}
 void PatternManager::Populate(const std::vector<Pattern *> &patterns) {
-  for (Pattern *pattern : patterns) { this->pattern_table_->Populate(*pattern); }
+  for (Pattern *pattern : patterns) {
+    this->pattern_table_->Populate(*pattern);
+  }
 }
 EntityPointerUnorderedSet PatternManager::Get(Entity *variable, const std::string &expr, bool isSubmatch) {
   spdlog::debug("Retrieving all statements that matches {} = {}", variable->GetValue(), expr);

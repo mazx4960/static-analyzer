@@ -7,7 +7,9 @@
 class Pattern {
  private:
   Entity *stmt_;
+
   Entity *variable_;
+
   std::string expr_;
 
  public:

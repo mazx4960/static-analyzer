@@ -17,7 +17,8 @@ class Query {
  public:
   Query(std::vector<QueryDeclaration *> query_declarations, QueryCall query_call)
       : query_declarations_(std::move(query_declarations)),
-        query_call_(std::move(query_call)) {}
+        query_call_(std::move(query_call)) {
+  }
 
   [[nodiscard]] std::vector<QueryDeclaration *> getDeclarations() const;
   [[nodiscard]] QueryCall getQueryCall() const;

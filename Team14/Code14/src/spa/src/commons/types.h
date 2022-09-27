@@ -33,6 +33,11 @@ enum class RsType {
   kParentAll,
   kUses,
   kModifies,
+  kCalls,
+  kCallsAll,
+  kNext,
+  kNextAll,
+  kAffects,
   // Used by PQL,
   kAssignPattern,
 };
@@ -62,17 +67,24 @@ inline std::string EntityTypeToString(EntityType type) {
 inline std::string RsTypeToString(RsType type) {
   switch (type) {
     case RsType::kFollows: return "Follows";
+    case RsType::kFollowsAll: return "Follows*";
     case RsType::kParent: return "Parent";
+    case RsType::kParentAll: return "Parent*";
     case RsType::kUses: return "Uses";
     case RsType::kModifies: return "Modifies";
-    case RsType::kParentAll: return "Parent*";
-    case RsType::kFollowsAll: return "Follows*";
+    case RsType::kCalls: return "Calls";
+    case RsType::kCallsAll: return "Calls*";
+    case RsType::kNext: return "Next";
+    case RsType::kNextAll: return "Next*";
+    case RsType::kAffects: return "Affects";
     case RsType::kAssignPattern: return "pattern";
     default: return "Unknown";
   }
 }
 
 inline std::vector<EntityType> all_stmt_types = {EntityType::kAssignStmt, EntityType::kCallStmt,
-                                                 EntityType::kIfStmt,     EntityType::kPrintStmt,
-                                                 EntityType::kReadStmt,   EntityType::kWhileStmt};
-inline std::vector<EntityType> GetAllStmtTypes() { return all_stmt_types; }
+                                                 EntityType::kIfStmt, EntityType::kPrintStmt,
+                                                 EntityType::kReadStmt, EntityType::kWhileStmt};
+inline std::vector<EntityType> GetAllStmtTypes() {
+  return all_stmt_types;
+}

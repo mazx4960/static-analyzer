@@ -99,6 +99,7 @@ class CallNode : public StatementNode {
  public:
   explicit CallNode(std::string procedureName);
   std::vector<Node *> GetChildren() override;
+  std::string GetProcedureName();
   std::string ToString() override;
 };
 

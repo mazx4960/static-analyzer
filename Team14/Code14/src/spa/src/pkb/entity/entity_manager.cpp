@@ -36,10 +36,7 @@ void EntityManager::CreateTable(EntityType entity_type) {
       break;
     case EntityType::kWhileStmt: table = new WhileTable();
       break;
-    default: table = nullptr;
-  }
-  if (table == nullptr) {
-    throw PKBException(EntityTypeToString(entity_type) + "table could not be created");
+    default: throw PKBException(EntityTypeToString(entity_type) + "table could not be created");
   }
   this->entity_table_map_[entity_type] = table;
 }

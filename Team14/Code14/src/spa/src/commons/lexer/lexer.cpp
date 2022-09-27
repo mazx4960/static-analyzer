@@ -11,7 +11,9 @@ Lexer::Lexer(std::istream *s) {
   tmp_ = "";
 }
 
-char Lexer::peek() { return static_cast<char>(source_stream_->peek()); }
+char Lexer::peek() {
+  return static_cast<char>(source_stream_->peek());
+}
 char Lexer::advance() {
   column_number_++;
   return static_cast<char>(source_stream_->get());
@@ -57,7 +59,7 @@ Token *Lexer::next_token() {
   char c = advance();
   tmp_ = c;
   if (isalpha(c) || isdigit(c)) {
-    // Symbol
+    // create symbol token
     read_alphanumeric();
     return new SymbolToken(tmp_);
   }

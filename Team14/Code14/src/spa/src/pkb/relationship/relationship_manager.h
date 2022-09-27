@@ -14,6 +14,7 @@
 class RelationshipManager {
  private:
   std::unordered_map<RsType, RelationshipTable *> relationship_table_map_;
+
   void CreateTable(RsType);
 
  public:

@@ -22,7 +22,8 @@ class Result {
 
  public:
   explicit Result(QuerySynonym *synonym, EntityPointerUnorderedSet results_set)
-      : synonym_(std::move(synonym)), results_(std::move(results_set)) {};
+      : synonym_(std::move(synonym)), results_(std::move(results_set)) {
+  };
 
   static Result *empty();
   static Result *empty(QuerySynonym *synonym);

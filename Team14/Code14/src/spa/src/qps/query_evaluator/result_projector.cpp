@@ -20,7 +20,9 @@ EntityPointerUnorderedSet ResultProjector::intersect(const EntityPointerUnordere
  */
 EntityPointerUnorderedSet ResultProjector::project() {
   if (std::any_of(subquery_results_.begin(), subquery_results_.end(),
-                  [](SubqueryResult subquery_result) { return subquery_result.empty(); })) {
+                  [](SubqueryResult subquery_result) {
+                    return subquery_result.empty();
+                  })) {
     return EntityPointerUnorderedSet();
   }
 

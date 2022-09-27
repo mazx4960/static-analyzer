@@ -8,7 +8,9 @@ Token::Token(TokenType type, std::string value) {
   this->type = type;
   this->value = std::move(value);
 }
-bool Token::operator==(const Token &other) const { return this->type == other.type && this->value == other.value; }
+bool Token::operator==(const Token &other) const {
+  return this->type == other.type && this->value == other.value;
+}
 std::string Token::ToString() const {
   std::string type_string;
   switch (this->type) {

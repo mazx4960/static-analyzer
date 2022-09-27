@@ -21,7 +21,8 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDecl
 
 SubqueryResult::SubqueryResult(EntityPointerUnorderedMap table, EntityPointerUnorderedMap table_inv,
                                QueryDeclaration *first, QueryDeclaration *second)
-    : table_(std::move(table)), table_inv_(std::move(table_inv)), first_decl_(first), second_decl_(second) {}
+    : table_(std::move(table)), table_inv_(std::move(table_inv)), first_decl_(first), second_decl_(second) {
+}
 
 bool SubqueryResult::empty() {
   return table_.empty() || table_inv_.empty();

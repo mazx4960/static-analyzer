@@ -8,9 +8,15 @@ PKB::PKB() {
   this->relationship_manager_ = new RelationshipManager();
 }
 
-void PKB::populate(std::vector<Entity *> entities) { this->entity_manager_->Populate(entities); }
-void PKB::populate(std::vector<Pattern *> patterns) { this->pattern_manager_->Populate(patterns); }
-void PKB::populate(std::vector<Relationship *> relationships) { this->relationship_manager_->Populate(relationships); }
+void PKB::populate(std::vector<Entity *> entities) {
+  this->entity_manager_->Populate(entities);
+}
+void PKB::populate(std::vector<Pattern *> patterns) {
+  this->pattern_manager_->Populate(patterns);
+}
+void PKB::populate(std::vector<Relationship *> relationships) {
+  this->relationship_manager_->Populate(relationships);
+}
 
 EntityPointerUnorderedSet PKB::getEntities(EntityType entity_type) {
   return this->entity_manager_->Get(entity_type);
