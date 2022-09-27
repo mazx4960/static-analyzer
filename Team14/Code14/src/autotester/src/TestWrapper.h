@@ -2,7 +2,9 @@
 
 #include <iostream>
 #include <list>
+#include <iterator>
 #include <string>
+#include <unordered_set>
 
 // include your other headers here
 #include "AbstractWrapper.h"
@@ -10,7 +12,7 @@
 
 class TestWrapper : public AbstractWrapper {
  private:
-  UI* ui_;
+  UI *ui_;
 
  public:
   // default constructor
@@ -23,5 +25,5 @@ class TestWrapper : public AbstractWrapper {
   void parse(std::string filename) override;
 
   // method for evaluating a query
-  void evaluate(std::string query, std::list<std::string>& results) override;
+  void evaluate(std::string query, std::list<std::string> &results) override;
 };

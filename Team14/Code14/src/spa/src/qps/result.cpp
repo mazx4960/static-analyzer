@@ -1,7 +1,5 @@
 #include "result.h"
 
-#include <utility>
-
 Result::Result(QuerySynonym *synonym, const EntityPointerUnorderedSet &results_set) : synonym_(std::move(synonym)) {
   this->results_.reserve(results_set.size());
   for (auto *entity : results_set) {

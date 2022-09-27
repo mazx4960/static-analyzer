@@ -3,6 +3,7 @@
 #pragma once
 
 #include <algorithm>
+#include <iterator>
 #include <string>
 #include <unordered_set>
 
@@ -35,5 +36,5 @@ class Result {
   [[nodiscard]] QuerySynonym *get_synonym() const;
   [[nodiscard]] std::unordered_set<std::string> get_results_set() const;
   [[nodiscard]] std::vector<std::string> get_sorted_results_string_list() const;
-  int size() const;
+  [[nodiscard]] int size() const;
 };

@@ -34,7 +34,7 @@ void TestWrapper::parse(std::string filename) {
 void TestWrapper::evaluate(std::string query, std::list<std::string> &final_results_list) {
   this->ui_->SetQueryString(query);
   auto *result = this->ui_->ExecuteQuery();
-  
+
   if (result->is_empty()) {
     return;
   }
