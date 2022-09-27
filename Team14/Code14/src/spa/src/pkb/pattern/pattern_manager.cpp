@@ -14,13 +14,17 @@ void PatternManager::Populate(const std::vector<Pattern *> &patterns) {
     this->pattern_table_->Populate(*pattern);
   }
 }
-EntityPointerUnorderedSet PatternManager::Get(Entity *variable, const std::string &expr) {
+EntityPointerUnorderedSet PatternManager::Get(Entity *variable, const std::string &expr, bool isSubmatch) {
   spdlog::debug("Retrieving all statements that matches {} = {}", variable->GetValue(), expr);
   auto matches = EntityPointerUnorderedSet();
   auto set = this->pattern_table_->Get(variable);
   for (const auto &pair : set) {
-    auto full_expr = pair.second;
-    if (full_expr.find(expr) != std::string::npos) {
+    auto full_expr = pair.second; // RHS of the statement
+    if (isSubmatch) {
+      if (expr.empty() || full_expr.find(expr) != std::string::npos) {
+        matches.insert(pair.first);
+      }
+    } else if (full_expr == expr) {
       matches.insert(pair.first);
     }
   }
