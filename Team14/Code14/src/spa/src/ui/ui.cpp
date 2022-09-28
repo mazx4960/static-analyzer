@@ -84,11 +84,13 @@ Result *UI::ExecuteQuery() {
 }
 void UI::DisplayResults(const Result *result) {
   spdlog::info("Sorting results...");
-  std::vector<Entity *> results_list = result->get_sorted_results_list();
+  std::vector<std::string> results_string_list = result->get_sorted_results_string_list();
 
   spdlog::info("====================BEGIN QUERY RESULTS====================");
   std::string result_string;
-  for (auto *s : results_list) { result_string += s->ToString() + ", "; }
-  spdlog::info("Results for '{}'[{}]: {}", result->get_synonym()->toString(), results_list.size(), result_string);
+  for (const auto &curr : results_string_list) {
+    result_string += curr + ", ";
+  }
+  spdlog::info("Results for '{}'[{}]: {}", result->get_synonym()->toString(), results_string_list.size(), result_string);
   spdlog::info("=====================END QUERY RESULTS=====================");
 }
