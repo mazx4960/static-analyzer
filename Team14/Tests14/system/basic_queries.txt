@@ -163,3 +163,28 @@ variable v; assign a;
 Select v pattern a(_, _"1+x"_)
 none
 5000
+33 - error in syntax, extra "+" in pattern
+assign a;
+Select a pattern a (_, _" +temp"_)
+SyntaxError
+5000
+34 - error in syntax, extra ; at end of line
+assign a;
+Select a;
+SyntaxError
+5000
+35 - error in semantics, x not defined
+while w; stmt s;
+Select x such that Uses (s,  "x")
+SemanticError
+5000
+36 - error in semantics, synonym cannot be used as pattern left
+assign a; variable v; constant c;
+Select a such that Uses (a, c) pattern a (v,  _)
+SemanticError
+5000
+37 - error in both syntax (extra "+" in pattern, same as 33) and semantics (undefined synonym), syntax error should be prioritised
+assign a;
+Select b pattern a (_, _" +temp"_)
+SyntaxError
+5000
