@@ -278,9 +278,7 @@ void RelationshipExtractor::ExtractCallsHelper(std::vector<Relationship *> &rela
   if (node->GetNodeType() != NodeType::kStatementList) { return; }
   // Get all children entities
   std::vector<Entity *> children;
-  CallStmtEntity *call_statement;
-  ProcedureEntity *procedure_entity;
-  auto const op = [&children, &call_statement, &procedure_entity](Node *node) {
+  auto const op = [&children](Node *node) {
     if (node->GetNodeType() == NodeType::kStatement) {
       auto *stmt = static_cast<StatementNode *>(node);
       if (stmt->GetStmtType() == EntityType::kCallStmt) {
