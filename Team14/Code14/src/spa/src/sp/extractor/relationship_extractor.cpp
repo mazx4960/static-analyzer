@@ -184,15 +184,12 @@ void RelationshipExtractor::ExtractUsesHelper(std::vector<Relationship *> &relat
           auto *if_node = static_cast<IfNode *>(node);
           std::vector<Entity *> children = EntityExtractor::ExtractAllVariables(if_node->GetConditional());
           Match(relationships, RsType::kUses, parent, children);
-          ExtractUsesHelper(relationships, parent, if_node->GetThenStatementList());
-          ExtractUsesHelper(relationships, parent, if_node->GetElseStatementList());
           break;
         }
         case EntityType::kWhileStmt: {
           auto *while_node = static_cast<WhileNode *>(node);
           std::vector<Entity *> children = EntityExtractor::ExtractAllVariables(while_node->GetConditional());
           Match(relationships, RsType::kUses, parent, children);
-          ExtractUsesHelper(relationships, parent, while_node->GetStatementList());
           break;
         }
         default: break;// other statement entity types are ignored.
@@ -256,17 +253,6 @@ void RelationshipExtractor::ExtractModifiesHelper(std::vector<Relationship *> &r
           VariableNode *variable = static_cast<ReadNode *>(node)->GetVariable();
           Entity *child = new VariableEntity(variable->GetVariableName());
           relationships.push_back(new Relationship(RsType::kModifies, parent, child));
-          break;
-        }
-        case EntityType::kIfStmt: {
-          auto *if_node = static_cast<IfNode *>(node);
-          ExtractModifiesHelper(relationships, parent, if_node->GetThenStatementList());
-          ExtractModifiesHelper(relationships, parent, if_node->GetElseStatementList());
-          break;
-        }
-        case EntityType::kWhileStmt: {
-          auto *while_node = static_cast<WhileNode *>(node);
-          ExtractModifiesHelper(relationships, parent, while_node->GetStatementList());
           break;
         }
         default: break;

@@ -124,15 +124,20 @@ EntityPointerUnorderedSet RelationshipManager::getInferenceFromProcedure(Relatio
 }
 
 EntityPointerUnorderedSet RelationshipManager::getInferenceFromChildren(RelationshipTable *relationship_table, Entity *entity) {
-  // Get children in container statement/procedure
-  auto children_statements = GetAll(RsType::kParent, entity, false);
   EntityPointerUnorderedSet result;
 
-  for (auto *child: children_statements) {
-    // Check if statement is in modifies/uses table
-    auto variable_entity_set = relationship_table->get(child, false);
+  // Check if current statement is in relationship table.
+  auto current_statement_variables = relationship_table->get(entity, false);
+  if (current_statement_variables != this->Empty()) {
+    result.insert(current_statement_variables.begin(), current_statement_variables.end());
+  }
+
+  // Check if child statements are in relationship table.
+  auto children_statements = GetAll(RsType::kParent, entity, false);
+  for (auto *child_entity: children_statements) {
+    auto variable_entity_set = relationship_table->get(child_entity, false);
     if (variable_entity_set != this->Empty()) {
-      result.insert(*(variable_entity_set.begin()));
+      result.insert(variable_entity_set.begin(), variable_entity_set.end());
     }
   }
   return result;
