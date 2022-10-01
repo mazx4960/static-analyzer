@@ -4,18 +4,28 @@
 #include "query_builder.h"
 #include "spdlog/spdlog.h"
 
-void QPS::SetPKB(IPKBQuerier *pkb) { this->pkb_ = pkb; }
+void QPS::SetPKB(IPKBQuerier *pkb) {
+  this->pkb_ = pkb;
+}
 Result *QPS::EvaluateQuery(std::istream *query_stream) {
   QueryLexer lexer(query_stream);
   auto tokens = lexer.lex();
   spdlog::info("Generated query tokens");
   std::string token_string;
-  for (auto *token : tokens) { token_string += token->ToString() + " "; }
+  for (auto *token : tokens) {
+    token_string += token->ToString() + " ";
+  }
   spdlog::debug("Tokens[{}]: ", tokens.size(), token_string);
 
   QueryParser parser(tokens);
   spdlog::info("Parsing tokens...");
-  parser.parse();
+  try {
+    parser.parse();
+  } catch (ParseSemanticError &e) {
+    return Result::semanticError();
+  } catch (ParseSyntaxError &e) {
+    return Result::syntacticError();
+  }
   QueryBuilder builder = QueryBuilder();
   std::vector<QueryDeclaration *> query_declarations = parser.getDeclarations();
   std::vector<QueryCall *> query_calls = parser.getQueryCalls();

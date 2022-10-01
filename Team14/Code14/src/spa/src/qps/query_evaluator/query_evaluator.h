@@ -31,7 +31,8 @@ class QueryEvaluator {
   std::vector<SubqueryResult> evaluateSubqueries();
 
  public:
-  QueryEvaluator(IPKBQuerier *pkb, Query &query) : pkb_(pkb), query_(query) {};
+  QueryEvaluator(IPKBQuerier *pkb, Query &query) : pkb_(pkb), query_(query) {
+  };
 
   Result *evaluate();
 };

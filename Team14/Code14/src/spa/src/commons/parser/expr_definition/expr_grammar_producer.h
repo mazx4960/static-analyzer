@@ -8,44 +8,44 @@
 
 class ParenthesizedGrammarProducer : public GrammarRuleProducer {
  private:
-  GrammarRuleProducer* parenthesized_rule_;
+  GrammarRuleProducer *parenthesized_rule_;
 
  public:
-  explicit ParenthesizedGrammarProducer(GrammarRuleProducer* producer);
-  ParenthesizedGrammarRule* produce() override;
+  explicit ParenthesizedGrammarProducer(GrammarRuleProducer *producer);
+  ParenthesizedGrammarRule *produce() override;
 };
 
 class RelFactorGrammarProducer : public GrammarRuleProducer {
  public:
-  RelFactorGrammarRule* produce() override;
+  RelFactorGrammarRule *produce() override;
 };
 
 class ExprGrammarProducer : public GrammarRuleProducer {
  public:
-  ExprGrammarRule* produce() override;
+  ExprGrammarRule *produce() override;
 };
 
 class TermGrammarProducer : public GrammarRuleProducer {
  public:
-  TermGrammarRule* produce() override;
+  TermGrammarRule *produce() override;
 };
 
 class FactorGrammarProducer : public GrammarRuleProducer {
  public:
-  FactorGrammarRule* produce() override;
+  FactorGrammarRule *produce() override;
 };
 
 class ReferenceGrammarProducer : public GrammarRuleProducer {
  public:
-  ReferenceGrammarRule* produce() override;
+  ReferenceGrammarRule *produce() override;
 };
 
 class VariableGrammarProducer : public GrammarRuleProducer {
  public:
-  VariableGrammarRule* produce() override;
+  VariableGrammarRule *produce() override;
 };
 
 class ConstantGrammarProducer : public GrammarRuleProducer {
  public:
-  ConstantGrammarRule* produce() override;
+  ConstantGrammarRule *produce() override;
 };

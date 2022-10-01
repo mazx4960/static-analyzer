@@ -1,165 +1,185 @@
-1 - select all variables
+101 - select all variables
 variable v;
 Select v
 x
 5000
-2 - select all procedures
+102 - select all procedures
 procedure v;
 Select v
 main
 5000
-3 - select all if statements
+103 - select all if statements
 if v;
 Select v
 none
 5000
-4 - select all while statements
+104 - select all while statements
 while v;
 Select v
 none
 5000
-5 - select all constants
+105 - select all constants
 constant c;
 Select c
 1
 5000
-6 - select variables with false subquery
+201 - select variables with false subquery
 variable v;
 Select v such that Follows(1, 2)
 none
 5000
-7 - select statements with false subquery
+202 - select statements with false subquery
 stmt v;
 Select v such that Follows*(123, 456)
 none
 5000
-8 - select ifs with false subquery
+203 - select ifs with false subquery
 if v;
 Select v such that Parent(1, 2)
 none
 5000
-9 - select while statements with false subquery
+204 - select while statements with false subquery
 while v;
 Select v such that Parent*(1, 2)
 none
 5000
-10 - select variables being used in line 1
+301 - select variables being used in line 1
 variable v;
 Select v such that Uses(1, v)
 x
 5000
-11 - select variables used in non-existent line
+302 - select variables used in non-existent line
 variable v;
 Select v such that Uses(2, v)
 none
 5000
-12 - select variables used in any line
+303 - select variables used in any line
 variable v; stmt s;
 Select v such that Uses(s, v)
 x
 5000
-13 - select variables used in procedure "main"
+401 - select variables used in procedure "main"
 variable v;
 Select v such that Uses("main", v)
 x
 5000
-13 - select variables used in any procedure
+402 - select variables used in any procedure
 variable v; procedure p;
 Select v such that Uses(p, v)
 x
 5000
-14 - select variables used in non-existent procedure
+403 - select variables used in non-existent procedure
 variable v;
 Select v such that Uses("main2", v)
 none
 5000
-15 - select variables modified in line 1
-variable v;
-Select v such that Modifies(1, v)
-x
-5000
-16 - select variables modified in any line
-variable v; stmt s;
-Select v such that Modifies(s, v)
-x
-5000
-17 - select variables modified in non-existent line
-variable v;
-Select v such that Modifies(2, v)
-none
-5000
-18 - select variables modified in procedure "main"
-variable v;
-Select v such that Modifies("main", v)
-x
-5000
-19 - select variables modified in any procedure
-variable v; procedure p;
-Select v such that Modifies(p, v)
-x
-5000
-20 - select variables modified in non-existent procedure
-variable v;
-Select v such that Modifies("main2", v)
-none
-5000
-21 - select variables given valid Modifies relationship, procedure
-variable v;
-Select v such that Modifies("main", "x")
-x
-5000
-22 - select variables given valid Uses relationship, line
+404 - select variables given valid Uses relationship, line
 variable v;
 Select v such that Uses(1, "x")
 x
 5000
-23 - select assignments that match pattern left
+501 - select variables modified in line 1
+variable v;
+Select v such that Modifies(1, v)
+x
+5000
+502 - select variables modified in any line
+variable v; stmt s;
+Select v such that Modifies(s, v)
+x
+5000
+503 - select variables modified in non-existent line
+variable v;
+Select v such that Modifies(2, v)
+none
+5000
+504 - select variables modified in procedure "main"
+variable v;
+Select v such that Modifies("main", v)
+x
+5000
+505 - select variables modified in any procedure
+variable v; procedure p;
+Select v such that Modifies(p, v)
+x
+5000
+506 - select variables modified in non-existent procedure
+variable v;
+Select v such that Modifies("main2", v)
+none
+5000
+507 - select variables given valid Modifies relationship, procedure
+variable v;
+Select v such that Modifies("main", "x")
+x
+5000
+601 - select assignments that match pattern left
 assign a;
 Select a pattern a("x", _)
 1
 5000
-24 - select variables that match pattern left
+602 - select variables that match pattern left
 variable v; assign a;
 Select v pattern a(v, _)
 x
 5000
-25 - select assignments that match pattern right
+603 - select assignments that match pattern right
 variable v; assign a;
 Select a pattern a(v, _)
 1
 5000
-26 - select variables that match pattern right
+604 - select variables that match pattern right
 variable v; assign a;
 Select v pattern a(_, _"1"_)
 x
 5000
-27 - select assignments that match pattern right
+605 - select assignments that match pattern right
 variable v; assign a;
 Select v pattern a(_, _"x"_)
 x
 5000
-28 - select assignments that match pattern right
+606 - select assignments that match pattern right
 variable v; assign a;
 Select v pattern a(_, _"x+1"_)
 x
 5000
-29 - select assignments that match pattern both
+607 - select assignments that match pattern both
 variable v; assign a;
 Select a pattern a("x", _"x+1"_)
 1
 5000
-30 - select variables that match pattern right with spaces
+608 - select variables that match pattern right with spaces
 variable v; assign a;
 Select v pattern a(_, _"       x        +      1     "_)
 x
 5000
-31 - select variables that match pattern right
+609 - select variables that match pattern right
 variable v; assign a;
 Select v pattern a(_, _"x+2"_)
 none
 5000
-32 - select variables that match pattern right
+610 - select variables that match pattern right
 variable v; assign a;
 Select v pattern a(_, _"1+x"_)
+none
+5000
+701 - select statement with false subquery, same synonym in Follows relationship
+stmt s;
+Select s such that Follows(s, s)
+none
+5000
+702 - select statement with false subquery, same synonym in Follows* relationship
+assign a;
+Select a such that Follows*(a, a)
+none
+5000
+801 - select statement with false subquery, same synonym in Parent relationship
+while w;
+Select w such that Parent(w, w)
+none
+5000
+802 - select statement with false subquery, same synonym in Parent* relationship
+if ifs;
+Select ifs such that Parent*(ifs, ifs)
 none
 5000

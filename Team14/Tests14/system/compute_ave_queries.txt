@@ -1,125 +1,125 @@
-1 - select all variables
+101 - select all variables
 variable v;
 Select v
 num1, num2, num3, ave, sum
 5000
-2 - select all procedures
+102 - select all procedures
 procedure v;
 Select v
 computeAverage
 5000
-3 - select all if statements
+103 - select all if statements
 if v;
 Select v
 none
 5000
-4 - select all while statements
+104 - select all while statements
 while w;
 Select w
 none
 5000
-5 - select all constants
+105 - select all constants
 constant c;
 Select c
 3
 5000
-6 - select variables with Follows
+201 - select variables with Follows
 variable v; stmt s1, s2;
 Select v such that Follows(s1, s2)
 num1, num2, num3, ave, sum
 5000
-7 - select variables with Follows*
+202 - select variables with Follows*
 variable v; stmt s1, s2;
 Select v such that Follows*(s1, s2)
 num1, num2, num3, ave, sum
 5000
-8 - select variables with Parent
-variable v; stmt s1, s2;
-Select v such that Parent(s1, s2)
-none
-5000
-9 - select all statements that have other statements following directly
+203 - select all statements that have other statements following directly
 stmt s1, s2;
 Select s1 such that Follows(s1, s2)
 1, 2, 3, 4, 5
 5000
-10 - select all statements that have other statements following directly or indirectly
+204 - select all statements that have other statements following directly or indirectly
 stmt s1, s2;
 Select s1 such that Follows(s1, s2)
 1, 2, 3, 4, 5
 5000
-11 - select all statements that have another statement before it
+205 - select all statements that have another statement before it
 stmt s1, s2;
 Select s2 such that Follows(s1, s2)
 2, 3, 4, 5, 6
 5000
-12 - select all statements that have another statement before it or indirectly
+206 - select all statements that have another statement before it or indirectly
 stmt s1, s2;
 Select s2 such that Follows*(s1, s2)
 2, 3, 4, 5, 6
 5000
-13 - select all statements that have direct children
+301 - select variables with Parent
+variable v; stmt s1, s2;
+Select v such that Parent(s1, s2)
+none
+5000
+302 - select all statements that have direct children
 stmt s1, s2;
 Select s1 such that Parent(s1, s2)
 none
 5000
-14 - select all statements that have direct or indirect children
+303 - select all statements that have direct or indirect children
 stmt s1, s2;
 Select s1 such that Parent*(s1, s2)
 none
 5000
-15 - select all statements that have direct parents
+304 - select all statements that have direct parents
 stmt s1, s2;
 Select s2 such that Parent(s1, s2)
 none
 5000
-16 - select all statements that have direct or indirect parents
+305 - select all statements that have direct or indirect parents
 stmt s1, s2;
 Select s2 such that Parent*(s1, s2)
 none
 5000
-17 - select all variables that are used in a print statement
-variable v; print p;
-Select v such that Uses(p, v)
-ave
-5000
-18 - select all variables that are modified in a read statement
+401 - select all variables that are modified in a read statement
 variable v; read re;
 Select v such that Modifies(re, v)
 num1, num2, num3
 5000
-19 - select all variables modified with with "num1 + num2" on the right side of equals
-variable v; assign a;
-Select v pattern a(v, _"num1 + num2"_)
-sum
+501 - select all variables that are used in a print statement
+variable v; print p;
+Select v such that Uses(p, v)
+ave
 5000
-20 - select all variables in assignment stmt that has ""num1 + num2" on the right side of equals
+502 - select all variables in assignment stmt that has ""num1 + num2" on the right side of equals
 variable v; assign a;
 Select v such that Uses(a, v) pattern a(_, _"num1 + num2"_)
 num1, num2, num3
 5000
-21 - select all variables that appear on both left and right side of equals
+503 - select all variables that appear on both left and right side of equals
 variable v; assign a;
 Select v such that Uses(a, v) pattern a(v, _)
 none
 5000
-22 - select all statements with variables that appear on both left and right side of equals
+504 - select all statements with variables that appear on both left and right side of equals
 variable v; assign a;
 Select a such that Uses(a, v) pattern a(v, _)
 none
 5000
-23 - select all assign statements that have "num3" on the right
+505 - select all variables in assign statements that have "sum" on the left of equals
+variable v; assign a;
+Select v such that Uses(a, v) pattern a("sum", _)
+num1, num2, num3
+5000
+601 - select all variables modified with with "num1 + num2" on the right side of equals
+variable v; assign a;
+Select v pattern a(v, _"num1 + num2"_)
+sum
+5000
+602 - select all assign statements that have "num3" on the right
 assign a;
 Select a pattern a(_, _"num3"_)
 4
 5000
-24 - select all assign statements that have "sum" on the left
+603 - select all assign statements that have "sum" on the left
 assign a;
 Select a pattern a("sum", _)
 4
-5000
-25 - select all variables in assign statements that have "sum" on the left of equals
-variable v; assign a;
-Select v such that Uses(a, v) pattern a("sum", _)
-num1, num2, num3
 5000

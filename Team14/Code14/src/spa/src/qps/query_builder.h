@@ -10,12 +10,13 @@
 
 class QueryBuilder {
  private:
-  std::vector<QueryDeclaration*> query_declarations_;
-  std::vector<QueryCall*> query_calls_;
+  std::vector<QueryDeclaration *> query_declarations_;
+
+  std::vector<QueryCall *> query_calls_;
 
  public:
   explicit QueryBuilder();
   Query build();
-  void withDeclarations(std::vector<QueryDeclaration*> query_declarations);
-  void withQueryCalls(std::vector<QueryCall*> query_calls);
+  void withDeclarations(std::vector<QueryDeclaration *> query_declarations);
+  void withQueryCalls(std::vector<QueryCall *> query_calls);
 };

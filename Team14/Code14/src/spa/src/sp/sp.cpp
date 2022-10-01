@@ -7,13 +7,17 @@
 #include "sp/extractor/relationship_extractor.h"
 #include "spdlog/spdlog.h"
 
-void SP::SetPKB(IPKBPopulator *pkb) { this->pkb_ = pkb; }
+void SP::SetPKB(IPKBPopulator *pkb) {
+  this->pkb_ = pkb;
+}
 void SP::LoadSource(std::istream *source_stream) {
   SimpleLexer lexer(source_stream);
   auto tokens = lexer.lex();
   spdlog::info("Generated source tokens");
   std::string token_string = "Tokens: ";
-  for (auto *token : tokens) { token_string += token->ToString() + " "; }
+  for (auto *token : tokens) {
+    token_string += token->ToString() + " ";
+  }
   spdlog::debug(token_string);
 
   auto *program_node = SimpleParser::ParseProgram(tokens);

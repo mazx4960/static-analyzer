@@ -2,7 +2,7 @@
 
 #include "commons/parser/grammar/grammar.h"
 
-using ConditionalRule = std::pair<bool (*)(TokenIterator), GrammarRuleProducer*>;
+using ConditionalRule = std::pair<bool (*)(TokenIterator), GrammarRuleProducer *>;
 
 class EarlyChoiceGrammarRule : public GrammarRule {
  private:
@@ -10,5 +10,5 @@ class EarlyChoiceGrammarRule : public GrammarRule {
 
  public:
   explicit EarlyChoiceGrammarRule(std::vector<ConditionalRule> conditionalRules);
-  Node* parseNode(TokenIterator& tokenStream) override;
+  Node *parseNode(TokenIterator &tokenStream) override;
 };

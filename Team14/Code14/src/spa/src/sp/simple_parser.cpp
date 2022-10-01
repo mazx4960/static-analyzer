@@ -6,6 +6,6 @@
 
 #include "sp/simple_definition/simple_grammar.h"
 
-Node* SimpleParser::ParseProgram(const std::vector<Token*>& tokens) {
+Node *SimpleParser::ParseProgram(const std::vector<Token *> &tokens) {
   return Parser::Parse(new ProgramGrammarRule(), std::move(tokens));
 }

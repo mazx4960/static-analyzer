@@ -14,7 +14,12 @@
 class RelationshipManager {
  private:
   std::unordered_map<RsType, RelationshipTable *> relationship_table_map_;
+
   void CreateTable(RsType);
+  EntityPointerUnorderedSet GetInference(RsType, Entity *, bool);
+  EntityPointerUnorderedSet getInferenceFromProcedure(RelationshipTable *, Entity *);
+  EntityPointerUnorderedSet getInferenceFromChildren(RelationshipTable *, Entity *);
+  static EntityPointerUnorderedSet Empty();
 
  public:
   RelationshipManager() = default;

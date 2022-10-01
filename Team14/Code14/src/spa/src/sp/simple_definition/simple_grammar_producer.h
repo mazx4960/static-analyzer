@@ -4,79 +4,79 @@
 
 class BracedGrammarProducer : public GrammarRuleProducer {
  private:
-  GrammarRuleProducer* braced_rule_;
+  GrammarRuleProducer *braced_rule_;
 
  public:
-  explicit BracedGrammarProducer(GrammarRuleProducer* producer);
-  BracedGrammarRule* produce() override;
+  explicit BracedGrammarProducer(GrammarRuleProducer *producer);
+  BracedGrammarRule *produce() override;
 };
 
 class ProgramGrammarProducer : public GrammarRuleProducer {
  public:
-  ProgramGrammarRule* produce() override;
+  ProgramGrammarRule *produce() override;
 };
 
 class ProcedureGrammarProducer : public GrammarRuleProducer {
  public:
-  ProcedureGrammarRule* produce() override;
+  ProcedureGrammarRule *produce() override;
 };
 
 class StatementListGrammarProducer : public GrammarRuleProducer {
  public:
-  StatementListGrammarRule* produce() override;
+  StatementListGrammarRule *produce() override;
 };
 
 class StatementGrammarProducer : public GrammarRuleProducer {
  public:
-  StatementGrammarRule* produce() override;
+  StatementGrammarRule *produce() override;
 };
 
 class ReadGrammarProducer : public GrammarRuleProducer {
  public:
-  ReadGrammarRule* produce() override;
+  ReadGrammarRule *produce() override;
 };
 
 class PrintGrammarProducer : public GrammarRuleProducer {
  public:
-  PrintGrammarRule* produce() override;
+  PrintGrammarRule *produce() override;
 };
 
 class CallGrammarProducer : public GrammarRuleProducer {
  public:
-  CallGrammarRule* produce() override;
+  CallGrammarRule *produce() override;
 };
 
 class WhileGrammarProducer : public GrammarRuleProducer {
  public:
-  WhileGrammarRule* produce() override;
+  WhileGrammarRule *produce() override;
 };
 
 class IfGrammarProducer : public GrammarRuleProducer {
  public:
-  IfGrammarRule* produce() override;
+  IfGrammarRule *produce() override;
 };
 
 class AssignGrammarProducer : public GrammarRuleProducer {
  public:
-  AssignGrammarRule* produce() override;
+  AssignGrammarRule *produce() override;
 };
 
 class CondExprGrammarProducer : public GrammarRuleProducer {
  public:
-  CondExprGrammarRule* produce() override;
+  CondExprGrammarRule *produce() override;
 };
 
 class NotExprGrammarProducer : public GrammarRuleProducer {
  public:
-  NotExprGrammarRule* produce() override;
+  NotExprGrammarRule *produce() override;
 };
 
 class BinaryCondGrammarProducer : public GrammarRuleProducer {
  public:
-  BinaryCondGrammarRule* produce() override;
+  BinaryCondGrammarRule *produce() override;
 };
 
 class RelExprGrammarProducer : public GrammarRuleProducer {
  public:
-  RelExprGrammarRule* produce() override;
+  RelExprGrammarRule *produce() override;
 };

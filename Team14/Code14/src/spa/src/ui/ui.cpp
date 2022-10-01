@@ -19,10 +19,18 @@ UI::UI(std::string source_file, const std::string &query_file, int mode = 0)
     spdlog::set_level(spdlog::level::off);
   }
 }
-UI::UI() { spdlog::set_level(spdlog::level::off); }
-void UI::SetSP(SP *sp) { this->sp_ = sp; }
-void UI::SetQPS(QPS *qps) { this->qps_ = qps; }
-void UI::SetSourceFile(std::string source_file) { this->source_file_ = std::move(source_file); }
+UI::UI() {
+  spdlog::set_level(spdlog::level::off);
+}
+void UI::SetSP(SP *sp) {
+  this->sp_ = sp;
+}
+void UI::SetQPS(QPS *qps) {
+  this->qps_ = qps;
+}
+void UI::SetSourceFile(std::string source_file) {
+  this->source_file_ = std::move(source_file);
+}
 void UI::SetQueryFile(const std::string &query_file) {
   this->query_stream_ = StreamReader::GetStreamFromFile(query_file);
 }
@@ -76,11 +84,13 @@ Result *UI::ExecuteQuery() {
 }
 void UI::DisplayResults(const Result *result) {
   spdlog::info("Sorting results...");
-  std::vector<Entity *> results_list = result->get_sorted_results_list();
+  std::vector<std::string> results_string_list = result->get_sorted_results_string_list();
 
   spdlog::info("====================BEGIN QUERY RESULTS====================");
   std::string result_string;
-  for (auto *s : results_list) { result_string += s->ToString() + ", "; }
-  spdlog::info("Results for '{}'[{}]: {}", result->get_synonym()->toString(), results_list.size(), result_string);
+  for (const auto &curr : results_string_list) {
+    result_string += curr + ", ";
+  }
+  spdlog::info("Results for '{}'[{}]: {}", result->get_synonym()->toString(), results_string_list.size(), result_string);
   spdlog::info("=====================END QUERY RESULTS=====================");
 }

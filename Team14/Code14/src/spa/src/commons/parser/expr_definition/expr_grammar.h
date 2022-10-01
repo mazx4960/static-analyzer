@@ -33,10 +33,10 @@ class ReferenceGrammarRule : public EarlyChoiceGrammarRule {
 
 class VariableGrammarRule : public GrammarRule {
  public:
-  VariableNode* parseNode(TokenIterator& tokenStream) override;
+  VariableNode *parseNode(TokenIterator &tokenStream) override;
 };
 
 class ConstantGrammarRule : public GrammarRule {
  public:
-  ConstantNode* parseNode(TokenIterator& tokenStream) override;
+  ConstantNode *parseNode(TokenIterator &tokenStream) override;
 };

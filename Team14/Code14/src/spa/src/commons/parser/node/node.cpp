@@ -2,8 +2,11 @@
 
 #include "node.h"
 
-Node::Node(NodeType nodeType) : nodeType_(nodeType) {}
-NodeType Node::GetNodeType() const { return nodeType_; }
+Node::Node(NodeType nodeType) : nodeType_(nodeType) {
+}
+NodeType Node::GetNodeType() const {
+  return nodeType_;
+}
 /**
  * DFS to visit all nodes
  * prevents infinite loop by keeping track of visited nodes
