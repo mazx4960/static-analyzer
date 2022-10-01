@@ -3,7 +3,8 @@
 # run system tests
 mkdir -p test_results
 
-test_names=("pql_error" "basic" "compute_ave" "compute_centroid" "extreme_nesting")
+#test_names=("pql_error" "basic" "compute_ave" "compute_centroid" "extreme_nesting" "patterns")
+test_names=("patterns")
 num_failed=0
 
 for test_name in "${test_names[@]}"; do
