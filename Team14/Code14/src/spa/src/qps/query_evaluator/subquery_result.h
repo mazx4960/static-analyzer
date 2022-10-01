@@ -28,12 +28,13 @@ class SubqueryResult {
   std::vector<ResultRow > table_rows_;
 
   SubqueryResult(EntityPointerUnorderedMap, EntityPointerUnorderedMap, QueryDeclaration *, QueryDeclaration *);
+  SubqueryResult(std::vector<QuerySynonym *>, std::vector<ResultRow>);
  public:
   SubqueryResult(const EntityPointerUnorderedMap &, QueryDeclaration *, QueryDeclaration *);
   [[nodiscard]] bool empty();
   SubqueryResult invert();
   bool uses(QueryDeclaration *decl);
-  std::vector<QueryDeclaration *> getCommonSynonyms(const SubqueryResult &other);
+  std::vector<QuerySynonym *> getCommonSynonyms(const SubqueryResult &other);
   EntityPointerUnorderedSet GetColumn(QuerySynonym *);
   SubqueryResult Intersect(SubqueryResult &other);
   SubqueryResult Join(SubqueryResult &other);
