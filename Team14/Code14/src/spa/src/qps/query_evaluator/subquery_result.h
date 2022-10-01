@@ -5,10 +5,6 @@
 
 #include "pkb/relationship/relationship_table.h"
 #include "qps/pql/query_declaration.h"
-using EntityPointerUnorderedMap = std::unordered_map<Entity *,
-                                                     EntityPointerUnorderedSet,
-                                                     EntityHashFunction,
-                                                     EntityPointerEquality>;
 using ResultRow = std::unordered_map<QuerySynonym *,
                                      Entity *,
                                      QuerySynonymHashFunction,
@@ -16,24 +12,15 @@ using ResultRow = std::unordered_map<QuerySynonym *,
 
 class SubqueryResult {
  private:
-  EntityPointerUnorderedMap table_;
-
-  EntityPointerUnorderedMap table_inv_;
-
-  QueryDeclaration *first_decl_;
-
-  QueryDeclaration *second_decl_;
 
   std::vector<QuerySynonym *> synonyms_;
   std::vector<ResultRow > table_rows_;
 
-  SubqueryResult(EntityPointerUnorderedMap, EntityPointerUnorderedMap, QueryDeclaration *, QueryDeclaration *);
   SubqueryResult(std::vector<QuerySynonym *>, std::vector<ResultRow>);
  public:
   SubqueryResult(const EntityPointerUnorderedMap &, QueryDeclaration *, QueryDeclaration *);
   [[nodiscard]] bool empty();
-  SubqueryResult invert();
-  bool uses(QueryDeclaration *decl);
+  bool uses(QuerySynonym *decl);
   std::vector<QuerySynonym *> getCommonSynonyms(const SubqueryResult &other);
   EntityPointerUnorderedSet GetColumn(QuerySynonym *);
   SubqueryResult Intersect(SubqueryResult &other);
