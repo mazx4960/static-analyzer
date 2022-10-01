@@ -12,10 +12,21 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDecl
   if (first_synonym != QuerySynonym::empty()) {
     synonyms_.push_back(first_synonym);
     if (second->getSynonym() != QuerySynonym::empty()) {
-      synonyms_.push_back(second_synonym);
-      for (auto [entity, entity_set] : table) {
-        for (auto *other_entity : entity_set) {
-          table_rows_.push_back(ResultRow{{first_synonym, entity}, {second_synonym, other_entity}});
+      // Corner case: first and second synonyms are the same
+      if (*first_synonym == *second_synonym) {
+        for (auto [entity, entity_set] : table) {
+          // Only add entries with same first and second entity
+          if (entity_set.find(entity) != entity_set.end()) {
+            table_rows_.push_back(ResultRow({{first_synonym, entity})});
+          }
+        }
+      }
+      else {
+        synonyms_.push_back(second_synonym);
+        for (auto [entity, entity_set] : table) {
+          for (auto *other_entity : entity_set) {
+            table_rows_.push_back(ResultRow{{first_synonym, entity}, {second_synonym, other_entity}});
+          }
         }
       }
     }
