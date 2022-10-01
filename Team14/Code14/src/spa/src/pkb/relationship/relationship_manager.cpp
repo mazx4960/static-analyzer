@@ -61,7 +61,8 @@ EntityPointerUnorderedSet RelationshipManager::Get(RsType rs_type, Entity *entit
       matches = this->GetAll(RsType::kNext, entity, is_inverse);
       break;
     }
-    case RsType::kModifies: case RsType::kUses: {
+    case RsType::kModifies: // fallthrough
+    case RsType::kUses: {
       matches = this->GetInference(rs_type, entity, is_inverse);
       break;
     }
