@@ -1,4 +1,4 @@
-//
+//R
 // Created by gabri on 19/9/2022.
 //
 #include "subquery_result.h"
@@ -15,6 +15,32 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDecl
         table_inv_[other_entity] = EntityPointerUnorderedSet();
       }
       table_inv_[other_entity].insert(entity);
+    }
+  }
+  QuerySynonym* first_synonym = first->getSynonym();
+  QuerySynonym* second_synonym = second->getSynonym();
+  if (first_synonym != QuerySynonym::empty()) {
+    synonyms_.push_back(first_synonym);
+    if (second->getSynonym() != QuerySynonym::empty()) {
+      synonyms_.push_back(second_synonym);
+      for (auto [entity, entity_set] : table) {
+        for (auto *other_entity : entity_set) {
+          table_rows_.push_back(ResultRow{{first_synonym, entity}, {second_synonym, other_entity}});
+        }
+      }
+    }
+    else {
+      for (auto [entity, entity_set] : table) {
+        table_rows_.push_back(ResultRow{{first_synonym, entity}});
+      }
+    }
+  }
+  else if (second->getSynonym() != QuerySynonym::empty()) {
+    synonyms_.push_back(second_synonym);
+    for (auto [entity, entity_set] : table) {
+      for (auto *other_entity : entity_set) {
+        table_rows_.push_back(ResultRow{{second_synonym, other_entity}});
+      }
     }
   }
 }

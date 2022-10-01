@@ -9,6 +9,10 @@ using EntityPointerUnorderedMap = std::unordered_map<Entity *,
                                                      EntityPointerUnorderedSet,
                                                      EntityHashFunction,
                                                      EntityPointerEquality>;
+using ResultRow = std::unordered_map<QuerySynonym *,
+                                     Entity *,
+                                     QuerySynonymHashFunction,
+                                     QuerySynonymPointerEquality>;
 
 class SubqueryResult {
  private:
@@ -19,6 +23,9 @@ class SubqueryResult {
   QueryDeclaration *first_decl_;
 
   QueryDeclaration *second_decl_;
+
+  std::vector<QuerySynonym *> synonyms_;
+  std::vector<ResultRow > table_rows_;
 
   SubqueryResult(EntityPointerUnorderedMap, EntityPointerUnorderedMap, QueryDeclaration *, QueryDeclaration *);
  public:
