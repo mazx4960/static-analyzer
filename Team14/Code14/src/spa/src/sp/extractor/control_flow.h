@@ -6,28 +6,24 @@
 #include "commons/parser/node/node.h"
 #include "commons/types.h"
 
-class CFGNode {
+class CFGNode : public Node {
  private:
   Entity *stmt_;
-
-  std::vector<CFGNode *> children_;
+  std::vector<Node *> children_;
 
  public:
   explicit CFGNode(Entity *stmt);
   Entity *GetStmt();
-  void AddChild(CFGNode *child);
-  void SetChild(CFGNode *child, int pos);
-  void SetChildren(std::vector<CFGNode *> children);
+  void AddChild(Node *child);
+  void SetChild(Node *child, int pos);
   bool IsTerminal();
-  std::vector<CFGNode *> GetChildren();
-  std::string ToString();
-  void VisitAll(const std::function<void(CFGNode *)> &op);
+  std::vector<Node *> GetChildren() override;
+  std::string ToString() override;
 };
 
 class CFGBuilder {
  private:
   CFGNode *start_node_;
-
   static CFGNode *ToCFGNode(Node *node);
   static void ConnectNode(CFGNode *parent, CFGNode *child);
   static CFGNode *BuildBlock(Node *node, CFGNode *parent, CFGNode *terminal);
