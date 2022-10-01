@@ -64,22 +64,15 @@ std::vector<QuerySynonym *> SubqueryResult::getCommonSynonyms(const SubqueryResu
   return std::vector<QuerySynonym *>(common_synonyms.begin(), end_pos);
 }
 EntityPointerUnorderedSet SubqueryResult::GetColumn(QuerySynonym *synonym) {
-  if (*first_decl_->getSynonym() == *synonym) {
-    EntityPointerUnorderedSet entities{};
-    for (auto [key, values] : table_) {
-      if (!values.empty()) { entities.insert(key); }
-    }
-    return entities;
+  if (std::find(synonyms_.begin(), synonyms_.end(), synonym) != synonyms_.end()) {
+    return EntityPointerUnorderedSet{};
   }
-  if (*second_decl_->getSynonym() == *synonym) {
-    EntityPointerUnorderedSet entities{};
-    for (auto [key, values] : table_inv_) {
-      if (!values.empty()) { entities.insert(key); }
-    }
-    return entities;
+  EntityPointerUnorderedSet results{};
+  results.reserve(table_rows_.size());
+  for (auto row : table_rows_) {
+    results.insert(row[synonym]);
   }
-  spdlog::debug("Synonym not found!");
-  return EntityPointerUnorderedSet();
+  return results;
 }
 
 SubqueryResult SubqueryResult::Intersect(SubqueryResult &other) {
