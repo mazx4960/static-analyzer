@@ -33,14 +33,18 @@ void TestWrapper::parse(std::string filename) {
 // method to evaluating a query
 void TestWrapper::evaluate(std::string query, std::list<std::string> &results) {
   this->ui_->SetQueryString(query);
-  auto *result = this->ui_->ExecuteQuery();
-
-  if (result->is_empty()) {
+  try {
+    auto *result = this->ui_->ExecuteQuery();
+    if (result->is_empty()) { return; }
+    // store the answers to the query in the results list (it is initially empty)
+    // each result must be a string.
+    std::unordered_set<std::string> results_set = result->get_results_set();
+    std::copy(results_set.begin(), results_set.end(), std::back_inserter(results));
+  } catch (ParseSemanticError &e) {
+    results.emplace_back("SemanticError");
+    return;
+  } catch (ParseSyntaxError &e) {
+    results.emplace_back("SyntaxError");
     return;
   }
-
-  // store the answers to the query in the results list (it is initially empty)
-  // each result must be a string.
-  std::unordered_set<std::string> results_set = result->get_results_set();
-  std::copy(results_set.begin(), results_set.end(), std::back_inserter(results));
 }
