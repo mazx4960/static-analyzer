@@ -67,7 +67,9 @@ QueryDeclaration *QueryBuilder::buildExpression(std::string expression) {
 }
 QueryDeclaration *QueryBuilder::getStmtDeclaration(const std::string& synonym) {
   QueryDeclaration *declaration = getDeclaration(synonym);
-  if (declaration->getType() != EntityType::kProcedure && (GetAllStmtTypes().count(declaration->getType()) == 0U)) {
+  if (declaration->getType() != EntityType::kStatement
+  && declaration->getType() != EntityType::kProcedure
+  && (GetAllStmtTypes().count(declaration->getType()) == 0U)) {
     throw ParseSemanticError("Synonym given is not a statement/procedure: " + synonym);
   }
   return declaration;
