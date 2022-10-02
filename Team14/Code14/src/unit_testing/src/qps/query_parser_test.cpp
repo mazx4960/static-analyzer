@@ -186,8 +186,8 @@ TEST(QueryParserTest, ValidSingleParentClauseTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front(),
-            expected_query.getQueryCall().getClauseVector().front());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<ParentClause *>(parser.getQueryCall()->getClauseVector().front())
                 ->getFirst()->getSynonym()->toString(),
@@ -224,8 +224,8 @@ TEST(QueryParserTest, ValidSingleFollowsClauseSynonymSynonymTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<FollowsClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -260,8 +260,8 @@ TEST(QueryParserTest, ValidSingleFollowsClauseSynonymIntegerTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<FollowsClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -296,8 +296,8 @@ TEST(QueryParserTest, ValidSingleFollowsClauseSynonymWildcardTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<FollowsClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -333,8 +333,9 @@ TEST(QueryParserTest, ValidSingleFollowsClauseIntegerSynonymTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  // check clause
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<FollowsClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -370,8 +371,8 @@ TEST(QueryParserTest, ValidSingleFollowsClauseIntegerIntegerTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<FollowsClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -407,8 +408,8 @@ TEST(QueryParserTest, ValidSingleFollowsClauseWildcardIntegerTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<FollowsClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -446,8 +447,8 @@ TEST(QueryParserTest, ValidSingleUsesClauseSynonymSynonymTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<UsesClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -482,8 +483,8 @@ TEST(QueryParserTest, ValidSingleUsesClauseSynonymStringTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<UsesClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -518,8 +519,8 @@ TEST(QueryParserTest, ValidSingleUsesClauseSynonymWildcardTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<UsesClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -555,8 +556,8 @@ TEST(QueryParserTest, ValidSingleUsesClauseIntegerWildcardTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<UsesClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -592,8 +593,8 @@ TEST(QueryParserTest, ValidSingleUsesClauseIntegerSynonymTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<UsesClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -629,8 +630,8 @@ TEST(QueryParserTest, ValidSingleUsesClauseIntegerStringTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<UsesClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -650,7 +651,7 @@ TEST(QueryParserTest, InvalidSingleUsesClauseWildcardStringTest) {
       new WildCardToken(), new CommaToken(), new QuoteToken(), new SymbolToken("a"), new QuoteToken(), new RoundCloseBracketToken(),
       new EndOfFileToken()};
   QueryParser parser = QueryParser(single_clause_parent_query);
-  ASSERT_THROW(parser.parse(), ParseSemanticError);
+  ASSERT_THROW(parser.parse(), ParseSyntaxError);
 }
 
 TEST(QueryParserTest, ValidSinglePatternClauseSymbolExprTest) {
@@ -679,8 +680,8 @@ TEST(QueryParserTest, ValidSinglePatternClauseSymbolExprTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -724,8 +725,8 @@ TEST(QueryParserTest, ValidSinglePatternClauseWildcardExprTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -773,8 +774,8 @@ TEST(QueryParserTest, ValidSinglePatternClauseSynonymExprTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -822,8 +823,8 @@ TEST(QueryParserTest, ValidSinglePatternClauseSynonymWildcardExprTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -870,8 +871,8 @@ TEST(QueryParserTest, ValidSinglePatternClauseSynonymWildcardTest) {
   ASSERT_EQ(parser.getQueryCall()->getType(), expected_query.getQueryCall().getType());
 
   // check clause
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
 
   ASSERT_EQ(static_cast<AssignPatternClause *>(parser.getQueryCall()->getClauseVector()[0])
                 ->getFirst()->getSynonym()->toString(),
@@ -921,8 +922,8 @@ TEST(QueryParserTest, ValidDualClauseTest) {
 
   // check clause
   ASSERT_EQ(parser.getQueryCall()->getClauseVector().size(), 2);
-  ASSERT_EQ(parser.getQueryCall()->getClauseVector()[0]->getClauseType(),
-            expected_query.getQueryCall().getClauseVector()[0]->getClauseType());
+  ASSERT_EQ(parser.getQueryCall()->getClauseVector().front()->getClauseType(),
+            expected_query.getQueryCall().getClauseVector().front()->getClauseType());
   ASSERT_EQ(parser.getQueryCall()->getClauseVector()[1]->getClauseType(),
             expected_query.getQueryCall().getClauseVector()[1]->getClauseType());
 

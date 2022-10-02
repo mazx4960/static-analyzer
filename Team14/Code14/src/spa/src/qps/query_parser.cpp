@@ -312,7 +312,7 @@ QueryDeclaration *QueryParser::parseExpression() {
 }
 
 std::string QueryParser::parseFlattenedExpression() {
-  parseQuote(nextToken());
+  expect(nextToken(), {TokenType::kQuote});
   std::string expression;
   bool expect_operand = true;
   std::vector<Token *> expr_tokens;
@@ -328,16 +328,12 @@ std::string QueryParser::parseFlattenedExpression() {
       expect_operand = true;
     }
   }
-  if (!expect_operand) {
+  if (expect_operand) {
     expect(peekToken(), {TokenType::kSymbol});
   }
-  parseQuote(nextToken());
+  expect(nextToken(), {TokenType::kQuote});
   expr_tokens.push_back(new EndOfFileToken());
   return Parser::ParseExpression(expr_tokens)->ToString();
-}
-
-void QueryParser::parseQuote(Token *quote) {
-  expect(quote, {TokenType::kQuote});
 }
 
 QueryDeclaration *QueryParser::parseWildcard(EntityType type) {

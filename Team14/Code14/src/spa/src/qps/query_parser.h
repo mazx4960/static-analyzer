@@ -48,6 +48,5 @@ class QueryParser {
   QueryDeclaration *parseWildcard(EntityType type);
   QueryDeclaration *parseAnyRefDeclaration();
   std::string parseFlattenedExpression();
-  void parseQuote(Token *quote);
   void expect(Token *token, const std::unordered_set<TokenType> &expected_types);
 };
