@@ -24,13 +24,13 @@ EntityPointerUnorderedSet ResultProjector::project() {
   QuerySynonym *synonym = this->called_declaration_->getSynonym();
   if (std::any_of(subquery_results_.begin(), subquery_results_.end(),
                   [](SubqueryResult subquery_result) {
-                    return subquery_result.empty();
+                    return subquery_result.IsEmpty();
                   })) {
     return EntityPointerUnorderedSet();
   }
   if (std::none_of(subquery_results_.begin(), subquery_results_.end(),
                   [synonym](SubqueryResult subquery_result) {
-                    return subquery_result.uses(synonym);
+                    return subquery_result.Uses(synonym);
                   })) {
     return EntityPointerUnorderedSet();
   }

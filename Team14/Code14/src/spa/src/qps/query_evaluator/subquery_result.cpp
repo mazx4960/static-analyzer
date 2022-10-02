@@ -49,15 +49,15 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDecl
 SubqueryResult::SubqueryResult(std::vector<QuerySynonym *> synonyms, std::vector<ResultRow> result_rows)
     : synonyms_(std::move(synonyms)), table_rows_(std::move(result_rows)) {}
 
-bool SubqueryResult::empty() {
+bool SubqueryResult::IsEmpty() {
   return table_rows_.empty();
 }
 
-bool SubqueryResult::uses(QuerySynonym *synonym) {
+bool SubqueryResult::Uses(QuerySynonym *synonym) {
   return std::find(synonyms_.begin(), synonyms_.end(), synonym) != synonyms_.end();
 }
 
-std::vector<QuerySynonym *> SubqueryResult::getCommonSynonyms(const SubqueryResult &other) {
+std::vector<QuerySynonym *> SubqueryResult::GetCommonSynonyms(const SubqueryResult &other) {
   std::vector<QuerySynonym *> common_synonyms(std::min(synonyms_.size(), other.synonyms_.size()));
   auto end_pos = std::set_intersection(synonyms_.begin(), synonyms_.end(), other.synonyms_.begin(), other.synonyms_.end(), common_synonyms.begin());
   return std::vector<QuerySynonym *>(common_synonyms.begin(), end_pos);
@@ -75,7 +75,7 @@ EntityPointerUnorderedSet SubqueryResult::GetColumn(QuerySynonym *synonym) {
 }
 
 SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
-  auto common_synonyms = this->getCommonSynonyms(other);
+  auto common_synonyms = this->GetCommonSynonyms(other);
   std::vector<QuerySynonym *> all_synonyms{};
   all_synonyms.reserve(synonyms_.size() + other.synonyms_.size());
   all_synonyms.insert(all_synonyms.end(), synonyms_.begin(), synonyms_.end());
