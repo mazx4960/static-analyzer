@@ -163,3 +163,93 @@ variable v; assign a;
 Select a such that Uses(a,v) pattern a(v, _)
 15, 16, 17, 21, 22
 5000
+601 - select all procedures that calls some other procedure
+procedure p, q;
+Select p such that Calls(p, q)
+main, computeCentroid
+5000
+602 - select all procedures that are called by some procedure
+procedure p, q;
+Select q such that Calls(p, q)
+computeCentroid, readPoint, printResults
+5000
+603 - select all procedures that call procedure printResults
+procedure p;
+Select p such that Calls(p, "printResults")
+main
+5000
+604 - select all procedures that call readPoint directly or indirectly
+procedure p;
+Select p such that Calls*(p, "readPoint")
+main, computeCentroid
+5000
+605 - select all procedures that call main
+procedure p;
+Select p such that Calls(p, "main")
+none
+5000
+606 - select all procedures that call main directly or indirectly
+procedure p;
+Select p such that Calls(p, "main")
+none
+5000
+607 - select all procedures that call itself directly (none, since no recursion)
+procedure p;
+Select p such that Calls(p, p)
+none
+5000
+608 - select all procedures that are called by main
+procedure p;
+Select p such that Calls("main", p)
+computeCentroid, printResults
+5000
+609 - select all procedures that are called by main directly or indirectly
+procedure p;
+Select p such that Calls*(p, "main")
+computeCentroid, printResults, readPoint
+5000
+610 - select all procedures that are called by printResults
+procedure p;
+Select p such that Calls("printResults", p)
+none
+5000
+611 - select all procedures with valid Calls relationship
+procedure p;
+Select p such that Calls("main", "computeCentroid")
+main, readPoint, printResults, computeCentroid
+5000
+612 - select all procedures with valid Calls* relationship
+procedure p;
+Select p such that Calls*("main", "readPoint")
+main, readPoint, printResults, computeCentroid
+5000
+613 - select all procedures with invalid Calls relationship
+procedure p;
+Select p such that Calls("computeCentroid", "main")
+none
+5000
+614 - select all procedures with invalid Calls* relationship
+procedure p;
+Select p such that Calls*("readPoint, "main")
+none
+5000
+615 - select all procedures, using wildcard
+procedure p;
+Select p such that Calls(_, _)
+main, computeCentroid, readPoint, printResults
+5000
+616 - select all procedures that calls some other procedure, using wildcard
+procedure p;
+Select p such that Calls(p, _)
+main, computeCentroid
+5000
+617 - select all procedures that are called by some procedure, using wildcard
+procedure q;
+Select q such that Calls(_, q)
+computeCentroid, readPoint, printResults
+5000
+618 - select all procedures, using wildcard and non-related synonym
+procedure p, q;
+Select p such that Calls(q, _)
+main, computeCentroid, readPoint, printResults
+5000
