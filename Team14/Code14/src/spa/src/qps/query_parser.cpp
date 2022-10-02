@@ -352,31 +352,12 @@ QueryDeclaration *QueryParser::parseExpression() {
   }
   if (tmp->type == TokenType::kQuote) {
     nextToken();
-    bool toggle = true;
     std::vector<Token *> expr_tokens;
     while (peekToken()->type != TokenType::kQuote) {
       tmp = nextToken();
-      if (toggle) {
-        if (tmp->type == TokenType::kSymbol || tmp->type == TokenType::kLiteral) {
-          expr_tokens.push_back(tmp);
-        } else {
-          throw ParseSyntaxError("Unexpected symbol in expression: " + tmp->value);
-        }
-        toggle = false;
-      } else {
-        if (tmp->type == TokenType::kOperator) {
-          expr_tokens.push_back(tmp);
-        } else {
-          throw ParseSyntaxError("Unexpected operator in expression: " + tmp->value);
-        }
-        toggle = true;
-      }
-    }
-    if (toggle) {
-      throw ParseSyntaxError("Missing symbol in expression");
+      expr_tokens.push_back(tmp);
     }
     nextToken();
-    expr_tokens.push_back(new EndOfFileToken());
     expression = Parser::ParseExpression(expr_tokens)->ToString();
     if (wild_expression) {
       if (nextToken()->type != TokenType::kWildCard) {

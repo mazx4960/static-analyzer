@@ -19,13 +19,7 @@ Result *QPS::EvaluateQuery(std::istream *query_stream) {
 
   QueryParser parser(tokens);
   spdlog::info("Parsing tokens...");
-  try {
-    parser.parse();
-  } catch (ParseSemanticError &e) {
-    return Result::semanticError();
-  } catch (ParseSyntaxError &e) {
-    return Result::syntacticError();
-  }
+  parser.parse();
   QueryBuilder builder = QueryBuilder();
   std::vector<QueryDeclaration *> query_declarations = parser.getDeclarations();
   std::vector<QueryCall *> query_calls = parser.getQueryCalls();
