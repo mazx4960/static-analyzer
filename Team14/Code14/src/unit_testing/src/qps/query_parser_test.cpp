@@ -284,7 +284,7 @@ TEST(QueryParserTest, ValidSingleFollowsClauseSynonymWildcardTest) {
   parser.parse();
 
   QueryDeclaration *v1 = new AssignDeclaration(new QuerySynonym("v1"));
-  QueryDeclaration *w2 = new StmtWildCardDeclaration();
+  QueryDeclaration *w2 = new WildCardStmtDeclaration();
   Query expected_query = Query(std::vector<QueryDeclaration *>{v1, w2},
                                SelectCall(v1, std::vector<QueryClause *>{new FollowsClause(v1, w2)}));
 
@@ -394,7 +394,7 @@ TEST(QueryParserTest, ValidSingleFollowsClauseWildcardIntegerTest) {
   parser.parse();
 
   QueryDeclaration *v1 = new AssignDeclaration(new QuerySynonym("v1"));
-  QueryDeclaration *w1 = new StmtWildCardDeclaration();
+  QueryDeclaration *w1 = new WildCardStmtDeclaration();
   QueryDeclaration *i2 = new IntegerDeclaration("2");
   Query expected_query = Query(std::vector<QueryDeclaration *>{w1, i2},
                                SelectCall(w1, std::vector<QueryClause *>{new FollowsClause(w1, i2)}));
@@ -506,7 +506,7 @@ TEST(QueryParserTest, ValidSingleUsesClauseSynonymWildcardTest) {
   parser.parse();
 
   QueryDeclaration *v1 = new AssignDeclaration(new QuerySynonym("v1"));
-  QueryDeclaration *w2 = new EntWildCardDeclaration();
+  QueryDeclaration *w2 = new WildCardEntDeclaration();
   Query expected_query = Query(std::vector<QueryDeclaration *>{v1, w2},
                                SelectCall(v1, std::vector<QueryClause *>{new UsesClause(v1, w2)}));
 
@@ -543,7 +543,7 @@ TEST(QueryParserTest, ValidSingleUsesClauseIntegerWildcardTest) {
 
   QueryDeclaration *v1 = new AssignDeclaration(new QuerySynonym("v1"));
   QueryDeclaration *i1 = new IntegerDeclaration("1");
-  QueryDeclaration *w2 = new EntWildCardDeclaration();
+  QueryDeclaration *w2 = new WildCardEntDeclaration();
   Query expected_query = Query(std::vector<QueryDeclaration *>{i1, w2},
                                SelectCall(v1, std::vector<QueryClause *>{new UsesClause(i1, w2)}));
 
@@ -713,7 +713,7 @@ TEST(QueryParserTest, ValidSinglePatternClauseWildcardExprTest) {
   Query expected_query =
       Query(std::vector<QueryDeclaration *>{a},
             SelectCall(a, {new AssignPatternClause(a,
-                                                   new EntWildCardDeclaration(),
+                                                   new WildCardEntDeclaration(),
                                                    new ExpressionDeclaration("((x)+(y))"))}));
 
   // check declarations

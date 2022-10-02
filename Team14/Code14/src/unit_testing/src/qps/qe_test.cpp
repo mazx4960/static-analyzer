@@ -145,7 +145,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
   auto *expr_dec = new ExpressionDeclaration("x+y");
   auto *str_dec = new StringDeclaration("string_dec");
   auto *int_dec = new IntegerDeclaration("123");
-  auto *wild_dec = new StmtWildCardDeclaration();
+  auto *wild_dec = new WildCardStmtDeclaration();
 
   std::vector<QueryDeclaration *> declarations_vector = {
       stmt_dec, read_dec, print_dec, call_dec, while_dec,
@@ -185,7 +185,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   auto *expr_dec_1 = new ExpressionDeclaration("x+y");
   auto *str_dec_1 = new StringDeclaration("string_dec_1");
   auto *int_dec_1 = new IntegerDeclaration("123");
-  auto *wild_dec_1 = new StmtWildCardDeclaration();
+  auto *wild_dec_1 = new WildCardStmtDeclaration();
 
   auto *stmt_dec_2 = new StatementDeclaration(new QuerySynonym("stmt_dec_2"));
   auto *read_dec_2 = new ReadDeclaration(new QuerySynonym("read_dec_2"));
@@ -200,7 +200,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   auto *expr_dec_2 = new ExpressionDeclaration("x+y");
   auto *str_dec_2 = new StringDeclaration("string_dec_2");
   auto *int_dec_2 = new IntegerDeclaration("123");
-  auto *wild_dec_2 = new StmtWildCardDeclaration();
+  auto *wild_dec_2 = new WildCardStmtDeclaration();
 
   std::vector<QueryDeclaration *> declarations_vector = {
       stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
@@ -251,7 +251,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
   auto *expr_dec_1 = new ExpressionDeclaration("x+y");
   auto *str_dec_1 = new StringDeclaration("string_dec");
   auto *int_dec_1 = new IntegerDeclaration("123");
-  auto *wild_dec_1 = new StmtWildCardDeclaration();
+  auto *wild_dec_1 = new WildCardStmtDeclaration();
 
   auto *stmt_dec_2 = new StatementDeclaration(new QuerySynonym("stmt_dec"));
   auto *read_dec_2 = new ReadDeclaration(new QuerySynonym("read_dec"));
@@ -266,7 +266,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
   auto *expr_dec_2 = new ExpressionDeclaration("x+y");
   auto *str_dec_2 = new StringDeclaration("string_dec");
   auto *int_dec_2 = new IntegerDeclaration("123");
-  auto *wild_dec_2 = new StmtWildCardDeclaration();
+  auto *wild_dec_2 = new WildCardStmtDeclaration();
 
   std::vector<QueryDeclaration *> declarations_vector = {
       stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,

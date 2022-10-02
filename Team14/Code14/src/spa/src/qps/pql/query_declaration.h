@@ -128,16 +128,16 @@ class ProcedureDeclaration : public QueryDeclaration {
 };
 
 // Inline declaration of  Wildcard "_"
-class EntWildCardDeclaration : public QueryDeclaration {
+class WildCardEntDeclaration : public QueryDeclaration {
  public:
-  explicit EntWildCardDeclaration() : QueryDeclaration(EntityType::kWildcardEnt) {
+  explicit WildCardEntDeclaration() : QueryDeclaration(EntityType::kWildcardEnt) {
   }
 };
 
 // Inline declaration of  Wildcard "_"
-class StmtWildCardDeclaration : public QueryDeclaration {
+class WildCardStmtDeclaration : public QueryDeclaration {
  public:
-  explicit StmtWildCardDeclaration() : QueryDeclaration(EntityType::kWildcardStmt) {
+  explicit WildCardStmtDeclaration() : QueryDeclaration(EntityType::kWildcardStmt) {
   }
 };
 
