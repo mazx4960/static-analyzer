@@ -106,6 +106,12 @@ class UsesTable {
 class ParentTable {
 } 
 
+class CallsTable {
+} 
+
+class NextTable {
+} 
+
 IPKBPopulator *-down- PKB
 IPKBQuerier *-down- PKB
 SP -down- IPKBPopulator
@@ -133,6 +139,8 @@ ModifiesTable -up-|> RelationshipTable
 FollowsTable -up-|> RelationshipTable 
 UsesTable -up-|> RelationshipTable
 ParentTable -up-|> RelationshipTable 
+CallsTable -up-|> RelationshipTable 
+NextTable -up-|> RelationshipTable 
 
 PatternTable -up-* PatternManager
 PatternTable -down-|> QueryPattern
