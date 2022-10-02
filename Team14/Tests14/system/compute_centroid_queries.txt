@@ -81,7 +81,7 @@ Select a such that Follows*(a, ifs)
 301 - select all procedures that modifies variable "x"
 procedure p;
 Select p such that Modifies(p, "x")
-readPoint
+main, readPoint, computeCentroid
 5000
 302 - select all procedures that modifies variable "cenX" (nested in while loop)
 procedure p;
