@@ -221,6 +221,12 @@ SuchThatClause *QueryParser::parseSuchThat() {
       return parseUses();
     case RsType::kModifies:
       return parseModifies();
+    case RsType::kCalls:
+      return parseCalls();
+    case RsType::kNext:
+      return parseNext();
+    case RsType::kAffects:
+      return parseAffects();
     default:
       throw ParseSyntaxError("Unknown such-that relationship: " + relationship->value);
   }
@@ -241,7 +247,7 @@ SuchThatClause *QueryParser::parseFollows() {
 
   SuchThatClause *clause;
   if (follows_all) {
-    clause = builder_.buildSuchThat(RsType::kFollowsAll, first, second);
+    clause = builder_.buildSuchThat(RsType::kFollowsT, first, second);
   } else {
     clause = builder_.buildSuchThat(RsType::kFollows, first, second);
   }
@@ -265,7 +271,7 @@ SuchThatClause *QueryParser::parseParent() {
 
   SuchThatClause *clause;
   if (parent_all) {
-    clause = builder_.buildSuchThat(RsType::kParentAll, first, second);
+    clause = builder_.buildSuchThat(RsType::kParentT, first, second);
   } else {
     clause = builder_.buildSuchThat(RsType::kParent, first, second);
   }
@@ -290,6 +296,72 @@ SuchThatClause *QueryParser::parseModifies() {
   expect(nextToken(), {TokenType::kRoundCloseBracket});
   spdlog::debug("Modifies parsed: Modifies({}, {})", first->toString(), second->toString());
   return builder_.buildSuchThat(RsType::kModifies, first, second);
+}
+SuchThatClause *QueryParser::parseCalls() {
+  Token *star = peekToken();
+  bool calls_all = false;
+  if (*star == OperatorToken("*")) {
+    nextToken();
+    calls_all = true;
+  }
+  expect(nextToken(), {TokenType::kRoundOpenBracket});
+  QueryDeclaration *first = parseEntRefDeclaration();
+  expect(nextToken(), {TokenType::kComma});
+  QueryDeclaration *second = parseEntRefDeclaration();;
+  expect(nextToken(), {TokenType::kRoundCloseBracket});
+
+  SuchThatClause *clause;
+  if (calls_all) {
+    clause = builder_.buildSuchThat(RsType::kCallsT, first, second);
+  } else {
+    clause = builder_.buildSuchThat(RsType::kCalls, first, second);
+  }
+  spdlog::debug("Calls parsed: Calls({}, {}), *: {}", first->toString(), second->toString(), calls_all);
+  return clause;
+}
+SuchThatClause *QueryParser::parseNext() {
+  Token *star = peekToken();
+  bool next_all = false;
+  if (*star == OperatorToken("*")) {
+    nextToken();
+    next_all = true;
+  }
+  expect(nextToken(), {TokenType::kRoundOpenBracket});
+  QueryDeclaration *first = parseStmtRefDeclaration();
+  expect(nextToken(), {TokenType::kComma});
+  QueryDeclaration *second = parseStmtRefDeclaration();;
+  expect(nextToken(), {TokenType::kRoundCloseBracket});
+
+  SuchThatClause *clause;
+  if (next_all) {
+    clause = builder_.buildSuchThat(RsType::kNextT, first, second);
+  } else {
+    clause = builder_.buildSuchThat(RsType::kNext, first, second);
+  }
+  spdlog::debug("Next parsed: Next({}, {}), *: {}", first->toString(), second->toString(), next_all);
+  return clause;
+}
+SuchThatClause *QueryParser::parseAffects() {
+  Token *star = peekToken();
+  bool affects_all = false;
+  if (*star == OperatorToken("*")) {
+    nextToken();
+    affects_all = true;
+  }
+  expect(nextToken(), {TokenType::kRoundOpenBracket});
+  QueryDeclaration *first = parseStmtRefDeclaration();
+  expect(nextToken(), {TokenType::kComma});
+  QueryDeclaration *second = parseStmtRefDeclaration();;
+  expect(nextToken(), {TokenType::kRoundCloseBracket});
+
+  SuchThatClause *clause;
+  if (affects_all) {
+    clause = builder_.buildSuchThat(RsType::kAffectsT, first, second);
+  } else {
+    clause = builder_.buildSuchThat(RsType::kAffects, first, second);
+  }
+  spdlog::debug("Parent parsed: Parent({}, {}), *: {}", first->toString(), second->toString(), affects_all);
+  return clause;
 }
 
 QueryDeclaration *QueryParser::parseExpression() {
@@ -361,6 +433,7 @@ void QueryParser::expect(Token *token, const std::unordered_set<TokenType>& expe
     throw ParseSyntaxError("Invalid token type: " + token->value);
   }
 }
+
 
 
 

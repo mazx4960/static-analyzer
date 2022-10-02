@@ -49,4 +49,7 @@ class QueryParser {
   QueryDeclaration *parseAnyRefDeclaration();
   std::string parseFlattenedExpression();
   void expect(Token *token, const std::unordered_set<TokenType> &expected_types);
+  SuchThatClause *parseCalls();
+  SuchThatClause *parseNext();
+  SuchThatClause *parseAffects();
 };

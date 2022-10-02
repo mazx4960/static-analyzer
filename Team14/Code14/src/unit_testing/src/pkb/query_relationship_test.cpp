@@ -20,8 +20,8 @@ TEST(QueryTest, FollowsRelationship) {
 
   auto result_inverse_false = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("8"), false);
   auto result_inverse_true = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("10"), true);
-  auto result_traverse_inverse_false = pkb.getByRelationship(RsType::kFollowsAll, new AssignStmtEntity("1"), false);
-  auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kFollowsAll, new AssignStmtEntity("4"), true);
+  auto result_traverse_inverse_false = pkb.getByRelationship(RsType::kFollowsT, new AssignStmtEntity("1"), false);
+  auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kFollowsT, new AssignStmtEntity("4"), true);
   auto result_no_preceding_statement = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("1"), true);
   auto result_no_subsequent_statement = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("10"), false);
 
@@ -55,9 +55,9 @@ TEST(QueryTest, ParentRelationship) {
 
   auto result_inverse_false = pkb.getByRelationship(RsType::kParent, new ProcedureEntity("Megatron"), false);
   auto result_inverse_true = pkb.getByRelationship(RsType::kParent, new AssignStmtEntity("10"), true);
-  auto result_traverse_inverse_false = pkb.getByRelationship(RsType::kParentAll, new WhileStmtEntity("1"), false);
-  auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kParentAll, new AssignStmtEntity("4"), true);
-  auto result_no_parent = pkb.getByRelationship(RsType::kParentAll, new ProcedureEntity("main"), true);
+  auto result_traverse_inverse_false = pkb.getByRelationship(RsType::kParentT, new WhileStmtEntity("1"), false);
+  auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kParentT, new AssignStmtEntity("4"), true);
+  auto result_no_parent = pkb.getByRelationship(RsType::kParentT, new ProcedureEntity("main"), true);
   auto result_no_child = pkb.getByRelationship(RsType::kParent, new AssignStmtEntity("10"), false);
 
   EntityPointerUnorderedSet expected_result_inverse_false = {new AssignStmtEntity("10")};
@@ -214,8 +214,8 @@ TEST(QueryTest, CallsRelationship) {
   auto result_single_inverse_false = pkb.getByRelationship(RsType::kCalls, new ProcedureEntity("main"), false);
   auto result_single_inverse_true = pkb.getByRelationship(RsType::kCalls, new ProcedureEntity("Megatron"), true);
   auto result_invalid_procedure = pkb.getByRelationship(RsType::kCalls, new ProcedureEntity("Bumblebee"), false);
-  auto result_traverse_inverse_false = pkb.getByRelationship(RsType::kCallsAll, new ProcedureEntity("main"), false);
-  auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kCallsAll, new ProcedureEntity("four"), true);
+  auto result_traverse_inverse_false = pkb.getByRelationship(RsType::kCallsT, new ProcedureEntity("main"), false);
+  auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kCallsT, new ProcedureEntity("four"), true);
   auto result_no_preceding_procedure = pkb.getByRelationship(RsType::kCalls, new ProcedureEntity("main"), true);
   auto result_no_subsequent_procedure = pkb.getByRelationship(RsType::kCalls, new ProcedureEntity("four"), false);
 
@@ -251,8 +251,8 @@ TEST(QueryTest, NextRelationship) {
   auto result_single_inverse_false = pkb.getByRelationship(RsType::kNext, new AssignStmtEntity("1"), false);
   auto result_single_inverse_true = pkb.getByRelationship(RsType::kNext, new AssignStmtEntity("4"), true);
   auto result_invalid_assignment_statement = pkb.getByRelationship(RsType::kNext, new AssignStmtEntity("7"), false);
-  auto result_traverse_inverse_false = pkb.getByRelationship(RsType::kNextAll, new AssignStmtEntity("1"), false);
-  auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kNextAll, new AssignStmtEntity("5"), true);
+  auto result_traverse_inverse_false = pkb.getByRelationship(RsType::kNextT, new AssignStmtEntity("1"), false);
+  auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kNextT, new AssignStmtEntity("5"), true);
   auto result_no_preceding_statement = pkb.getByRelationship(RsType::kNext, new AssignStmtEntity("1"), true);
   auto result_no_subsequent_statement = pkb.getByRelationship(RsType::kNext, new AssignStmtEntity("10"), false);
 

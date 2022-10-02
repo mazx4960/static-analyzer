@@ -67,17 +67,15 @@ QueryDeclaration *QueryBuilder::buildExpression(std::string expression) {
 }
 QueryDeclaration *QueryBuilder::getStmtDeclaration(const std::string& synonym) {
   QueryDeclaration *declaration = getDeclaration(synonym);
-  if (declaration->getType() != EntityType::kStatement
-  && declaration->getType() != EntityType::kProcedure
-  && (GetAllStmtTypes().count(declaration->getType()) == 0U)) {
-    throw ParseSemanticError("Synonym given is not a statement/procedure: " + synonym);
+  if ((GetStmtRefTypes().count(declaration->getType()) == 0U)) {
+    throw ParseSemanticError("Synonym given is not a stmtref: " + synonym);
   }
   return declaration;
 }
 QueryDeclaration *QueryBuilder::getEntDeclaration(const std::string& synonym) {
   QueryDeclaration *declaration = getDeclaration(synonym);
-  if (declaration->getType() != EntityType::kVariable) {
-    throw ParseSemanticError("Synonym given is not a variable: " + EntityTypeToString(declaration->getType()));
+  if ((GetEntRefTypes().count(declaration->getType()) == 0U)) {
+    throw ParseSemanticError("Synonym given is not aa entref: " + synonym);
   }
   return declaration;
 }

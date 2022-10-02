@@ -45,19 +45,19 @@ void RelationshipManager::Populate(std::vector<Relationship *> &relationships) {
 EntityPointerUnorderedSet RelationshipManager::Get(RsType rs_type, Entity *entity, bool is_inverse) {
   auto matches = EntityPointerUnorderedSet();
   switch (rs_type) {
-    case RsType::kFollowsAll: {
+    case RsType::kFollowsT: {
       matches = this->GetAll(RsType::kFollows, entity, is_inverse);
       break;
     }
-    case RsType::kParentAll: {
+    case RsType::kParentT: {
       matches = this->GetAll(RsType::kParent, entity, is_inverse);
       break;
     }
-    case RsType::kCallsAll: {
+    case RsType::kCallsT: {
       matches = this->GetAll(RsType::kCalls, entity, is_inverse);
       break;
     }
-    case RsType::kNextAll: {
+    case RsType::kNextT: {
       matches = this->GetAll(RsType::kNext, entity, is_inverse);
       break;
     }

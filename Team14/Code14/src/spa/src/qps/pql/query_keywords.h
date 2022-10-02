@@ -34,6 +34,9 @@ class QueryKeywords {
     {"Parent", RsType::kParent},
     {"Uses", RsType::kUses},
     {"Modifies", RsType::kModifies},
+    {"Calls", RsType::kCalls},
+    {"Next", RsType::kNext},
+    {"Affects", RsType::kAffects},
     {"pattern", RsType::kAssignPattern}};
 
   inline static const std::unordered_map<std::string, RsType> kPatternKeywordsMap{
