@@ -58,6 +58,16 @@ stmt s;
 Select s such that Calls(s, _)
 SemanticError
 5000
+210 - semantic error, invalid wildcard in Modifies
+variable v;
+Select v such that Modifies(_, v)
+SemanticError
+5000
+211 - semantic error, invalid wildcard in Uses
+variable v;
+Select v such that Uses(_, v)
+SemanticError
+5000
 301 - error in both syntax (extra "+" in pattern, same as 33) and semantics (undefined synonym), syntax error should be prioritised
 assign a;
 Select b pattern a (_, _" +temp"_)
