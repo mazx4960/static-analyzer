@@ -72,8 +72,8 @@ TEST(QueryDeclarationPointerEqualityTest, EqualProcedure) {
   ASSERT_TRUE((*q1) == (*q2));
 }
 TEST(QueryDeclarationPointerEqualityTest, EqualWildCard) {
-  auto *q1 = new EntWildCardDeclaration();
-  auto *q2 = new EntWildCardDeclaration();
+  auto *q1 = new WildCardEntDeclaration();
+  auto *q2 = new WildCardEntDeclaration();
   std::unordered_set<QueryDeclaration *, QueryDeclarationHashFunction, QueryDeclarationPointerEquality> s = {q1, q2};
   ASSERT_EQ(s.size(), 1);
   ASSERT_TRUE((*q1) == (*q2));
