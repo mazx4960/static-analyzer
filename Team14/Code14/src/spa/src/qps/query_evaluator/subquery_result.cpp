@@ -108,7 +108,7 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
     for (auto that_row : other.table_rows_) {
       bool can_join = true;
       for (auto *syn : common_synonyms) {
-        if (this_row[syn] != that_row[syn]) {
+        if (!(*this_row[syn] == *that_row[syn])) {
           can_join = false;
           break;
         }
