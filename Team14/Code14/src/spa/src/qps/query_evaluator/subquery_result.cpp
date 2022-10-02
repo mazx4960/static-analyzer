@@ -5,13 +5,17 @@
 
 #include <utility>
 
+#include "spdlog/spdlog.h"
+
 SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDeclaration *first, QueryDeclaration *second)
 {
   QuerySynonym* first_synonym = first->getSynonym();
   QuerySynonym* second_synonym = second->getSynonym();
-  if (first_synonym != QuerySynonym::empty()) {
+  if (*first_synonym != *QuerySynonym::empty()) {
+    spdlog::debug("First synonym used");
     synonyms_.push_back(first_synonym);
-    if (second->getSynonym() != QuerySynonym::empty()) {
+    if (*second_synonym != *QuerySynonym::empty()) {
+      spdlog::debug("Second synonym used");
       // Corner case: first and second synonyms are the same
       if (*first_synonym == *second_synonym) {
         for (auto [entity, entity_set] : table) {
@@ -36,7 +40,8 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDecl
       }
     }
   }
-  else if (second->getSynonym() != QuerySynonym::empty()) {
+  else if (*second_synonym != *QuerySynonym::empty()) {
+    spdlog::debug("Second synonym used");
     synonyms_.push_back(second_synonym);
     for (auto [entity, entity_set] : table) {
       for (auto *other_entity : entity_set) {
@@ -46,6 +51,7 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDecl
   }
   // In this case there are no synonyms, but still need to add an entry if there are entries in the table
   else {
+    spdlog::debug("No synonyms used");
     for (auto [entity, entity_set] : table) {
       for (auto *other_entity : entity_set) {
         // Adds an empty hash table
