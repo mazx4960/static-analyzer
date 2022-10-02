@@ -61,10 +61,27 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDecl
       }
     }
   }
+  std::string synonym_string;
+  for (auto *syn : synonyms_) synonym_string += syn->toString() + ", ";
+  spdlog::debug("Creating new table with synonyms: {} and tuples:", synonym_string);
+  for (auto row : table_rows_) {
+    std::string row_string;
+    for (auto *syn : synonyms_) row_string += row[syn]->ToString() + ", ";
+    spdlog::debug("({})", row_string);
+  }
 }
 
 SubqueryResult::SubqueryResult(std::vector<QuerySynonym *> synonyms, std::vector<ResultRow> result_rows)
-    : synonyms_(std::move(synonyms)), table_rows_(std::move(result_rows)) {}
+    : synonyms_(std::move(synonyms)), table_rows_(std::move(result_rows)) {
+  std::string synonym_string;
+  for (auto *syn : synonyms_) synonym_string += syn->toString() + ", ";
+  spdlog::debug("Creating new table with synonyms: {} and tuples:", synonym_string);
+  for (auto row : table_rows_) {
+    std::string row_string;
+    for (auto *syn : synonyms_) row_string += row[syn]->ToString() + ", ";
+    spdlog::debug("({})", row_string);
+  }
+}
 
 bool SubqueryResult::IsEmpty() {
   return table_rows_.empty();
@@ -79,7 +96,7 @@ bool SubqueryResult::Uses(QuerySynonym *synonym) {
 
 std::vector<QuerySynonym *> SubqueryResult::GetCommonSynonyms(const SubqueryResult &other) {
   std::vector<QuerySynonym *> common_synonyms(std::min(synonyms_.size(), other.synonyms_.size()));
-  auto end_pos = std::set_intersection(synonyms_.begin(), synonyms_.end(), other.synonyms_.begin(), other.synonyms_.end(), common_synonyms.begin());
+  auto end_pos = std::set_intersection(synonyms_.begin(), synonyms_.end(), other.synonyms_.begin(), other.synonyms_.end(), common_synonyms.begin(), QuerySynonymPointerEquality());
   return std::vector<QuerySynonym *>(common_synonyms.begin(), end_pos);
 }
 EntityPointerUnorderedSet SubqueryResult::GetColumn(QuerySynonym *synonym) {
@@ -105,10 +122,16 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
 
   std::vector<ResultRow > new_rows{};
   for (auto this_row : table_rows_) {
+    std::string first_row_string;
+    for (auto *syn : common_synonyms) first_row_string += this_row[syn]->ToString() + ", ";
     for (auto that_row : other.table_rows_) {
+      std::string second_row_string;
+      for (auto *syn : common_synonyms) second_row_string += that_row[syn]->ToString() + ", ";
       bool can_join = true;
+      spdlog::debug("Comparing ({}) to ({})", first_row_string, second_row_string);
       for (auto *syn : common_synonyms) {
         if (!(*this_row[syn] == *that_row[syn])) {
+          spdlog::debug("Fail at synonym {}", syn->toString());
           can_join = false;
           break;
         }
@@ -121,5 +144,6 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
       }
     }
   }
+  spdlog::debug("Number of rows in result: {}", new_rows.size());
   return SubqueryResult(all_synonyms, new_rows);
 }
