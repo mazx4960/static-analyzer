@@ -1,0 +1,2 @@
+assign a;
+Select a such that Follows(10,a) pattern a(_,_"v1*(v2+v3)/v4"_)

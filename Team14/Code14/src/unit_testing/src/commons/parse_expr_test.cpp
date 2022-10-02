@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "commons/parser/parser.h"
+#include "commons/reader.h"
+#include "sp/simple_lexer.h"
 
 TEST(ExprParserTest, Variable) {
   std::vector<Token *> tokens = {new SymbolToken("x")};
@@ -156,5 +158,15 @@ TEST(ExprParserTest, Mixed) {
   Node *expr = Parser::ParseExpression(tokens);
   std::string actual = expr->ToString();
   std::string expected = "((x)+(((y)+(1))/((z)-(1))))";
+  ASSERT_EQ(actual, expected);
+}
+
+TEST(ExprParserTest, Brackets) {
+  std::string expr = "v1*(v2+v3)/v4";
+  SimpleLexer lexer(StreamReader::GetStreamFromString(expr));
+  std::vector<Token *> tokens = lexer.lex();
+  Node *node = Parser::ParseExpression(tokens);
+  std::string actual = node->ToString();
+  std::string expected = "(((v1)*((v2)+(v3)))/(v4))";
   ASSERT_EQ(actual, expected);
 }

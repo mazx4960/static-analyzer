@@ -16,6 +16,7 @@ procedure main{
 		v3 = v1/(v2-v3)+v4 + v1*(v2+v3-v4) + v1%v2-v3+v4;
 		v4 = v1/v2-v3*v4 + v1*(v2+v3)/v4 + v1%(v2-v3*v4);
 		v5 = v1 + v2*v3 + v4 - v4/v5;
+		v1 = v1-1;
 	}
 
 	if(v1 != 1) then {
@@ -43,7 +44,6 @@ procedure main{
 	} else {
 		print v4;
     }
-    print v1;
 
 	if((v1 == 1) && (v2 ==1)) then {
 		v2 = (v1-v2)/v3 - v1-v2/v3 - v1-v2%v3 ;
