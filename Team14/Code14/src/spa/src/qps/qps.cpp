@@ -17,6 +17,7 @@ Result *QPS::EvaluateQuery(std::istream *query_stream) {
   QueryBuilder builder = QueryBuilder();
   QueryParser parser(tokens, builder);
   spdlog::info("Parsing tokens...");
+
   Query *query;
   try {
     query = parser.parse();

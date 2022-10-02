@@ -111,14 +111,10 @@ void RelationshipExtractor::ExtractParent(std::vector<Relationship *> &relations
  */
 void RelationshipExtractor::ExtractParentHelper(std::vector<Relationship *> &relationships, Entity *parent,
                                                 Node *node) {
-  if (node->GetNodeType() != NodeType::kStatementList) {
-    return;
-  }
+  if (node->GetNodeType() != NodeType::kStatementList) { return; }
   // Get all children entities
   std::vector<Entity *> children;
-  auto const op = [&children](Node *node) {
-    EntityExtractor::ExtractStatement(children, node);
-  };
+  auto const op = [&children](Node *node) { EntityExtractor::ExtractStatement(children, node); };
   node->VisitChildren(op);
   // Match the child with the parent entity
   Match(relationships, RsType::kParent, parent, children);
@@ -130,75 +126,36 @@ void RelationshipExtractor::ExtractParentHelper(std::vector<Relationship *> &rel
  * @param node
  */
 void RelationshipExtractor::ExtractUses(std::vector<Relationship *> &relationships, Node *node) {
-  switch (node->GetNodeType()) {
-    case NodeType::kProcedure: {
-      auto *proc = static_cast<ProcedureNode *>(node);
-      Entity *parent = new ProcedureEntity(proc->GetProcName());
-      auto *stmt_list = proc->GetStatementList();
-      ExtractUsesHelper(relationships, parent, stmt_list);
+  if (node->GetNodeType() != NodeType::kStatement) { return; }
+  auto *stmt = static_cast<StatementNode *>(node);
+  auto stmt_type = stmt->GetStmtType();
+  auto *parent = new Entity(stmt_type, std::to_string(stmt->GetStmtNo()));
+  switch (stmt_type) {
+    case EntityType::kAssignStmt: {
+      std::vector<Entity *> children =
+          EntityExtractor::ExtractAllVariables(static_cast<AssignNode *>(node)->GetExpression());
+      Match(relationships, RsType::kUses, parent, children);
       break;
     }
-    case NodeType::kStatement: {
-      auto *stmt = static_cast<StatementNode *>(node);
-      auto stmt_type = stmt->GetStmtType();
-      switch (stmt_type) {
-        case EntityType::kAssignStmt:// fallthrough
-        case EntityType::kPrintStmt: // fallthrough
-        case EntityType::kIfStmt:    // fallthrough
-        case EntityType::kWhileStmt: {
-          auto *parent = new Entity(stmt_type, std::to_string(stmt->GetStmtNo()));
-          ExtractUsesHelper(relationships, parent, stmt);
-          break;
-        }
-        default: break;// other statement entity types are ignored.
-      }
+    case EntityType::kPrintStmt: {
+      Node *variable = static_cast<PrintNode *>(node)->GetVariable();
+      Entity *child = new VariableEntity(static_cast<VariableNode *>(variable)->GetVariableName());
+      relationships.push_back(new Relationship(RsType::kUses, parent, child));
       break;
     }
-    default: break;// other node types are ignored.
-  }
-}
-void RelationshipExtractor::ExtractUsesHelper(std::vector<Relationship *> &relationships, Entity *parent, Node *node) {
-  switch (node->GetNodeType()) {
-    case NodeType::kStatementList: {
-      auto *stmt_list = static_cast<StatementListNode *>(node);
-      for (auto *stmt : stmt_list->GetStatements()) { ExtractUsesHelper(relationships, parent, stmt); }
+    case EntityType::kIfStmt: {
+      auto *if_node = static_cast<IfNode *>(node);
+      std::vector<Entity *> children = EntityExtractor::ExtractAllVariables(if_node->GetConditional());
+      Match(relationships, RsType::kUses, parent, children);
       break;
     }
-    case NodeType::kStatement: {
-      auto *stmt = static_cast<StatementNode *>(node);
-      auto stmt_type = stmt->GetStmtType();
-      switch (stmt_type) {
-        case EntityType::kAssignStmt: {
-          std::vector<Entity *> children =
-              EntityExtractor::ExtractAllVariables(static_cast<AssignNode *>(node)->GetExpression());
-          Match(relationships, RsType::kUses, parent, children);
-          break;
-        }
-        case EntityType::kPrintStmt: {
-          Node *variable = static_cast<PrintNode *>(node)->GetVariable();
-          Entity *child = new VariableEntity(static_cast<VariableNode *>(variable)->GetVariableName());
-          relationships.push_back(new Relationship(RsType::kUses, parent, child));
-          break;
-        }
-        case EntityType::kIfStmt: {
-          auto *if_node = static_cast<IfNode *>(node);
-          std::vector<Entity *> children = EntityExtractor::ExtractAllVariables(if_node->GetConditional());
-          Match(relationships, RsType::kUses, parent, children);
-          ExtractUsesHelper(relationships, parent, if_node->GetThenStatementList());
-          ExtractUsesHelper(relationships, parent, if_node->GetElseStatementList());
-          break;
-        }
-        case EntityType::kWhileStmt: {
-          auto *while_node = static_cast<WhileNode *>(node);
-          std::vector<Entity *> children = EntityExtractor::ExtractAllVariables(while_node->GetConditional());
-          Match(relationships, RsType::kUses, parent, children);
-          ExtractUsesHelper(relationships, parent, while_node->GetStatementList());
-          break;
-        }
-        default: break;// other statement entity types are ignored.
-      }
+    case EntityType::kWhileStmt: {
+      auto *while_node = static_cast<WhileNode *>(node);
+      std::vector<Entity *> children = EntityExtractor::ExtractAllVariables(while_node->GetConditional());
+      Match(relationships, RsType::kUses, parent, children);
+      break;
     }
-    default: break;// other node types are ignored.
+    default: break;// other statement entity types are ignored.
   }
 }
 /**
@@ -208,71 +165,24 @@ void RelationshipExtractor::ExtractUsesHelper(std::vector<Relationship *> &relat
  * @param node
  */
 void RelationshipExtractor::ExtractModifies(std::vector<Relationship *> &relationships, Node *node) {
-  switch (node->GetNodeType()) {
-    case NodeType::kProcedure: {
-      auto *proc = static_cast<ProcedureNode *>(node);
-      Entity *parent = new ProcedureEntity(proc->GetProcName());
-      auto *stmt_list = proc->GetStatementList();
-      ExtractModifiesHelper(relationships, parent, stmt_list);
-    }
-    case NodeType::kStatement: {
-      auto *stmt = static_cast<StatementNode *>(node);
-      auto stmt_type = stmt->GetStmtType();
-
-      switch (stmt_type) {
-        case EntityType::kAssignStmt:// fallthrough
-        case EntityType::kReadStmt:  // fallthrough
-        case EntityType::kIfStmt:    // fallthrough
-        case EntityType::kWhileStmt: {
-          auto *parent = new Entity(stmt_type, std::to_string(stmt->GetStmtNo()));
-          ExtractModifiesHelper(relationships, parent, stmt);
-        }
-        default: break;// other statement entity types are ignored.
-      }
+  if (node->GetNodeType() != NodeType::kStatement) { return; }
+  auto *stmt = static_cast<StatementNode *>(node);
+  auto stmt_type = stmt->GetStmtType();
+  auto *parent = new Entity(stmt_type, std::to_string(stmt->GetStmtNo()));
+  switch (stmt_type) {
+    case EntityType::kAssignStmt: {
+      VariableNode *variable = static_cast<AssignNode *>(node)->GetVariable();
+      Entity *child = new VariableEntity(variable->GetVariableName());
+      relationships.push_back(new Relationship(RsType::kModifies, parent, child));
       break;
     }
-    default: break;// other node types are ignored.
-  }
-}
-void RelationshipExtractor::ExtractModifiesHelper(std::vector<Relationship *> &relationships, Entity *parent,
-                                                  Node *node) {
-  switch (node->GetNodeType()) {
-    case NodeType::kStatementList: {
-      auto *stmt_list = static_cast<StatementListNode *>(node);
-      for (auto *stmt : stmt_list->GetStatements()) { ExtractModifiesHelper(relationships, parent, stmt); }
+    case EntityType::kReadStmt: {
+      VariableNode *variable = static_cast<ReadNode *>(node)->GetVariable();
+      Entity *child = new VariableEntity(variable->GetVariableName());
+      relationships.push_back(new Relationship(RsType::kModifies, parent, child));
       break;
     }
-    case NodeType::kStatement: {
-      auto *stmt = static_cast<StatementNode *>(node);
-      auto stmt_type = stmt->GetStmtType();
-      switch (stmt_type) {
-        case EntityType::kAssignStmt: {
-          VariableNode *variable = static_cast<AssignNode *>(node)->GetVariable();
-          Entity *child = new VariableEntity(variable->GetVariableName());
-          relationships.push_back(new Relationship(RsType::kModifies, parent, child));
-          break;
-        }
-        case EntityType::kReadStmt: {
-          VariableNode *variable = static_cast<ReadNode *>(node)->GetVariable();
-          Entity *child = new VariableEntity(variable->GetVariableName());
-          relationships.push_back(new Relationship(RsType::kModifies, parent, child));
-          break;
-        }
-        case EntityType::kIfStmt: {
-          auto *if_node = static_cast<IfNode *>(node);
-          ExtractModifiesHelper(relationships, parent, if_node->GetThenStatementList());
-          ExtractModifiesHelper(relationships, parent, if_node->GetElseStatementList());
-          break;
-        }
-        case EntityType::kWhileStmt: {
-          auto *while_node = static_cast<WhileNode *>(node);
-          ExtractModifiesHelper(relationships, parent, while_node->GetStatementList());
-          break;
-        }
-        default: break;
-      }
-    }
-    default: break;// other node types are ignored.
+    default: break;
   }
 }
 /**
@@ -282,28 +192,13 @@ void RelationshipExtractor::ExtractModifiesHelper(std::vector<Relationship *> &r
  * @param node
  */
 void RelationshipExtractor::ExtractCalls(std::vector<Relationship *> &relationships, Node *node) {
-  if (node->GetNodeType() != NodeType::kProcedure) { return; }
-  auto *proc = static_cast<ProcedureNode *>(node);
-  Entity *parent = new ProcedureEntity(proc->GetProcName());
-  auto *stmt_list = proc->GetStatementList();
-  ExtractCallsHelper(relationships, parent, stmt_list);
-}
-void RelationshipExtractor::ExtractCallsHelper(std::vector<Relationship *> &relationships, Entity *parent, Node *node) {
-  if (node->GetNodeType() != NodeType::kStatementList) { return; }
-  // Get all children entities
-  std::vector<Entity *> children;
-  auto const op = [&children](Node *node) {
-    if (node->GetNodeType() == NodeType::kStatement) {
-      auto *stmt = static_cast<StatementNode *>(node);
-      if (stmt->GetStmtType() == EntityType::kCallStmt) {
-        auto *call = static_cast<CallNode *>(stmt);
-        children.push_back(new ProcedureEntity(call->GetProcedureName()));
-      }
-    }
-  };
-  node->VisitAll(op);
-  // Match the child with the procedure entity
-  Match(relationships, RsType::kCalls, parent, children);
+  if (node->GetNodeType() != NodeType::kStatement) { return; }
+  auto *stmt = static_cast<StatementNode *>(node);
+  if (stmt->GetStmtType() != EntityType::kCallStmt) { return; }
+  auto *call_node = static_cast<CallNode *>(stmt);
+  Entity *parent = new CallStmtEntity(std::to_string(stmt->GetStmtNo()));
+  Entity *child = new ProcedureEntity(call_node->GetProcedureName());
+  relationships.push_back(new Relationship(RsType::kCalls, parent, child));
 }
 /**
  * Extracts all immediate next relationships from a given AST node.
@@ -318,9 +213,10 @@ void RelationshipExtractor::ExtractNext(std::vector<Relationship *> &relationshi
   auto *cfg_builder = new CFGBuilder();
   auto *cfg = cfg_builder->Build(proc);
 
-  auto const op = [&relationships](CFGNode *node) {
-    if (node->IsTerminal()) { return; }
-    auto *parent = node->GetStmt();
+  auto const op = [&relationships](Node *node) {
+    auto *cfg_node = static_cast<CFGNode *>(node);
+    if (cfg_node->IsTerminal()) { return; }
+    auto *parent = cfg_node->GetStmt();
     std::vector<Entity *> children;
     for (auto *child : node->GetChildren()) {
       auto *child_node = static_cast<CFGNode *>(child);

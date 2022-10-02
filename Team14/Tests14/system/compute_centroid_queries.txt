@@ -111,7 +111,7 @@ none
 307 - select all assignment statements that modify any variables
 stmt s;
 Select s such that Modifies(s, _)
-1, 4, 5, 10, 11, 12, 14, 15, 16, 17, 19, 20, 21, 22, 23
+1, 2, 4, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
 5000
 401 - select all assignment statements using pattern
 assign a;
@@ -131,7 +131,7 @@ computeCentroid
 502 - select all assignment statements that uses any variables on the right-hand side
 stmt s;
 Select s such that Uses(s, _)
-6, 7, 8, 9, 14, 15, 16, 17, 19, 21, 22, 23
+2, 3, 6, 7, 8, 9, 14, 15, 16, 17, 19, 21, 22, 23
 5000
 503 - select all while statements that uses "cenY" on the right-hand side
 while w;

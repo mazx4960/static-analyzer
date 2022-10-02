@@ -18,7 +18,7 @@ TEST(ExtractorTest, TestCalls) {
 
   // DFS traversal should yield the following result
   std::vector<Relationship *> expected = {
-      new CallsRelationship(new ProcedureEntity("main"), new ProcedureEntity("test")),
+      new CallsRelationship(new CallStmtEntity("1"), new ProcedureEntity("test")),
   };
 
   ASSERT_EQ(relationships.size(), expected.size());
@@ -47,8 +47,8 @@ TEST(ExtractorTest, TestCallsNested) {
 
   // DFS traversal should yield the following result
   std::vector<Relationship *> expected = {
-      new CallsRelationship(new ProcedureEntity("main"), new ProcedureEntity("test1")),
-      new CallsRelationship(new ProcedureEntity("main"), new ProcedureEntity("test2")),
+      new CallsRelationship(new CallStmtEntity("3"), new ProcedureEntity("test2")),
+      new CallsRelationship(new CallStmtEntity("1"), new ProcedureEntity("test1")),
   };
 
   ASSERT_EQ(relationships.size(), expected.size());

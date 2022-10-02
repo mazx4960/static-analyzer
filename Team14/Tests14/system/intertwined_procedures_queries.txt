@@ -1,0 +1,80 @@
+101 - Select base print
+print pn;
+Select pn such that Uses(pn, "x")
+6,10
+5000
+102 - Select base print
+print pn;
+Select pn such that Uses(pn, "y")
+7,11
+5000
+103 - Select base assignment
+assign a;
+Select a such that Uses(a, "x")
+none
+5000
+104 - Select base assignment
+assign a;
+Select a such that Uses(a, "y")
+9
+5000
+105 - Select base read
+read r;
+Select r such that Uses(r, "x")
+none
+5000
+106 - Select base read
+read r;
+Select r such that Uses(r, "y")
+none
+5000
+201 - Select base print
+print pn;
+Select pn such that Modifies(pn, "x")
+none
+5000
+202 - Select base print
+print pn;
+Select pn such that Modifies(pn, "y")
+none
+5000
+203 - Select base assignment
+assign a;
+Select a such that Modifies(a, "x")
+1,9
+5000
+204 - Select base assignment
+assign a;
+Select a such that Modifies(a, "y")
+none
+5000
+205 - Select base read
+read r;
+Select r such that Modifies(r, "x")
+none
+5000
+206 - Select base read
+read r;
+Select r such that Modifies(r, "y")
+3
+5000
+301 - Select procedures
+procedure p;
+Select p such that Uses(p, "x")
+main, a, b, c, d
+5000
+302 - Select procedures
+procedure p;
+Select p such that Uses(p, "y")
+main, a, b, c, d
+5000
+401 - Select procedures
+procedure p;
+Select p such that Modifies(p, "x")
+main, a, b, c, d
+5000
+402 - Select procedures
+procedure p;
+Select p such that Modifies(p, "y")
+main, a, b
+5000

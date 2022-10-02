@@ -21,7 +21,6 @@ TEST(ExtractorTest, TestModifies) {
 
   // DFS traversal should yield the following result
   std::vector<Relationship *> expected = {
-      new ModifiesRelationship(new ProcedureEntity("main"), new VariableEntity("v1")),
       new ModifiesRelationship(new AssignStmtEntity("1"), new VariableEntity("v1")),
   };
 

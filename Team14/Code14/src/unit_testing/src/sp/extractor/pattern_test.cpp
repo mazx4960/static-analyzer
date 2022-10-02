@@ -21,8 +21,8 @@ TEST(ExtractorTest, TestAssignPattern) {
   program->VisitAll(op);
 
   std::vector<Pattern *> expected = {
-      new Pattern(new AssignStmtEntity("1"), new VariableEntity("v1"), "(1)"),
       new Pattern(new AssignStmtEntity("2"), new VariableEntity("v2"), "(1)"),
+      new Pattern(new AssignStmtEntity("1"), new VariableEntity("v1"), "(1)"),
   };
   ASSERT_EQ(patterns.size(), expected.size());
   for (int i = 0; i < patterns.size(); ++i) {
@@ -31,7 +31,6 @@ TEST(ExtractorTest, TestAssignPattern) {
     ASSERT_EQ(patterns[i]->GetExpr(), expected[i]->GetExpr());
   }
 }
-
 
 TEST(ExtractorTest, TestIfPattern) {
   auto *v1 = new VariableNode("v1");

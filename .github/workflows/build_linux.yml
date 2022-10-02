@@ -41,11 +41,11 @@ jobs:
           lcov --capture --directory . --output-file coverage.info
           lcov --extract coverage.info "$src/*" --output-file coverage.info
           lcov --list coverage.info
-#      - name: Upload Coverage to Codecov
-#        uses: codecov/codecov-action@v3
-#        with:
-#          files: ./coverage.info
-#          flags: unittests
-#          name: codecov-umbrella
-#          fail_ci_if_error: true
-#          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}

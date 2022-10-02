@@ -1,0 +1,28 @@
+procedure a {
+    x = 1;
+    call b;
+}
+
+procedure b {
+    read y;
+    call c;
+}
+
+procedure c {
+    if (x == y) then {
+        print x;
+    } else {
+        print y;
+    }
+    call d;
+}
+
+procedure d {
+    x = y + 1;
+    print x;
+    print y;
+}
+
+procedure main {
+    call a;
+}
