@@ -17,7 +17,7 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDecl
         for (auto [entity, entity_set] : table) {
           // Only add entries with same first and second entity
           if (entity_set.find(entity) != entity_set.end()) {
-            table_rows_.push_back(ResultRow({{first_synonym, entity})});
+            table_rows_.push_back(ResultRow({{first_synonym, entity}}));
           }
         }
       }
