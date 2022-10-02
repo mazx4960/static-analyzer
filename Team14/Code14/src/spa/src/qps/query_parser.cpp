@@ -66,9 +66,7 @@ void QueryParser::parseDeclaration() {
   }
 
   // End declaration with a semicolon
-  if (*nextToken() != SemicolonToken()) {
-    throw ParseSyntaxError("Missing `;` after declaration");
-  }
+  expect(nextToken(), TokenType::kSemicolon);
 }
 
 QueryDeclaration *QueryParser::getDeclaration(Token *synonym) {
@@ -144,6 +142,7 @@ QueryDeclaration *QueryParser::parseAnyRefDeclaration() {
 
 IntegerDeclaration *QueryParser::parseLiteralDeclaration() {
   Token *literal = nextToken();
+  expect(literal, TokenType::kLiteral);
   if (std::stoi(literal->value) <= 0) {
     throw ParseSyntaxError("Integer cannot be negative/zero: " + literal->value);
   }
@@ -152,28 +151,20 @@ IntegerDeclaration *QueryParser::parseLiteralDeclaration() {
 
 StringDeclaration *QueryParser::parseStringDeclaration() {
   Token *symbol = nextToken();
-  if (symbol->type != TokenType::kSymbol) {
-    throw ParseSyntaxError("Invalid string: " + symbol->value);
-  }
+  expect(symbol, TokenType::kSymbol);
   return builder_.buildString(symbol->value);
 }
 
 StringDeclaration *QueryParser::parseQuotedDeclaration() {
-  if (nextToken()->type != TokenType::kQuote) {
-    throw ParseSyntaxError("Missing '\"' before declaration");
-  }
+  expect(nextToken(), TokenType::kQuote);
   StringDeclaration *declaration = parseStringDeclaration();
-  if (nextToken()->type != TokenType::kQuote) {
-    throw ParseSyntaxError("Missing '\"' after declaration");
-  }
+  expect(nextToken(), TokenType::kQuote);
   return declaration;
 }
 
 QuerySynonym *QueryParser::parseSynonym() {
   Token *synonym = nextToken();
-  if (synonym->type != TokenType::kSymbol) {
-    throw ParseSyntaxError("Invalid synonym name: " + synonym->value);
-  }
+  expect(synonym, TokenType::kSymbol);
   return builder_.buildSynonym(synonym->value);
 }
 
@@ -201,9 +192,7 @@ QueryClause *QueryParser::parseClause() {
 }
 PatternClause *QueryParser::parsePattern() {
   Token *synonym = nextToken();
-  if (synonym->type != TokenType::kSymbol) {
-    throw ParseSyntaxError("Missing assign synonym");
-  }
+  expect(synonym, TokenType::kSymbol);
   QueryDeclaration *pattern_synonym = getDeclaration(synonym);
   parseBracket(nextToken(), true);
   QueryDeclaration *first_param = parseEntRefDeclaration();
@@ -285,9 +274,7 @@ SuchThatClause *QueryParser::parseParent() {
 }
 SuchThatClause *QueryParser::parseUses() {
   Token *star = peekToken();
-  if (*star == OperatorToken("*")) {
-    throw ParseSyntaxError("* not allowed for Uses");
-  }
+  unexpected(star, new OperatorToken("*"));
   parseBracket(nextToken(), true);
   QueryDeclaration *first = parseAnyRefDeclaration();
   parseComma(nextToken());
@@ -299,9 +286,7 @@ SuchThatClause *QueryParser::parseUses() {
 
 SuchThatClause *QueryParser::parseModifies() {
   Token *star = peekToken();
-  if (*star == OperatorToken("*")) {
-    throw ParseSyntaxError("* not allowed for Modifies");
-  }
+  unexpected(star, new OperatorToken("*"));
   parseBracket(nextToken(), true);
   QueryDeclaration *first = parseAnyRefDeclaration();
   parseComma(nextToken());
@@ -312,20 +297,15 @@ SuchThatClause *QueryParser::parseModifies() {
 }
 
 void QueryParser::parseBracket(Token *bracket, bool open) {
-  if (open && *bracket != RoundOpenBracketToken()) {
-    throw ParseSyntaxError("Missing '(' before parameters");
-
-  }
-  if (!open && *bracket != RoundCloseBracketToken()) {
-    throw ParseSyntaxError("Missing ')' after parameters");
+  if (open) {
+    expect(bracket, TokenType::kRoundOpenBracket);
+  } else {
+    expect(bracket, TokenType::kRoundCloseBracket);
   }
 }
 
 void QueryParser::parseComma(Token *comma) {
-  if (*comma != CommaToken()) {
-    throw ParseSyntaxError("Missing ',' between parameters");
-
-  }
+  expect(comma, TokenType::kComma);
 }
 
 QueryDeclaration *QueryParser::parseExpression() {
@@ -339,9 +319,7 @@ QueryDeclaration *QueryParser::parseExpression() {
   if (tmp->type == TokenType::kQuote) {
     std::string expression = parseFlattenedExpression();
     if (wild_expression) {
-      if (nextToken()->type != TokenType::kWildCard) {
-        throw ParseSyntaxError("Invalid wildcard expression");
-      }
+      expect(nextToken(), TokenType::kWildCard);
       return builder_.buildWildcardExpression(expression);
     }
     return builder_.buildExpression(expression);
@@ -357,23 +335,17 @@ std::string QueryParser::parseFlattenedExpression() {
   while (peekToken()->type != TokenType::kQuote) {
     Token *tmp  = nextToken();
     if (expect_operand) {
-      if (tmp->type == TokenType::kSymbol || tmp->type == TokenType::kLiteral) {
-        expr_tokens.push_back(tmp);
-      } else {
-        throw ParseSyntaxError("Unexpected symbol in expression: " + tmp->value);
-      }
+      expect(tmp, {TokenType::kSymbol, TokenType::kLiteral});
+      expr_tokens.push_back(tmp);
       expect_operand = false;
     } else {
-      if (tmp->type == TokenType::kOperator) {
-        expr_tokens.push_back(tmp);
-      } else {
-        throw ParseSyntaxError("Unexpected operator in expression: " + tmp->value);
-      }
+      expect(tmp, TokenType::kOperator);
+      expr_tokens.push_back(tmp);
       expect_operand = true;
     }
   }
-  if (expect_operand) {
-    throw ParseSyntaxError("Missing symbol in expression");
+  if (!expect_operand) {
+    expect(peekToken(), TokenType::kSymbol);
   }
   parseQuote(nextToken());
   expr_tokens.push_back(new EndOfFileToken());
@@ -381,30 +353,47 @@ std::string QueryParser::parseFlattenedExpression() {
 }
 
 void QueryParser::parseQuote(Token *quote) {
-  if (*quote != QuoteToken()) {
-    throw ParseSyntaxError("Missing \"");
-  }
+  expect(quote, TokenType::kQuote);
 }
 
 QueryDeclaration *QueryParser::parseWildcard(EntityType type) {
   Token *wildcard = nextToken();
-  if (wildcard->type != TokenType::kWildCard) {
-    throw ParseSyntaxError("Invalid wildcard expression");
-  }
+  expect(wildcard, TokenType::kWildCard);
   switch (type) {
     case EntityType::kWildcardStmt:
       return builder_.buildWildcardStmt();
     case EntityType::kWildcardEnt:
       return builder_.buildWildcardEnt();
     default:
-      throw ParseSyntaxError("Invalid wildcard type (internal error)");
+      throw ParseSyntaxError("Wrong usage");
   }
 }
 std::vector<QueryDeclaration *> QueryParser::getDeclarations() {
   return this->builder_.getDeclarations();
 }
+
 QueryCall *QueryParser::getQueryCall() {
-  return nullptr;
+  return this->builder_.getQueryCall();
 }
+
+void QueryParser::expect(Token *token, TokenType expected_type) {
+  if (token->type != expected_type) {
+    throw ParseSyntaxError("Invalid token type: " + token->value);
+  }
+}
+
+void QueryParser::expect(Token *token, const std::unordered_set<TokenType>& expected_types) {
+  if (expected_types.count(token->type) == 0) {
+    throw ParseSyntaxError("Invalid token type: " + token->value);
+  }
+}
+
+void QueryParser::unexpected(Token *token, Token *unexpected) {
+  if (*token == *unexpected) {
+    throw ParseSyntaxError("Unexpected token type: " + token->value);
+  }
+}
+
+
 
 
