@@ -253,3 +253,28 @@ procedure p, q;
 Select p such that Calls(q, _)
 main, computeCentroid, readPoint, printResults
 5000
+619 - select all procedures that call on some other procedure that modifies "x"
+procedure p, q;
+Select p such that Calls(p, q) and Modifies(q, "x")
+main
+5000
+620 - select all procedures that modifies "x" and are called on by another procedure
+procedure p, q;
+Select q such that Calls(p, q) such that Modifies(q, "x")
+readPoint
+5000
+621 - select all procedures that call each other (no recursion)
+procedure p, q;
+Select p such that Calls(p, q) and Calls(q, p)
+none
+5000
+622 - select all procedure p that calls procedure q that calls procedure r
+procedure p, q, r;
+Select p such that Calls(p, q) and Calls(q, r)
+main
+5000
+623 - select all procedures q that are called by procedure p, that calls procedure r
+procedure p, q, r;
+Select q such that Calls(p, q) and Calls(q, r)
+computeCentroid
+5000
