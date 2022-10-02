@@ -7,8 +7,8 @@
 #include "qps/exceptions.h"
 
 QueryBuilder::QueryBuilder() = default;
-Query QueryBuilder::build() {
-  return Query(this->query_declarations_, this->query_call_);
+Query *QueryBuilder::build() {
+  return new Query(this->query_declarations_, this->query_call_);
 }
 
 QuerySynonym *QueryBuilder::buildSynonym(const std::string &synonym) {
@@ -19,9 +19,10 @@ QuerySynonym *QueryBuilder::buildSynonym(const std::string &synonym) {
   return new QuerySynonym(synonym);
 }
 
-void *QueryBuilder::buildDeclaration(EntityType type, QuerySynonym *synonym) {
+QueryDeclaration *QueryBuilder::buildDeclaration(EntityType type, QuerySynonym *synonym) {
   auto *declaration = new QueryDeclaration(type, synonym);
   this->query_declarations_.push_back(declaration);
+  return declaration;
 }
 
 QueryDeclaration *QueryBuilder::getDeclaration(const std::string &synonym) {
@@ -35,9 +36,7 @@ QueryDeclaration *QueryBuilder::getDeclaration(const std::string &synonym) {
   throw ParseSemanticError("Missing declaration: " + synonym);
 }
 
-bool QueryBuilder::isDeclared(const std::string &synonym) {
-  return this->synonyms_.count(synonym) != 0U;
-}
+bool QueryBuilder::isDeclared(const std::string &synonym) { return this->synonyms_.count(synonym) != 0U; }
 WildCardStmtDeclaration *QueryBuilder::buildWildcardStmt() {
   return new WildCardStmtDeclaration();
 }
@@ -82,5 +81,11 @@ QueryDeclaration *QueryBuilder::getEntDeclaration(const std::string& synonym) {
 }
 SuchThatClause *QueryBuilder::buildSuchThat(RsType type, QueryDeclaration *first, QueryDeclaration *second) {
   return new SuchThatClause(type, first, second);
+}
+std::vector<QueryDeclaration *> QueryBuilder::getDeclarations() {
+  return this->query_declarations_;
+}
+QueryCall *QueryBuilder::getQueryCall() {
+  return this->query_call_;
 }
 

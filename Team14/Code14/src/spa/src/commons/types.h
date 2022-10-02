@@ -3,7 +3,7 @@
 #pragma once
 
 #include <string>
-#include <vector>
+#include <unordered_set>
 
 enum class EntityType {
   kProcedure,
