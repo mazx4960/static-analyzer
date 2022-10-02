@@ -66,7 +66,7 @@ void QueryParser::parseDeclaration() {
   }
 
   // End declaration with a semicolon
-  expect(nextToken(), TokenType::kSemicolon);
+  expect(nextToken(), {TokenType::kSemicolon});
 }
 
 QueryDeclaration *QueryParser::getDeclaration(Token *synonym) {
@@ -142,7 +142,7 @@ QueryDeclaration *QueryParser::parseAnyRefDeclaration() {
 
 IntegerDeclaration *QueryParser::parseLiteralDeclaration() {
   Token *literal = nextToken();
-  expect(literal, TokenType::kLiteral);
+  expect(literal, {TokenType::kLiteral});
   if (std::stoi(literal->value) <= 0) {
     throw ParseSyntaxError("Integer cannot be negative/zero: " + literal->value);
   }
@@ -151,20 +151,20 @@ IntegerDeclaration *QueryParser::parseLiteralDeclaration() {
 
 StringDeclaration *QueryParser::parseStringDeclaration() {
   Token *symbol = nextToken();
-  expect(symbol, TokenType::kSymbol);
+  expect(symbol, {TokenType::kSymbol});
   return builder_.buildString(symbol->value);
 }
 
 StringDeclaration *QueryParser::parseQuotedDeclaration() {
-  expect(nextToken(), TokenType::kQuote);
+  expect(nextToken(), {TokenType::kQuote});
   StringDeclaration *declaration = parseStringDeclaration();
-  expect(nextToken(), TokenType::kQuote);
+  expect(nextToken(), {TokenType::kQuote});
   return declaration;
 }
 
 QuerySynonym *QueryParser::parseSynonym() {
   Token *synonym = nextToken();
-  expect(synonym, TokenType::kSymbol);
+  expect(synonym, {TokenType::kSymbol});
   return builder_.buildSynonym(synonym->value);
 }
 
@@ -192,13 +192,13 @@ QueryClause *QueryParser::parseClause() {
 }
 PatternClause *QueryParser::parsePattern() {
   Token *synonym = nextToken();
-  expect(synonym, TokenType::kSymbol);
+  expect(synonym, {TokenType::kSymbol});
   QueryDeclaration *pattern_synonym = getDeclaration(synonym);
-  parseBracket(nextToken(), true);
+  expect(nextToken(), {TokenType::kRoundOpenBracket});
   QueryDeclaration *first_param = parseEntRefDeclaration();
-  parseComma(nextToken());
+  expect(nextToken(), {TokenType::kComma});
   QueryDeclaration *second_param = parseExpression();
-  parseBracket(nextToken(), false);
+  expect(nextToken(), {TokenType::kRoundCloseBracket});
   spdlog::debug("Pattern parsed: pattern {}({}, {})",
                 pattern_synonym->toString() ,first_param->toString(), second_param->toString());
   return builder_.buildAssignPattern(pattern_synonym, first_param, second_param);
@@ -233,11 +233,11 @@ SuchThatClause *QueryParser::parseFollows() {
     nextToken();
     follows_all = true;
   }
-  parseBracket(nextToken(), true);
+  expect(nextToken(), {TokenType::kRoundOpenBracket});
   QueryDeclaration *first = parseStmtRefDeclaration();
-  parseComma(nextToken());
+  expect(nextToken(), {TokenType::kComma});
   QueryDeclaration *second = parseStmtRefDeclaration();;
-  parseBracket(nextToken(), false);
+  expect(nextToken(), {TokenType::kRoundCloseBracket});
 
   SuchThatClause *clause;
   if (follows_all) {
@@ -257,11 +257,11 @@ SuchThatClause *QueryParser::parseParent() {
     nextToken();
     parent_all = true;
   }
-  parseBracket(nextToken(), true);
+  expect(nextToken(), {TokenType::kRoundOpenBracket});
   QueryDeclaration *first = parseStmtRefDeclaration();
-  parseComma(nextToken());
-  QueryDeclaration *second = parseStmtRefDeclaration();
-  parseBracket(nextToken(), false);
+  expect(nextToken(), {TokenType::kComma});
+  QueryDeclaration *second = parseStmtRefDeclaration();;
+  expect(nextToken(), {TokenType::kRoundCloseBracket});
 
   SuchThatClause *clause;
   if (parent_all) {
@@ -273,39 +273,23 @@ SuchThatClause *QueryParser::parseParent() {
   return clause;
 }
 SuchThatClause *QueryParser::parseUses() {
-  Token *star = peekToken();
-  unexpected(star, new OperatorToken("*"));
-  parseBracket(nextToken(), true);
+  expect(nextToken(), {TokenType::kRoundOpenBracket});
   QueryDeclaration *first = parseAnyRefDeclaration();
-  parseComma(nextToken());
-  QueryDeclaration *second = parseEntRefDeclaration();
-  parseBracket(nextToken(), false);
+  expect(nextToken(), {TokenType::kComma});
+  QueryDeclaration *second = parseEntRefDeclaration();;
+  expect(nextToken(), {TokenType::kRoundCloseBracket});
   spdlog::debug("Uses parsed: Uses({}, {})", first->toString(), second->toString());
   return builder_.buildSuchThat(RsType::kUses, first, second);
 }
 
 SuchThatClause *QueryParser::parseModifies() {
-  Token *star = peekToken();
-  unexpected(star, new OperatorToken("*"));
-  parseBracket(nextToken(), true);
+  expect(nextToken(), {TokenType::kRoundOpenBracket});
   QueryDeclaration *first = parseAnyRefDeclaration();
-  parseComma(nextToken());
-  QueryDeclaration *second = parseEntRefDeclaration();
-  parseBracket(nextToken(), false);
+  expect(nextToken(), {TokenType::kComma});
+  QueryDeclaration *second = parseEntRefDeclaration();;
+  expect(nextToken(), {TokenType::kRoundCloseBracket});
   spdlog::debug("Modifies parsed: Modifies({}, {})", first->toString(), second->toString());
   return builder_.buildSuchThat(RsType::kModifies, first, second);
-}
-
-void QueryParser::parseBracket(Token *bracket, bool open) {
-  if (open) {
-    expect(bracket, TokenType::kRoundOpenBracket);
-  } else {
-    expect(bracket, TokenType::kRoundCloseBracket);
-  }
-}
-
-void QueryParser::parseComma(Token *comma) {
-  expect(comma, TokenType::kComma);
 }
 
 QueryDeclaration *QueryParser::parseExpression() {
@@ -319,7 +303,7 @@ QueryDeclaration *QueryParser::parseExpression() {
   if (tmp->type == TokenType::kQuote) {
     std::string expression = parseFlattenedExpression();
     if (wild_expression) {
-      expect(nextToken(), TokenType::kWildCard);
+      expect(nextToken(), {TokenType::kWildCard});
       return builder_.buildWildcardExpression(expression);
     }
     return builder_.buildExpression(expression);
@@ -339,13 +323,13 @@ std::string QueryParser::parseFlattenedExpression() {
       expr_tokens.push_back(tmp);
       expect_operand = false;
     } else {
-      expect(tmp, TokenType::kOperator);
+      expect(tmp, {TokenType::kOperator});
       expr_tokens.push_back(tmp);
       expect_operand = true;
     }
   }
   if (!expect_operand) {
-    expect(peekToken(), TokenType::kSymbol);
+    expect(peekToken(), {TokenType::kSymbol});
   }
   parseQuote(nextToken());
   expr_tokens.push_back(new EndOfFileToken());
@@ -353,12 +337,12 @@ std::string QueryParser::parseFlattenedExpression() {
 }
 
 void QueryParser::parseQuote(Token *quote) {
-  expect(quote, TokenType::kQuote);
+  expect(quote, {TokenType::kQuote});
 }
 
 QueryDeclaration *QueryParser::parseWildcard(EntityType type) {
   Token *wildcard = nextToken();
-  expect(wildcard, TokenType::kWildCard);
+  expect(wildcard, {TokenType::kWildCard});
   switch (type) {
     case EntityType::kWildcardStmt:
       return builder_.buildWildcardStmt();
@@ -376,24 +360,11 @@ QueryCall *QueryParser::getQueryCall() {
   return this->builder_.getQueryCall();
 }
 
-void QueryParser::expect(Token *token, TokenType expected_type) {
-  if (token->type != expected_type) {
-    throw ParseSyntaxError("Invalid token type: " + token->value);
-  }
-}
-
 void QueryParser::expect(Token *token, const std::unordered_set<TokenType>& expected_types) {
   if (expected_types.count(token->type) == 0) {
     throw ParseSyntaxError("Invalid token type: " + token->value);
   }
 }
-
-void QueryParser::unexpected(Token *token, Token *unexpected) {
-  if (*token == *unexpected) {
-    throw ParseSyntaxError("Unexpected token type: " + token->value);
-  }
-}
-
 
 
 
