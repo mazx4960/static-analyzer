@@ -44,6 +44,17 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDecl
       }
     }
   }
+  // In this case there are no synonyms, but still need to add an entry if there are entries in the table
+  else {
+    for (auto [entity, entity_set] : table) {
+      for (auto *other_entity : entity_set) {
+        // Adds an empty hash table
+        table_rows_.emplace_back();
+        // Short circuit break since table will not need to add more elements
+        return;
+      }
+    }
+  }
 }
 
 SubqueryResult::SubqueryResult(std::vector<QuerySynonym *> synonyms, std::vector<ResultRow> result_rows)
