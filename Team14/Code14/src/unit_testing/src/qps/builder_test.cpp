@@ -13,6 +13,6 @@ TEST(BuilderTest, QueryBuilderTest) {
   QueryCall *query_call = new SelectCall(query_declaration, clause_vector);
 
   QueryBuilder builder = QueryBuilder();
-  ASSERT_EQ(builder.buildDeclaration(EntityType::kVariable, query_synonym), query_declaration);
-  ASSERT_EQ(builder.buildSelectCall(query_declaration, clause_vector), query_call);
+  ASSERT_EQ(*builder.buildDeclaration(EntityType::kVariable, query_synonym), *query_declaration);
+  ASSERT_EQ(builder.buildSelectCall(query_declaration, clause_vector)->getType(), query_call->getType());
 }
