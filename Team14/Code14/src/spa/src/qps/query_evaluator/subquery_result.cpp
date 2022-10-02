@@ -63,7 +63,7 @@ std::vector<QuerySynonym *> SubqueryResult::getCommonSynonyms(const SubqueryResu
   return std::vector<QuerySynonym *>(common_synonyms.begin(), end_pos);
 }
 EntityPointerUnorderedSet SubqueryResult::GetColumn(QuerySynonym *synonym) {
-  if (std::find(synonyms_.begin(), synonyms_.end(), synonym) != synonyms_.end()) {
+  if (std::find(synonyms_.begin(), synonyms_.end(), synonym) == synonyms_.end()) {
     return EntityPointerUnorderedSet{};
   }
   EntityPointerUnorderedSet results{};
