@@ -1,5 +1,7 @@
 #include "result_projector.h"
 
+#include "spdlog/spdlog.h"
+
 /**
  * Intersect the context of two QueryDeclarations.
  * @param first first set of Entity pointers.
@@ -26,13 +28,15 @@ EntityPointerUnorderedSet ResultProjector::project() {
                   [](SubqueryResult subquery_result) {
                     return subquery_result.IsEmpty();
                   })) {
+    spdlog::debug("Some table is empty");
     return EntityPointerUnorderedSet();
   }
   if (std::none_of(subquery_results_.begin(), subquery_results_.end(),
                   [synonym](SubqueryResult subquery_result) {
                     return subquery_result.Uses(synonym);
                   })) {
-    return EntityPointerUnorderedSet();
+    spdlog::debug("No tables use the synonym");
+    return pkb_->getEntities(called_declaration_->getType());
   }
 
   SubqueryResult intermediate_result = subquery_results_[0];

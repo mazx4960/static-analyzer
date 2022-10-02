@@ -54,7 +54,10 @@ bool SubqueryResult::IsEmpty() {
 }
 
 bool SubqueryResult::Uses(QuerySynonym *synonym) {
-  return std::find(synonyms_.begin(), synonyms_.end(), synonym) != synonyms_.end();
+  // Need to use find_if for pointer comparison
+  return std::find_if(synonyms_.begin(), synonyms_.end(), [synonym](QuerySynonym* searched_synonym){
+           return *synonym == *searched_synonym;
+         }) != synonyms_.end();
 }
 
 std::vector<QuerySynonym *> SubqueryResult::GetCommonSynonyms(const SubqueryResult &other) {
