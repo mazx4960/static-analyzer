@@ -10,7 +10,7 @@ main, computeCentroid
 5000
 301 - Calls readPoint
 procedure p;
-    Select p such that Calls(p, "readPoint")
+Select p such that Calls(p, "readPoint")
 computeCentroid
 5000
 302 - CallsT readPoint
