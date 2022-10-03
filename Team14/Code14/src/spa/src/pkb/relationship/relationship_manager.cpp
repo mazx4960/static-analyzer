@@ -4,8 +4,6 @@
 
 #include <spdlog/spdlog.h>
 
-#include <iostream>
-
 RelationshipTable *RelationshipManager::GetTable(RsType rs_type) {
   // If table hasn't been created, create it first.
   if (this->relationship_table_map_.find(rs_type) == this->relationship_table_map_.end()) {
@@ -164,9 +162,18 @@ EntityPointerUnorderedSet RelationshipManager::GetInferenceFromChildren(Relation
   // Check if child statements are in relationship table.
   auto children_statements = GetAll(RsType::kParent, entity, false);
   for (auto *child_entity: children_statements) {
-    auto variable_entity_set = relationship_table->get(child_entity, false);
-    if (variable_entity_set != this->Empty()) {
-      result.insert(variable_entity_set.begin(), variable_entity_set.end());
+    if (child_entity->GetType() == EntityType::kCallStmt) {
+      auto *procedure_entity = this->GetProcedureEntity(child_entity, true);
+      if (!procedure_entity->GetValue().empty()) {
+        auto child_result = GetInferenceGivenProcedure(relationship_table, child_entity);
+        result.insert(procedure_entity);
+        result.insert(child_result.begin(), child_result.end());
+      }
+    } else {
+      auto variable_entity_set = relationship_table->get(child_entity, false);
+      if (variable_entity_set != this->Empty()) {
+        result.insert(variable_entity_set.begin(), variable_entity_set.end());
+      }
     }
   }
   return result;
@@ -194,7 +201,7 @@ EntityPointerUnorderedSet RelationshipManager::GetCalls(Entity *entity, bool is_
   EntityPointerUnorderedSet result = this->Empty();
   if (is_inverse) {
     auto *calls_table = GetTable(RsType::kCalls);
-    auto call_entries = calls_table->get(entity, is_inverse);
+    auto call_entries = calls_table->get(entity, true);
     for (auto *stmt_entity: call_entries) {
       auto parent_statements = GetAll(RsType::kParent, stmt_entity, true);
       for (auto *parent_entity: parent_statements) {
