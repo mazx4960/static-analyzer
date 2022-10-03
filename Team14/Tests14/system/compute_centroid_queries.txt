@@ -96,7 +96,7 @@ Select w such that Modifies(w, "cenX")
 304 - select all while statements that modify "x"
 while w;
 Select w such that Modifies(w, "x")
-none
+14
 5000
 305 - select all if statements that modify "cenX"
 if ifs;
