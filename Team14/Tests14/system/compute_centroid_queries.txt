@@ -86,7 +86,7 @@ main, readPoint, computeCentroid
 302 - select all procedures that modifies variable "cenX"
 procedure p;
 Select p such that Modifies(p, "cenX")
-computeCentroid
+main, computeCentroid
 5000
 303 - select all while statements that modify "cenX"
 while w;
