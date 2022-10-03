@@ -13,6 +13,21 @@ assign a1, a2; variable v; stmt s1;
 Select a1 such that Uses(a2, v) pattern a2 (_, _"x + 1 + y"_);
 SyntaxError
 5000
+104 - syntax error, first arg of pattern must be exact
+assign a;
+Select a pattern a (_"x"_, _)
+SyntaxError
+5000
+105 - syntax error, first arg of pattern must be exact
+assign a;
+Select a pattern a (_"x"_, _"x + 1"_)
+SyntaxError
+5000
+106 - syntax error, first arg of pattern must be exact
+assign a;
+Select a such that Modifies(a, "x") pattern a (_"x"_, _"x + 1"_)
+SyntaxError
+5000
 201 - semantic error, "x" not defined in Select
 while w; stmt s;
 Select x such that Uses(s,  "x")
@@ -66,6 +81,21 @@ SemanticError
 211 - semantic error, invalid wildcard in Uses
 variable v;
 Select v such that Uses(_, v)
+SemanticError
+5000
+212 - semantic error, wrong argument type in Next
+stmt s; variable v;
+Select s such that Next(s, v)
+SemanticError
+5000
+213 - semantic error, wrong argument type in Next
+stmt s; call c;
+Select s such that Next(c, s)
+SemanticError
+5000
+214 - semantic error, wrong argument type in Next
+variable v; procedure p;
+Select p such that Next(v, p)
 SemanticError
 5000
 301 - error in both syntax (extra "+" in pattern, same as 33) and semantics (undefined synonym), syntax error should be prioritised
