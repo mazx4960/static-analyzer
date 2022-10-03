@@ -3,7 +3,6 @@
 
 # Build files
 build/
-test_results/
 coverage/
 
 ### C++ ###
