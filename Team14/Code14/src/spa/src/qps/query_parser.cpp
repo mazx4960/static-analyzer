@@ -2,348 +2,370 @@
 
 #include <algorithm>
 #include <utility>
+#include <functional>
 
 #include "commons/parser/parser.h"
 #include "qps/pql/query_keywords.h"
 #include "spdlog/spdlog.h"
 
-QueryParser::QueryParser(std::vector<Token *> tokens) {
+QueryParser::QueryParser(std::vector<Token *> tokens, QueryBuilder builder) {
+  this->builder_ = std::move(builder);
   this->tokens_ = std::move(tokens);
 }
 
-void QueryParser::parse() {
+Query *QueryParser::parse() {
   while (!outOfTokens()) {
     Token *tmp = peekToken();
     if (QueryKeywords::isValidDeclarationKeyword(tmp->value)) {
       parseDeclarations();
     } else if (QueryKeywords::isValidCallKeyword(tmp->value)) {
-      parseQueryCalls();
+      parseQueryCall();
     } else if (*tmp == EndOfFileToken()) {
       break;
     } else {
       throw ParseSyntaxError("Unexpected token: " + tmp->value);
     }
   }
-}
-
-std::vector<QueryDeclaration *> QueryParser::getDeclarations() {
-  return this->query_declarations_;
-}
-std::vector<QueryCall *> QueryParser::getQueryCalls() {
-  return this->query_calls_;
+  return builder_.build();
 }
 
 Token *QueryParser::nextToken() {
+  if (token_index_ >= tokens_.size() || *peekToken() == EndOfFileToken()) {
+    throw ParseSyntaxError("Too few arguments");
+  }
   return tokens_[this->token_index_++];
 }
 Token *QueryParser::peekToken() {
   return tokens_[this->token_index_];
 }
 bool QueryParser::outOfTokens() {
-  return this->tokens_.size() == this->token_index_;
+  return this->token_index_ == this->tokens_.size();
 }
+
 void QueryParser::parseDeclarations() {
   while (QueryKeywords::isValidDeclarationKeyword(peekToken()->value)) {
     parseDeclaration();
   }
 }
+
 void QueryParser::parseDeclaration() {
-  Token *token = nextToken();
-  QueryDeclaration *declaration = nullptr;
-  if (*token == KeywordToken("stmt")) {
-    declaration = new StatementDeclaration(parseSynonym());
+  Token *prefix = nextToken();
+  EntityType type;
+  try {
+    type = QueryKeywords::declarationKeywordToType(prefix->value);
   }
-  if (*token == KeywordToken("variable")) {
-    declaration = new VariableDeclaration(parseSynonym());
+  catch (std::out_of_range& oor) {
+    throw ParseSyntaxError("Unknown declaration type: " + prefix->value);
   }
-  if (*token == KeywordToken("constant")) {
-    declaration = new ConstantDeclaration(parseSynonym());
-  }
-  if (*token == KeywordToken("procedure")) {
-    declaration = new ProcedureDeclaration(parseSynonym());
-  }
-  if (*token == KeywordToken("read")) {
-    declaration = new ReadDeclaration(parseSynonym());
-  }
-  if (*token == KeywordToken("print")) {
-    declaration = new PrintDeclaration(parseSynonym());
-  }
-  if (*token == KeywordToken("call")) {
-    declaration = new CallDeclaration(parseSynonym());
-  }
-  if (*token == KeywordToken("while")) {
-    declaration = new WhileDeclaration(parseSynonym());
-  }
-  if (*token == KeywordToken("if")) {
-    declaration = new IfDeclaration(parseSynonym());
-  }
-  if (*token == KeywordToken("assign")) {
-    declaration = new AssignDeclaration(parseSynonym());
-  }
-  if (declaration == nullptr) {
-    throw ParseSyntaxError("Unknown declaration type: " + token->value);
-  }
+  builder_.buildDeclaration(type, parseSynonym());
+
+  // While there are multiple declarations seperated by commas
   while (*peekToken() == CommaToken()) {
     nextToken();
-    this->query_declarations_.push_back(new QueryDeclaration(declaration->getType(), parseSynonym()));
+    builder_.buildDeclaration(type, parseSynonym());
   }
-  if (!(*nextToken() == SemicolonToken())) {
-    throw ParseSyntaxError("Missing `;` after declaration");
-  }
-  this->query_declarations_.push_back(declaration);
+
+  // End declaration with a semicolon
+  expect(nextToken(), {TokenType::kSemicolon});
 }
 
-QueryDeclaration *QueryParser::parseStmtRefDeclaration(bool allowWild) {
-  if (peekToken()->type == TokenType::kLiteral) {
-    return parseLiteralDeclaration();
-  }
-  if (peekToken()->type == TokenType::kSymbol) {
-    QueryDeclaration *declaration = getDeclaration(nextToken()->value);
-    if (declaration->getType() == EntityType::kProcedure) {
-      return declaration;
-    }
-    for (auto type : GetAllStmtTypes()) {
-      if (type == declaration->getType()) {
-        return declaration;
-      }
-    }
-    if (declaration->getType() == EntityType::kStatement) {
-      return declaration;
-    }
-    throw ParseSemanticError("Parameter given is not a statement/procedure: "
-                                 + EntityTypeToString(declaration->getType()));
-  }
-  if (peekToken()->type == TokenType::kWildCard) {
-    if (allowWild) {
-      nextToken();
-      return new StmtWildCardDeclaration();
-    }
-    throw ParseSemanticError("Wildcard '_' is not allowed here");
-  }
-  throw ParseSyntaxError("Unknown StmtRef: " + peekToken()->value);
+QueryDeclaration *QueryParser::getDeclaration(Token *synonym) {
+  return builder_.getDeclaration(synonym->value);
 }
 
-QueryDeclaration *QueryParser::parseEntRefDeclaration(bool allowWild) {
-  if (peekToken()->type == TokenType::kQuote) {
-    return parseQuotedDeclaration();
-  }
-  if (peekToken()->type == TokenType::kSymbol) {
-    QueryDeclaration *declaration = getDeclaration(nextToken()->value);
-    if (declaration->getType() == EntityType::kVariable) {
-      return declaration;
-    }
-    throw ParseSemanticError("Parameter given is not a variable: " + EntityTypeToString(declaration->getType()));
-  }
-  if (peekToken()->type == TokenType::kWildCard) {
-    if (allowWild) {
-      nextToken();
-      return new EntWildCardDeclaration();
-    }
-    throw ParseSemanticError("Wildcard '_' is not allowed here");
-  }
-  throw ParseSyntaxError("Unknown EntRef: " + peekToken()->value);
+QueryDeclaration *QueryParser::getStmtDeclaration(Token *synonym) {
+  return builder_.getStmtDeclaration(synonym->value);
 }
 
-IntegerDeclaration *QueryParser::parseLiteralDeclaration() {
-  return new IntegerDeclaration(nextToken()->value);
+QueryDeclaration *QueryParser::getEntDeclaration(Token *synonym) {
+  return builder_.getEntDeclaration(synonym->value);
 }
 
-StringDeclaration *QueryParser::parseStringDeclaration() {
-  return new StringDeclaration(nextToken()->value);
-}
-
-StringDeclaration *QueryParser::parseQuotedDeclaration() {
-  if (nextToken()->type != TokenType::kQuote) {
-    throw ParseSyntaxError("Missing '\"' before declaration");
-  }
-  StringDeclaration *declaration = parseStringDeclaration();
-  if (nextToken()->type != TokenType::kQuote) {
-    throw ParseSyntaxError("Missing '\"' after declaration");
+QueryDeclaration *QueryParser::parseStmtRefDeclaration() {
+  Token *stmtref = peekToken();
+  QueryDeclaration *declaration = nullptr;
+  switch (stmtref->type) {
+    case TokenType::kLiteral:
+      declaration = parseLiteralDeclaration();
+      break;
+    case TokenType::kSymbol:
+      declaration = getStmtDeclaration(nextToken());
+      break;
+    case TokenType::kWildCard:
+      declaration = parseWildcard(EntityType::kWildcardStmt);
+      break;
+    default:
+      throw ParseSyntaxError("Unknown StmtRef: " + stmtref->value);
   }
   return declaration;
 }
 
-QueryDeclaration *QueryParser::getDeclaration(const std::string &synonym) {
-  auto *to_check = new QuerySynonym(synonym);
-  for (QueryDeclaration *declaration : query_declarations_) {
-    QuerySynonym *declaration_synonym = declaration->getSynonym();
-    if (*declaration_synonym == *to_check) {
-      return declaration;
-    }
+QueryDeclaration *QueryParser::parseEntRefDeclaration() {
+  Token *entref = peekToken();
+  QueryDeclaration *declaration = nullptr;
+  switch (entref->type) {
+    case TokenType::kQuote:
+      declaration = parseQuotedDeclaration();
+      break;
+    case TokenType::kSymbol:
+      declaration = getEntDeclaration(nextToken());
+      break;
+    case TokenType::kWildCard:
+      declaration = parseWildcard(EntityType::kWildcardEnt);
+      break;
+    default:
+      throw ParseSyntaxError("Unknown EntRef: " + entref->value);
   }
-  throw ParseSemanticError("Missing declaration: " + synonym);
+  return declaration;
 }
 
-bool QueryParser::isDeclared(const std::string &synonym) {
-  return this->synonyms_.count(synonym) != 0U;
+QueryDeclaration *QueryParser::parseAnyRefDeclaration() {
+  Token *ref = peekToken();
+  QueryDeclaration *declaration = nullptr;
+  switch (ref->type) {
+    case TokenType::kQuote:
+      declaration = parseQuotedDeclaration();
+      break;
+    case TokenType::kLiteral:
+      declaration = parseLiteralDeclaration();
+      break;
+    case TokenType::kSymbol:
+      declaration = getDeclaration(nextToken());
+      break;
+    case TokenType::kWildCard:
+      throw ParseSyntaxError("Wildcard '_' is not allowed here");
+    default:
+      throw ParseSyntaxError("Unknown Ref: " + ref->value);
+  }
+  return declaration;
+}
+
+IntegerDeclaration *QueryParser::parseLiteralDeclaration() {
+  Token *literal = nextToken();
+  expect(literal, {TokenType::kLiteral});
+  if (std::stoi(literal->value) <= 0) {
+    throw ParseSyntaxError("Integer cannot be negative/zero: " + literal->value);
+  }
+  return builder_.buildLiteral(literal->value);
+}
+
+StringDeclaration *QueryParser::parseStringDeclaration() {
+  Token *symbol = nextToken();
+  expect(symbol, {TokenType::kSymbol});
+  return builder_.buildString(symbol->value);
+}
+
+StringDeclaration *QueryParser::parseQuotedDeclaration() {
+  expect(nextToken(), {TokenType::kQuote});
+  StringDeclaration *declaration = parseStringDeclaration();
+  expect(nextToken(), {TokenType::kQuote});
+  return declaration;
 }
 
 QuerySynonym *QueryParser::parseSynonym() {
-  if (peekToken()->type != TokenType::kSymbol) {
-    throw ParseSemanticError("Invalid synonym name: " + peekToken()->value);
-  }
-  if (isDeclared(peekToken()->value)) {
-    throw ParseSemanticError("Synonym already declared: " + peekToken()->value);
-  }
-  this->synonyms_.insert(peekToken()->value);
-  return new QuerySynonym(nextToken()->value);
+  Token *synonym = nextToken();
+  expect(synonym, {TokenType::kSymbol});
+  return builder_.buildSynonym(synonym->value);
 }
 
-void QueryParser::parseQueryCalls() {
-  Token *token = nextToken();
-  if (*token == KeywordToken("Select")) {
-    QueryDeclaration *synonym_declaration = getDeclaration(nextToken()->value);
-    std::vector<QueryClause *> clause_vector;
-    while (!(*peekToken() == EndOfFileToken())) {
-      clause_vector.push_back(parseClause());
-    }
-    query_calls_.push_back(new SelectCall(synonym_declaration, clause_vector));
-  } else {
-    throw ParseSyntaxError("Unknown query call: " + token->value);
+QueryCall *QueryParser::parseQueryCall() {
+  Token *call = nextToken();
+  if (!QueryKeywords::isValidCallKeyword(call->value)) {
+    throw ParseSyntaxError("Unknown query call: " + call->value);
   }
+  QueryDeclaration *synonym_declaration = getDeclaration(nextToken());
+  std::vector<QueryClause *> clause_vector;
+  while (*peekToken() != EndOfFileToken()) {
+    clause_vector.push_back(parseClause());
+  }
+  return builder_.buildSelectCall(synonym_declaration, clause_vector);
 }
 QueryClause *QueryParser::parseClause() {
-  Token *token = nextToken();
-  if (*token == KeywordToken("such") && *nextToken() == KeywordToken("that")) {
+  Token *clause = nextToken();
+  if (*clause == KeywordToken("such") && *nextToken() == KeywordToken("that")) {
     return parseSuchThat();
   }
-  if (*token == KeywordToken("pattern")) {
+  if (*clause == KeywordToken("pattern")) {
     return parsePattern();
   }
-  throw ParseSyntaxError("Unknown clause: " + token->value);
+  throw ParseSyntaxError("Unknown clause: " + clause->value);
 }
 PatternClause *QueryParser::parsePattern() {
-  if (peekToken()->type != TokenType::kSymbol) {
-    throw ParseSyntaxError("Missing assign synonym");
-  }
-  QueryDeclaration *first = getDeclaration(nextToken()->value);
-
-  if (!(*nextToken() == RoundOpenBracketToken())) {
-    throw ParseSyntaxError("Missing '(' before parameters");
-  }
-  QueryDeclaration *second = parseEntRefDeclaration(true);
-
-  if (!(*nextToken() == CommaToken())) {
-    throw ParseSyntaxError("Missing ',' between parameters");
-  }
-  QueryDeclaration *third = parseExpression();
-
-  if (!(*nextToken() == RoundCloseBracketToken())) {
-    throw ParseSyntaxError("Missing ')' after parameters");
-  }
-  spdlog::debug("Pattern parsed: " + first->toString() + "(" + second->toString() + ", " + third->toString()
-                    + ") expression type: " + EntityTypeToString(third->getType()));
-  return new AssignPatternClause(first, second, third);
+  Token *synonym = nextToken();
+  expect(synonym, {TokenType::kSymbol});
+  QueryDeclaration *pattern_synonym = getDeclaration(synonym);
+  expect(nextToken(), {TokenType::kRoundOpenBracket});
+  QueryDeclaration *first_param = parseEntRefDeclaration();
+  expect(nextToken(), {TokenType::kComma});
+  QueryDeclaration *second_param = parseExpression();
+  expect(nextToken(), {TokenType::kRoundCloseBracket});
+  spdlog::debug("Pattern parsed: pattern {}({}, {})",
+                pattern_synonym->toString() ,first_param->toString(), second_param->toString());
+  return builder_.buildAssignPattern(pattern_synonym, first_param, second_param);
 }
 SuchThatClause *QueryParser::parseSuchThat() {
-  Token *token = nextToken();
-  if (*token == KeywordToken("Follows")) {
-    return parseFollows();
+  Token *relationship = nextToken();
+  RsType rs_type;
+  try {
+    rs_type = QueryKeywords::relationshipKeywordToType(relationship->value);
   }
-  if (*token == KeywordToken("Parent")) {
-    return parseParent();
+  catch (std::out_of_range& oor) {
+    throw ParseSyntaxError("Unknown such-that relationship: " + relationship->value);
   }
-  if (*token == KeywordToken("Uses")) {
-    return parseUses();
+  switch (rs_type) {
+    case RsType::kFollows:
+      return parseFollows();
+    case RsType::kParent:
+      return parseParent();
+    case RsType::kUses:
+      return parseUses();
+    case RsType::kModifies:
+      return parseModifies();
+    case RsType::kCalls:
+      return parseCalls();
+    case RsType::kNext:
+      return parseNext();
+    case RsType::kAffects:
+      return parseAffects();
+    default:
+      throw ParseSyntaxError("Unknown such-that relationship: " + relationship->value);
   }
-  if (*token == KeywordToken("Modifies")) {
-    return parseModifies();
-  }
-  throw ParseSyntaxError("Unknown such-that relationship: " + token->value);
 }
+
 SuchThatClause *QueryParser::parseFollows() {
+  Token *star = peekToken();
   bool follows_all = false;
-  if (*peekToken() == OperatorToken("*")) {
+  if (*star == OperatorToken("*")) {
     nextToken();
     follows_all = true;
   }
-  if (!(*nextToken() == RoundOpenBracketToken())) {
-    throw ParseSyntaxError("Missing '(' before parameters");
-  }
-  QueryDeclaration *first = parseStmtRefDeclaration(true);
-  if (!(*nextToken() == CommaToken())) {
-    throw ParseSyntaxError("Missing ',' between parameters");
-  }
-  QueryDeclaration *second = parseStmtRefDeclaration(true);;
-  if (!(*nextToken() == RoundCloseBracketToken())) {
-    throw ParseSyntaxError("Missing ')' after parameters");
-  }
+  expect(nextToken(), {TokenType::kRoundOpenBracket});
+  QueryDeclaration *first = parseStmtRefDeclaration();
+  expect(nextToken(), {TokenType::kComma});
+  QueryDeclaration *second = parseStmtRefDeclaration();;
+  expect(nextToken(), {TokenType::kRoundCloseBracket});
 
+  SuchThatClause *clause;
   if (follows_all) {
-    spdlog::debug("Follows* parsed: " + first->toString() + ", " + second->toString());
-    return new FollowsAllClause(first, second);
+    clause = builder_.buildSuchThat(RsType::kFollowsT, first, second);
+  } else {
+    clause = builder_.buildSuchThat(RsType::kFollows, first, second);
   }
-  spdlog::debug("Follows parsed: " + first->toString() + ", " + second->toString());
-  return new FollowsClause(first, second);
+  spdlog::debug("Follows parsed: Follows({}, {}), *: {}", first->toString(), second->toString(), follows_all);
+
+  return clause;
 }
+
 SuchThatClause *QueryParser::parseParent() {
+  Token *star = peekToken();
   bool parent_all = false;
-  if (*peekToken() == OperatorToken("*")) {
+  if (*star == OperatorToken("*")) {
     nextToken();
     parent_all = true;
   }
-  if (!(*nextToken() == RoundOpenBracketToken())) {
-    throw ParseSyntaxError("Missing '(' before parameters");
-  }
-  QueryDeclaration *first = parseStmtRefDeclaration(true);
-  if (!(*nextToken() == CommaToken())) {
-    throw ParseSyntaxError("Missing ',' between parameters");
-  }
-  QueryDeclaration *second = parseStmtRefDeclaration(true);;
-  if (!(*nextToken() == RoundCloseBracketToken())) {
-    throw ParseSyntaxError("Missing ')' after parameters");
-  }
+  expect(nextToken(), {TokenType::kRoundOpenBracket});
+  QueryDeclaration *first = parseStmtRefDeclaration();
+  expect(nextToken(), {TokenType::kComma});
+  QueryDeclaration *second = parseStmtRefDeclaration();;
+  expect(nextToken(), {TokenType::kRoundCloseBracket});
 
+  SuchThatClause *clause;
   if (parent_all) {
-    spdlog::debug("Parent* parsed: " + first->toString() + ", " + second->toString());
-    return new ParentAllClause(first, second);
+    clause = builder_.buildSuchThat(RsType::kParentT, first, second);
+  } else {
+    clause = builder_.buildSuchThat(RsType::kParent, first, second);
   }
-  spdlog::debug("Parent parsed: " + first->toString() + ", " + second->toString());
-  return new ParentClause(first, second);
+  spdlog::debug("Parent parsed: Parent({}, {}), *: {}", first->toString(), second->toString(), parent_all);
+  return clause;
 }
 SuchThatClause *QueryParser::parseUses() {
-  if (!(*nextToken() == RoundOpenBracketToken())) {
-    throw ParseSyntaxError("Missing '(' before parameters");
-  }
-  QueryDeclaration *first;
-  if (*peekToken() == QuoteToken()) {
-    first = parseEntRefDeclaration(false);
-  } else {
-    first = parseStmtRefDeclaration(false);
-  }
-  if (!(*nextToken() == CommaToken())) {
-    throw ParseSyntaxError("Missing ',' between parameters");
-  }
-  QueryDeclaration *second = parseEntRefDeclaration(true);
-  if (!(*nextToken() == RoundCloseBracketToken())) {
-    throw ParseSyntaxError("Missing ')' after parameters");
-  }
-  spdlog::debug("Uses parsed: " + first->toString() + ", " + second->toString());
-  return new UsesClause(first, second);
+  expect(nextToken(), {TokenType::kRoundOpenBracket});
+  QueryDeclaration *first = parseAnyRefDeclaration();
+  expect(nextToken(), {TokenType::kComma});
+  QueryDeclaration *second = parseEntRefDeclaration();;
+  expect(nextToken(), {TokenType::kRoundCloseBracket});
+  spdlog::debug("Uses parsed: Uses({}, {})", first->toString(), second->toString());
+  return builder_.buildSuchThat(RsType::kUses, first, second);
 }
+
 SuchThatClause *QueryParser::parseModifies() {
-  if (!(*nextToken() == RoundOpenBracketToken())) {
-    throw ParseSyntaxError("Missing '(' before parameters");
-  }
-  QueryDeclaration *first;
-  if (*peekToken() == QuoteToken()) {
-    first = parseEntRefDeclaration(false);
-  } else {
-    first = parseStmtRefDeclaration(false);
-  }
-  if (!(*nextToken() == CommaToken())) {
-    throw ParseSyntaxError("Missing ',' between parameters");
-  }
-  QueryDeclaration *second = parseEntRefDeclaration(true);;
-  if (!(*nextToken() == RoundCloseBracketToken())) {
-    throw ParseSyntaxError("Missing ')' after parameters");
-  }
-  spdlog::debug("Modifies parsed: " + first->toString() + ", " + second->toString());
-  return new ModifiesClause(first, second);
+  expect(nextToken(), {TokenType::kRoundOpenBracket});
+  QueryDeclaration *first = parseAnyRefDeclaration();
+  expect(nextToken(), {TokenType::kComma});
+  QueryDeclaration *second = parseEntRefDeclaration();;
+  expect(nextToken(), {TokenType::kRoundCloseBracket});
+  spdlog::debug("Modifies parsed: Modifies({}, {})", first->toString(), second->toString());
+  return builder_.buildSuchThat(RsType::kModifies, first, second);
 }
+SuchThatClause *QueryParser::parseCalls() {
+  Token *star = peekToken();
+  bool calls_all = false;
+  if (*star == OperatorToken("*")) {
+    nextToken();
+    calls_all = true;
+  }
+  expect(nextToken(), {TokenType::kRoundOpenBracket});
+  QueryDeclaration *first = parseEntRefDeclaration();
+  expect(nextToken(), {TokenType::kComma});
+  QueryDeclaration *second = parseEntRefDeclaration();;
+  expect(nextToken(), {TokenType::kRoundCloseBracket});
+
+  SuchThatClause *clause;
+  if (calls_all) {
+    clause = builder_.buildSuchThat(RsType::kCallsT, first, second);
+  } else {
+    clause = builder_.buildSuchThat(RsType::kCalls, first, second);
+  }
+  spdlog::debug("Calls parsed: Calls({}, {}), *: {}", first->toString(), second->toString(), calls_all);
+  return clause;
+}
+SuchThatClause *QueryParser::parseNext() {
+  Token *star = peekToken();
+  bool next_all = false;
+  if (*star == OperatorToken("*")) {
+    nextToken();
+    next_all = true;
+  }
+  expect(nextToken(), {TokenType::kRoundOpenBracket});
+  QueryDeclaration *first = parseStmtRefDeclaration();
+  expect(nextToken(), {TokenType::kComma});
+  QueryDeclaration *second = parseStmtRefDeclaration();;
+  expect(nextToken(), {TokenType::kRoundCloseBracket});
+
+  SuchThatClause *clause;
+  if (next_all) {
+    clause = builder_.buildSuchThat(RsType::kNextT, first, second);
+  } else {
+    clause = builder_.buildSuchThat(RsType::kNext, first, second);
+  }
+  spdlog::debug("Next parsed: Next({}, {}), *: {}", first->toString(), second->toString(), next_all);
+  return clause;
+}
+SuchThatClause *QueryParser::parseAffects() {
+  Token *star = peekToken();
+  bool affects_all = false;
+  if (*star == OperatorToken("*")) {
+    nextToken();
+    affects_all = true;
+  }
+  expect(nextToken(), {TokenType::kRoundOpenBracket});
+  QueryDeclaration *first = parseStmtRefDeclaration();
+  expect(nextToken(), {TokenType::kComma});
+  QueryDeclaration *second = parseStmtRefDeclaration();;
+  expect(nextToken(), {TokenType::kRoundCloseBracket});
+
+  SuchThatClause *clause;
+  if (affects_all) {
+    clause = builder_.buildSuchThat(RsType::kAffectsT, first, second);
+  } else {
+    clause = builder_.buildSuchThat(RsType::kAffects, first, second);
+  }
+  spdlog::debug("Parent parsed: Parent({}, {}), *: {}", first->toString(), second->toString(), affects_all);
+  return clause;
+}
+
 QueryDeclaration *QueryParser::parseExpression() {
   bool wild_expression = false;
-  std::string expression;
   Token *tmp = peekToken();
   if (tmp->type == TokenType::kWildCard) {
     nextToken();
@@ -351,21 +373,67 @@ QueryDeclaration *QueryParser::parseExpression() {
     tmp = peekToken();
   }
   if (tmp->type == TokenType::kQuote) {
-    nextToken();
-    std::vector<Token *> expr_tokens;
-    while (peekToken()->type != TokenType::kQuote) {
-      tmp = nextToken();
-      expr_tokens.push_back(tmp);
-    }
-    nextToken();
-    expression = Parser::ParseExpression(expr_tokens)->ToString();
+    std::string expression = parseFlattenedExpression();
     if (wild_expression) {
-      if (nextToken()->type != TokenType::kWildCard) {
-        throw ParseSyntaxError("Invalid wildcard expression");
-      }
-      return new WildCardExpressionDeclaration(expression);
+      expect(nextToken(), {TokenType::kWildCard});
+      return builder_.buildWildcardExpression(expression);
     }
-    return new ExpressionDeclaration(expression);
+    return builder_.buildExpression(expression);
   }
-  return new StmtWildCardDeclaration();
+  return builder_.buildWildcardStmt();
 }
+
+std::string QueryParser::parseFlattenedExpression() {
+  expect(nextToken(), {TokenType::kQuote});
+  std::string expression;
+  bool expect_operand = true;
+  std::vector<Token *> expr_tokens;
+  while (peekToken()->type != TokenType::kQuote) {
+    Token *tmp  = nextToken();
+    if (expect_operand) {
+      expect(tmp, {TokenType::kSymbol, TokenType::kLiteral});
+      expr_tokens.push_back(tmp);
+      expect_operand = false;
+    } else {
+      expect(tmp, {TokenType::kOperator});
+      expr_tokens.push_back(tmp);
+      expect_operand = true;
+    }
+  }
+  if (expect_operand) {
+    expect(peekToken(), {TokenType::kSymbol});
+  }
+  expect(nextToken(), {TokenType::kQuote});
+  expr_tokens.push_back(new EndOfFileToken());
+  return Parser::ParseExpression(expr_tokens)->ToString();
+}
+
+QueryDeclaration *QueryParser::parseWildcard(EntityType type) {
+  Token *wildcard = nextToken();
+  expect(wildcard, {TokenType::kWildCard});
+  switch (type) {
+    case EntityType::kWildcardStmt:
+      return builder_.buildWildcardStmt();
+    case EntityType::kWildcardEnt:
+      return builder_.buildWildcardEnt();
+    default:
+      throw ParseSyntaxError("Wrong usage");
+  }
+}
+std::vector<QueryDeclaration *> QueryParser::getDeclarations() {
+  return this->builder_.getDeclarations();
+}
+
+QueryCall *QueryParser::getQueryCall() {
+  return this->builder_.getQueryCall();
+}
+
+void QueryParser::expect(Token *token, const std::unordered_set<TokenType>& expected_types) {
+  if (expected_types.count(token->type) == 0) {
+    throw ParseSyntaxError("Invalid token type: " + token->value);
+  }
+}
+
+
+
+

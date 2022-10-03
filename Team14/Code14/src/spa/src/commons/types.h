@@ -3,7 +3,7 @@
 #pragma once
 
 #include <string>
-#include <vector>
+#include <unordered_set>
 
 enum class EntityType {
   kProcedure,
@@ -28,16 +28,17 @@ enum class EntityType {
 
 enum class RsType {
   kFollows,
-  kFollowsAll,
+  kFollowsT,
   kParent,
-  kParentAll,
+  kParentT,
   kUses,
   kModifies,
   kCalls,
-  kCallsAll,
+  kCallsT,
   kNext,
-  kNextAll,
+  kNextT,
   kAffects,
+  kAffectsT,
   // Used by PQL,
   kAssignPattern,
 };
@@ -67,24 +68,37 @@ inline std::string EntityTypeToString(EntityType type) {
 inline std::string RsTypeToString(RsType type) {
   switch (type) {
     case RsType::kFollows: return "Follows";
-    case RsType::kFollowsAll: return "Follows*";
+    case RsType::kFollowsT: return "Follows*";
     case RsType::kParent: return "Parent";
-    case RsType::kParentAll: return "Parent*";
+    case RsType::kParentT: return "Parent*";
     case RsType::kUses: return "Uses";
     case RsType::kModifies: return "Modifies";
     case RsType::kCalls: return "Calls";
-    case RsType::kCallsAll: return "Calls*";
+    case RsType::kCallsT: return "Calls*";
     case RsType::kNext: return "Next";
-    case RsType::kNextAll: return "Next*";
+    case RsType::kNextT: return "Next*";
     case RsType::kAffects: return "Affects";
+    case RsType::kAffectsT:return "Affects*";
     case RsType::kAssignPattern: return "pattern";
-    default: return "Unknown";
+
   }
 }
 
-inline std::vector<EntityType> all_stmt_types = {EntityType::kAssignStmt, EntityType::kCallStmt,
+inline std::unordered_set<EntityType> all_stmt_types = {EntityType::kAssignStmt, EntityType::kCallStmt,
                                                  EntityType::kIfStmt, EntityType::kPrintStmt,
                                                  EntityType::kReadStmt, EntityType::kWhileStmt};
-inline std::vector<EntityType> GetAllStmtTypes() {
+
+inline std::unordered_set<EntityType> stmt_ref_types = {EntityType::kAssignStmt, EntityType::kCallStmt,
+                                                        EntityType::kIfStmt, EntityType::kPrintStmt,
+                                                        EntityType::kReadStmt, EntityType::kWhileStmt,
+                                                        EntityType::kStatement};
+inline std::unordered_set<EntityType> ent_ref_types = {EntityType::kVariable, EntityType::kConstant, EntityType::kProcedure};
+inline std::unordered_set<EntityType> GetAllStmtTypes() {
   return all_stmt_types;
+}
+inline std::unordered_set<EntityType> GetStmtRefTypes() {
+  return stmt_ref_types;
+}
+inline std::unordered_set<EntityType> GetEntRefTypes() {
+  return ent_ref_types;
 }

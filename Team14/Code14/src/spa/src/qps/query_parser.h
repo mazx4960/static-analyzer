@@ -3,37 +3,34 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#include <map>
 
 #include "commons/lexer/token.h"
 #include "commons/parser/parser_exceptions.h"
 #include "qps/pql/query.h"
 #include "qps/pql/query_declaration.h"
+#include "qps/query_builder.h"
 
 class QueryParser {
  private:
+  QueryBuilder builder_;
   std::vector<Token *> tokens_;
-
-  std::vector<QueryDeclaration *> query_declarations_;
-
-  std::unordered_set<std::string> synonyms_;
-
-  std::vector<QueryCall *> query_calls_;
-
   int token_index_ = 0;
 
+ public:
   Token *nextToken();
   Token *peekToken();
   bool outOfTokens();
-
- public:
-  explicit QueryParser(std::vector<Token *> tokens);
-  void parse();
-  std::vector<QueryDeclaration *> getDeclarations();
-  std::vector<QueryCall *> getQueryCalls();
+  explicit QueryParser(std::vector<Token *> tokens, QueryBuilder builder = QueryBuilder());
+  Query *parse();
   void parseDeclarations();
-  void parseQueryCalls();
+  std::vector<QueryDeclaration *> getDeclarations();
+  QueryCall *parseQueryCall();
+  QueryCall *getQueryCall();
   void parseDeclaration();
-  QueryDeclaration *getDeclaration(const std::string &synonym);
+  QueryDeclaration *getDeclaration(Token *synonym);
+  QueryDeclaration *getStmtDeclaration(Token *synonym);
+  QueryDeclaration *getEntDeclaration(Token *synonym);
   QuerySynonym *parseSynonym();
   QueryClause *parseClause();
   PatternClause *parsePattern();
@@ -42,11 +39,17 @@ class QueryParser {
   SuchThatClause *parseParent();
   SuchThatClause *parseUses();
   SuchThatClause *parseModifies();
-  bool isDeclared(const std::string &synonym);
   QueryDeclaration *parseExpression();
   StringDeclaration *parseQuotedDeclaration();
-  QueryDeclaration *parseStmtRefDeclaration(bool allowWild);
-  QueryDeclaration *parseEntRefDeclaration(bool allowWild);
+  QueryDeclaration *parseStmtRefDeclaration();
+  QueryDeclaration *parseEntRefDeclaration();
   IntegerDeclaration *parseLiteralDeclaration();
   StringDeclaration *parseStringDeclaration();
+  QueryDeclaration *parseWildcard(EntityType type);
+  QueryDeclaration *parseAnyRefDeclaration();
+  std::string parseFlattenedExpression();
+  void expect(Token *token, const std::unordered_set<TokenType> &expected_types);
+  SuchThatClause *parseCalls();
+  SuchThatClause *parseNext();
+  SuchThatClause *parseAffects();
 };

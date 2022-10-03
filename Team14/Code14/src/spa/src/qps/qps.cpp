@@ -1,7 +1,5 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 #include "qps.h"
-
-#include "query_builder.h"
 #include "spdlog/spdlog.h"
 
 void QPS::SetPKB(IPKBQuerier *pkb) {
@@ -16,22 +14,25 @@ Result *QPS::EvaluateQuery(std::istream *query_stream) {
     token_string += token->ToString() + " ";
   }
   spdlog::debug("Tokens[{}]: ", tokens.size(), token_string);
-
-  QueryParser parser(tokens);
-  spdlog::info("Parsing tokens...");
-  parser.parse();
   QueryBuilder builder = QueryBuilder();
-  std::vector<QueryDeclaration *> query_declarations = parser.getDeclarations();
-  std::vector<QueryCall *> query_calls = parser.getQueryCalls();
-  builder.withDeclarations(query_declarations);
-  builder.withQueryCalls(query_calls);
+  QueryParser parser(tokens, builder);
+  spdlog::info("Parsing tokens...");
+
+  Query *query;
+  try {
+    query = parser.parse();
+  } catch (ParseSemanticError &e) {
+    return Result::semanticError();
+  } catch (ParseSyntaxError &e) {
+    return Result::syntacticError();
+  }
+
   std::string declaration_string;
-  for (auto *declaration : parser.getDeclarations()) {
+  for (auto *declaration : query->getDeclarations()) {
     declaration_string += EntityTypeToString(declaration->getType()) + ":" + declaration->toString() + " ";
   }
-  spdlog::debug("Declarations[{}]: {}", query_declarations.size(), declaration_string);
-  Query query = builder.build();
-  spdlog::info("Tokens parsed");
-  Result *result = (new QueryEvaluator(this->pkb_, query))->evaluate();
+  spdlog::debug("Declarations[{}]: {}", query->getDeclarations().size(), declaration_string);
+  spdlog::info("Query parsed");
+  Result *result = (new QueryEvaluator(this->pkb_, *query))->evaluate();
   return result;
 }

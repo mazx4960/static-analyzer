@@ -12,11 +12,31 @@ class QueryBuilder {
  private:
   std::vector<QueryDeclaration *> query_declarations_;
 
-  std::vector<QueryCall *> query_calls_;
+  std::unordered_set<std::string> synonyms_;
+
+  SelectCall *query_call_;
 
  public:
   explicit QueryBuilder();
-  Query build();
-  void withDeclarations(std::vector<QueryDeclaration *> query_declarations);
-  void withQueryCalls(std::vector<QueryCall *> query_calls);
+  Query *build();
+  QuerySynonym *buildSynonym(const std::string &synonym);
+  QueryDeclaration *buildDeclaration(EntityType type, QuerySynonym *synonym);
+  QueryDeclaration *getDeclaration(const std::string &synonym);
+  std::vector<QueryDeclaration *> getDeclarations();
+  bool isDeclared(const std::string &synonym);
+
+  WildCardStmtDeclaration *buildWildcardStmt();
+  IntegerDeclaration *buildLiteral(const std::string &number);
+  StringDeclaration *buildString(const std::string &str);
+  WildCardEntDeclaration * buildWildcardEnt();
+  SelectCall *buildSelectCall(QueryDeclaration *synonym_declaration, std::vector<QueryClause *> clause_vector);
+  QueryCall *getQueryCall();
+  PatternClause *buildAssignPattern(QueryDeclaration *pattern_synonym,
+                                    QueryDeclaration *first_param,
+                                    QueryDeclaration *second_param);
+  SuchThatClause *buildSuchThat(RsType type, QueryDeclaration *first, QueryDeclaration *second);
+  QueryDeclaration *buildWildcardExpression(std::string expression);
+  QueryDeclaration *buildExpression(std::string expression);
+  QueryDeclaration *getStmtDeclaration(const std::string& synonym);
+  QueryDeclaration *getEntDeclaration(const std::string& synonym);
 };
