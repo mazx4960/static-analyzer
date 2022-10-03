@@ -53,8 +53,12 @@ EntityPointerUnorderedSet RelationshipManager::Get(RsType rs_type, Entity *entit
       matches = this->GetAll(RsType::kParent, entity, is_inverse);
       break;
     }
+    case RsType::kCalls: {
+      matches = this->GetCalls(entity, is_inverse);
+      break;
+    }
     case RsType::kCallsAll: {
-      matches = this->GetAll(RsType::kCalls, entity, is_inverse);
+      matches = this->GetAllCalls(entity, is_inverse);
       break;
     }
     case RsType::kNextAll: {
@@ -104,28 +108,50 @@ EntityPointerUnorderedSet RelationshipManager::GetInference(RsType rs_type, Enti
 
   switch(entity_type) {
     case EntityType::kCallStmt:
-      return this->getInferenceFromProcedure(relationship_table, entity);
+      return this->GetInferenceGivenProcedure(relationship_table, entity);
     case EntityType::kProcedure: // fallthrough
     case EntityType::kIfStmt:    // fallthrough
     case EntityType::kWhileStmt:
-      return this->getInferenceFromChildren(relationship_table, entity);
+      return this->GetInferenceFromChildren(relationship_table, entity);
+    case EntityType::kVariable:
+      return this->GetInferenceGivenVariable(relationship_table, entity);
     default: return relationship_table->get(entity, is_inverse);
   }
 }
 
-EntityPointerUnorderedSet RelationshipManager::getInferenceFromProcedure(RelationshipTable *relationship_table, Entity *entity) {
-  // Get corresponding procedure entity
-  auto *calls_table = GetTable(RsType::kCalls);
-  auto call_entries = calls_table->get(entity, false);
-  if (call_entries.empty()) {
-    return this->Empty();
+Entity* RelationshipManager::GetProcedureEntity(Entity *entity, bool is_call_statement_entity) {
+  Entity *result = new ProcedureEntity("");
+  if (is_call_statement_entity) {
+    auto *calls_table = GetTable(RsType::kCalls);
+    auto call_entries = calls_table->get(entity, false);
+    if (call_entries.empty()) {
+      result = new ProcedureEntity("");
+    } else {
+      result = *(call_entries.begin());
+    }
+  } else {
+    auto parent_entries = GetAll(RsType::kParent, entity, true);
+    for (auto *parent: parent_entries) {
+      if (parent->GetType() == EntityType::kProcedure) {
+        result = parent;
+        break;
+      }
+    }
   }
-  auto *procedure_entity = *(call_entries.begin());
-  return this->getInferenceFromChildren(relationship_table, procedure_entity);
+  return result;
 }
 
-EntityPointerUnorderedSet RelationshipManager::getInferenceFromChildren(RelationshipTable *relationship_table, Entity *entity) {
-  EntityPointerUnorderedSet result;
+EntityPointerUnorderedSet RelationshipManager::GetInferenceGivenProcedure(RelationshipTable *relationship_table, Entity *entity) {
+  // Get corresponding procedure entity
+  auto *procedure_entity = this->GetProcedureEntity(entity, true);
+  if (procedure_entity->GetValue().empty()) {
+    return this->Empty();
+  }
+  return this->GetInferenceFromChildren(relationship_table, procedure_entity);
+}
+
+EntityPointerUnorderedSet RelationshipManager::GetInferenceFromChildren(RelationshipTable *relationship_table, Entity *entity) {
+  EntityPointerUnorderedSet result = this->Empty();
 
   // Check if current statement is in relationship table.
   auto current_statement_variables = relationship_table->get(entity, false);
@@ -136,10 +162,81 @@ EntityPointerUnorderedSet RelationshipManager::getInferenceFromChildren(Relation
   // Check if child statements are in relationship table.
   auto children_statements = GetAll(RsType::kParent, entity, false);
   for (auto *child_entity: children_statements) {
-    auto variable_entity_set = relationship_table->get(child_entity, false);
-    if (variable_entity_set != this->Empty()) {
-      result.insert(variable_entity_set.begin(), variable_entity_set.end());
+    if (child_entity->GetType() == EntityType::kCallStmt) {
+      auto *procedure_entity = this->GetProcedureEntity(child_entity, true);
+      if (!procedure_entity->GetValue().empty()) {
+        auto child_result = GetInferenceGivenProcedure(relationship_table, child_entity);
+        result.insert(procedure_entity);
+        result.insert(child_result.begin(), child_result.end());
+      }
+    } else {
+      auto variable_entity_set = relationship_table->get(child_entity, false);
+      if (variable_entity_set != this->Empty()) {
+        result.insert(variable_entity_set.begin(), variable_entity_set.end());
+      }
     }
+  }
+  return result;
+}
+
+EntityPointerUnorderedSet RelationshipManager::GetInferenceGivenVariable(RelationshipTable *relationship_table, Entity *entity) {
+  EntityPointerUnorderedSet result = this->Empty();
+
+  auto statements = relationship_table->get(entity, true);
+  for (auto *statement_entity: statements) {
+    auto *procedure_entity = this->GetProcedureEntity(statement_entity, false);
+    if (!procedure_entity->GetValue().empty()) {
+      auto preceding_procedure = this->GetAllCalls(procedure_entity, true);
+      auto subsequent_procedure = this->GetAllCalls(procedure_entity, false);
+      result.insert(preceding_procedure.begin(), preceding_procedure.end());
+      result.insert(subsequent_procedure.begin(), subsequent_procedure.end());
+      result.insert(procedure_entity);
+    }
+    result.insert(statement_entity);
+  }
+  return result;
+}
+
+EntityPointerUnorderedSet RelationshipManager::GetCalls(Entity *entity, bool is_inverse) {
+  EntityPointerUnorderedSet result = this->Empty();
+  if (is_inverse) {
+    auto *calls_table = GetTable(RsType::kCalls);
+    auto call_entries = calls_table->get(entity, true);
+    for (auto *stmt_entity: call_entries) {
+      auto parent_statements = GetAll(RsType::kParent, stmt_entity, true);
+      for (auto *parent_entity: parent_statements) {
+        if (parent_entity->GetType() == EntityType::kProcedure) {
+          result.insert(parent_entity);
+          break;
+        }
+      }
+    }
+  } else {
+    auto children_statements = GetAll(RsType::kParent, entity, is_inverse);
+    for (auto *child_entity: children_statements) {
+      if (child_entity->GetType() == EntityType::kCallStmt) {
+        auto *procedure_entity = this->GetProcedureEntity(child_entity, true);
+        if (!procedure_entity->GetValue().empty()) {
+          result.insert(procedure_entity);
+        }
+      }
+    }
+  }
+  return result;
+}
+
+EntityPointerUnorderedSet RelationshipManager::GetAllCalls(Entity *entity, bool is_inverse) {
+  EntityPointerUnorderedSet result = this->Empty();
+  std::queue<Entity *> queue;
+  queue.push(entity);
+  while(!queue.empty()) {
+    auto *current = queue.front();
+    auto procedure_set = this->GetCalls(current, is_inverse);
+    for (auto *procedure_entity: procedure_set) {
+      queue.push(procedure_entity);
+      result.insert(procedure_entity);
+    }
+    queue.pop();
   }
   return result;
 }
