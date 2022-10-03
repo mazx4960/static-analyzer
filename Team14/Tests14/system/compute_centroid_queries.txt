@@ -83,7 +83,7 @@ procedure p;
 Select p such that Modifies(p, "x")
 main, readPoint, computeCentroid
 5000
-302 - select all procedures that modifies variable "cenX" (nested in while loop)
+302 - select all procedures that modifies variable "cenX"
 procedure p;
 Select p such that Modifies(p, "cenX")
 computeCentroid
@@ -126,7 +126,7 @@ Select a pattern a(_, _"x"_)
 501 - select procedures that uses variable "x"
 procedure p;
 Select p such that Uses(p, "x")
-computeCentroid
+main, computeCentroid
 5000
 502 - select all assignment statements that uses any variables on the right-hand side
 stmt s;
