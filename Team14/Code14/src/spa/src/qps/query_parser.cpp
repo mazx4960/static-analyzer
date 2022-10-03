@@ -386,22 +386,10 @@ QueryDeclaration *QueryParser::parseExpression() {
 std::string QueryParser::parseFlattenedExpression() {
   expect(nextToken(), {TokenType::kQuote});
   std::string expression;
-  bool expect_operand = true;
   std::vector<Token *> expr_tokens;
   while (peekToken()->type != TokenType::kQuote) {
     Token *tmp  = nextToken();
-    if (expect_operand) {
-      expect(tmp, {TokenType::kSymbol, TokenType::kLiteral});
-      expr_tokens.push_back(tmp);
-      expect_operand = false;
-    } else {
-      expect(tmp, {TokenType::kOperator});
-      expr_tokens.push_back(tmp);
-      expect_operand = true;
-    }
-  }
-  if (expect_operand) {
-    expect(peekToken(), {TokenType::kSymbol});
+    expr_tokens.push_back(tmp);
   }
   expect(nextToken(), {TokenType::kQuote});
   expr_tokens.push_back(new EndOfFileToken());
