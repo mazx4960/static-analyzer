@@ -205,7 +205,7 @@ computeCentroid, printResults
 5000
 609 - select all procedures that are called by main directly or indirectly
 procedure p;
-Select p such that Calls*(p, "main")
+Select p such that Calls*("main", p)
 computeCentroid, printResults, readPoint
 5000
 610 - select all procedures that are called by printResults
