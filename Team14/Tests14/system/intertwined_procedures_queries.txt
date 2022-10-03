@@ -78,3 +78,58 @@ procedure p;
 Select p such that Modifies(p, "y")
 main, a, b
 5000
+501 - select all procedures that call another procedure
+procedure p, q;
+Select p such that Calls(p, q)
+main, a, b, c
+5000
+502 - select all procedures that call another procedure directly or indirectly
+procedure p, q;
+Select p such that Calls*(p, q)
+main, a, b, c
+5000
+503 - select all procedures that call procedure a
+procedure p;
+Select p such that Calls(p, "a")
+main
+5000
+504 - select all procedures that are called by procedure a
+procedure p;
+Select p such that Calls("a", p)
+b
+5000
+505 - select all procedures that are called by another procedure
+procedure p, q;
+Select q such that Calls(p, q)
+a, b, c, d
+5000
+506 - select all procedures that are called by another procedure directly or indirectly
+procedure p, q;
+Select q such that Calls*(p, q)
+a, b, c, d
+5000
+507 - select all procedures that call another procedure, using wildcard
+procedure p;
+Select p such that Calls(p, _)
+main, a, b, c
+5000
+508 - select all procedures that are called by another procedure directly or indirectly, using wildcard
+procedure p;
+Select p such that Calls*(_, p)
+a, b, c, d
+5000
+509 - select all procedures with valid Calls relationship
+procedure p;
+Select p such that Calls("main", "a")
+main, a, b, c, d
+5000
+510 - select all procedures with an invalid Calls relationship
+procedure p;
+Select p such that Calls*("a", "main")
+none
+5000
+511 - select all procedures that call on a non-existent procedures
+procedure p;
+Select p such that Calls(p, "void")
+none
+5000
