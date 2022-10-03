@@ -214,6 +214,14 @@ TEST(PopulateEntityTest, MultipleEntitiesTest) {
   std::vector<std::string> read_stmt_no({"7", "8", "9", "10"});
   std::vector<std::string> if_stmt_no({"11", "12", "13"}); 
   std::vector<std::string> while_stmt_no({"14"}); 
+  int length = variable_entity_names.size() + 
+			   constant_entity_names.size() + 
+			   procedure_entity_names.size() + 
+			   assign_stmt_no.size() + 
+			   read_stmt_no.size() + 
+			   if_stmt_no.size() + 
+			   while_stmt_no.size();
+  entities.reserve(length);
   for (const auto &s : variable_entity_names) { 
 	entities.push_back(new VariableEntity(s)); 
   }
