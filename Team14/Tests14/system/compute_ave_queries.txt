@@ -123,3 +123,48 @@ assign a;
 Select a pattern a("sum", _)
 4
 5000
+701 - select all stmts that can be executed directly after some other stmt
+stmt s1, s2;
+Select s2 such that Next(s1, s2)
+2, 3, 4, 5, 6
+5000
+702 - select all stmts that have another stmt that can be executed directly after it
+stmt s1, s2;
+Select s1 such that Next(s1, s2)
+1, 2, 3, 4, 5
+5000
+703 - select all stmts that can be executed directly or indirectly after some other stmt
+stmt s1, s2;
+Select s2 such that Next*(s1, s2)
+2, 3, 4, 5, 6
+5000
+704 - select all stmts that have another stmt that can be executed directly or indirectly after it
+stmt s1, s2;
+Select s1 such that Next*(s1, s2)
+1, 2, 3, 4, 5
+5000
+705 - select all read stmt that have another read stmt executed directly after it
+read r1, r2;
+Select r1 such that Next(r1, r2)
+1, 2
+5000
+706 - select all assign stmts that have another assign stmt executed directly after it
+assign a1, a2;
+Select a1 such that Next(a1, a2)
+4
+5000
+707 - select all assign stmts that have another assign stmt executed directly before it that uses "x" (non existent)
+assign a1, a2;
+Select a2 such that Next(a1, a2) pattern a1 (_, _"x"_)
+none
+5000
+708 - select all read stmts with invalid Next relationship
+read r;
+Select r such that Next(2, 1)
+none
+5000
+709 - select all assign stmts with pattern with invalid Next relationship
+assign a;
+Select a pattern a (_, _"num2 + num3"_) such that Next(1, 3)
+none
+5000

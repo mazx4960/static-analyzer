@@ -278,3 +278,128 @@ procedure p, q, r;
 Select q such that Calls(p, q) and Calls(q, r)
 computeCentroid
 5000
+701 - select all stmts that can be executed directly after some other stmt
+stmt s1, s2;
+Select s2 such that Next(s1, s2)
+2, 3, 5, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+5000
+702 - select all stmts that have another stmt that can be executed directly after it
+stmt s1, s2;
+Select s1 such that Next(s1, s2)
+1, 2, 4, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22
+5000
+703 - select all stmts that can be executed directly or indirectly after some other stmt
+stmt s1, s2;
+Select s2 such that Next*(s1, s2)
+2, 3, 5, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+5000
+704 - select all stmts that have another stmt that can be executed directly or indirectly after it
+stmt s1, s2;
+Select s1 such that Next*(s1, s2)
+1, 2, 4, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22
+5000
+705 - select all assign stmts that have another assign stmt directly after
+assign a1, a2;
+Select a1 such that Next(a1, a2)
+10, 11, 15, 16, 21
+5000
+706 - select all WHILE blocks that have another WHILE block directly after
+while w1, w2;
+Select w1 such that Next(w1, w2)
+none
+5000
+707 - select all IF blocks that have a WHILE block directly before
+if ifs; while w;
+Select ifs such that Next(w, ifs)
+19
+5000
+708 - select all assign stmts that are directly before line 10 (none)
+assign a;
+Select a such that Next(a, 10)
+none
+5000
+709 - select all stmts that are directly after another assign stmt that modifies "cenX"
+stmt s; assign a;
+Select s such that Next(a, s) pattern a ("cenX", _)
+17, 22
+5000
+710 - select all stmts that are directly or indirectly after stmt 17
+stmt s;
+Select s such that Next*(17, s)
+18, 19, 20, 21, 22, 23
+5000
+711 - select all stmts that are directly or indirectly after stmt 20
+stmt s;
+Select s such that Next*(20, s)
+23
+5000
+712 - select all assign stmts given valid Next relationship
+assign a;
+Select a such that Next(1, 2)
+1, 10, 11, 12, 15, 16, 17, 20, 21, 22, 23
+5000
+713 - select all procedures given valid Next relationship
+procedure p;
+Select p such that Next(19, 21)
+main, readPoint, printResults, computeCentroid
+5000
+713 - select all procedures given valid Next relationship
+procedure p;
+Select p such that Next*(19, 23)
+main, readPoint, printResults, computeCentroid
+5000
+714 - select all assign stmts with pattern given valid Next relationship
+assign a;
+Select a pattern a ("cenX", _) such that Next(1, 2)
+11, 16, 21
+5000
+715 - select all assign stmts with specified pattern given valid Next relationship
+assign a;
+Select a such that Next(18, 19) pattern a (_, _"y"_)
+17
+5000
+716 - select all call stmts given invalid Next relationship
+call c;
+Select c such that Next(1, 3)
+none
+5000
+717 - select all while blocks given invalid Next relationship (stmts in Next must be in same procedure)
+while w;
+Select w such that Next(23, 6)
+none
+5000
+718 - select all stmts given invalid Next relationship
+stmt s;
+Select s such that Next(s, s)
+none
+5000
+719 - select all stmts given invalid Next* relationship
+stmt s;
+Select s such that Next*(s, s)
+none
+5000
+720 - select all stmts given invalid Next relationship
+stmt s;
+Select s such that Next(1, 1)
+none
+5000
+721 - select all stmts given invalid Next* relationship
+stmt s;
+Select s such that Next*(23, 23)
+none
+5000
+722 - select all stmts given invalid Next relationship (line 24 non existent)
+stmt s;
+Select s such that Next*(23, 24)
+none
+5000
+723 - select all read stmts that have another stmt executed directly after, using wildcard
+read r;
+Select r such that Next(r, _)
+4
+5000
+724 - select all print stmt that are executed after another stmt, using wildcard
+print p;
+Select p such that Next(_, p)
+6, 7, 8
+5000
