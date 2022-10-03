@@ -1,8 +1,6 @@
 #!/bin/bash
 
 # run system tests
-mkdir -p test_results
-
 test_folder="Team14/Code14/tests"
 test_names=("pql_error" "basic" "compute_ave" "compute_centroid" "extreme_nesting" "patterns" "intertwined_procedures" "demo")
 num_failed=0
