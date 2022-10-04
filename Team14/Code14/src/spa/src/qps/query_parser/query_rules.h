@@ -34,23 +34,33 @@ inline static EntityTypeSet modifies_ref_types = {EntityType::kAssignStmt, Entit
 inline static EntityTypeSet syn_assign_types = {EntityType::kAssignStmt};
 inline static EntityTypeSet ent_ref_variable_type = {EntityType::kVariable, EntityType::kString,
                                                      EntityType::kWildcardEnt};
+inline static EntityTypeSet ent_ref_procedure_type = {EntityType::kProcedure, EntityType::kString,
+                                                     EntityType::kWildcardEnt};
 inline static EntityTypeSet expression_types = {EntityType::kExpression, EntityType::kWildcardExpression};
 
-inline static RelationshipRules follows_args_rule = {stmt_ref_types, stmt_ref_types};
-inline static RelationshipRules follows_all_args_rule = {stmt_ref_types, stmt_ref_types};
-inline static RelationshipRules parent_args_rule = {stmt_ref_types, stmt_ref_types};
-inline static RelationshipRules parent_all_args_rule = {stmt_ref_types, stmt_ref_types};
-inline static RelationshipRules uses_args_rule = {uses_ref_types, ent_ref_variable_type};
-inline static RelationshipRules modifies_args_rule = {modifies_ref_types, ent_ref_variable_type};
+inline static RelationshipRules follows_args_rules = {stmt_ref_types, stmt_ref_types};
+inline static RelationshipRules follows_all_args_rules = {stmt_ref_types, stmt_ref_types};
+inline static RelationshipRules parent_args_rules = {stmt_ref_types, stmt_ref_types};
+inline static RelationshipRules parent_all_args_rules = {stmt_ref_types, stmt_ref_types};
+inline static RelationshipRules uses_args_rules = {uses_ref_types, ent_ref_variable_type};
+inline static RelationshipRules modifies_args_rules = {modifies_ref_types, ent_ref_variable_type};
+inline static RelationshipRules calls_args_rules = {ent_ref_procedure_type, ent_ref_procedure_type};
+inline static RelationshipRules calls_all_args_rules = {ent_ref_procedure_type, ent_ref_procedure_type};
+inline static RelationshipRules next_args_rules = {stmt_ref_types, stmt_ref_types};
+inline static RelationshipRules next_all_args_rules = {stmt_ref_types, stmt_ref_types};
 
 inline static PatternRules pattern_args_rule = {syn_assign_types, ent_ref_variable_type, expression_types};
 
-inline static SuchThatRules such_that_rules = {{RsType::kFollows, follows_args_rule},
-                                               {RsType::kFollowsT, follows_all_args_rule},
-                                               {RsType::kParent, parent_args_rule},
-                                               {RsType::kParentT, parent_all_args_rule},
-                                               {RsType::kUses, uses_args_rule},
-                                               {RsType::kModifies, modifies_args_rule}};
+inline static SuchThatRules such_that_rules = {{RsType::kFollows, follows_args_rules},
+                                               {RsType::kFollowsT, follows_all_args_rules},
+                                               {RsType::kParent, parent_args_rules},
+                                               {RsType::kParentT, parent_all_args_rules},
+                                               {RsType::kUses, uses_args_rules},
+                                               {RsType::kModifies, modifies_args_rules},
+                                               {RsType::kCalls, calls_args_rules},
+                                               {RsType::kCallsT, calls_all_args_rules},
+                                               {RsType::kNext, next_args_rules},
+                                               {RsType::kNextT, next_all_args_rules}};
 
 inline SuchThatRules getSuchThatRules() {
   return such_that_rules;

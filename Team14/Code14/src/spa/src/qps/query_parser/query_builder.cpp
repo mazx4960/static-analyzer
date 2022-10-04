@@ -88,6 +88,8 @@ SuchThatClause *QueryBuilder::buildSuchThat(RsType type, QueryDeclaration *first
   if (relationship_rules[1].find(second->getType()) == relationship_rules[1].end()) {
     throw ParseSemanticError("Invalid second arg: " + EntityTypeToString(second->getType()));
   }
+
+
   return new SuchThatClause(type, first, second);
 }
 std::vector<QueryDeclaration *> QueryBuilder::getDeclarations() {
