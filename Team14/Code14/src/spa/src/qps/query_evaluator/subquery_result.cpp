@@ -36,7 +36,9 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDecl
     }
     else {
       for (auto [entity, entity_set] : table) {
-        table_rows_.push_back(ResultRow{{first_synonym, entity}});
+        if (!entity_set.empty()) {
+          table_rows_.push_back(ResultRow{{first_synonym, entity}});
+        }
       }
     }
   }
