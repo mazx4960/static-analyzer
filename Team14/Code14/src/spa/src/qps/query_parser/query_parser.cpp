@@ -176,11 +176,11 @@ void QueryParser::parseClause() {
   Token *clause = nextToken();
   if (*clause == KeywordToken("such") && *nextToken() == KeywordToken("that")) {
     parseSuchThat();
-  }
-  if (*clause == KeywordToken("pattern")) {
+  } else if (*clause == KeywordToken("pattern")) {
     parsePattern();
+  } else {
+    throw ParseSyntaxError("Unknown clause: " + clause->value);
   }
-  throw ParseSyntaxError("Unknown clause: " + clause->value);
 }
 void QueryParser::parsePattern() {
   Token *synonym = nextToken();
