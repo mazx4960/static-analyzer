@@ -230,7 +230,7 @@ none
 5000
 614 - select all procedures with invalid Calls* relationship
 procedure p;
-Select p such that Calls*("readPoint, "main")
+Select p such that Calls*("readPoint", "main")
 none
 5000
 615 - select all procedures, using wildcard
