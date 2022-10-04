@@ -89,6 +89,10 @@ void QueryBuilder::buildAssignPattern(PatternClause *clause) {
   QueryDeclaration *syn_assign = clause->getFirst();
   QueryDeclaration *ent_ref = clause->getSecond();
   QueryDeclaration *expression_spec = clause->getThird();
+  if (syn_assign == nullptr || ent_ref == nullptr || expression_spec == nullptr) {
+    throw ParseSemanticError("Synonym not found");
+  }
+
   auto pattern_rules = getPatternRules();
   if (pattern_rules[0].find(syn_assign->getType()) == pattern_rules[0].end()) {
     throw ParseSemanticError("Invalid syn_assign: " + EntityTypeToString(syn_assign->getType()));
@@ -107,6 +111,9 @@ void QueryBuilder::buildSuchThat(SuchThatClause *clause) {
   RsType type = clause->getSuchThatType();
   QueryDeclaration *first = clause->getFirst();
   QueryDeclaration *second = clause->getSecond();
+  if (first == nullptr || second == nullptr) {
+    throw ParseSemanticError("Synonym not found");
+  }
   auto st_rules = getSuchThatRules();
   if (st_rules.find(type) == st_rules.end()) {
     throw ParseSemanticError("Unsupported relationship type: " + RsTypeToString(type));
