@@ -24,12 +24,14 @@ inline static EntityTypeSet stmt_ref_types = {EntityType::kAssignStmt, EntityTyp
 inline static EntityTypeSet uses_ref_types = {EntityType::kAssignStmt, EntityType::kPrintStmt,
                                               EntityType::kIfStmt, EntityType::kWhileStmt,
                                               EntityType::kProcedure, EntityType::kCallStmt,
-                                              EntityType::kString, EntityType::kInteger};
+                                              EntityType::kString, EntityType::kInteger,
+                                              EntityType::kStatement};
 
 inline static EntityTypeSet modifies_ref_types = {EntityType::kAssignStmt, EntityType::kReadStmt,
                                                   EntityType::kIfStmt, EntityType::kWhileStmt,
                                                   EntityType::kProcedure, EntityType::kCallStmt,
-                                                  EntityType::kString, EntityType::kInteger};
+                                                  EntityType::kString, EntityType::kInteger,
+                                                  EntityType::kStatement};
 
 inline static EntityTypeSet syn_assign_types = {EntityType::kAssignStmt};
 inline static EntityTypeSet ent_ref_variable_type = {EntityType::kVariable, EntityType::kString,
