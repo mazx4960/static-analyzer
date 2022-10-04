@@ -24,6 +24,7 @@ enum class EntityType {
   kWildcardExpression,
   kString,
   kInteger,
+  kWildcardProcedure
 };
 
 enum class RsType {
@@ -61,6 +62,7 @@ inline std::string EntityTypeToString(EntityType type) {
     case EntityType::kWildcardExpression: return "WildcardExpression";
     case EntityType::kString: return "String";
     case EntityType::kInteger: return "Integer";
+    case EntityType::kWildcardProcedure: return "WildcardProcedure";
     default: return "Unknown";
   }
 }
