@@ -73,14 +73,6 @@ QueryDeclaration *QueryParser::getDeclaration(Token *synonym) {
   return builder_.getDeclaration(synonym->value);
 }
 
-QueryDeclaration *QueryParser::getStmtDeclaration(Token *synonym) {
-  return builder_.getStmtDeclaration(synonym->value);
-}
-
-QueryDeclaration *QueryParser::getEntDeclaration(Token *synonym) {
-  return builder_.getEntDeclaration(synonym->value);
-}
-
 QueryDeclaration *QueryParser::parseStmtRefDeclaration() {
   Token *stmtref = peekToken();
   QueryDeclaration *declaration = nullptr;
@@ -89,7 +81,7 @@ QueryDeclaration *QueryParser::parseStmtRefDeclaration() {
       declaration = parseLiteralDeclaration();
       break;
     case TokenType::kSymbol:
-      declaration = getStmtDeclaration(nextToken());
+      declaration = getDeclaration(nextToken());
       break;
     case TokenType::kWildCard:
       declaration = parseWildcard(EntityType::kWildcardStmt);
@@ -108,7 +100,7 @@ QueryDeclaration *QueryParser::parseEntRefDeclaration() {
       declaration = parseQuotedDeclaration();
       break;
     case TokenType::kSymbol:
-      declaration = getEntDeclaration(nextToken());
+      declaration = getDeclaration(nextToken());
       break;
     case TokenType::kWildCard:
       declaration = parseWildcard(EntityType::kWildcardEnt);
@@ -133,7 +125,7 @@ QueryDeclaration *QueryParser::parseAnyRefDeclaration() {
       declaration = getDeclaration(nextToken());
       break;
     case TokenType::kWildCard:
-      throw ParseSyntaxError("Wildcard '_' is not allowed here");
+      throw ParseSemanticError("Wildcard '_' is not allowed here");
     default:
       throw ParseSyntaxError("Unknown Ref: " + ref->value);
   }
@@ -143,21 +135,22 @@ QueryDeclaration *QueryParser::parseAnyRefDeclaration() {
 IntegerDeclaration *QueryParser::parseLiteralDeclaration() {
   Token *literal = nextToken();
   expect(literal, {TokenType::kLiteral});
-  if (std::stoi(literal->value) <= 0) {
-    throw ParseSyntaxError("Integer cannot be negative/zero: " + literal->value);
+  std::string literal_string = literal->value;
+  if (literal_string.length() > 1 && literal_string[0] == '0') {
+    throw ParseSyntaxError("INTEGER cannot have leading zero: " + literal_string);
   }
-  return builder_.buildLiteral(literal->value);
+  return builder_.buildLiteral(literal_string);
 }
 
-StringDeclaration *QueryParser::parseStringDeclaration() {
+IdentDeclaration *QueryParser::parseIdentDeclaration() {
   Token *symbol = nextToken();
   expect(symbol, {TokenType::kSymbol});
-  return builder_.buildString(symbol->value);
+  return builder_.buildIdent(symbol->value);
 }
 
-StringDeclaration *QueryParser::parseQuotedDeclaration() {
+IdentDeclaration *QueryParser::parseQuotedDeclaration() {
   expect(nextToken(), {TokenType::kQuote});
-  StringDeclaration *declaration = parseStringDeclaration();
+  IdentDeclaration *declaration = parseIdentDeclaration();
   expect(nextToken(), {TokenType::kQuote});
   return declaration;
 }
@@ -193,15 +186,15 @@ QueryClause *QueryParser::parseClause() {
 PatternClause *QueryParser::parsePattern() {
   Token *synonym = nextToken();
   expect(synonym, {TokenType::kSymbol});
-  QueryDeclaration *pattern_synonym = getDeclaration(synonym);
+  QueryDeclaration *syn_assign = getDeclaration(synonym);
   expect(nextToken(), {TokenType::kRoundOpenBracket});
-  QueryDeclaration *first_param = parseEntRefDeclaration();
+  QueryDeclaration *ent_ref = parseEntRefDeclaration();
   expect(nextToken(), {TokenType::kComma});
-  QueryDeclaration *second_param = parseExpression();
+  QueryDeclaration *expression_spec = parseExpression();
   expect(nextToken(), {TokenType::kRoundCloseBracket});
   spdlog::debug("Pattern parsed: pattern {}({}, {})",
-                pattern_synonym->toString() ,first_param->toString(), second_param->toString());
-  return builder_.buildAssignPattern(pattern_synonym, first_param, second_param);
+                syn_assign->toString() , ent_ref->toString(), expression_spec->toString());
+  return builder_.buildAssignPattern(syn_assign, ent_ref, expression_spec);
 }
 SuchThatClause *QueryParser::parseSuchThat() {
   Token *relationship = nextToken();
@@ -366,13 +359,13 @@ SuchThatClause *QueryParser::parseAffects() {
 
 QueryDeclaration *QueryParser::parseExpression() {
   bool wild_expression = false;
-  Token *tmp = peekToken();
-  if (tmp->type == TokenType::kWildCard) {
+  Token *expr = peekToken();
+  if (expr->type == TokenType::kWildCard) {
     nextToken();
     wild_expression = true;
-    tmp = peekToken();
+    expr = peekToken();
   }
-  if (tmp->type == TokenType::kQuote) {
+  if (expr->type == TokenType::kQuote) {
     std::string expression = parseFlattenedExpression();
     if (wild_expression) {
       expect(nextToken(), {TokenType::kWildCard});
@@ -380,19 +373,21 @@ QueryDeclaration *QueryParser::parseExpression() {
     }
     return builder_.buildExpression(expression);
   }
-  return builder_.buildWildcardStmt();
+  return builder_.buildWildcardExpression();
 }
 
 std::string QueryParser::parseFlattenedExpression() {
   expect(nextToken(), {TokenType::kQuote});
   std::string expression;
   std::vector<Token *> expr_tokens;
+
   while (peekToken()->type != TokenType::kQuote) {
     Token *tmp  = nextToken();
     expr_tokens.push_back(tmp);
   }
   expect(nextToken(), {TokenType::kQuote});
   expr_tokens.push_back(new EndOfFileToken());
+
   return Parser::ParseExpression(expr_tokens)->ToString();
 }
 

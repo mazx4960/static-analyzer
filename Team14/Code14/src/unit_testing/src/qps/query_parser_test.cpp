@@ -3,7 +3,7 @@
 #include <algorithm>
 
 #include "qps/pql/query_call.h"
-#include "qps/query_parser.h"
+#include "qps/query_parser/query_parser.h"
 
 
 TEST(QueryParserTest, AssignDeclarationParseTest) {
@@ -131,7 +131,7 @@ TEST(QueryParserTest, StringEntRefDeclarationParseTest) {
   };
   QueryParser parser = QueryParser(ent_ref_tokens);
   QueryDeclaration *ent_ref_declaration = parser.parseEntRefDeclaration();
-  ASSERT_EQ(*ent_ref_declaration, StringDeclaration("abc"));
+  ASSERT_EQ(*ent_ref_declaration, IdentDeclaration("abc"));
 }
 
 TEST(QueryParserTest, SymbolEntRefDeclarationParseTest) {
@@ -471,7 +471,7 @@ TEST(QueryParserTest, ValidSingleUsesClauseSynonymStringTest) {
   parser.parse();
 
   QueryDeclaration *v1 = new AssignDeclaration(new QuerySynonym("v1"));
-  QueryDeclaration *i2 = new StringDeclaration("west");
+  QueryDeclaration *i2 = new IdentDeclaration("west");
   Query expected_query = Query(std::vector<QueryDeclaration *>{v1, i2},
                                new SelectCall(v1, std::vector<QueryClause *>{new UsesClause(v1, i2)}));
 
@@ -618,7 +618,7 @@ TEST(QueryParserTest, ValidSingleUsesClauseIntegerStringTest) {
 
   QueryDeclaration *v1 = new AssignDeclaration(new QuerySynonym("v1"));
   QueryDeclaration *i1 = new IntegerDeclaration("1");
-  QueryDeclaration *i2 = new StringDeclaration("t");
+  QueryDeclaration *i2 = new IdentDeclaration("t");
   Query expected_query = Query(std::vector<QueryDeclaration *>{i1, i2},
                                new SelectCall(i1, std::vector<QueryClause *>{new UsesClause(i1, i2)}));
 
@@ -651,7 +651,7 @@ TEST(QueryParserTest, InvalidSingleUsesClauseWildcardStringTest) {
       new WildCardToken(), new CommaToken(), new QuoteToken(), new SymbolToken("a"), new QuoteToken(), new RoundCloseBracketToken(),
       new EndOfFileToken()};
   QueryParser parser = QueryParser(single_clause_parent_query);
-  ASSERT_THROW(parser.parse(), ParseSyntaxError);
+  ASSERT_THROW(parser.parse(), ParseSemanticError);
 }
 
 TEST(QueryParserTest, ValidSinglePatternClauseSymbolExprTest) {
@@ -669,7 +669,7 @@ TEST(QueryParserTest, ValidSinglePatternClauseSymbolExprTest) {
   Query expected_query =
       Query(std::vector<QueryDeclaration *>{a},
             new SelectCall(a, {new AssignPatternClause(a,
-                                                   new StringDeclaration("x"),
+                                                   new IdentDeclaration("x"),
                                                    new ExpressionDeclaration("((x)+(y))"))}));
 
   // check declarations

@@ -143,7 +143,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
   auto *const_dec = new ConstantDeclaration(new QuerySynonym("const_dec"));
   auto *proc_dec = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
   auto *expr_dec = new ExpressionDeclaration("x+y");
-  auto *str_dec = new StringDeclaration("string_dec");
+  auto *str_dec = new IdentDeclaration("string_dec");
   auto *int_dec = new IntegerDeclaration("123");
   auto *wild_dec = new WildCardStmtDeclaration();
 
@@ -183,7 +183,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   auto *const_dec_1 = new ConstantDeclaration(new QuerySynonym("const_dec_1"));
   auto *proc_dec_1 = new ProcedureDeclaration(new QuerySynonym("proc_dec_1"));
   auto *expr_dec_1 = new ExpressionDeclaration("x+y");
-  auto *str_dec_1 = new StringDeclaration("string_dec_1");
+  auto *str_dec_1 = new IdentDeclaration("string_dec_1");
   auto *int_dec_1 = new IntegerDeclaration("123");
   auto *wild_dec_1 = new WildCardStmtDeclaration();
 
@@ -198,7 +198,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   auto *const_dec_2 = new ConstantDeclaration(new QuerySynonym("const_dec_2"));
   auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec_2"));
   auto *expr_dec_2 = new ExpressionDeclaration("x+y");
-  auto *str_dec_2 = new StringDeclaration("string_dec_2");
+  auto *str_dec_2 = new IdentDeclaration("string_dec_2");
   auto *int_dec_2 = new IntegerDeclaration("123");
   auto *wild_dec_2 = new WildCardStmtDeclaration();
 
@@ -249,7 +249,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
   auto *const_dec_1 = new ConstantDeclaration(new QuerySynonym("const_dec"));
   auto *proc_dec_1 = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
   auto *expr_dec_1 = new ExpressionDeclaration("x+y");
-  auto *str_dec_1 = new StringDeclaration("string_dec");
+  auto *str_dec_1 = new IdentDeclaration("string_dec");
   auto *int_dec_1 = new IntegerDeclaration("123");
   auto *wild_dec_1 = new WildCardStmtDeclaration();
 
@@ -264,7 +264,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
   auto *const_dec_2 = new ConstantDeclaration(new QuerySynonym("const_dec"));
   auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
   auto *expr_dec_2 = new ExpressionDeclaration("x+y");
-  auto *str_dec_2 = new StringDeclaration("string_dec");
+  auto *str_dec_2 = new IdentDeclaration("string_dec");
   auto *int_dec_2 = new IntegerDeclaration("123");
   auto *wild_dec_2 = new WildCardStmtDeclaration();
 

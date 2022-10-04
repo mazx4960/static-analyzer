@@ -157,9 +157,9 @@ class WildCardExpressionDeclaration : public QueryDeclaration {
 };
 
 // Inline declaration of string eg. Modifies("x", v)
-class StringDeclaration : public QueryDeclaration {
+class IdentDeclaration : public QueryDeclaration {
  public:
-  explicit StringDeclaration(std::string string) : QueryDeclaration(EntityType::kString, std::move(string)) {
+  explicit IdentDeclaration(std::string string) : QueryDeclaration(EntityType::kString, std::move(string)) {
   }
 };
 

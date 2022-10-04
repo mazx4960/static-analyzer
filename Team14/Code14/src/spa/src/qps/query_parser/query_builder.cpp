@@ -46,17 +46,27 @@ WildCardEntDeclaration * QueryBuilder::buildWildcardEnt() {
 IntegerDeclaration *QueryBuilder::buildLiteral(const std::string &number) {
   return new IntegerDeclaration(number);
 }
-StringDeclaration *QueryBuilder::buildString(const std::string &str) {
-  return new StringDeclaration(str);
+IdentDeclaration *QueryBuilder::buildIdent(const std::string &str) {
+  return new IdentDeclaration(str);
 }
 SelectCall *QueryBuilder::buildSelectCall(QueryDeclaration *synonym_declaration, std::vector<QueryClause *> clause_vector) {
   this->query_call_ = new SelectCall(synonym_declaration, std::move(clause_vector));
   return this->query_call_;
 }
-PatternClause *QueryBuilder::buildAssignPattern(QueryDeclaration *pattern_synonym,
-                                                QueryDeclaration *first_param,
-                                                QueryDeclaration *second_param) {
-  return new AssignPatternClause(pattern_synonym, first_param, second_param);
+PatternClause *QueryBuilder::buildAssignPattern(QueryDeclaration *syn_assign,
+                                                QueryDeclaration *ent_ref,
+                                                QueryDeclaration *expression_spec) {
+  auto pattern_rules = getPatternRules();
+  if (pattern_rules[0].find(syn_assign->getType()) == pattern_rules[0].end()) {
+    throw ParseSemanticError("Invalid syn_assign: " + EntityTypeToString(syn_assign->getType()));
+  }
+  if (pattern_rules[1].find(ent_ref->getType()) == pattern_rules[1].end()) {
+    throw ParseSemanticError("Invalid ent_ref: " + EntityTypeToString(ent_ref->getType()));
+  }
+  if (pattern_rules[2].find(expression_spec->getType()) == pattern_rules[2].end()) {
+    throw ParseSemanticError("Invalid expression: " + EntityTypeToString(expression_spec->getType()));
+  }
+  return new AssignPatternClause(syn_assign, ent_ref, expression_spec);
 }
 
 QueryDeclaration *QueryBuilder::buildWildcardExpression(std::string expression) {
@@ -65,21 +75,19 @@ QueryDeclaration *QueryBuilder::buildWildcardExpression(std::string expression) 
 QueryDeclaration *QueryBuilder::buildExpression(std::string expression) {
   return new ExpressionDeclaration(std::move(expression));
 }
-QueryDeclaration *QueryBuilder::getStmtDeclaration(const std::string& synonym) {
-  QueryDeclaration *declaration = getDeclaration(synonym);
-  if ((GetStmtRefTypes().count(declaration->getType()) == 0U)) {
-    throw ParseSemanticError("Synonym given is not a stmtref: " + synonym);
-  }
-  return declaration;
-}
-QueryDeclaration *QueryBuilder::getEntDeclaration(const std::string& synonym) {
-  QueryDeclaration *declaration = getDeclaration(synonym);
-  if ((GetEntRefTypes().count(declaration->getType()) == 0U)) {
-    throw ParseSemanticError("Synonym given is not aa entref: " + synonym);
-  }
-  return declaration;
-}
+
 SuchThatClause *QueryBuilder::buildSuchThat(RsType type, QueryDeclaration *first, QueryDeclaration *second) {
+  auto st_rules = getSuchThatRules();
+  if (st_rules.find(type) == st_rules.end()) {
+    throw ParseSemanticError("Unsupported relationship type: " + RsTypeToString(type));
+  }
+  auto relationship_rules = st_rules[type];
+  if (relationship_rules[0].find(first->getType()) == relationship_rules[0].end()) {
+    throw ParseSemanticError("Invalid first arg: " + EntityTypeToString(first->getType()));
+  }
+  if (relationship_rules[1].find(second->getType()) == relationship_rules[1].end()) {
+    throw ParseSemanticError("Invalid second arg: " + EntityTypeToString(second->getType()));
+  }
   return new SuchThatClause(type, first, second);
 }
 std::vector<QueryDeclaration *> QueryBuilder::getDeclarations() {

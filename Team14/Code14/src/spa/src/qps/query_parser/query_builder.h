@@ -7,6 +7,7 @@
 #include "commons/lexer/token.h"
 #include "commons/parser/parser_exceptions.h"
 #include "qps/pql/query.h"
+#include "query_rules.h"
 
 class QueryBuilder {
  private:
@@ -25,18 +26,16 @@ class QueryBuilder {
   std::vector<QueryDeclaration *> getDeclarations();
   bool isDeclared(const std::string &synonym);
 
-  WildCardStmtDeclaration *buildWildcardStmt();
-  IntegerDeclaration *buildLiteral(const std::string &number);
-  StringDeclaration *buildString(const std::string &str);
-  WildCardEntDeclaration * buildWildcardEnt();
+  static WildCardStmtDeclaration *buildWildcardStmt();
+  static IntegerDeclaration *buildLiteral(const std::string &number);
+  IdentDeclaration *buildIdent(const std::string &str);
+  static WildCardEntDeclaration * buildWildcardEnt();
   SelectCall *buildSelectCall(QueryDeclaration *synonym_declaration, std::vector<QueryClause *> clause_vector);
   QueryCall *getQueryCall();
-  PatternClause *buildAssignPattern(QueryDeclaration *pattern_synonym,
-                                    QueryDeclaration *first_param,
-                                    QueryDeclaration *second_param);
-  SuchThatClause *buildSuchThat(RsType type, QueryDeclaration *first, QueryDeclaration *second);
-  QueryDeclaration *buildWildcardExpression(std::string expression);
+  PatternClause *buildAssignPattern(QueryDeclaration *syn_assign,
+                                    QueryDeclaration *ent_ref,
+                                    QueryDeclaration *expression_spec);
+  static SuchThatClause *buildSuchThat(RsType type, QueryDeclaration *first, QueryDeclaration *second);
+  QueryDeclaration *buildWildcardExpression(std::string expression = "");
   QueryDeclaration *buildExpression(std::string expression);
-  QueryDeclaration *getStmtDeclaration(const std::string& synonym);
-  QueryDeclaration *getEntDeclaration(const std::string& synonym);
 };

@@ -9,7 +9,7 @@
 #include "commons/parser/parser_exceptions.h"
 #include "qps/pql/query.h"
 #include "qps/pql/query_declaration.h"
-#include "qps/query_builder.h"
+#include "query_builder.h"
 
 class QueryParser {
  private:
@@ -29,8 +29,6 @@ class QueryParser {
   QueryCall *getQueryCall();
   void parseDeclaration();
   QueryDeclaration *getDeclaration(Token *synonym);
-  QueryDeclaration *getStmtDeclaration(Token *synonym);
-  QueryDeclaration *getEntDeclaration(Token *synonym);
   QuerySynonym *parseSynonym();
   QueryClause *parseClause();
   PatternClause *parsePattern();
@@ -40,15 +38,15 @@ class QueryParser {
   SuchThatClause *parseUses();
   SuchThatClause *parseModifies();
   QueryDeclaration *parseExpression();
-  StringDeclaration *parseQuotedDeclaration();
+  IdentDeclaration *parseQuotedDeclaration();
   QueryDeclaration *parseStmtRefDeclaration();
   QueryDeclaration *parseEntRefDeclaration();
   IntegerDeclaration *parseLiteralDeclaration();
-  StringDeclaration *parseStringDeclaration();
+  IdentDeclaration *parseIdentDeclaration();
   QueryDeclaration *parseWildcard(EntityType type);
   QueryDeclaration *parseAnyRefDeclaration();
   std::string parseFlattenedExpression();
-  void expect(Token *token, const std::unordered_set<TokenType> &expected_types);
+  static void expect(Token *token, const std::unordered_set<TokenType> &expected_types);
   SuchThatClause *parseCalls();
   SuchThatClause *parseNext();
   SuchThatClause *parseAffects();

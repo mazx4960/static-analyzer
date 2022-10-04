@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "qps/query_builder.h"
+#include "qps/query_parser/query_builder.h"
 
 TEST(BuilderTest, QueryBuilderTest) {
   auto *query_synonym = new QuerySynonym("v");

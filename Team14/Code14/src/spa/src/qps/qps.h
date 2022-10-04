@@ -2,7 +2,7 @@
 
 #include "pkb/pkb.h"
 #include "qps/query_evaluator/query_evaluator.h"
-#include "qps/query_parser.h"
+#include "qps/query_parser/query_parser.h"
 #include "query_lexer.h"
 
 class QPS {

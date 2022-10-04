@@ -80,7 +80,7 @@ inline std::string RsTypeToString(RsType type) {
     case RsType::kAffects: return "Affects";
     case RsType::kAffectsT:return "Affects*";
     case RsType::kAssignPattern: return "pattern";
-
+    default: return "Unknown";
   }
 }
 
@@ -88,17 +88,7 @@ inline std::unordered_set<EntityType> all_stmt_types = {EntityType::kAssignStmt,
                                                  EntityType::kIfStmt, EntityType::kPrintStmt,
                                                  EntityType::kReadStmt, EntityType::kWhileStmt};
 
-inline std::unordered_set<EntityType> stmt_ref_types = {EntityType::kAssignStmt, EntityType::kCallStmt,
-                                                        EntityType::kIfStmt, EntityType::kPrintStmt,
-                                                        EntityType::kReadStmt, EntityType::kWhileStmt,
-                                                        EntityType::kStatement};
-inline std::unordered_set<EntityType> ent_ref_types = {EntityType::kVariable, EntityType::kConstant, EntityType::kProcedure};
+
 inline std::unordered_set<EntityType> GetAllStmtTypes() {
   return all_stmt_types;
-}
-inline std::unordered_set<EntityType> GetStmtRefTypes() {
-  return stmt_ref_types;
-}
-inline std::unordered_set<EntityType> GetEntRefTypes() {
-  return ent_ref_types;
 }
