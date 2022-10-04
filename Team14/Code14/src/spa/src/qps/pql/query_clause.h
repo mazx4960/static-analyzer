@@ -78,7 +78,7 @@ class ParentClause : public SuchThatClause {
 class ParentAllClause : public SuchThatClause {
  public:
   explicit ParentAllClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(RsType::kParentAll, first, second) {
+      : SuchThatClause(RsType::kParentT, first, second) {
   }
 };
 
@@ -92,7 +92,7 @@ class FollowsClause : public SuchThatClause {
 class FollowsAllClause : public SuchThatClause {
  public:
   explicit FollowsAllClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(RsType::kFollowsAll, first, second) {
+      : SuchThatClause(RsType::kFollowsT, first, second) {
   }
 };
 

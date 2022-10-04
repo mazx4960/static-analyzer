@@ -11,6 +11,9 @@ Token::Token(TokenType type, std::string value) {
 bool Token::operator==(const Token &other) const {
   return this->type == other.type && this->value == other.value;
 }
+bool Token::operator!=(const Token &other) const {
+  return !(*this == other);
+}
 std::string Token::ToString() const {
   std::string type_string;
   switch (this->type) {

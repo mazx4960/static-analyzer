@@ -29,6 +29,7 @@ class Token {
   std::string value;
 
   bool operator==(const Token &other) const;
+  bool operator!=(const Token &other) const;
   [[nodiscard]] std::string ToString() const;
 };
 
