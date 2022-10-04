@@ -141,6 +141,13 @@ class WildCardStmtDeclaration : public QueryDeclaration {
   }
 };
 
+// Inline declaration of  Wildcard "_"
+class WildCardProcedureDeclaration : public QueryDeclaration {
+ public:
+  explicit WildCardProcedureDeclaration() : QueryDeclaration(EntityType::kWildcardProcedure) {
+  }
+};
+
 // Inline declaration of Expression "(x + (y * z))"
 class ExpressionDeclaration : public QueryDeclaration {
  public:

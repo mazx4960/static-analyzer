@@ -50,4 +50,5 @@ class QueryParser {
   void parseCalls();
   void parseNext();
   void parseAffects();
+  QueryDeclaration *parseProcedureRefDeclaration();
 };

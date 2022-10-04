@@ -56,6 +56,9 @@ WildCardStmtDeclaration *QueryBuilder::buildWildcardStmt() {
 WildCardEntDeclaration * QueryBuilder::buildWildcardEnt() {
   return new WildCardEntDeclaration();
 }
+WildCardProcedureDeclaration * QueryBuilder::buildWildcardProcedure() {
+  return new WildCardProcedureDeclaration();
+}
 IntegerDeclaration *QueryBuilder::buildLiteral(const std::string &number) {
   return new IntegerDeclaration(number);
 }

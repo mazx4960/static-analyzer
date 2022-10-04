@@ -111,6 +111,25 @@ QueryDeclaration *QueryParser::parseEntRefDeclaration() {
   return declaration;
 }
 
+QueryDeclaration *QueryParser::parseProcedureRefDeclaration() {
+  Token *procref = peekToken();
+  QueryDeclaration *declaration = nullptr;
+  switch (procref->type) {
+    case TokenType::kQuote:
+      declaration = parseQuotedDeclaration();
+      break;
+    case TokenType::kSymbol:
+      declaration = getDeclaration(nextToken());
+      break;
+    case TokenType::kWildCard:
+      declaration = parseWildcard(EntityType::kWildcardProcedure);
+      break;
+    default:
+      throw ParseSyntaxError("Unknown ProcedureRef: " + procref->value);
+  }
+  return declaration;
+}
+
 QueryDeclaration *QueryParser::parseAnyRefDeclaration() {
   Token *ref = peekToken();
   QueryDeclaration *declaration = nullptr;
@@ -301,9 +320,9 @@ void QueryParser::parseCalls() {
     calls_all = true;
   }
   expect(nextToken(), {TokenType::kRoundOpenBracket});
-  QueryDeclaration *first = parseEntRefDeclaration();
+  QueryDeclaration *first = parseProcedureRefDeclaration();
   expect(nextToken(), {TokenType::kComma});
-  QueryDeclaration *second = parseEntRefDeclaration();;
+  QueryDeclaration *second = parseProcedureRefDeclaration();;
   expect(nextToken(), {TokenType::kRoundCloseBracket});
 
   if (calls_all) {
@@ -398,6 +417,8 @@ QueryDeclaration *QueryParser::parseWildcard(EntityType type) {
       return builder_.buildWildcardStmt();
     case EntityType::kWildcardEnt:
       return builder_.buildWildcardEnt();
+    case EntityType::kWildcardProcedure:
+      return builder_.buildWildcardProcedure();
     default:
       throw ParseSyntaxError("Wrong usage");
   }

@@ -41,4 +41,5 @@ class QueryBuilder {
   QueryDeclaration *buildExpression(std::string expression);
   void withAssignPattern(QueryDeclaration *syn_assign, QueryDeclaration *ent_ref, QueryDeclaration *expression_spec);
   void withSuchThat(RsType type, QueryDeclaration *first, QueryDeclaration *second);
+  WildCardProcedureDeclaration *buildWildcardProcedure();
 };
