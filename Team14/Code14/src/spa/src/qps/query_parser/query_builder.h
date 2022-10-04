@@ -35,8 +35,8 @@ class QueryBuilder {
   static WildCardEntDeclaration * buildWildcardEnt();
   void withSelectCall(QueryDeclaration *synonym_declaration);
   QueryCall *getQueryCall();
-  PatternClause *buildAssignPattern(PatternClause *clause);
-  static SuchThatClause *buildSuchThat(SuchThatClause *clause);
+  void buildAssignPattern(PatternClause *clause);
+  void buildSuchThat(SuchThatClause *clause);
   QueryDeclaration *buildWildcardExpression(std::string expression = "");
   QueryDeclaration *buildExpression(std::string expression);
   void withAssignPattern(QueryDeclaration *syn_assign, QueryDeclaration *ent_ref, QueryDeclaration *expression_spec);

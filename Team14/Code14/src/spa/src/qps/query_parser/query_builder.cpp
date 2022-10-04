@@ -11,10 +11,10 @@ Query *QueryBuilder::build() {
   for (auto *clause:unchecked_clauses_) {
     switch (clause->getClauseType()) {
       case ClauseType::kPattern:
-        built_clauses_.push_back(buildAssignPattern(static_cast<PatternClause *>(clause)));
+        buildAssignPattern(static_cast<PatternClause *>(clause));
         break;
       case ClauseType::kSuchThat:
-        built_clauses_.push_back(buildSuchThat(static_cast<SuchThatClause *>(clause)));
+        buildSuchThat(static_cast<SuchThatClause *>(clause));
         break;
       default:
         throw ParseSemanticError("Unknown error: ");
@@ -85,7 +85,7 @@ void QueryBuilder::withSuchThat(RsType type, QueryDeclaration *first, QueryDecla
 }
 
 
-PatternClause *QueryBuilder::buildAssignPattern(PatternClause *clause) {
+void QueryBuilder::buildAssignPattern(PatternClause *clause) {
   QueryDeclaration *syn_assign = clause->getFirst();
   QueryDeclaration *ent_ref = clause->getSecond();
   QueryDeclaration *expression_spec = clause->getThird();
@@ -99,11 +99,11 @@ PatternClause *QueryBuilder::buildAssignPattern(PatternClause *clause) {
   if (pattern_rules[2].find(expression_spec->getType()) == pattern_rules[2].end()) {
     throw ParseSemanticError("Invalid expression: " + EntityTypeToString(expression_spec->getType()));
   }
-  return new AssignPatternClause(syn_assign, ent_ref, expression_spec);
+  built_clauses_.push_back(clause);
 }
 
 
-SuchThatClause *QueryBuilder::buildSuchThat(SuchThatClause *clause) {
+void QueryBuilder::buildSuchThat(SuchThatClause *clause) {
   RsType type = clause->getSuchThatType();
   QueryDeclaration *first = clause->getFirst();
   QueryDeclaration *second = clause->getSecond();
@@ -118,8 +118,7 @@ SuchThatClause *QueryBuilder::buildSuchThat(SuchThatClause *clause) {
   if (relationship_rules[1].find(second->getType()) == relationship_rules[1].end()) {
     throw ParseSemanticError("Invalid second arg: " + EntityTypeToString(second->getType()));
   }
-
-  return new SuchThatClause(type, first, second);
+  built_clauses_.push_back(clause);
 }
 std::vector<QueryDeclaration *> QueryBuilder::getDeclarations() {
   return this->query_declarations_;
