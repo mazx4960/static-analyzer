@@ -38,6 +38,9 @@ EntityPointerUnorderedSet EvaluationStrategy::getCandidates(QueryDeclaration *de
   } else if (declaration->getType() == EntityType::kWildcardEnt) {
     EntityPointerUnorderedSet all_variables = pkb_->getEntities(EntityType::kVariable);
     candidates = all_variables;
+  } else if (declaration->getType() == EntityType::kWildcardProcedure) {
+    EntityPointerUnorderedSet all_variables = pkb_->getEntities(EntityType::kProcedure);
+    candidates = all_variables;
   } else {
     candidates = declaration->getContext();
   }

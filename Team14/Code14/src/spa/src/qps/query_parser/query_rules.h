@@ -35,7 +35,7 @@ inline static EntityTypeSet syn_assign_types = {EntityType::kAssignStmt};
 inline static EntityTypeSet ent_ref_variable_type = {EntityType::kVariable, EntityType::kString,
                                                      EntityType::kWildcardEnt};
 inline static EntityTypeSet ent_ref_procedure_type = {EntityType::kProcedure, EntityType::kString,
-                                                     EntityType::kWildcardEnt};
+                                                     EntityType::kWildcardProcedure};
 inline static EntityTypeSet expression_types = {EntityType::kExpression, EntityType::kWildcardExpression};
 
 inline static RelationshipRules follows_args_rules = {stmt_ref_types, stmt_ref_types};
