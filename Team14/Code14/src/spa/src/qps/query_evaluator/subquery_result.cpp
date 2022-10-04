@@ -96,10 +96,18 @@ bool SubqueryResult::Uses(QuerySynonym *synonym) {
          }) != synonyms_.end();
 }
 
-std::vector<QuerySynonym *> SubqueryResult::GetCommonSynonyms(const SubqueryResult &other) {
-  std::vector<QuerySynonym *> common_synonyms(std::min(synonyms_.size(), other.synonyms_.size()));
-  auto end_pos = std::set_intersection(synonyms_.begin(), synonyms_.end(), other.synonyms_.begin(), other.synonyms_.end(), common_synonyms.begin(), QuerySynonymPointerEquality());
-  return std::vector<QuerySynonym *>(common_synonyms.begin(), end_pos);
+std::vector<QuerySynonym *> SubqueryResult::GetCommonSynonyms(SubqueryResult other) {
+  std::vector<QuerySynonym *> common_synonyms{};
+  for (auto *syn : synonyms_) spdlog::debug("This synonym: {}", syn->toString());
+  for (auto *syn : other.synonyms_) spdlog::debug("Other synonym: {}", syn->toString());
+  spdlog::debug("Equal? : {}", QuerySynonymPointerEquality()(synonyms_[0], other.synonyms_[0]));
+  spdlog::debug("Strings equal? : {}", synonyms_[0]->toString() == other.synonyms_[0]->toString());
+  for (auto *synonym : synonyms_) {
+    if (other.Uses(synonym)) {
+      common_synonyms.push_back(synonym);
+    }
+  }
+  return common_synonyms;
 }
 EntityPointerUnorderedSet SubqueryResult::GetColumn(QuerySynonym *synonym) {
   if (std::find(synonyms_.begin(), synonyms_.end(), synonym) == synonyms_.end()) {
@@ -119,8 +127,8 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
   all_synonyms.reserve(synonyms_.size() + other.synonyms_.size());
   all_synonyms.insert(all_synonyms.end(), synonyms_.begin(), synonyms_.end());
   all_synonyms.insert(all_synonyms.end(), other.synonyms_.begin(), other.synonyms_.end());
-  std::sort(all_synonyms.begin(), all_synonyms.end());
-  all_synonyms.erase(std::unique(all_synonyms.begin(), all_synonyms.end()), all_synonyms.end());
+  std::sort(all_synonyms.begin(), all_synonyms.end(), QuerySynonymPointerEquality());
+  all_synonyms.erase(std::unique(all_synonyms.begin(), all_synonyms.end(), QuerySynonymPointerEquality()), all_synonyms.end());
 
   std::vector<ResultRow > new_rows{};
   for (auto this_row : table_rows_) {
