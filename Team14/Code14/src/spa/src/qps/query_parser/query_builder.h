@@ -16,9 +16,12 @@ class QueryBuilder {
   std::unordered_set<std::string> synonyms_;
 
   SelectCall *query_call_;
+  QueryDeclaration *selected_declaration_;
+  std::vector<QueryClause *> unchecked_clauses_;
+  std::vector<QueryClause *> built_clauses_;
 
  public:
-  explicit QueryBuilder();
+  QueryBuilder();
   Query *build();
   QuerySynonym *buildSynonym(const std::string &synonym);
   QueryDeclaration *buildDeclaration(EntityType type, QuerySynonym *synonym);
@@ -30,12 +33,12 @@ class QueryBuilder {
   static IntegerDeclaration *buildLiteral(const std::string &number);
   IdentDeclaration *buildIdent(const std::string &str);
   static WildCardEntDeclaration * buildWildcardEnt();
-  SelectCall *buildSelectCall(QueryDeclaration *synonym_declaration, std::vector<QueryClause *> clause_vector);
+  void withSelectCall(QueryDeclaration *synonym_declaration);
   QueryCall *getQueryCall();
-  PatternClause *buildAssignPattern(QueryDeclaration *syn_assign,
-                                    QueryDeclaration *ent_ref,
-                                    QueryDeclaration *expression_spec);
-  static SuchThatClause *buildSuchThat(RsType type, QueryDeclaration *first, QueryDeclaration *second);
+  PatternClause *buildAssignPattern(PatternClause *clause);
+  static SuchThatClause *buildSuchThat(SuchThatClause *clause);
   QueryDeclaration *buildWildcardExpression(std::string expression = "");
   QueryDeclaration *buildExpression(std::string expression);
+  void withAssignPattern(QueryDeclaration *syn_assign, QueryDeclaration *ent_ref, QueryDeclaration *expression_spec);
+  void withSuchThat(RsType type, QueryDeclaration *first, QueryDeclaration *second);
 };

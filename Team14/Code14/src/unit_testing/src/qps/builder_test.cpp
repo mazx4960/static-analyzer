@@ -14,5 +14,4 @@ TEST(BuilderTest, QueryBuilderTest) {
 
   QueryBuilder builder = QueryBuilder();
   ASSERT_EQ(*builder.buildDeclaration(EntityType::kVariable, query_synonym), *query_declaration);
-  ASSERT_EQ(builder.buildSelectCall(query_declaration, clause_vector)->getType(), query_call->getType());
 }

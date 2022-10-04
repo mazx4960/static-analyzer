@@ -8,7 +8,20 @@
 
 QueryBuilder::QueryBuilder() = default;
 Query *QueryBuilder::build() {
-  return new Query(this->query_declarations_, this->query_call_);
+  for (auto *clause:unchecked_clauses_) {
+    switch (clause->getClauseType()) {
+      case ClauseType::kPattern:
+        built_clauses_.push_back(buildAssignPattern(static_cast<PatternClause *>(clause)));
+        break;
+      case ClauseType::kSuchThat:
+        built_clauses_.push_back(buildSuchThat(static_cast<SuchThatClause *>(clause)));
+        break;
+      default:
+        throw ParseSemanticError("Unknown error: ");
+    }
+  }
+  query_call_ = new SelectCall(selected_declaration_, built_clauses_);
+  return new Query(this->query_declarations_, query_call_);
 }
 
 QuerySynonym *QueryBuilder::buildSynonym(const std::string &synonym) {
@@ -33,7 +46,7 @@ QueryDeclaration *QueryBuilder::getDeclaration(const std::string &synonym) {
       return declaration;
     }
   }
-  throw ParseSemanticError("Missing declaration: " + synonym);
+  return nullptr;
 }
 
 bool QueryBuilder::isDeclared(const std::string &synonym) { return this->synonyms_.count(synonym) != 0U; }
@@ -49,13 +62,33 @@ IntegerDeclaration *QueryBuilder::buildLiteral(const std::string &number) {
 IdentDeclaration *QueryBuilder::buildIdent(const std::string &str) {
   return new IdentDeclaration(str);
 }
-SelectCall *QueryBuilder::buildSelectCall(QueryDeclaration *synonym_declaration, std::vector<QueryClause *> clause_vector) {
-  this->query_call_ = new SelectCall(synonym_declaration, std::move(clause_vector));
-  return this->query_call_;
+QueryDeclaration *QueryBuilder::buildWildcardExpression(std::string expression) {
+  return new WildCardExpressionDeclaration(std::move(expression));
 }
-PatternClause *QueryBuilder::buildAssignPattern(QueryDeclaration *syn_assign,
+QueryDeclaration *QueryBuilder::buildExpression(std::string expression) {
+  return new ExpressionDeclaration(std::move(expression));
+}
+void QueryBuilder::withSelectCall(QueryDeclaration *synonym_declaration) {
+  this->selected_declaration_ = synonym_declaration;
+}
+
+void QueryBuilder::withAssignPattern(QueryDeclaration *syn_assign,
                                                 QueryDeclaration *ent_ref,
                                                 QueryDeclaration *expression_spec) {
+  unchecked_clauses_.push_back(new AssignPatternClause(syn_assign, ent_ref, expression_spec));
+}
+
+
+
+void QueryBuilder::withSuchThat(RsType type, QueryDeclaration *first, QueryDeclaration *second) {
+  unchecked_clauses_.push_back(new SuchThatClause(type, first, second));
+}
+
+
+PatternClause *QueryBuilder::buildAssignPattern(PatternClause *clause) {
+  QueryDeclaration *syn_assign = clause->getFirst();
+  QueryDeclaration *ent_ref = clause->getSecond();
+  QueryDeclaration *expression_spec = clause->getThird();
   auto pattern_rules = getPatternRules();
   if (pattern_rules[0].find(syn_assign->getType()) == pattern_rules[0].end()) {
     throw ParseSemanticError("Invalid syn_assign: " + EntityTypeToString(syn_assign->getType()));
@@ -69,14 +102,11 @@ PatternClause *QueryBuilder::buildAssignPattern(QueryDeclaration *syn_assign,
   return new AssignPatternClause(syn_assign, ent_ref, expression_spec);
 }
 
-QueryDeclaration *QueryBuilder::buildWildcardExpression(std::string expression) {
-  return new WildCardExpressionDeclaration(std::move(expression));
-}
-QueryDeclaration *QueryBuilder::buildExpression(std::string expression) {
-  return new ExpressionDeclaration(std::move(expression));
-}
 
-SuchThatClause *QueryBuilder::buildSuchThat(RsType type, QueryDeclaration *first, QueryDeclaration *second) {
+SuchThatClause *QueryBuilder::buildSuchThat(SuchThatClause *clause) {
+  RsType type = clause->getSuchThatType();
+  QueryDeclaration *first = clause->getFirst();
+  QueryDeclaration *second = clause->getSecond();
   auto st_rules = getSuchThatRules();
   if (st_rules.find(type) == st_rules.end()) {
     throw ParseSemanticError("Unsupported relationship type: " + RsTypeToString(type));
@@ -88,7 +118,6 @@ SuchThatClause *QueryBuilder::buildSuchThat(RsType type, QueryDeclaration *first
   if (relationship_rules[1].find(second->getType()) == relationship_rules[1].end()) {
     throw ParseSemanticError("Invalid second arg: " + EntityTypeToString(second->getType()));
   }
-
 
   return new SuchThatClause(type, first, second);
 }
