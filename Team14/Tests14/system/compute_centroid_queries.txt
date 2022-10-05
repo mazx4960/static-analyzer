@@ -320,11 +320,6 @@ Select a such that Next(1, 2)
 5000
 713 - select all procedures given valid Next relationship
 procedure p;
-Select p such that Next(19, 21)
-main, readPoint, printResults, computeCentroid
-5000
-713 - select all procedures given valid Next relationship
-procedure p;
 Select p such that Next*(19, 23)
 main, readPoint, printResults, computeCentroid
 5000
