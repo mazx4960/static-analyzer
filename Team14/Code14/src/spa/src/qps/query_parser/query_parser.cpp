@@ -54,7 +54,7 @@ void QueryParser::parseDeclaration() {
   try {
     type = QueryKeywords::declarationKeywordToType(prefix->value);
   }
-  catch (std::out_of_range& oor) {
+  catch (std::out_of_range &oor) {
     throw ParseSyntaxError("Unknown declaration type: " + prefix->value);
   }
   builder_.buildDeclaration(type, parseSynonym());
@@ -77,17 +77,13 @@ QueryDeclaration *QueryParser::parseStmtRefDeclaration() {
   Token *stmtref = peekToken();
   QueryDeclaration *declaration = nullptr;
   switch (stmtref->type) {
-    case TokenType::kLiteral:
-      declaration = parseLiteralDeclaration();
+    case TokenType::kLiteral:declaration = parseLiteralDeclaration();
       break;
-    case TokenType::kSymbol:
-      declaration = getDeclaration(nextToken());
+    case TokenType::kSymbol:declaration = getDeclaration(nextToken());
       break;
-    case TokenType::kWildCard:
-      declaration = parseWildcard(EntityType::kWildcardStmt);
+    case TokenType::kWildCard:declaration = parseWildcard(EntityType::kWildcardStmt);
       break;
-    default:
-      throw ParseSyntaxError("Unknown StmtRef: " + stmtref->value);
+    default:throw ParseSyntaxError("Unknown StmtRef: " + stmtref->value);
   }
   return declaration;
 }
@@ -96,17 +92,13 @@ QueryDeclaration *QueryParser::parseEntRefDeclaration() {
   Token *entref = peekToken();
   QueryDeclaration *declaration = nullptr;
   switch (entref->type) {
-    case TokenType::kQuote:
-      declaration = parseQuotedDeclaration();
+    case TokenType::kQuote:declaration = parseQuotedDeclaration();
       break;
-    case TokenType::kSymbol:
-      declaration = getDeclaration(nextToken());
+    case TokenType::kSymbol:declaration = getDeclaration(nextToken());
       break;
-    case TokenType::kWildCard:
-      declaration = parseWildcard(EntityType::kWildcardEnt);
+    case TokenType::kWildCard:declaration = parseWildcard(EntityType::kWildcardEnt);
       break;
-    default:
-      throw ParseSyntaxError("Unknown EntRef: " + entref->value);
+    default:throw ParseSyntaxError("Unknown EntRef: " + entref->value);
   }
   return declaration;
 }
@@ -115,17 +107,13 @@ QueryDeclaration *QueryParser::parseProcedureRefDeclaration() {
   Token *procref = peekToken();
   QueryDeclaration *declaration = nullptr;
   switch (procref->type) {
-    case TokenType::kQuote:
-      declaration = parseQuotedDeclaration();
+    case TokenType::kQuote:declaration = parseQuotedDeclaration();
       break;
-    case TokenType::kSymbol:
-      declaration = getDeclaration(nextToken());
+    case TokenType::kSymbol:declaration = getDeclaration(nextToken());
       break;
-    case TokenType::kWildCard:
-      declaration = parseWildcard(EntityType::kWildcardProcedure);
+    case TokenType::kWildCard:declaration = parseWildcard(EntityType::kWildcardProcedure);
       break;
-    default:
-      throw ParseSyntaxError("Unknown ProcedureRef: " + procref->value);
+    default:throw ParseSyntaxError("Unknown ProcedureRef: " + procref->value);
   }
   return declaration;
 }
@@ -134,19 +122,14 @@ QueryDeclaration *QueryParser::parseAnyRefDeclaration() {
   Token *ref = peekToken();
   QueryDeclaration *declaration = nullptr;
   switch (ref->type) {
-    case TokenType::kQuote:
-      declaration = parseQuotedDeclaration();
+    case TokenType::kQuote:declaration = parseQuotedDeclaration();
       break;
-    case TokenType::kLiteral:
-      declaration = parseLiteralDeclaration();
+    case TokenType::kLiteral:declaration = parseLiteralDeclaration();
       break;
-    case TokenType::kSymbol:
-      declaration = getDeclaration(nextToken());
+    case TokenType::kSymbol:declaration = getDeclaration(nextToken());
       break;
-    case TokenType::kWildCard:
-      throw ParseSemanticError("Wildcard '_' is not allowed here");
-    default:
-      throw ParseSyntaxError("Unknown Ref: " + ref->value);
+    case TokenType::kWildCard:throw ParseSemanticError("Wildcard '_' is not allowed here");
+    default:throw ParseSyntaxError("Unknown Ref: " + ref->value);
   }
   return declaration;
 }
@@ -210,8 +193,6 @@ void QueryParser::parsePattern() {
   expect(nextToken(), {TokenType::kComma});
   QueryDeclaration *expression_spec = parseExpression();
   expect(nextToken(), {TokenType::kRoundCloseBracket});
-  spdlog::debug("Pattern parsed: pattern {}({}, {})",
-                syn_assign->toString() , ent_ref->toString(), expression_spec->toString());
   builder_.withAssignPattern(syn_assign, ent_ref, expression_spec);
 }
 void QueryParser::parseSuchThat() {
@@ -220,33 +201,25 @@ void QueryParser::parseSuchThat() {
   try {
     rs_type = QueryKeywords::relationshipKeywordToType(relationship->value);
   }
-  catch (std::out_of_range& oor) {
+  catch (std::out_of_range &oor) {
     throw ParseSyntaxError("Unknown such-that relationship: " + relationship->value);
   }
   switch (rs_type) {
-    case RsType::kFollows:
-      parseFollows();
+    case RsType::kFollows:parseFollows();
       break;
-    case RsType::kParent:
-      parseParent();
+    case RsType::kParent:parseParent();
       break;
-    case RsType::kUses:
-      parseUses();
+    case RsType::kUses:parseUses();
       break;
-    case RsType::kModifies:
-      parseModifies();
+    case RsType::kModifies:parseModifies();
       break;
-    case RsType::kCalls:
-      parseCalls();
+    case RsType::kCalls:parseCalls();
       break;
-    case RsType::kNext:
-      parseNext();
+    case RsType::kNext:parseNext();
       break;
-    case RsType::kAffects:
-      parseAffects();
+    case RsType::kAffects:parseAffects();
       break;
-    default:
-      throw ParseSyntaxError("Unknown such-that relationship: " + relationship->value);
+    default:throw ParseSyntaxError("Unknown such-that relationship: " + relationship->value);
   }
 }
 
@@ -400,7 +373,7 @@ std::string QueryParser::parseFlattenedExpression() {
   std::vector<Token *> expr_tokens;
 
   while (peekToken()->type != TokenType::kQuote) {
-    Token *tmp  = nextToken();
+    Token *tmp = nextToken();
     expr_tokens.push_back(tmp);
   }
   expect(nextToken(), {TokenType::kQuote});
@@ -413,14 +386,10 @@ QueryDeclaration *QueryParser::parseWildcard(EntityType type) {
   Token *wildcard = nextToken();
   expect(wildcard, {TokenType::kWildCard});
   switch (type) {
-    case EntityType::kWildcardStmt:
-      return builder_.buildWildcardStmt();
-    case EntityType::kWildcardEnt:
-      return builder_.buildWildcardEnt();
-    case EntityType::kWildcardProcedure:
-      return builder_.buildWildcardProcedure();
-    default:
-      throw ParseSyntaxError("Wrong usage");
+    case EntityType::kWildcardStmt:return builder_.buildWildcardStmt();
+    case EntityType::kWildcardEnt:return builder_.buildWildcardEnt();
+    case EntityType::kWildcardProcedure:return builder_.buildWildcardProcedure();
+    default:throw ParseSyntaxError("Wrong usage");
   }
 }
 std::vector<QueryDeclaration *> QueryParser::getDeclarations() {
@@ -431,7 +400,7 @@ QueryCall *QueryParser::getQueryCall() {
   return this->builder_.getQueryCall();
 }
 
-void QueryParser::expect(Token *token, const std::unordered_set<TokenType>& expected_types) {
+void QueryParser::expect(Token *token, const std::unordered_set<TokenType> &expected_types) {
   if (expected_types.count(token->type) == 0) {
     throw ParseSyntaxError("Invalid token type: " + token->value);
   }
