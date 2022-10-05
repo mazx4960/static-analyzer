@@ -23,7 +23,10 @@ Token *SimpleLexer::next_token() {
 
   char c = advance();
   tmp_ = c;
-  if (isalpha(c)) {
+  if (c == hashtag_) {
+    ignore_comments();
+    return next_token();
+  } else if (isalpha(c)) {
     // Symbol or keyword
     read_alphanumeric();
     if (valid_keywords_.find(tmp_) != valid_keywords_.end()) {

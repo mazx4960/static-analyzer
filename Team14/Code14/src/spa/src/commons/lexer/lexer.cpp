@@ -34,27 +34,43 @@ void Lexer::ignore_whitespace() {
   }
 }
 /*
+ * Ignore comments.
+ */
+void Lexer::ignore_comments() {
+  while (!source_stream_->eof() && peek() != '\n') {
+    advance();
+  }
+}
+/*
  * Read letters from the source stream and updates the tmp attribute.
  */
 void Lexer::read_alpha() {
-  while (isalpha(peek())) { tmp_ += advance(); }
+  while (isalpha(peek())) {
+    tmp_ += advance();
+  }
 }
 /*
  * Read digits from the source stream and updates the tmp attribute.
  */
 void Lexer::read_digits() {
-  while (isdigit(peek())) { tmp_ += advance(); }
+  while (isdigit(peek())) {
+    tmp_ += advance();
+  }
 }
 /*
  * Read letters or digits from the source stream and updates the tmp attribute.
  */
 void Lexer::read_alphanumeric() {
-  while (isalpha(peek()) || isdigit(peek())) { this->tmp_ += this->advance(); }
+  while (isalpha(peek()) || isdigit(peek())) {
+    this->tmp_ += this->advance();
+  }
 }
 
 Token *Lexer::next_token() {
   ignore_whitespace();
-  if (source_stream_->eof()) { return nullptr; }
+  if (source_stream_->eof()) {
+    return nullptr;
+  }
 
   char c = advance();
   tmp_ = c;
