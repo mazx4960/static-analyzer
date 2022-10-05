@@ -3,7 +3,11 @@
 # run stress tests
 test_folder="Team14/Tests14/system"
 result_folder="Team14/Code14/tests"
-test_names=("stress" "stress2")
+test_names=(
+  "qps_stress_1"
+  "sp_stress_1"
+  "sp_stress_2"
+)
 
 for test_name in "${test_names[@]}"; do
     echo "=============================================================="
