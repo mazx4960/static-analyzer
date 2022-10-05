@@ -1,4 +1,4 @@
-//
+//R
 // Created by gabri on 19/9/2022.
 //
 #include "subquery_result.h"
@@ -8,123 +8,152 @@
 #include "spdlog/spdlog.h"
 
 SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDeclaration *first, QueryDeclaration *second)
-    : table_(table), first_decl_(first), second_decl_(second) {
-  for (auto [entity, entity_set] : table) {
-    for (auto *other_entity : entity_set) {
-      if (table_inv_.find(other_entity) == table_inv_.end()) {
-        table_inv_[other_entity] = EntityPointerUnorderedSet();
+{
+  QuerySynonym* first_synonym = first->getSynonym();
+  QuerySynonym* second_synonym = second->getSynonym();
+  if (*first_synonym != *QuerySynonym::empty()) {
+    spdlog::debug("First synonym used");
+    synonyms_.push_back(first_synonym);
+    if (*second_synonym != *QuerySynonym::empty()) {
+      spdlog::debug("Second synonym used");
+      // Corner case: first and second synonyms are the same
+      if (*first_synonym == *second_synonym) {
+        for (auto [entity, entity_set] : table) {
+          // Only add entries with same first and second entity
+          if (entity_set.find(entity) != entity_set.end()) {
+            table_rows_.push_back(ResultRow({{first_synonym, entity}}));
+          }
+        }
       }
-      table_inv_[other_entity].insert(entity);
+      else {
+        synonyms_.push_back(second_synonym);
+        for (auto [entity, entity_set] : table) {
+          for (auto *other_entity : entity_set) {
+            table_rows_.push_back(ResultRow{{first_synonym, entity}, {second_synonym, other_entity}});
+          }
+        }
+      }
+    }
+    else {
+      for (auto [entity, entity_set] : table) {
+        if (!entity_set.empty()) {
+          table_rows_.push_back(ResultRow{{first_synonym, entity}});
+        }
+      }
     }
   }
-}
-
-SubqueryResult::SubqueryResult(EntityPointerUnorderedMap table, EntityPointerUnorderedMap table_inv,
-                               QueryDeclaration *first, QueryDeclaration *second)
-    : table_(std::move(table)), table_inv_(std::move(table_inv)), first_decl_(first), second_decl_(second) {
-}
-
-bool SubqueryResult::empty() {
-  return table_.empty() || table_inv_.empty();
-}
-
-SubqueryResult SubqueryResult::invert() {
-  return SubqueryResult(table_inv_, table_, second_decl_, first_decl_);
-}
-
-bool SubqueryResult::uses(QueryDeclaration *decl) {
-  return (decl->getType() == first_decl_->getType() && decl->getSynonym() == first_decl_->getSynonym())
-      || (decl->getType() == second_decl_->getType() && decl->getSynonym() == second_decl_->getSynonym());
-}
-
-std::vector<QueryDeclaration *> SubqueryResult::getCommonSynonyms(const SubqueryResult &other) {
-  std::vector<QueryDeclaration *> common_synonyms;
-  if (first_decl_->getSynonym() != QuerySynonym::empty() &&
-      ((first_decl_->getType() == other.first_decl_->getType() && first_decl_->getSynonym() == other.first_decl_->getSynonym())
-          || (first_decl_->getType() == other.second_decl_->getType() && first_decl_->getSynonym() == other.second_decl_->getSynonym()))) {
-    common_synonyms.push_back(first_decl_);
+  else if (*second_synonym != *QuerySynonym::empty()) {
+    spdlog::debug("Second synonym used");
+    synonyms_.push_back(second_synonym);
+    for (auto [entity, entity_set] : table) {
+      for (auto *other_entity : entity_set) {
+        table_rows_.push_back(ResultRow{{second_synonym, other_entity}});
+      }
+    }
   }
-  if (second_decl_->getSynonym() != QuerySynonym::empty() &&
-      ((second_decl_->getType() == other.first_decl_->getType() && second_decl_->getSynonym() == other.first_decl_->getSynonym())
-          || (second_decl_->getType() == other.second_decl_->getType() && second_decl_->getSynonym() == other.second_decl_->getSynonym()))) {
-    common_synonyms.push_back(second_decl_);
+  // In this case there are no synonyms, but still need to add an entry if there are entries in the table
+  else {
+    spdlog::debug("No synonyms used");
+    for (auto [entity, entity_set] : table) {
+      for (auto *other_entity : entity_set) {
+        // Adds an empty hash table
+        table_rows_.emplace_back();
+        // Short circuit break since table will not need to add more elements
+        return;
+      }
+    }
+  }
+  std::string synonym_string;
+  for (auto *syn : synonyms_) synonym_string += syn->toString() + ", ";
+  spdlog::debug("Creating new table with synonyms: {} and tuples:", synonym_string);
+  for (auto row : table_rows_) {
+    std::string row_string;
+    for (auto *syn : synonyms_) row_string += row[syn]->ToString() + ", ";
+    spdlog::debug("({})", row_string);
+  }
+}
+
+SubqueryResult::SubqueryResult(std::vector<QuerySynonym *> synonyms, std::vector<ResultRow> result_rows)
+    : synonyms_(std::move(synonyms)), table_rows_(std::move(result_rows)) {
+  std::string synonym_string;
+  for (auto *syn : synonyms_) synonym_string += syn->toString() + ", ";
+  spdlog::debug("Creating new table with synonyms: {} and tuples:", synonym_string);
+  for (auto row : table_rows_) {
+    std::string row_string;
+    for (auto *syn : synonyms_) row_string += row[syn]->ToString() + ", ";
+    spdlog::debug("({})", row_string);
+  }
+}
+
+bool SubqueryResult::IsEmpty() {
+  return table_rows_.empty();
+}
+
+bool SubqueryResult::Uses(QuerySynonym *synonym) {
+  // Need to use find_if for pointer comparison
+  return std::find_if(synonyms_.begin(), synonyms_.end(), [synonym](QuerySynonym* searched_synonym){
+           return *synonym == *searched_synonym;
+         }) != synonyms_.end();
+}
+
+std::vector<QuerySynonym *> SubqueryResult::GetCommonSynonyms(SubqueryResult other) {
+  std::vector<QuerySynonym *> common_synonyms{};
+  for (auto *syn : synonyms_) spdlog::debug("This synonym: {}", syn->toString());
+  for (auto *syn : other.synonyms_) spdlog::debug("Other synonym: {}", syn->toString());
+  spdlog::debug("Equal? : {}", QuerySynonymPointerEquality()(synonyms_[0], other.synonyms_[0]));
+  spdlog::debug("Strings equal? : {}", synonyms_[0]->toString() == other.synonyms_[0]->toString());
+  for (auto *synonym : synonyms_) {
+    if (other.Uses(synonym)) {
+      common_synonyms.push_back(synonym);
+    }
   }
   return common_synonyms;
 }
 EntityPointerUnorderedSet SubqueryResult::GetColumn(QuerySynonym *synonym) {
-  if (*first_decl_->getSynonym() == *synonym) {
-    EntityPointerUnorderedSet entities{};
-    for (auto [key, values] : table_) {
-      if (!values.empty()) { entities.insert(key); }
-    }
-    return entities;
+  if (std::find(synonyms_.begin(), synonyms_.end(), synonym) == synonyms_.end()) {
+    return EntityPointerUnorderedSet{};
   }
-  if (*second_decl_->getSynonym() == *synonym) {
-    EntityPointerUnorderedSet entities{};
-    for (auto [key, values] : table_inv_) {
-      if (!values.empty()) { entities.insert(key); }
-    }
-    return entities;
+  EntityPointerUnorderedSet results{};
+  results.reserve(table_rows_.size());
+  for (auto row : table_rows_) {
+    results.insert(row[synonym]);
   }
-  spdlog::debug("Synonym not found!");
-  return EntityPointerUnorderedSet();
-}
-
-SubqueryResult SubqueryResult::Intersect(SubqueryResult &other) {
-  if (this->getCommonSynonyms(other).size() != 2) {
-    return SubqueryResult(EntityPointerUnorderedMap(), first_decl_, second_decl_);
-  }
-  if (*this->first_decl_ == *other.second_decl_) {
-    return this->invert().Intersect(other);
-  }
-  spdlog::debug("first: {}", first_decl_->getSynonym()->toString());
-  spdlog::debug("second: {}", other.first_decl_->getSynonym()->toString());
-  EntityPointerUnorderedMap intersection{};
-  spdlog::debug("sizes: {}, {}", table_.size(), other.table_.size());
-  for (auto [key, values] : table_) {
-    spdlog::debug("First: {}", key->ToString());
-    if (other.table_.find(key) != other.table_.end()) {
-      spdlog::debug("Adding key for entity: {}", key->ToString());
-      intersection[key] = EntityPointerUnorderedSet{};
-      for (auto *value : values) {
-        if (other.table_[key].find(value) != other.table_[key].end()) {
-          spdlog::debug("Adding entity: {}", value->ToString());
-          intersection[key].insert(value);
-        }
-      }
-    }
-  }
-  return SubqueryResult(intersection, first_decl_, second_decl_);
+  return results;
 }
 
 SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
-  auto common_synonyms = this->getCommonSynonyms(other);
-  if (common_synonyms.size() != 1) {
-    return SubqueryResult(EntityPointerUnorderedMap(), first_decl_, second_decl_);
-  }
-  auto *common_synonym = common_synonyms[0];
-  QueryDeclaration *first = (common_synonym->getType() == first_decl_->getType() && common_synonym->getSynonym() == first_decl_->getSynonym())
-                            ? second_decl_ : first_decl_;
-  QueryDeclaration *third = (common_synonym->getType() == other.first_decl_->getType() && common_synonym->getSynonym() == other.first_decl_->getSynonym())
-                            ? other.second_decl_ : other.first_decl_;
-  EntityPointerUnorderedMap &first_table = (common_synonym->getType() == first_decl_->getType() && common_synonym->getSynonym() == first_decl_->getSynonym())
-                                           ? table_inv_ : table_;
-  EntityPointerUnorderedMap &second_table = (common_synonym->getType() == other.first_decl_->getType() && common_synonym->getSynonym() == other.first_decl_->getSynonym())
-                                            ? other.table_ : other.table_inv_;
-  EntityPointerUnorderedMap join{};
-  spdlog::debug("Making result from {} to {}", first->toString(), third->toString());
-  for (auto [key, values] : first_table) {
-    join[key] = EntityPointerUnorderedSet{};
-    spdlog::debug("Processing {}", key->ToString());
-    for (auto *value_key : values) {
-      if (second_table.find(value_key) != second_table.end()) {
-        spdlog::debug("Found common element {}", value_key->ToString());
-        for (auto *value : second_table[value_key]) {
-          spdlog::debug("Adding {}", value->ToString());
-          join[key].insert(value);
+  auto common_synonyms = this->GetCommonSynonyms(other);
+  std::vector<QuerySynonym *> all_synonyms{};
+  all_synonyms.reserve(synonyms_.size() + other.synonyms_.size());
+  all_synonyms.insert(all_synonyms.end(), synonyms_.begin(), synonyms_.end());
+  all_synonyms.insert(all_synonyms.end(), other.synonyms_.begin(), other.synonyms_.end());
+  std::sort(all_synonyms.begin(), all_synonyms.end(), QuerySynonymPointerEquality());
+  all_synonyms.erase(std::unique(all_synonyms.begin(), all_synonyms.end(), QuerySynonymPointerEquality()), all_synonyms.end());
+
+  std::vector<ResultRow > new_rows{};
+  for (auto this_row : table_rows_) {
+    std::string first_row_string;
+    for (auto *syn : common_synonyms) first_row_string += this_row[syn]->ToString() + ", ";
+    for (auto that_row : other.table_rows_) {
+      std::string second_row_string;
+      for (auto *syn : common_synonyms) second_row_string += that_row[syn]->ToString() + ", ";
+      bool can_join = true;
+      spdlog::debug("Comparing ({}) to ({})", first_row_string, second_row_string);
+      for (auto *syn : common_synonyms) {
+        if (!(*this_row[syn] == *that_row[syn])) {
+          spdlog::debug("Fail at synonym {}", syn->toString());
+          can_join = false;
+          break;
         }
+      }
+      if (can_join) {
+        // Creates a hashmap with the contents of the two hash maps
+        ResultRow new_row = this_row;
+        new_row.insert(that_row.begin(), that_row.end());
+        new_rows.push_back(new_row);
       }
     }
   }
-  return SubqueryResult(join, first, third);
+  spdlog::debug("Number of rows in result: {}", new_rows.size());
+  return SubqueryResult(all_synonyms, new_rows);
 }
