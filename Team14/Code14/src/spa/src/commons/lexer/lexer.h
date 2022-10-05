@@ -34,11 +34,14 @@ class Lexer {
 
   const char wild_card_ = '_';
 
+  const char hashtag_ = '#';
+
   std::unordered_set<std::string> valid_whitespace_ = {" ", "\t", "\r", "\n"};
 
   virtual char peek();
   virtual char advance();
   virtual void ignore_whitespace();
+  virtual void ignore_comments();
   virtual void read_alpha();
   virtual void read_digits();
   virtual void read_alphanumeric();
