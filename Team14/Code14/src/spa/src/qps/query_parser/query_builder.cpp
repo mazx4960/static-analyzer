@@ -5,139 +5,125 @@
 #include <utility>
 
 #include "qps/exceptions.h"
+#include "spdlog/spdlog.h"
 
-QueryBuilder::QueryBuilder() = default;
+QueryBuilder::QueryBuilder(Query *maybe_query) {
+  if (maybe_query == nullptr) {
+    throw ParseSemanticError("No query given");
+  }
+  this->maybe_query_ = maybe_query;
+}
+
 Query *QueryBuilder::build() {
-  for (auto *clause : unchecked_clauses_) {
-    switch (clause->getClauseType()) {
-      case ClauseType::kPattern: {
-        buildAssignPattern(static_cast<PatternClause *>(clause));
-        break;
-      }
-      case ClauseType::kSuchThat: {
-        buildSuchThat(static_cast<SuchThatClause *>(clause));
-        break;
-      }
-      default: {
-        throw ParseSemanticError("Unknown clause type!");
-      }
-    }
+  spdlog::info("Building query...");
+  spdlog::info("Building declarations...");
+  this->declarations_ = buildDeclarations(maybe_query_->getSynonymDeclarations());
+  spdlog::info("Declarations built successfully");
+
+  if (maybe_query_->getQueryCall() == nullptr) {
+    throw ParseSemanticError("Bad Select creation");
   }
-  if (selected_declaration_ == nullptr) {
-    throw ParseSemanticError("Synonym in Select not declared!");
+  if (maybe_query_->getQueryCall()->getDeclaration() == nullptr) {
+    throw ParseSemanticError("Synonym in Select is not declared!");
   }
-  query_call_ = new SelectCall(selected_declaration_, built_clauses_);
-  return new Query(this->query_declarations_, query_call_);
+  spdlog::info("Building clauses...");
+  buildClauses(maybe_query_->getQueryCall()->getClauseVector());
+  spdlog::info("Clauses built successfully");
+  spdlog::info("Query built successfully");
+  return maybe_query_;
 }
 
-QuerySynonym *QueryBuilder::buildSynonym(const std::string &synonym) {
-  if (isDeclared(synonym)) {
-    throw ParseSemanticError("Synonym already declared: " + synonym);
+std::vector<SynonymDeclaration *> QueryBuilder::buildDeclarations(const std::vector<SynonymDeclaration *>& maybe_declarations) {
+  for (auto *maybe_declaration: maybe_declarations) {
+    buildDeclaration(maybe_declaration);
   }
-  this->synonyms_.insert(synonym);
-  return new QuerySynonym(synonym);
+  return maybe_declarations;
 }
 
-QueryDeclaration *QueryBuilder::buildDeclaration(EntityType type, QuerySynonym *synonym) {
-  auto *declaration = new QueryDeclaration(type, synonym);
-  this->query_declarations_.push_back(declaration);
-  return declaration;
+SynonymDeclaration *QueryBuilder::buildDeclaration(SynonymDeclaration *maybe_declaration) {
+  if (maybe_declaration == nullptr) {
+    throw ParseSemanticError("Missing declaration");
+  }
+  if (!synonyms_.insert(maybe_declaration->toString()).second) {
+    throw ParseSemanticError("Synonym already declared: " + maybe_declaration->toString());
+  }
+  return maybe_declaration;
 }
 
-QueryDeclaration *QueryBuilder::getDeclaration(const std::string &synonym) {
-  auto *to_check = new QuerySynonym(synonym);
-  for (QueryDeclaration *declaration : query_declarations_) {
+SynonymDeclaration *QueryBuilder::getDeclaration(const QuerySynonym *synonym) {
+  for (auto *declaration : declarations_) {
     QuerySynonym *declaration_synonym = declaration->getSynonym();
-    if (*declaration_synonym == *to_check) {
+    if (*declaration_synonym == *synonym) {
       return declaration;
     }
   }
-  return nullptr;
+  throw ParseSemanticError("Synonym is not declared: " + synonym->toString());
 }
 
-bool QueryBuilder::isDeclared(const std::string &synonym) {
-  return this->synonyms_.count(synonym) != 0U;
-}
-WildCardStmtDeclaration *QueryBuilder::buildWildcardStmt() {
-  return new WildCardStmtDeclaration();
-}
-WildCardEntDeclaration *QueryBuilder::buildWildcardEnt() {
-  return new WildCardEntDeclaration();
-}
-WildCardProcedureDeclaration *QueryBuilder::buildWildcardProcedure() {
-  return new WildCardProcedureDeclaration();
-}
-IntegerDeclaration *QueryBuilder::buildLiteral(const std::string &number) {
-  return new IntegerDeclaration(number);
-}
-IdentDeclaration *QueryBuilder::buildIdent(const std::string &str) {
-  return new IdentDeclaration(str);
-}
-QueryDeclaration *QueryBuilder::buildWildcardExpression(std::string expression) {
-  return new WildCardExpressionDeclaration(std::move(expression));
-}
-QueryDeclaration *QueryBuilder::buildExpression(std::string expression) {
-  return new ExpressionDeclaration(std::move(expression));
-}
-void QueryBuilder::withSelectCall(QueryDeclaration *synonym_declaration) {
-  this->selected_declaration_ = synonym_declaration;
+std::vector<QueryClause *> QueryBuilder::buildClauses(const std::vector<QueryClause *> &maybe_clauses) {
+  for (auto *clause : maybe_clauses) {
+    switch (clause->getClauseType()) {
+      case ClauseType::kPattern:
+        buildAssignPattern(static_cast<PatternClause *>(clause));
+        break;
+      case ClauseType::kSuchThat:
+        buildSuchThat(static_cast<SuchThatClause *>(clause));
+        break;
+      default:
+        throw ParseSemanticError("Unsupported clause type!");
+    }
+  }
+  return maybe_clauses;
 }
 
-void QueryBuilder::withAssignPattern(QueryDeclaration *syn_assign,
-                                     QueryDeclaration *ent_ref,
-                                     QueryDeclaration *expression_spec) {
-  unchecked_clauses_.push_back(new AssignPatternClause(syn_assign, ent_ref, expression_spec));
-}
-
-void QueryBuilder::withSuchThat(RsType type, QueryDeclaration *first, QueryDeclaration *second) {
-  unchecked_clauses_.push_back(new SuchThatClause(type, first, second));
-}
-
-void QueryBuilder::buildAssignPattern(PatternClause *clause) {
-  QueryDeclaration *syn_assign = clause->getFirst();
-  QueryDeclaration *ent_ref = clause->getSecond();
-  QueryDeclaration *expression_spec = clause->getThird();
+PatternClause *QueryBuilder::buildAssignPattern(PatternClause *maybe_clause) {
+  SynonymDeclaration *syn_assign = maybe_clause->getSynonymDeclaration();
+  QueryDeclaration *ent_ref = maybe_clause->getEntRef();
+  StaticDeclaration *expression_spec = maybe_clause->getExpression();
   if (syn_assign == nullptr || ent_ref == nullptr || expression_spec == nullptr) {
-    throw ParseSemanticError("Synonym not found");
+    throw ParseSemanticError("Missing parameters!");
   }
-
-  auto pattern_rules = getPatternRules();
-  if (pattern_rules[0].find(syn_assign->getType()) == pattern_rules[0].end()) {
-    throw ParseSemanticError("Invalid syn_assign: " + EntityTypeToString(syn_assign->getType()));
+  if (syn_assign->getDeclarationType() == DeclarationType::kSynonym) {
+    maybe_clause->setSynonymDeclaration(getDeclaration(syn_assign->getSynonym()));
   }
-  if (pattern_rules[1].find(ent_ref->getType()) == pattern_rules[1].end()) {
-    throw ParseSemanticError("Invalid ent_ref: " + EntityTypeToString(ent_ref->getType()));
-  }
-  if (pattern_rules[2].find(expression_spec->getType()) == pattern_rules[2].end()) {
-    throw ParseSemanticError("Invalid expression: " + EntityTypeToString(expression_spec->getType()));
-  }
-  built_clauses_.push_back(clause);
+  auto pattern_rules = pattern_args_rule;
+  checkParamSemantics(pattern_rules, syn_assign, 0);
+  checkParamSemantics(pattern_rules, ent_ref, 1);
+  checkParamSemantics(pattern_rules, expression_spec, 2);
+  return maybe_clause;
 }
 
-void QueryBuilder::buildSuchThat(SuchThatClause *clause) {
-  RsType type = clause->getSuchThatType();
-  QueryDeclaration *first = clause->getFirst();
-  QueryDeclaration *second = clause->getSecond();
+SuchThatClause *QueryBuilder::buildSuchThat(SuchThatClause *maybe_clause) {
+  RsType type = maybe_clause->getSuchThatType();
+  QueryDeclaration *first = maybe_clause->getFirst();
+  QueryDeclaration *second = maybe_clause->getSecond();
   if (first == nullptr || second == nullptr) {
-    throw ParseSemanticError("Synonym not found");
+    throw ParseSemanticError("Missing parameters!");
   }
-  auto st_rules = getSuchThatRules();
+  if (first->getDeclarationType() == DeclarationType::kSynonym) {
+    maybe_clause->setFirst(getDeclaration(static_cast<SynonymDeclaration *>(first)->getSynonym()));
+  }
+  if (second->getDeclarationType() == DeclarationType::kSynonym) {
+    maybe_clause->setSecond(getDeclaration(static_cast<SynonymDeclaration *>(second)->getSynonym()));
+  }
+  auto st_rules = such_that_semantic_rules;
   if (st_rules.find(type) == st_rules.end()) {
     throw ParseSemanticError("Unsupported relationship type: " + RsTypeToString(type));
   }
   auto relationship_rules = st_rules[type];
-  if (relationship_rules[0].find(first->getType()) == relationship_rules[0].end()) {
-    throw ParseSemanticError("Invalid first arg: " + EntityTypeToString(first->getType()));
-  }
-  if (relationship_rules[1].find(second->getType()) == relationship_rules[1].end()) {
-    throw ParseSemanticError("Invalid second arg: " + EntityTypeToString(second->getType()));
-  }
-  built_clauses_.push_back(clause);
-}
-std::vector<QueryDeclaration *> QueryBuilder::getDeclarations() {
-  return this->query_declarations_;
-}
-QueryCall *QueryBuilder::getQueryCall() {
-  return this->query_call_;
+  checkParamSemantics(relationship_rules, first, 0);
+  checkParamSemantics(relationship_rules, second, 1);
+  return maybe_clause;
 }
 
+void QueryBuilder::checkParamSemantics(std::vector<EntityTypeSet> semantic_rules,
+                                       QueryDeclaration *query_declaration,
+                                       int rule_no) {
+  if (semantic_rules[rule_no].find(query_declaration->getEntityType()) == semantic_rules[rule_no].end()) {
+    throw ParseSemanticError("Invalid parameter type: " + EntityTypeToString(query_declaration->getEntityType()));
+  }
+  if (query_declaration->getEntityType() == EntityType::kWildcard) {
+    auto *wildcard_declaration = static_cast<WildcardDeclaration*>(query_declaration);
+    wildcard_declaration->setWildcardType(semantic_rules[rule_no + 2]);
+  }
+}

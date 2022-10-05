@@ -29,17 +29,15 @@ EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClaus
  */
 EntityPointerUnorderedSet EvaluationStrategy::getCandidates(QueryDeclaration *declaration) {
   EntityPointerUnorderedSet candidates;
-  if (declaration->getType() == EntityType::kString || declaration->getType() == EntityType::kInteger) {
+  if (declaration->getEntityType() == EntityType::kIdent || declaration->getEntityType() == EntityType::kInteger) {
     std::basic_string<char> value = declaration->toString();
     candidates = pkb_->getEntitiesByString(value);
-  } else if (declaration->getType() == EntityType::kWildcardStmt) {
-    EntityPointerUnorderedSet all_variables = pkb_->getEntities(EntityType::kStatement);
-    candidates = all_variables;
-  } else if (declaration->getType() == EntityType::kWildcardEnt) {
-    EntityPointerUnorderedSet all_variables = pkb_->getEntities(EntityType::kVariable);
-    candidates = all_variables;
-  } else if (declaration->getType() == EntityType::kWildcardProcedure) {
-    EntityPointerUnorderedSet all_variables = pkb_->getEntities(EntityType::kProcedure);
+  } else if (declaration->getEntityType() == EntityType::kWildcard) {
+    auto *wildcard_declaration = static_cast<WildcardDeclaration *>(declaration);
+    EntityPointerUnorderedSet all_variables;
+    for (EntityType type : wildcard_declaration->getWildcardType()) {
+      all_variables = pkb_->getEntities(type);
+    }
     candidates = all_variables;
   } else {
     candidates = declaration->getContext();
@@ -127,9 +125,9 @@ EntityPointerUnorderedMap SuchThatStrategy::evaluateParameter(QueryDeclaration *
 SubqueryResult PatternStrategy::evaluate() {
   spdlog::debug("Evaluating Pattern clause");
 
-  QueryDeclaration *stmt_param = this->clause_->getFirst();
-  QueryDeclaration *var_param = this->clause_->getSecond();
-  QueryDeclaration *expr_param = this->clause_->getThird();
+  QueryDeclaration *stmt_param = this->clause_->getSynonymDeclaration();
+  QueryDeclaration *var_param = this->clause_->getEntRef();
+  QueryDeclaration *expr_param = this->clause_->getExpression();
   EntityPointerUnorderedSet stmt_param_context = stmt_param->getContext();
 
   auto stmt_matches = this->evaluateParameter(var_param, expr_param, stmt_param_context);
@@ -151,8 +149,7 @@ EntityPointerUnorderedMap PatternStrategy::evaluateParameter(QueryDeclaration *v
   spdlog::debug("Candidates[{}]: {}", candidates.size(), candidate_string);
   EntityPointerUnorderedMap results;
   std::string expr = expr_param->toString();
-  bool is_wildcard_expression = expr_param->getType() == EntityType::kWildcardExpression
-      || expr_param->getType() == EntityType::kWildcardStmt;
+  bool is_wildcard_expression = expr_param->getEntityType() == EntityType::kWildcardExpression;
   for (auto *entity : candidates) {
     EntityPointerUnorderedSet valid_entities = this->pkb_->getByPattern(entity, expr, is_wildcard_expression);
     auto intersected = EvaluationStrategy::intersect(valid_entities, potential_matches);

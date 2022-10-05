@@ -32,87 +32,47 @@ class QueryClause {
 };
 
 class SuchThatClause : public QueryClause {
+ private:
+  RsType type_;
+
+  QueryDeclaration *first_;
+
+  QueryDeclaration *second_;
  public:
   explicit SuchThatClause(RsType type, QueryDeclaration *first, QueryDeclaration *second)
       : QueryClause(ClauseType::kSuchThat), type_(type), first_(first), second_(second) {
   };
-
-  RsType type_;
-
-  QueryDeclaration *first_;
-
-  QueryDeclaration *second_;
-
   [[nodiscard]] RsType getSuchThatType() const;
   [[nodiscard]] QueryDeclaration *getFirst() const;
   [[nodiscard]] QueryDeclaration *getSecond() const;
+  void setFirst(SynonymDeclaration *synonym_declaration);
+  void setSecond(SynonymDeclaration *synonym_declaration);
 };
 
 class PatternClause : public QueryClause {
- public:
-  explicit PatternClause(RsType type, QueryDeclaration *first, QueryDeclaration *second, QueryDeclaration *third)
-      : QueryClause(ClauseType::kPattern), type_(type), first_(first), second_(second), third_(third) {
-  };
-
+ private:
   RsType type_;
 
-  QueryDeclaration *first_;
+  SynonymDeclaration *synonym_declaration_;
 
-  QueryDeclaration *second_;
+  QueryDeclaration *ent_ref_;
 
-  QueryDeclaration *third_;
+  StaticDeclaration *expression_;
+ public:
+  explicit PatternClause(RsType type, SynonymDeclaration *synonym_declaration, QueryDeclaration *ent_ref, StaticDeclaration *expression)
+      : QueryClause(ClauseType::kPattern), type_(type), synonym_declaration_(synonym_declaration), ent_ref_(ent_ref), expression_(expression) {
+  };
 
   [[nodiscard]] RsType getPatternType() const;
-  [[nodiscard]] QueryDeclaration *getFirst() const;
-  [[nodiscard]] QueryDeclaration *getSecond() const;
-  [[nodiscard]] QueryDeclaration *getThird() const;
-};
-
-class ParentClause : public SuchThatClause {
- public:
-  explicit ParentClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(RsType::kParent, first, second) {
-  }
-};
-
-class ParentAllClause : public SuchThatClause {
- public:
-  explicit ParentAllClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(RsType::kParentT, first, second) {
-  }
-};
-
-class FollowsClause : public SuchThatClause {
- public:
-  explicit FollowsClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(RsType::kFollows, first, second) {
-  }
-};
-
-class FollowsAllClause : public SuchThatClause {
- public:
-  explicit FollowsAllClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(RsType::kFollowsT, first, second) {
-  }
-};
-
-class UsesClause : public SuchThatClause {
- public:
-  explicit UsesClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(RsType::kUses, first, second) {
-  }
-};
-
-class ModifiesClause : public SuchThatClause {
- public:
-  explicit ModifiesClause(QueryDeclaration *first, QueryDeclaration *second)
-      : SuchThatClause(RsType::kModifies, first, second) {
-  }
+  [[nodiscard]] SynonymDeclaration *getSynonymDeclaration() const;
+  void setSynonymDeclaration(SynonymDeclaration *synonym_declaration);
+  [[nodiscard]] QueryDeclaration *getEntRef() const;
+  [[nodiscard]] StaticDeclaration *getExpression() const;
 };
 
 class AssignPatternClause : public PatternClause {
  public:
-  explicit AssignPatternClause(QueryDeclaration *first, QueryDeclaration *second, QueryDeclaration *third)
-      : PatternClause(RsType::kAssignPattern, first, second, third) {
+  explicit AssignPatternClause(SynonymDeclaration *synonym_declaration, QueryDeclaration *ent_ref, StaticDeclaration *expression)
+      : PatternClause(RsType::kAssignPattern, synonym_declaration, ent_ref, expression) {
   }
 };

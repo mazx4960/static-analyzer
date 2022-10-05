@@ -5,7 +5,7 @@
 CallType QueryCall::getType() const {
   return this->type_;
 }
-QueryDeclaration *QueryCall::getDeclaration() const {
+SynonymDeclaration *QueryCall::getDeclaration() const {
   return this->query_declaration_;
 }
 std::vector<QueryClause *> QueryCall::getClauseVector() const {

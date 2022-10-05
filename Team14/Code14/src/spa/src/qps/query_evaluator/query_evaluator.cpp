@@ -20,7 +20,7 @@ QueryDeclarationPointerUnorderedSet QueryEvaluator::getDeclarationAsSet() {
  */
 QueryDeclarationPointerUnorderedSet QueryEvaluator::copyDeclarations() {
   Query &query = this->query_;
-  std::vector<QueryDeclaration *> query_declarations = query.getDeclarations();
+  std::vector<SynonymDeclaration *> query_declarations = query.getSynonymDeclarations();
   this->declarations_ = std::unordered_set < QueryDeclaration *,
       QueryDeclarationHashFunction,
       QueryDeclarationPointerEquality > (
@@ -38,7 +38,7 @@ QueryDeclarationPointerUnorderedSet QueryEvaluator::fetchContext() {
 
   for (auto *declaration : this->declarations_) {
     std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> query_declaration_context_set;
-    query_declaration_context_set = this->pkb_->getEntities(declaration->getType());
+    query_declaration_context_set = this->pkb_->getEntities(declaration->getEntityType());
     declaration->setContext(query_declaration_context_set);
   }
   return this->getDeclarationAsSet();
@@ -49,7 +49,7 @@ QueryDeclarationPointerUnorderedSet QueryEvaluator::fetchContext() {
  * @return vector of SubqueryResults.
  */
 std::vector<SubqueryResult> QueryEvaluator::evaluateSubqueries() {
-  std::vector<QueryClause *> subquery_clauses = this->query_.getQueryCall().getClauseVector();
+  std::vector<QueryClause *> subquery_clauses = this->query_.getQueryCall()->getClauseVector();
   std::vector<SubqueryResult> subquery_results_list;
   for (auto *clause : subquery_clauses) {
     SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, clause);
@@ -67,7 +67,7 @@ Result *QueryEvaluator::evaluate() {
   this->fetchContext();
 
   // Query declaration for whose subquery_results are to be returned.
-  QueryDeclaration *called_declaration = this->query_.getQueryCall().getDeclaration();
+  SynonymDeclaration *called_declaration = this->query_.getQueryCall()->getDeclaration();
   QuerySynonym *synonym = called_declaration->getSynonym();
 
   std::vector<SubqueryResult> subquery_results = this->evaluateSubqueries();

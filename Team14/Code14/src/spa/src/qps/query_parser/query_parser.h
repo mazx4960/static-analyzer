@@ -10,45 +10,43 @@
 #include "qps/pql/query.h"
 #include "qps/pql/query_declaration.h"
 #include "query_builder.h"
+#include "query_syntax_rules.h"
 
 class QueryParser {
  private:
-  QueryBuilder builder_;
   std::vector<Token *> tokens_;
+  std::vector<SynonymDeclaration *> maybe_declarations_;
+  Query *maybe_query_;
+  std::vector<QueryClause *> maybe_clauses_;
+
   int token_index_ = 0;
 
- public:
   Token *nextToken();
   Token *peekToken();
   bool outOfTokens();
-  explicit QueryParser(std::vector<Token *> tokens, QueryBuilder builder = QueryBuilder());
-  Query *parse();
-  void parseDeclarations();
-  std::vector<QueryDeclaration *> getDeclarations();
-  void parseQueryCall();
-  QueryCall *getQueryCall();
   void parseDeclaration();
-  QueryDeclaration *getDeclaration(Token *synonym);
+  void checkReferenceSyntax(SyntaxRuleType syntax_type);
+
+ public:
+  explicit QueryParser(std::vector<Token *> tokens);
+  Query *parse();
+
+  QueryCall *parseQueryCall();
+
   QuerySynonym *parseSynonym();
-  void parseClause();
-  void parsePattern();
-  void parseSuchThat();
-  void parseFollows();
-  void parseParent();
-  void parseUses();
-  void parseModifies();
-  QueryDeclaration *parseExpression();
+  std::vector<SynonymDeclaration *> parseDeclarations();
+  QueryClause *parseClause();
+  PatternClause *parsePattern();
+  SuchThatClause *parseSuchThat();
+
+  QueryDeclaration *parseReference(SyntaxRuleType syntax_type);
   IdentDeclaration *parseQuotedDeclaration();
-  QueryDeclaration *parseStmtRefDeclaration();
-  QueryDeclaration *parseEntRefDeclaration();
   IntegerDeclaration *parseLiteralDeclaration();
   IdentDeclaration *parseIdentDeclaration();
-  QueryDeclaration *parseWildcard(EntityType type);
-  QueryDeclaration *parseAnyRefDeclaration();
+  WildcardDeclaration *parseWildcard();
+  StaticDeclaration *parseExpression();
   std::string parseFlattenedExpression();
+  SynonymDeclaration *parseInlineSynonymDeclaration();
+
   static void expect(Token *token, const std::unordered_set<TokenType> &expected_types);
-  void parseCalls();
-  void parseNext();
-  void parseAffects();
-  QueryDeclaration *parseProcedureRefDeclaration();
 };

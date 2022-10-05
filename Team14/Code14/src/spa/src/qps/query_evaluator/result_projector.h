@@ -10,7 +10,7 @@ using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunctio
 
 class ResultProjector {
  private:
-  QueryDeclaration *called_declaration_;
+  SynonymDeclaration *called_declaration_;
 
   IPKBQuerier *pkb_;
 
@@ -19,7 +19,7 @@ class ResultProjector {
   static EntityPointerUnorderedSet intersect(const EntityPointerUnorderedSet &first, const EntityPointerUnorderedSet &second);
 
  public:
-  ResultProjector(QueryDeclaration *declaration, std::vector<SubqueryResult> subquery_results, IPKBQuerier *pkb)
+  ResultProjector(SynonymDeclaration *declaration, std::vector<SubqueryResult> subquery_results, IPKBQuerier *pkb)
       : called_declaration_(declaration), subquery_results_(std::move(subquery_results)), pkb_(pkb) {
   };
 

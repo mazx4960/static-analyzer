@@ -11,185 +11,239 @@
 
 using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
 
+enum class DeclarationType {
+  kSynonym,
+  kStatic
+};
+
 class QueryDeclaration {
  private:
-  EntityType type_;
-
-  QuerySynonym *query_synonym_ = QuerySynonym::empty();
-
-  std::string string_;
+  DeclarationType declaration_type_;
+  EntityType entity_type_;
 
  protected:
   EntityPointerUnorderedSet context_;
+  explicit QueryDeclaration(DeclarationType declaration_type, EntityType entity_type)
+      : declaration_type_(declaration_type), entity_type_(entity_type) {
+  };
 
  public:
-  explicit QueryDeclaration(EntityType type) : type_(std::move(type)) {
-  };
-  QueryDeclaration(EntityType type, QuerySynonym *query_synonym)
-      : type_(std::move(type)),
-        query_synonym_(std::move(query_synonym)),
-        string_(query_synonym->toString()) {
-  };
-  QueryDeclaration(EntityType type, std::string string)
-      : type_(std::move(type)),
-        string_(std::move(string)),
-        query_synonym_(QuerySynonym::empty()) {
-  };
-
-  [[nodiscard]] EntityType getType() const;
-  [[nodiscard]] QuerySynonym *getSynonym() const;
-  [[nodiscard]] std::string toString() const;
-  [[nodiscard]] EntityPointerUnorderedSet getContext() const;
-  void removeEntityFromContext(Entity *entity);
-  void intersectContext(const EntityPointerUnorderedSet &other_context);
+  DeclarationType getDeclarationType() const;
+  EntityType getEntityType() const;
+  EntityPointerUnorderedSet getContext() const;
   void setContext(EntityPointerUnorderedSet);
-  bool operator==(const QueryDeclaration &) const;
-  bool operator==(const QueryDeclaration *) const;
+
+  virtual bool operator==(const QueryDeclaration &other) const;
+  virtual bool operator==(const QueryDeclaration *other) const;
+  virtual std::string toString() const;
 };
 
-// Pre-call declaration of "stmt x;" where x is the synonym
-class StatementDeclaration : public QueryDeclaration {
+// Synonym declaration of "stmt x;" where x is the synonym
+class SynonymDeclaration : public QueryDeclaration {
+ private:
+  QuerySynonym *query_synonym_;
+ public:
+  explicit SynonymDeclaration(QuerySynonym *query_synonym, EntityType entity_type = EntityType::kWildcard)
+      : QueryDeclaration(DeclarationType::kSynonym, entity_type), query_synonym_(query_synonym) {
+  };
+  bool operator==(const QueryDeclaration &other) const override;
+  bool operator==(const QueryDeclaration *other) const override;
+  QuerySynonym *getSynonym() const;
+  std::string toString() const override;
+};
+
+
+// Synonym declaration of "stmt x;" where x is the synonym
+class StatementDeclaration : public SynonymDeclaration {
+ private:
+  QuerySynonym *query_synonym_;
  public:
   explicit StatementDeclaration(QuerySynonym *query_synonym)
-      : QueryDeclaration(EntityType::kStatement, std::move(query_synonym)) {
-  }
+      : SynonymDeclaration(query_synonym, EntityType::kStatement), query_synonym_(query_synonym) {
+  };
 };
 
-// Pre-call declaration of "read x;" where x is the synonym
-class ReadDeclaration : public QueryDeclaration {
- public:
-  explicit ReadDeclaration(QuerySynonym *query_synonym)
-      : QueryDeclaration(EntityType::kReadStmt, std::move(query_synonym)) {
-  }
-};
-
-// Pre-call declaration of "print x;" where x is the synonym
-class PrintDeclaration : public QueryDeclaration {
- public:
-  explicit PrintDeclaration(QuerySynonym *query_synonym)
-      : QueryDeclaration(EntityType::kPrintStmt, std::move(query_synonym)) {
-  }
-};
-
-// Pre-call declaration of "call x;" where x is the synonym
-class CallDeclaration : public QueryDeclaration {
- public:
-  explicit CallDeclaration(QuerySynonym *query_synonym)
-      : QueryDeclaration(EntityType::kCallStmt, std::move(query_synonym)) {
-  }
-};
-
-// Pre-call declaration of "if x;" where x is the synonym
-class WhileDeclaration : public QueryDeclaration {
- public:
-  explicit WhileDeclaration(QuerySynonym *query_synonym)
-      : QueryDeclaration(EntityType::kWhileStmt, std::move(query_synonym)) {
-  }
-};
-
-// Pre-call declaration of "if x;" where x is the synonym
-class IfDeclaration : public QueryDeclaration {
+// Synonym declaration of "stmt x;" where x is the synonym
+class IfDeclaration : public SynonymDeclaration {
+ private:
+  QuerySynonym *query_synonym_;
  public:
   explicit IfDeclaration(QuerySynonym *query_synonym)
-      : QueryDeclaration(EntityType::kIfStmt, std::move(query_synonym)) {
-  }
+      : SynonymDeclaration(query_synonym, EntityType::kIfStmt), query_synonym_(query_synonym) {
+  };
 };
 
-// Pre-call declaration of "assign x;" where x is the synonym
-class AssignDeclaration : public QueryDeclaration {
+// Synonym declaration of "stmt x;" where x is the synonym
+class ReadDeclaration : public SynonymDeclaration {
+ private:
+  QuerySynonym *query_synonym_;
+ public:
+  explicit ReadDeclaration(QuerySynonym *query_synonym)
+      : SynonymDeclaration(query_synonym, EntityType::kIfStmt), query_synonym_(query_synonym) {
+  };
+};
+
+// Synonym declaration of "stmt x;" where x is the synonym
+class CallDeclaration : public SynonymDeclaration {
+ private:
+  QuerySynonym *query_synonym_;
+ public:
+  explicit CallDeclaration(QuerySynonym *query_synonym)
+      : SynonymDeclaration(query_synonym, EntityType::kIfStmt), query_synonym_(query_synonym) {
+  };
+};
+
+// Synonym declaration of "stmt x;" where x is the synonym
+class PrintDeclaration : public SynonymDeclaration {
+ private:
+  QuerySynonym *query_synonym_;
+ public:
+  explicit PrintDeclaration(QuerySynonym *query_synonym)
+      : SynonymDeclaration(query_synonym, EntityType::kIfStmt), query_synonym_(query_synonym) {
+  };
+};
+
+// Synonym declaration of "stmt x;" where x is the synonym
+class WhileDeclaration : public SynonymDeclaration {
+ private:
+  QuerySynonym *query_synonym_;
+ public:
+  explicit WhileDeclaration(QuerySynonym *query_synonym)
+      : SynonymDeclaration(query_synonym, EntityType::kIfStmt), query_synonym_(query_synonym) {
+  };
+};
+
+// Synonym declaration of "stmt x;" where x is the synonym
+class AssignDeclaration : public SynonymDeclaration {
+ private:
+  QuerySynonym *query_synonym_;
  public:
   explicit AssignDeclaration(QuerySynonym *query_synonym)
-      : QueryDeclaration(EntityType::kAssignStmt, std::move(query_synonym)) {
-  }
+      : SynonymDeclaration(query_synonym, EntityType::kIfStmt), query_synonym_(query_synonym) {
+  };
 };
 
-// Pre-call declaration of "variable x;" where x is the synonym
-class VariableDeclaration : public QueryDeclaration {
+// Synonym declaration of "stmt x;" where x is the synonym
+class VariableDeclaration : public SynonymDeclaration {
+ private:
+  QuerySynonym *query_synonym_;
  public:
   explicit VariableDeclaration(QuerySynonym *query_synonym)
-      : QueryDeclaration(EntityType::kVariable, std::move(query_synonym)) {
-  }
+      : SynonymDeclaration(query_synonym, EntityType::kIfStmt), query_synonym_(query_synonym) {
+  };
 };
-
-// Pre-call declaration of "constant x;" where x is the synonym
-class ConstantDeclaration : public QueryDeclaration {
+// Synonym declaration of "stmt x;" where x is the synonym
+class ConstantDeclaration : public SynonymDeclaration {
+ private:
+  QuerySynonym *query_synonym_;
  public:
   explicit ConstantDeclaration(QuerySynonym *query_synonym)
-      : QueryDeclaration(EntityType::kConstant, std::move(query_synonym)) {
-  }
+      : SynonymDeclaration(query_synonym, EntityType::kIfStmt), query_synonym_(query_synonym) {
+  };
 };
-
-// Pre-call declaration of "procedure x;" where x is the synonym
-class ProcedureDeclaration : public QueryDeclaration {
+// Synonym declaration of "stmt x;" where x is the synonym
+class ProcedureDeclaration : public SynonymDeclaration {
+ private:
+  QuerySynonym *query_synonym_;
  public:
   explicit ProcedureDeclaration(QuerySynonym *query_synonym)
-      : QueryDeclaration(EntityType::kProcedure, std::move(query_synonym)) {
-  }
+      : SynonymDeclaration(query_synonym, EntityType::kIfStmt), query_synonym_(query_synonym) {
+  };
 };
 
-// Inline declaration of  Wildcard "_"
-class WildCardEntDeclaration : public QueryDeclaration {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Static declaration of "stmt x;" where x is the synonym
+class StaticDeclaration : public QueryDeclaration {
+ private:
+  std::string value_;
  public:
-  explicit WildCardEntDeclaration() : QueryDeclaration(EntityType::kWildcardEnt) {
+  explicit StaticDeclaration(EntityType entity_type, std::string value)
+      : QueryDeclaration(DeclarationType::kStatic, entity_type), value_(std::move(value)) {
   }
+  bool operator==(const QueryDeclaration &other) const override;
+  bool operator==(const QueryDeclaration *other) const override;
+  std::string toString() const override;
 };
 
-// Inline declaration of  Wildcard "_"
-class WildCardStmtDeclaration : public QueryDeclaration {
+// Static declaration of  Wildcard "_"
+class WildcardDeclaration : public StaticDeclaration {
+ private:
+  std::unordered_set<EntityType> wildcard_types_;
  public:
-  explicit WildCardStmtDeclaration() : QueryDeclaration(EntityType::kWildcardStmt) {
-  }
+  explicit WildcardDeclaration(std::unordered_set<EntityType> wildcard_types = {})
+      : StaticDeclaration(EntityType::kWildcard, "_"), wildcard_types_(std::move(wildcard_types)) {
+  };
+  void setWildcardType(std::unordered_set<EntityType> types);
+  std::unordered_set<EntityType> getWildcardType();
 };
 
-// Inline declaration of  Wildcard "_"
-class WildCardProcedureDeclaration : public QueryDeclaration {
+
+// Static declaration of Expression "(x + (y * z))"
+class ExpressionDeclaration : public StaticDeclaration {
  public:
-  explicit WildCardProcedureDeclaration() : QueryDeclaration(EntityType::kWildcardProcedure) {
+  explicit ExpressionDeclaration(std::string string) : StaticDeclaration(EntityType::kExpression, std::move(string)) {
   }
 };
 
-// Inline declaration of Expression "(x + (y * z))"
-class ExpressionDeclaration : public QueryDeclaration {
- public:
-  explicit ExpressionDeclaration(std::string string) : QueryDeclaration(EntityType::kExpression, std::move(string)) {
-  }
-};
-
-// Inline declaration of Expression _"(x + (y * z))"_
-class WildCardExpressionDeclaration : public QueryDeclaration {
+// Static declaration of Expression _"(x + (y * z))"_
+class WildCardExpressionDeclaration : public StaticDeclaration {
  public:
   explicit WildCardExpressionDeclaration(std::string string)
-      : QueryDeclaration(EntityType::kWildcardExpression, std::move(string)) {
+      : StaticDeclaration(EntityType::kWildcardExpression, std::move(string)) {
   }
 };
 
-// Inline declaration of string eg. Modifies("x", v)
-class IdentDeclaration : public QueryDeclaration {
+// Static declaration of string eg. Modifies("x", v)
+class IdentDeclaration : public StaticDeclaration {
  public:
-  explicit IdentDeclaration(std::string string) : QueryDeclaration(EntityType::kString, std::move(string)) {
+  explicit IdentDeclaration(std::string string) : StaticDeclaration(EntityType::kIdent, std::move(string)) {
   }
 };
 
-// Inline declaration of integer eg. Modifies(3, v)
-class IntegerDeclaration : public QueryDeclaration {
+// Static declaration of integer eg. Modifies(3, v)
+class IntegerDeclaration : public StaticDeclaration {
  public:
-  explicit IntegerDeclaration(std::string number) : QueryDeclaration(EntityType::kInteger, std::move(number)) {
+  explicit IntegerDeclaration(std::string number) : StaticDeclaration(EntityType::kInteger, std::move(number)) {
   }
 };
 
 struct QueryDeclarationHashFunction {
   size_t operator()(const QueryDeclaration &declaration) const {
-    return QuerySynonymHashFunction().operator()(declaration.getSynonym());
+    if (declaration.getDeclarationType() == DeclarationType::kSynonym) {
+      return QuerySynonymHashFunction().operator()(static_cast<const SynonymDeclaration &>(declaration).getSynonym());
+    }
+    return QuerySynonymHashFunction().operator()(QuerySynonym::empty());
   }
   size_t operator()(const QueryDeclaration *declaration) const {
-    return QuerySynonymHashFunction().operator()(declaration->getSynonym());
+    if (declaration->getDeclarationType() == DeclarationType::kSynonym) {
+      return QuerySynonymHashFunction().operator()(static_cast<const SynonymDeclaration *>(declaration)->getSynonym());
+    }
+    return QuerySynonymHashFunction().operator()(QuerySynonym::empty());
   }
 };
 
 struct QueryDeclarationPointerEquality {
   bool operator()(const QueryDeclaration *lhs, const QueryDeclaration *rhs) const {
-    if (lhs->getType() == EntityType::kWildcardEnt || rhs->getType() == EntityType::kWildcardEnt ||
-        lhs->getType() == EntityType::kWildcardStmt || rhs->getType() == EntityType::kWildcardStmt) { return true; }
+    if (lhs->getEntityType() == EntityType::kWildcard || rhs->getEntityType() == EntityType::kWildcard) { return true; }
     return (*lhs) == (*rhs);
   }
 };

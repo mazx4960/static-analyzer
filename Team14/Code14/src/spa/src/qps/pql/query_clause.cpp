@@ -14,16 +14,25 @@ QueryDeclaration *SuchThatClause::getFirst() const {
 QueryDeclaration *SuchThatClause::getSecond() const {
   return this->second_;
 }
+void SuchThatClause::setFirst(SynonymDeclaration *synonym_declaration) {
+  this->first_ = synonym_declaration;
+}
+void SuchThatClause::setSecond(SynonymDeclaration *synonym_declaration) {
+  this->second_ = synonym_declaration;
+}
 
 RsType PatternClause::getPatternType() const {
   return this->type_;
 }
-QueryDeclaration *PatternClause::getFirst() const {
-  return this->first_;
+SynonymDeclaration *PatternClause::getSynonymDeclaration() const {
+  return this->synonym_declaration_;
 }
-QueryDeclaration *PatternClause::getSecond() const {
-  return this->second_;
+QueryDeclaration *PatternClause::getEntRef() const {
+  return this->ent_ref_;
 }
-QueryDeclaration *PatternClause::getThird() const {
-  return this->third_;
+StaticDeclaration *PatternClause::getExpression() const {
+  return this->expression_;
+}
+void PatternClause::setSynonymDeclaration(SynonymDeclaration *synonym_declaration) {
+  this->synonym_declaration_ = synonym_declaration;
 }

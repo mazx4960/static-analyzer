@@ -10,17 +10,17 @@
 
 class Query {
  private:
-  std::vector<QueryDeclaration *> query_declarations_;
+  std::vector<SynonymDeclaration *> synonym_declarations_;
 
   QueryCall *query_call_;
 
  public:
-  Query(std::vector<QueryDeclaration *> query_declarations, QueryCall *query_call)
-      : query_declarations_(std::move(query_declarations)),
+  Query(std::vector<SynonymDeclaration *> synonym_declarations, QueryCall *query_call)
+      : synonym_declarations_(std::move(synonym_declarations)),
         query_call_(query_call) {
   }
 
-  [[nodiscard]] std::vector<QueryDeclaration *> getDeclarations() const;
-  [[nodiscard]] QueryCall getQueryCall() const;
+  [[nodiscard]] std::vector<SynonymDeclaration *> getSynonymDeclarations() const;
+  [[nodiscard]] QueryCall *getQueryCall() const;
   [[nodiscard]] bool hasSubClauses() const;
 };

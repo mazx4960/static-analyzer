@@ -142,22 +142,17 @@ TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
   auto *var_dec = new VariableDeclaration(new QuerySynonym("var_dec"));
   auto *const_dec = new ConstantDeclaration(new QuerySynonym("const_dec"));
   auto *proc_dec = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
-  auto *expr_dec = new ExpressionDeclaration("x+y");
-  auto *str_dec = new IdentDeclaration("string_dec");
-  auto *int_dec = new IntegerDeclaration("123");
-  auto *wild_dec = new WildCardStmtDeclaration();
 
-  std::vector<QueryDeclaration *> declarations_vector = {
+
+  std::vector<SynonymDeclaration *> declarations_vector = {
       stmt_dec, read_dec, print_dec, call_dec, while_dec,
       if_dec, assign_dec, var_dec, const_dec, proc_dec,
-      expr_dec, str_dec, int_dec, wild_dec
   };
   std::unordered_set<QueryDeclaration *,
                      QueryDeclarationHashFunction,
                      QueryDeclarationPointerEquality> declarations_set = {
       stmt_dec, read_dec, print_dec, call_dec, while_dec,
       if_dec, assign_dec, var_dec, const_dec, proc_dec,
-      expr_dec, str_dec, int_dec, wild_dec
   };
 
   auto *select_call = new SelectCall(stmt_dec, {});
@@ -182,10 +177,6 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   auto *var_dec_1 = new VariableDeclaration(new QuerySynonym("var_dec_1"));
   auto *const_dec_1 = new ConstantDeclaration(new QuerySynonym("const_dec_1"));
   auto *proc_dec_1 = new ProcedureDeclaration(new QuerySynonym("proc_dec_1"));
-  auto *expr_dec_1 = new ExpressionDeclaration("x+y");
-  auto *str_dec_1 = new IdentDeclaration("string_dec_1");
-  auto *int_dec_1 = new IntegerDeclaration("123");
-  auto *wild_dec_1 = new WildCardStmtDeclaration();
 
   auto *stmt_dec_2 = new StatementDeclaration(new QuerySynonym("stmt_dec_2"));
   auto *read_dec_2 = new ReadDeclaration(new QuerySynonym("read_dec_2"));
@@ -197,30 +188,24 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   auto *var_dec_2 = new VariableDeclaration(new QuerySynonym("var_dec_2"));
   auto *const_dec_2 = new ConstantDeclaration(new QuerySynonym("const_dec_2"));
   auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec_2"));
-  auto *expr_dec_2 = new ExpressionDeclaration("x+y");
-  auto *str_dec_2 = new IdentDeclaration("string_dec_2");
-  auto *int_dec_2 = new IntegerDeclaration("123");
-  auto *wild_dec_2 = new WildCardStmtDeclaration();
 
-  std::vector<QueryDeclaration *> declarations_vector = {
+
+  std::vector<SynonymDeclaration *> declarations_vector = {
       stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
       if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
-      expr_dec_1, str_dec_1, int_dec_1, wild_dec_1,
 
       stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
-      if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
-      expr_dec_2, str_dec_2, int_dec_2, wild_dec_2
+      if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2
   };
   std::unordered_set<QueryDeclaration *,
                      QueryDeclarationHashFunction,
                      QueryDeclarationPointerEquality> declarations_set = {
       stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
       if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
-      expr_dec_1, str_dec_1, int_dec_1, wild_dec_1,
+
 
       stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
       if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
-      expr_dec_2, str_dec_2, int_dec_2, wild_dec_2
   };
 
   auto *select_call = new SelectCall(stmt_dec_1, {});
@@ -248,10 +233,6 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
   auto *var_dec_1 = new VariableDeclaration(new QuerySynonym("var_dec"));
   auto *const_dec_1 = new ConstantDeclaration(new QuerySynonym("const_dec"));
   auto *proc_dec_1 = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
-  auto *expr_dec_1 = new ExpressionDeclaration("x+y");
-  auto *str_dec_1 = new IdentDeclaration("string_dec");
-  auto *int_dec_1 = new IntegerDeclaration("123");
-  auto *wild_dec_1 = new WildCardStmtDeclaration();
 
   auto *stmt_dec_2 = new StatementDeclaration(new QuerySynonym("stmt_dec"));
   auto *read_dec_2 = new ReadDeclaration(new QuerySynonym("read_dec"));
@@ -263,30 +244,22 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
   auto *var_dec_2 = new VariableDeclaration(new QuerySynonym("var_dec"));
   auto *const_dec_2 = new ConstantDeclaration(new QuerySynonym("const_dec"));
   auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
-  auto *expr_dec_2 = new ExpressionDeclaration("x+y");
-  auto *str_dec_2 = new IdentDeclaration("string_dec");
-  auto *int_dec_2 = new IntegerDeclaration("123");
-  auto *wild_dec_2 = new WildCardStmtDeclaration();
 
-  std::vector<QueryDeclaration *> declarations_vector = {
+  std::vector<SynonymDeclaration *> declarations_vector = {
       stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
       if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
-      expr_dec_1, str_dec_1, int_dec_1, wild_dec_1,
 
       stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
       if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
-      expr_dec_2, str_dec_2, int_dec_2, wild_dec_2
   };
   std::unordered_set<QueryDeclaration *,
                      QueryDeclarationHashFunction,
                      QueryDeclarationPointerEquality> declarations_set = {
       stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
       if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
-      expr_dec_1, str_dec_1, int_dec_1, wild_dec_1,
 
       stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
       if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
-      expr_dec_2, str_dec_2, int_dec_2, wild_dec_2
   };
 
   auto *select_call = new SelectCall(stmt_dec_1, {});

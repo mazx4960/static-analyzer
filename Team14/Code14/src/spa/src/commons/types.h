@@ -18,13 +18,11 @@ enum class EntityType {
   kPrintStmt,
   kReadStmt,
   // Used by PQL
-  kWildcardStmt,
-  kWildcardEnt,
+  kWildcard,
   kExpression,
   kWildcardExpression,
-  kString,
-  kInteger,
-  kWildcardProcedure
+  kIdent,
+  kInteger
 };
 
 enum class RsType {
@@ -44,6 +42,7 @@ enum class RsType {
   kAssignPattern,
 };
 
+
 inline std::string EntityTypeToString(EntityType type) {
   switch (type) {
     case EntityType::kProcedure: return "Procedure";
@@ -56,13 +55,11 @@ inline std::string EntityTypeToString(EntityType type) {
     case EntityType::kWhileStmt: return "WhileStmt";
     case EntityType::kPrintStmt: return "PrintStmt";
     case EntityType::kReadStmt: return "ReadStmt";
-    case EntityType::kWildcardEnt: return "EntWildcard";
-    case EntityType::kWildcardStmt: return "StmtWildcard";
     case EntityType::kExpression: return "Expression";
     case EntityType::kWildcardExpression: return "WildcardExpression";
-    case EntityType::kString: return "String";
+    case EntityType::kIdent: return "Ident";
     case EntityType::kInteger: return "Integer";
-    case EntityType::kWildcardProcedure: return "WildcardProcedure";
+    case EntityType::kWildcard: return "Wildcard";
     default: return "Unknown";
   }
 }
