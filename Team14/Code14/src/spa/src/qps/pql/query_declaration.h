@@ -151,26 +151,6 @@ class ProcedureDeclaration : public SynonymDeclaration {
   };
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Static declaration of "stmt x;" where x is the synonym
 class StaticDeclaration : public QueryDeclaration {
  private:
