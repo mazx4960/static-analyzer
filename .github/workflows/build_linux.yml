@@ -33,6 +33,11 @@ jobs:
           scripts/test.sh
           chmod +x scripts/run.sh
           scripts/run.sh
+      - name: Profiling
+        shell: bash
+        run: |
+          chmod +x scripts/profile.sh
+          scripts/profile.sh
       - name: Generate Coverage files
         shell: bash
         run: |
