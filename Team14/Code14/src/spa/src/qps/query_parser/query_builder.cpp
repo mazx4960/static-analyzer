@@ -8,17 +8,23 @@
 
 QueryBuilder::QueryBuilder() = default;
 Query *QueryBuilder::build() {
-  for (auto *clause:unchecked_clauses_) {
+  for (auto *clause : unchecked_clauses_) {
     switch (clause->getClauseType()) {
-      case ClauseType::kPattern:
+      case ClauseType::kPattern: {
         buildAssignPattern(static_cast<PatternClause *>(clause));
         break;
-      case ClauseType::kSuchThat:
+      }
+      case ClauseType::kSuchThat: {
         buildSuchThat(static_cast<SuchThatClause *>(clause));
         break;
-      default:
-        throw ParseSemanticError("Unknown error: ");
+      }
+      default: {
+        throw ParseSemanticError("Unknown clause type!");
+      }
     }
+  }
+  if (selected_declaration_ == nullptr) {
+    throw ParseSemanticError("Synonym in Select not declared!");
   }
   query_call_ = new SelectCall(selected_declaration_, built_clauses_);
   return new Query(this->query_declarations_, query_call_);
@@ -49,14 +55,16 @@ QueryDeclaration *QueryBuilder::getDeclaration(const std::string &synonym) {
   return nullptr;
 }
 
-bool QueryBuilder::isDeclared(const std::string &synonym) { return this->synonyms_.count(synonym) != 0U; }
+bool QueryBuilder::isDeclared(const std::string &synonym) {
+  return this->synonyms_.count(synonym) != 0U;
+}
 WildCardStmtDeclaration *QueryBuilder::buildWildcardStmt() {
   return new WildCardStmtDeclaration();
 }
-WildCardEntDeclaration * QueryBuilder::buildWildcardEnt() {
+WildCardEntDeclaration *QueryBuilder::buildWildcardEnt() {
   return new WildCardEntDeclaration();
 }
-WildCardProcedureDeclaration * QueryBuilder::buildWildcardProcedure() {
+WildCardProcedureDeclaration *QueryBuilder::buildWildcardProcedure() {
   return new WildCardProcedureDeclaration();
 }
 IntegerDeclaration *QueryBuilder::buildLiteral(const std::string &number) {
@@ -76,17 +84,14 @@ void QueryBuilder::withSelectCall(QueryDeclaration *synonym_declaration) {
 }
 
 void QueryBuilder::withAssignPattern(QueryDeclaration *syn_assign,
-                                                QueryDeclaration *ent_ref,
-                                                QueryDeclaration *expression_spec) {
+                                     QueryDeclaration *ent_ref,
+                                     QueryDeclaration *expression_spec) {
   unchecked_clauses_.push_back(new AssignPatternClause(syn_assign, ent_ref, expression_spec));
 }
-
-
 
 void QueryBuilder::withSuchThat(RsType type, QueryDeclaration *first, QueryDeclaration *second) {
   unchecked_clauses_.push_back(new SuchThatClause(type, first, second));
 }
-
 
 void QueryBuilder::buildAssignPattern(PatternClause *clause) {
   QueryDeclaration *syn_assign = clause->getFirst();
@@ -108,7 +113,6 @@ void QueryBuilder::buildAssignPattern(PatternClause *clause) {
   }
   built_clauses_.push_back(clause);
 }
-
 
 void QueryBuilder::buildSuchThat(SuchThatClause *clause) {
   RsType type = clause->getSuchThatType();

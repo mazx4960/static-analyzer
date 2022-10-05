@@ -16,8 +16,11 @@ class QueryBuilder {
   std::unordered_set<std::string> synonyms_;
 
   SelectCall *query_call_;
+
   QueryDeclaration *selected_declaration_;
+
   std::vector<QueryClause *> unchecked_clauses_;
+
   std::vector<QueryClause *> built_clauses_;
 
  public:
@@ -32,7 +35,7 @@ class QueryBuilder {
   static WildCardStmtDeclaration *buildWildcardStmt();
   static IntegerDeclaration *buildLiteral(const std::string &number);
   IdentDeclaration *buildIdent(const std::string &str);
-  static WildCardEntDeclaration * buildWildcardEnt();
+  static WildCardEntDeclaration *buildWildcardEnt();
   void withSelectCall(QueryDeclaration *synonym_declaration);
   QueryCall *getQueryCall();
   void buildAssignPattern(PatternClause *clause);
