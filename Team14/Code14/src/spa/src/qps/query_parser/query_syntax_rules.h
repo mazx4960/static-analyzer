@@ -8,6 +8,7 @@
 #include <utility>
 
 #include "commons/types.h"
+#include "commons/lexer/token.h"
 enum class SyntaxRuleType {
   kStmtRef,
   kEntRef,
