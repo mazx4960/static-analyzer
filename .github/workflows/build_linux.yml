@@ -1,10 +1,6 @@
 name: Linux Build
 
-on:
-  workflow_dispatch: { }
-  push:
-    paths:
-      - 'Team14/**'
+on: push
 
 env:
   BUILD_TYPE: Release
