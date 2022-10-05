@@ -14,6 +14,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
       - name: Build Project
         shell: bash
         run: |
@@ -32,6 +35,7 @@ jobs:
       - name: Profiling
         shell: bash
         run: |
+          alias python3=python
           chmod +x scripts/profile.sh
           scripts/profile.sh
       - name: Generate Coverage files
