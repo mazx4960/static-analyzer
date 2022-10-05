@@ -84,9 +84,8 @@ inline std::string RsTypeToString(RsType type) {
 }
 
 inline std::unordered_set<EntityType> all_stmt_types = {EntityType::kAssignStmt, EntityType::kCallStmt,
-                                                 EntityType::kIfStmt, EntityType::kPrintStmt,
-                                                 EntityType::kReadStmt, EntityType::kWhileStmt};
-
+                                                        EntityType::kIfStmt, EntityType::kPrintStmt,
+                                                        EntityType::kReadStmt, EntityType::kWhileStmt};
 
 inline std::unordered_set<EntityType> GetAllStmtTypes() {
   return all_stmt_types;
