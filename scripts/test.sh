@@ -13,7 +13,7 @@ test_names=(
   "intertwined_procedures"
   "qps_stress_1"
   "sp_stress_1"
-  "sp_stress_2"
+  "multi_component_stress_1"
 )
 num_failed=0
 
