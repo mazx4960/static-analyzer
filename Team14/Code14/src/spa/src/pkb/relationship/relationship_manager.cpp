@@ -6,7 +6,7 @@
 
 RelationshipManager::RelationshipManager() {
   this->relationship_table_map_ = std::unordered_map<RsType, RelationshipTable *>();
-  this->cache_ = new Cache<entity_rs_inv, EntityPointerUnorderedSet, TripletHash>(100);
+  this->cache_ = new Cache<EntityRsInv, EntityPointerUnorderedSet, TripletHash>(100);
 }
 /**
  * Form the cache query
@@ -15,15 +15,13 @@ RelationshipManager::RelationshipManager() {
  * @param is_inverse
  * @return
  */
-entity_rs_inv RelationshipManager::GetCacheQuery(Entity *entity, RsType rs_type, bool is_inverse) {
-  return entity_rs_inv(entity, rs_type, is_inverse);
+EntityRsInv RelationshipManager::GetCacheQuery(Entity *entity, RsType rs_type, bool is_inverse) {
+  return EntityRsInv(entity, rs_type, is_inverse);
 }
 /**
  * Clears the cache
  */
-void RelationshipManager::ClearCache() {
-  this->cache_->clear();
-}
+void RelationshipManager::ClearCache() { this->cache_->Clear(); }
 /**
  * Get the relationship table for the given relationship type
  * @param rs_type

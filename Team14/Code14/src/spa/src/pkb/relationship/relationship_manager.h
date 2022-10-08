@@ -12,14 +12,14 @@
 #include "pkb/exception.h"
 #include "relationship_table.h"
 
-using entity_rs_inv = std::tuple<Entity *, RsType, bool>;
+using EntityRsInv = std::tuple<Entity *, RsType, bool>;
 
 class RelationshipManager {
  private:
-  Cache<entity_rs_inv, EntityPointerUnorderedSet, TripletHash> *cache_;
+  Cache<EntityRsInv, EntityPointerUnorderedSet, TripletHash> *cache_;
   std::unordered_map<RsType, RelationshipTable *> relationship_table_map_;
 
-  static entity_rs_inv GetCacheQuery(Entity *entity, RsType rs_type, bool is_inverse);
+  static EntityRsInv GetCacheQuery(Entity *entity, RsType rs_type, bool is_inverse);
   void CreateTable(RsType);
 
   EntityPointerUnorderedSet GetInference(RsType, Entity *, bool);

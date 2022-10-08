@@ -9,6 +9,7 @@
  * LRU cache implementation.
  * @tparam K key type
  * @tparam V value type
+ * @tparam KHash hash function for key
  */
 template<class K, class V, class KHash = std::hash<K>>
 class Cache {
@@ -20,19 +21,16 @@ class Cache {
  private:
   int hits_, misses_;
   int capacity_;
-  std::unordered_map<K, V, KHash> map_;
-  std::list<K> access_list_;
+  std::list<std::pair<K, V>> access_list_;
+  std::unordered_map<K, typename std::list<std::pair<K, V>>::iterator, KHash> map_;
 
-  void update_access(const K &key) {
-    access_list_.remove(key);
-    access_list_.push_front(key);
-  }
+  void UpdateAccess(const K &key) { access_list_.splice(access_list_.begin(), access_list_, map_[key]); }
 
-  void evict() {
-    if (map_.size() > capacity_) {
-      auto key = access_list_.back();
-      map_.erase(key);
+  void Evict() {
+    if (map_.size() == capacity_) {
+      auto key = access_list_.back().first;
       access_list_.pop_back();
+      map_.erase(key);
     }
   }
 
@@ -46,11 +44,15 @@ class Cache {
    * @param key
    * @param value
    */
-  void put(K key, V value) {
-    if (this->map_.find(key) != this->map_.end()) { this->map_.erase(key); }
-    this->map_.insert({key, value});
-    this->evict();
-    this->update_access(key);
+  void Add(K key, V value) {
+    if (this->map_.find(key) != this->map_.end()) {
+      this->UpdateAccess(key);
+      this->map_[key]->second = value;
+    } else {
+      this->Evict();
+      this->access_list_.push_front(std::make_pair(key, value));
+      this->map_[key] = this->access_list_.begin();
+    }
   };
   /**
    * Gets a value from the cache.
@@ -59,12 +61,12 @@ class Cache {
    * @param key
    * @return
    */
-  Result get(K key) {
+  Result Get(K key) {
     Result result;
     if (this->map_.find(key) != this->map_.end()) {
       this->hits_++;
-      this->update_access(key);
-      result.value = this->map_.at(key);
+      this->UpdateAccess(key);
+      result.value = this->map_.at(key)->second;
       result.found = true;
     } else {
       this->misses_++;
@@ -76,11 +78,11 @@ class Cache {
   /**
    * Clears the cache.
    */
-  void clear() {
+  void Clear() {
     this->map_.clear();
     this->access_list_.clear();
   };
-  [[nodiscard]] int size() const { return this->map_.size(); };
-  [[nodiscard]] int hits() const { return this->hits_; };
-  [[nodiscard]] int misses() const { return this->misses_; };
+  [[nodiscard]] int Size() const { return this->map_.size(); };
+  [[nodiscard]] int Hits() const { return this->hits_; };
+  [[nodiscard]] int Misses() const { return this->misses_; };
 };
