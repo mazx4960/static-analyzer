@@ -20,9 +20,15 @@ class RelationshipManager {
   EntityPointerUnorderedSet GetInferenceGivenProcedure(RelationshipTable *, Entity *);
   EntityPointerUnorderedSet GetInferenceFromChildren(RelationshipTable *, Entity *);
   EntityPointerUnorderedSet GetInferenceGivenVariable(RelationshipTable *, Entity *);
+  EntityPointerUnorderedSet GetAffects(Entity *, bool);
   EntityPointerUnorderedSet GetCalls(Entity *, bool);
+  EntityPointerUnorderedSet GetAllAffects(Entity *, bool);
   EntityPointerUnorderedSet GetAllCalls(Entity *, bool);
+  EntityPointerUnorderedSet GetAffectsHelper(EntityPointerUnorderedSet *, std::queue<Entity *> *);
+  EntityPointerUnorderedSet GetAffectsInverseHelper(EntityPointerUnorderedSet *, std::queue<Entity *> *);
   Entity *GetProcedureEntity(Entity *, bool);
+  bool IsVariableUsed(EntityPointerUnorderedSet *, Entity *);
+  bool IsVariableModified(EntityPointerUnorderedSet *, Entity *);
   static EntityPointerUnorderedSet Empty();
 
  public:

@@ -135,6 +135,21 @@ struct EntityPointerComparator {
     return left_val < right_val;
   }
 
+  /**
+   * Order two entities by value (strictly greater than)
+   * @param lhs
+   * @param rhs
+   * @return true if lhs > rhs
+   */
+  static bool gt(const Entity *lhs, const Entity *rhs) {
+    std::string left_val = lhs->GetValue();
+    std::string right_val = rhs->GetValue();
+    if (isNumber(left_val) && isNumber(right_val)) {
+      return std::stoi(left_val) > std::stoi(right_val);
+    }
+    return left_val > right_val;
+  }
+
  private:
   static bool isNumber(const std::string &s) {
     return std::all_of(s.begin(), s.end(), ::isdigit);
