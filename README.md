@@ -14,7 +14,48 @@ C++ Standard | C++17
 
 ### Additional Build Instructions
 
-No additional instructions required.
+Building the project:
+
+```bash
+scripts/build.sh
+```
+
+Running tests:
+
+```bash
+scripts/test.sh
+```
+
+Running the program:
+
+```bash
+scripts/run.sh
+```
+
+### Profiling statistics
+
+```bash
+scripts/profile.sh
+```
+
+Results:
+
+```
+==============================================================
+Profiling 'stress'
+[INFO] Checking required python packages...
+[INFO] Requirement satisfied.
+[MEM USAGE] Peak Memory Usage: 7.664 MiB
+[PARSE TIME] 26.676000
+==============================================================
+==============================================================
+Profiling 'stress2'
+[INFO] Checking required python packages...
+[INFO] Requirement satisfied.
+[MEM USAGE] Peak Memory Usage: 7.664 MiB
+[PARSE TIME] 17.157000
+==============================================================
+```
 
 # Team Members
 

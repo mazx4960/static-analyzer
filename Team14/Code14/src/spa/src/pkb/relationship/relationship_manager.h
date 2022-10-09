@@ -9,14 +9,20 @@
 #include "commons/entity.h"
 #include "commons/relationship.h"
 #include "commons/types.h"
+#include "pkb/cache.h"
 #include "pkb/exception.h"
 #include "relationship_table.h"
 
+using EntityRsInv = std::tuple<Entity *, RsType, bool>;
+
 class RelationshipManager {
  private:
+  Cache<EntityRsInv, EntityPointerUnorderedSet, TripletHash> *cache_;
   std::unordered_map<RsType, RelationshipTable *> relationship_table_map_;
 
+  static EntityRsInv GetCacheQuery(Entity *entity, RsType rs_type, bool is_inverse);
   void CreateTable(RsType);
+
   EntityPointerUnorderedSet GetInference(RsType, Entity *, bool);
   EntityPointerUnorderedSet GetInferenceGivenProcedure(RelationshipTable *, Entity *);
   EntityPointerUnorderedSet GetInferenceFromChildren(RelationshipTable *, Entity *);
@@ -33,7 +39,8 @@ class RelationshipManager {
   static EntityPointerUnorderedSet Empty();
 
  public:
-  RelationshipManager() = default;
+  RelationshipManager();
+  void ClearCache();
   RelationshipTable *GetTable(RsType rs_type);
   void Populate(std::vector<Relationship *> &relationships);
   EntityPointerUnorderedSet Get(RsType, Entity *, bool);
