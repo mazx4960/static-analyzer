@@ -450,7 +450,6 @@ TEST(QueryTest, AffectsRelationship) {
   auto result_get_modify_multiple_in_loop = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("13"), true);
   auto result_get_modify_none = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("4"), true);
   auto result_get_modify_chain_simple = pkb.getByRelationship(RsType::kAffectsT, new AssignStmtEntity("25"), true);
-  auto result_get_modify_chain_multiple = pkb.getByRelationship(RsType::kAffectsT, new AssignStmtEntity("21"), true);
 
   EntityPointerUnorderedSet expected_result_get_uses_simple = {new AssignStmtEntity("21")};
   EntityPointerUnorderedSet expected_result_get_uses_multiple = {new AssignStmtEntity("2"), new AssignStmtEntity("9")};
@@ -464,9 +463,7 @@ TEST(QueryTest, AffectsRelationship) {
   EntityPointerUnorderedSet expected_result_get_modify_multiple = {new AssignStmtEntity("21"), new AssignStmtEntity("3")};
   EntityPointerUnorderedSet expected_result_get_modify_multiple_in_loop = {new AssignStmtEntity("12"), new AssignStmtEntity("3")};
   EntityPointerUnorderedSet expected_result_get_modify_chain_simple = {new AssignStmtEntity("24"), new AssignStmtEntity("23")};
-  EntityPointerUnorderedSet expected_result_get_modify_chain_multiple = {new AssignStmtEntity("20"),
-                                                                         new AssignStmtEntity("14"), new AssignStmtEntity("3"),
-                                                                         new AssignStmtEntity("4"), new AssignStmtEntity("12")};
+
   EntityPointerUnorderedSet expected_result_empty = {};
 
   ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_simple, expected_result_get_uses_simple));
@@ -483,5 +480,4 @@ TEST(QueryTest, AffectsRelationship) {
   ASSERT_TRUE(PKBTestHelper::set_compare(result_get_modify_multiple_in_loop, expected_result_get_modify_multiple_in_loop));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_get_modify_none, expected_result_empty));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_get_modify_chain_simple, expected_result_get_modify_chain_simple));
-  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_modify_chain_multiple, expected_result_get_modify_chain_multiple));
 }
