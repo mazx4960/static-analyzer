@@ -4,6 +4,8 @@
 
 #include <spdlog/spdlog.h>
 
+#include <iostream>
+
 RelationshipTable *RelationshipManager::GetTable(RsType rs_type) {
   // If table hasn't been created, create it first.
   if (this->relationship_table_map_.find(rs_type) == this->relationship_table_map_.end()) {
@@ -258,72 +260,80 @@ EntityPointerUnorderedSet RelationshipManager::GetAffects(Entity *query_entity, 
   }
   auto next_statements = GetTable(RsType::kNext)->get(query_entity, is_inverse);
   auto query_statement_variables = table->get(query_entity, false);
-  std::queue<Entity *> queue;
+  std::stack<std::pair<Entity *, EntityPointerUnorderedSet>> stack;
+
   for (auto *entity : next_statements) {
-    queue.push(entity);
+    stack.push(std::pair(entity, query_statement_variables));
   }
   if (is_inverse) {
-    return GetAffectsInverseHelper(&query_statement_variables, &queue);
+    return GetAffectsInverseHelper(&stack);
   }
-  return GetAffectsHelper(&query_statement_variables, &queue);
+  return GetAffectsHelper(&stack);
 }
 
 EntityPointerUnorderedSet RelationshipManager::GetAllAffects(Entity *query_entity, bool is_inverse) {
   EntityPointerUnorderedSet result = this->Empty();
+  EntityPointerUnorderedSet visited = this->Empty();
   std::queue<Entity *> queue;
   queue.push(query_entity);
+
   while (!queue.empty()) {
     auto *current = queue.front();
     auto statement_set = GetAffects(current, is_inverse);
     for (auto *statement_entity : statement_set) {
-      queue.push(statement_entity);
-      result.insert(statement_entity);
+      if (visited.find(statement_entity) == visited.end()) {
+        queue.push(statement_entity);
+        result.insert(statement_entity);
+        visited.insert(statement_entity);
+      }
     }
     queue.pop();
   }
   return result;
 }
 
-EntityPointerUnorderedSet RelationshipManager::GetAffectsHelper(EntityPointerUnorderedSet *query_statement_variables,
-                                                                std::queue<Entity *> *queue) {
+EntityPointerUnorderedSet RelationshipManager::GetAffectsHelper(std::stack<std::pair<Entity *, EntityPointerUnorderedSet>> *stack) {
   EntityPointerUnorderedSet result = this->Empty();
   EntityPointerUnorderedSet visited = this->Empty();
-  while (!queue->empty()) {
-    auto *current_statement = queue->front();
+  while (!stack->empty()) {
+    auto current_pair = stack->top();
+    auto *current_statement = current_pair.first;
+    auto query_statement_variables = current_pair.second;
     visited.insert(current_statement);
-    if (IsVariableUsed(query_statement_variables, current_statement)) { result.insert(current_statement); }
-    if (IsVariableModified(query_statement_variables, current_statement)) {
-      queue->pop();
-      continue;
-    }
+    stack->pop();
+
+    if (IsVariableUsed(&query_statement_variables, current_statement)) { result.insert(current_statement); }
+    if (IsVariableModified(&query_statement_variables, current_statement)) { continue; }
     auto subsequent_statement = GetTable(RsType::kNext)->get(current_statement, false);
     for (auto *next_statement : subsequent_statement) {
-      if (visited.find(next_statement) == visited.end()) { queue->push(next_statement); }
+      if (visited.find(next_statement) == visited.end()) { stack->push(std::pair(next_statement, query_statement_variables)); }
     }
-    queue->pop();
   }
   return result;
 }
 
-EntityPointerUnorderedSet RelationshipManager::GetAffectsInverseHelper(EntityPointerUnorderedSet *query_statement_variables,
-                                                                       std::queue<Entity *> *queue) {
+EntityPointerUnorderedSet RelationshipManager::GetAffectsInverseHelper(std::stack<std::pair<Entity *, EntityPointerUnorderedSet>> *stack) {
   EntityPointerUnorderedSet result = this->Empty();
   EntityPointerUnorderedSet visited = this->Empty();
-  while (!queue->empty()) {
-    auto *current_statement = queue->front();
+  while (!stack->empty()) {
+    auto current_pair = stack->top();
+    auto *current_statement = current_pair.first;
+    auto query_statement_variables = current_pair.second;
     visited.insert(current_statement);
-    if (IsVariableModified(query_statement_variables, current_statement) && current_statement->GetType() == EntityType::kAssignStmt) {
+    stack->pop();
+
+    if (IsVariableModified(&query_statement_variables, current_statement) && current_statement->GetType() == EntityType::kAssignStmt) {
       auto *variable_entity = *(GetTable(RsType::kModifies)->get(current_statement, false).begin());
-      query_statement_variables->erase(variable_entity);
-      spdlog::info(query_statement_variables->size());
+      query_statement_variables.erase(variable_entity);
       result.insert(current_statement);
     }
-    if (query_statement_variables->empty()) { break; }
+    if (query_statement_variables.empty()) { break; }
     auto subsequent_statement = GetTable(RsType::kNext)->get(current_statement, true);
     for (auto *next_statement : subsequent_statement) {
-      if (visited.find(next_statement) == visited.end()) { queue->push(next_statement); }
+      if (visited.find(next_statement) == visited.end()) {
+        stack->push(std::pair(next_statement, query_statement_variables));
+      }
     }
-    queue->pop();
   }
   return result;
 }
