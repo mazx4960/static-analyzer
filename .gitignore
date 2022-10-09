@@ -5,6 +5,8 @@
 build/
 coverage/
 
+*.dat
+
 ### C++ ###
 # Prerequisites
 *.d
