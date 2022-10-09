@@ -465,8 +465,8 @@ TEST(QueryTest, AffectsRelationship) {
   EntityPointerUnorderedSet expected_result_get_modify_multiple_in_loop = {new AssignStmtEntity("12"), new AssignStmtEntity("3")};
   EntityPointerUnorderedSet expected_result_get_modify_chain_simple = {new AssignStmtEntity("24"), new AssignStmtEntity("23")};
   EntityPointerUnorderedSet expected_result_get_modify_chain_multiple = {new AssignStmtEntity("20"),
-                                                                         new AssignStmtEntity("14"), new AssignStmtEntity("12"),
-                                                                         new AssignStmtEntity("4"), new AssignStmtEntity("3")};
+                                                                         new AssignStmtEntity("14"), new AssignStmtEntity("3"),
+                                                                         new AssignStmtEntity("4"), new AssignStmtEntity("12")};
   EntityPointerUnorderedSet expected_result_empty = {};
 
   ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_simple, expected_result_get_uses_simple));
