@@ -4,8 +4,6 @@
 
 #include <spdlog/spdlog.h>
 
-#include <iostream>
-
 RelationshipTable *RelationshipManager::GetTable(RsType rs_type) {
   // If table hasn't been created, create it first.
   if (this->relationship_table_map_.find(rs_type) == this->relationship_table_map_.end()) {

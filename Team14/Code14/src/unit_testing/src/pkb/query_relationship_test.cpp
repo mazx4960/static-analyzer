@@ -447,7 +447,7 @@ TEST(QueryTest, AffectsRelationship) {
   auto result_get_uses_chain_multiple = pkb.getByRelationship(RsType::kAffectsT, new AssignStmtEntity("12"), false);
   auto result_get_modify_simple = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("2"), true);
   auto result_get_modify_multiple = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("22"), true);
-  auto result_get_modify_multiple_in_loop = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("14"), true);
+  auto result_get_modify_multiple_in_loop = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("13"), true);
   auto result_get_modify_none = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("4"), true);
   auto result_get_modify_chain_simple = pkb.getByRelationship(RsType::kAffectsT, new AssignStmtEntity("25"), true);
   auto result_get_modify_chain_multiple = pkb.getByRelationship(RsType::kAffectsT, new AssignStmtEntity("22"), true);
@@ -462,8 +462,7 @@ TEST(QueryTest, AffectsRelationship) {
   EntityPointerUnorderedSet expected_result_get_uses_split_on_if = {new AssignStmtEntity("10")};
   EntityPointerUnorderedSet expected_result_get_modify_simple = {new AssignStmtEntity("1")};
   EntityPointerUnorderedSet expected_result_get_modify_multiple = {new AssignStmtEntity("21"), new AssignStmtEntity("3")};
-  EntityPointerUnorderedSet expected_result_get_modify_multiple_in_loop = {new AssignStmtEntity("12"), new AssignStmtEntity("4"),
-                                                                           new AssignStmtEntity("3")};
+  EntityPointerUnorderedSet expected_result_get_modify_multiple_in_loop = {new AssignStmtEntity("12"), new AssignStmtEntity("3")};
   EntityPointerUnorderedSet expected_result_get_modify_chain_simple = {new AssignStmtEntity("24"), new AssignStmtEntity("23")};
   EntityPointerUnorderedSet expected_result_get_modify_chain_multiple = {new AssignStmtEntity("21"), new AssignStmtEntity("20"),
                                                                          new AssignStmtEntity("14"), new AssignStmtEntity("12"),
