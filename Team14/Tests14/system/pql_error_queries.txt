@@ -103,6 +103,31 @@ variable v; procedure p;
 Select p such that Next(v, p)
 SemanticError
 5000
+215 - semantic error, wrong argument type in Affects
+stmt s; assign a;
+Select s such that Affects(a, s)
+SemanticError
+5000
+216 - semantic error, wrong argument type in Affects
+while; assign a;
+Select w such that Affects(a, w)
+SemanticError
+5000
+217 - semantic error, wrong argument type in Affects
+stmt s1, s2;
+Select s2 such that Affects(s1, s2)
+SemanticError
+5000
+218 - semantic error, wrong argument type in Affects
+stmt s;
+Select s such that Affects*(s, _)
+SemanticError
+5000
+219 - semantic error, wrong argument type in Affects
+stmt s;
+Select s such that Affects*(_, s)
+SemanticError
+5000
 301 - error in both syntax (extra "+" in pattern, same as 33) and semantics (undefined synonym), syntax error should be prioritised
 assign a;
 Select b pattern a (_, _" +temp"_)
