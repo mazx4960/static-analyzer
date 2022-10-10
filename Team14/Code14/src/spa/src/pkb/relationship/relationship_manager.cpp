@@ -265,6 +265,7 @@ EntityPointerUnorderedSet RelationshipManager::GetAllCalls(Entity *entity, bool 
 
 EntityPointerUnorderedSet RelationshipManager::GetAffects(Entity *query_entity, bool is_inverse) {
   RelationshipTable *table;
+  if (query_entity->GetType() != EntityType::kAssignStmt) { return this->Empty(); }
   if (is_inverse) {
     table = GetTable(RsType::kUses);
   } else {
