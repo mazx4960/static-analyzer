@@ -10,7 +10,7 @@
 #include "result_projector.h"
 #include "subquery_evaluator.h"
 
-using QueryDeclarationPointerUnorderedSet = std::unordered_set<QueryDeclaration *,
+using QueryDeclarationPointerUnorderedSet = std::unordered_set<QueryReference *,
                                                                QueryDeclarationHashFunction,
                                                                QueryDeclarationPointerEquality>;
 

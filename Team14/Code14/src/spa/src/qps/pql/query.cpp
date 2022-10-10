@@ -2,12 +2,12 @@
 
 #include "query.h"
 
-std::vector<SynonymDeclaration *> Query::getSynonymDeclarations() const {
+std::vector<SynonymReference *> Query::getSynonymDeclarations() const {
   return this->synonym_declarations_;
 }
 QueryCall *Query::getQueryCall() const {
   return this->query_call_;
 }
-bool Query::hasSubClauses() const {
-  return this->query_call_->hasSubClauses();
+Clauses Query::getClauses() const {
+  return this->query_clauses_;
 }

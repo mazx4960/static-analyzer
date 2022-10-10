@@ -20,10 +20,10 @@ QueryDeclarationPointerUnorderedSet QueryEvaluator::getDeclarationAsSet() {
  */
 QueryDeclarationPointerUnorderedSet QueryEvaluator::copyDeclarations() {
   Query &query = this->query_;
-  std::vector<SynonymDeclaration *> query_declarations = query.getSynonymDeclarations();
-  this->declarations_ = std::unordered_set < QueryDeclaration *,
-      QueryDeclarationHashFunction,
-      QueryDeclarationPointerEquality > (
+  std::vector<SynonymReference *> query_declarations = query.getSynonymDeclarations();
+  this->declarations_ = std::unordered_set <QueryReference *,
+                                            QueryDeclarationHashFunction,
+                                            QueryDeclarationPointerEquality > (
           query_declarations.begin(), query_declarations.end()
       );
   return this->getDeclarationAsSet();
@@ -67,7 +67,7 @@ Result *QueryEvaluator::evaluate() {
   this->fetchContext();
 
   // Query declaration for whose subquery_results are to be returned.
-  SynonymDeclaration *called_declaration = this->query_.getQueryCall()->getDeclaration();
+  SynonymReference *called_declaration = this->query_.getQueryCall()->getReference();
   QuerySynonym *synonym = called_declaration->getSynonym();
 
   std::vector<SubqueryResult> subquery_results = this->evaluateSubqueries();

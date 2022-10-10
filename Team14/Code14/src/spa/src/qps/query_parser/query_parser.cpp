@@ -8,26 +8,14 @@
 #include "qps/pql/query_keywords.h"
 #include "spdlog/spdlog.h"
 
-QueryParser::QueryParser(std::vector<Token *> tokens) {
-  this->tokens_ = std::move(tokens);
-}
-
 Query *QueryParser::parse() {
-  QueryCall *maybe_call;
-  while (!outOfTokens()) {
-    Token *tmp = peekToken();
-    if (QueryKeywords::isValidDeclarationKeyword(tmp->value)) {
-      parseDeclarations();
-    } else if (QueryKeywords::isValidCallKeyword(tmp->value)) {
-      maybe_call = parseQueryCall();
-    } else if (*tmp == EndOfFileToken()) {
-      break;
-    } else {
-      throw ParseSyntaxError("Unexpected token: " + tmp->value);
-    }
+  Declarations query_declarations = parseDeclarations();
+  QueryCall *query_call = parseQueryCall();
+  Clauses query_clauses = parseClauses();
+  if (!outOfTokens()) {
+    throw ParseSyntaxError("Unexpected token");
   }
-  maybe_query_ =  new Query(maybe_declarations_, maybe_call);
-  return maybe_query_;
+  return new Query(query_declarations, query_call, query_clauses);
 }
 
 Token *QueryParser::nextToken() {
@@ -36,21 +24,23 @@ Token *QueryParser::nextToken() {
   }
   return tokens_[this->token_index_++];
 }
+
 Token *QueryParser::peekToken() {
   return tokens_[this->token_index_];
 }
+
 bool QueryParser::outOfTokens() {
-  return this->token_index_ == this->tokens_.size();
+  return this->token_index_ == this->tokens_.size() || *peekToken() == EndOfFileToken();
 }
 
-std::vector<SynonymDeclaration *> QueryParser::parseDeclarations() {
+Declarations QueryParser::parseDeclarations() {
   while (QueryKeywords::isValidDeclarationKeyword(peekToken()->value)) {
-    parseDeclaration();
+    parseDeclarationStatement()
   }
-  return this->maybe_declarations_;
+  return this->declarations_;
 }
 
-void QueryParser::parseDeclaration() {
+void QueryParser::parseDeclarationStatement() {
   Token *prefix = nextToken();
   EntityType type;
   try {
@@ -59,75 +49,82 @@ void QueryParser::parseDeclaration() {
   catch (std::out_of_range &oor) {
     throw ParseSyntaxError("Unknown declaration type: " + prefix->value);
   }
-  maybe_declarations_.push_back(new SynonymDeclaration(parseSynonym(), type));
+
+  Declarations declarations;
+  // Initial declaration
+  declarations_.push_back(parseDeclaration(type));
 
   // While there are multiple declarations seperated by commas
-  while (*peekToken() == CommaToken()) {
-    nextToken();
-    maybe_declarations_.push_back(new SynonymDeclaration(parseSynonym(), type));
+  while (*peekToken() != SemicolonToken()) {
+    expect(nextToken(), {TokenType::kComma});
+    declarations_.push_back(parseDeclaration(type));
   }
 
-  // End declaration with a semicolon
+  // End declaration statement with a semicolon
   expect(nextToken(), {TokenType::kSemicolon});
 }
 
+SynonymReference *QueryParser::parseDeclaration(EntityType type) {
+  switch (type) {
+    case EntityType::kProcedure: return new ProcedureDeclaration(parseSynonym());
+    case EntityType::kStatement: return new StatementDeclaration(parseSynonym());
+    case EntityType::kVariable: return new VariableDeclaration(parseSynonym());
+    case EntityType::kConstant: return new ConstantDeclaration(parseSynonym());
+    case EntityType::kAssignStmt: return new AssignDeclaration(parseSynonym());
+    case EntityType::kCallStmt: return new CallDeclaration(parseSynonym());
+    case EntityType::kIfStmt: return new IfDeclaration(parseSynonym());
+    case EntityType::kWhileStmt: return new WhileDeclaration(parseSynonym());
+    case EntityType::kPrintStmt: return new PrintDeclaration(parseSynonym());
+    case EntityType::kReadStmt: return new ReadDeclaration(parseSynonym());
+    default:
+      throw ParseSyntaxError("Unknown declaration type:" + EntityTypeToString(type));
+  }
+}
 
-QueryDeclaration *QueryParser::parseReference(SyntaxRuleType syntax_type) {
-  checkReferenceSyntax(syntax_type);
+
+QueryReference *QueryParser::parseReference() {
   Token *reference = peekToken();
-  QueryDeclaration *declaration;
   switch (reference->type) {
-    case TokenType::kQuote:declaration = parseQuotedDeclaration();
-      break;
-    case TokenType::kLiteral:declaration = parseLiteralDeclaration();
-      break;
-    case TokenType::kSymbol:declaration = parseInlineSynonymDeclaration();
-      break;
-    case TokenType::kWildCard:declaration = parseWildcard();
-      break;
+    case TokenType::kQuote: return parseQuotedReference();
+    case TokenType::kLiteral: return parseIntegerReference();
+    case TokenType::kSymbol: return parseSynonymReference();
+    case TokenType::kWildCard: return parseWildcardReference();
     default:throw ParseSyntaxError("Unknown Reference: " + reference->value);
   }
-  return declaration;
 }
 
-void QueryParser::checkReferenceSyntax(SyntaxRuleType syntax_type) {
-  auto reference_rules = syntax_token_map.at(syntax_type);
-  if (reference_rules.find(peekToken()->type) == reference_rules.end()) {
-    throw ParseSyntaxError("Invalid reference syntax");
-  }
+SynonymReference * QueryParser::parseSynonymReference() {
+  return new SynonymReference(parseSynonym());
 }
 
-SynonymDeclaration *QueryParser::parseInlineSynonymDeclaration() {
-  return new SynonymDeclaration(parseSynonym());
-}
-
-IntegerDeclaration *QueryParser::parseLiteralDeclaration() {
-  Token *literal = nextToken();
-  expect(literal, {TokenType::kLiteral});
-  std::string literal_string = literal->value;
+IntegerReference *QueryParser::parseIntegerReference() {
+  expect(peekToken(), {TokenType::kLiteral});
+  std::string literal_string = nextToken()->value;
   if (literal_string.length() > 1 && literal_string[0] == '0') {
     throw ParseSyntaxError("INTEGER cannot have leading zero: " + literal_string);
   }
-  return new IntegerDeclaration(literal_string);
+  return new IntegerReference(literal_string);
 }
 
-IdentDeclaration *QueryParser::parseQuotedDeclaration() {
+IdentReference *QueryParser::parseQuotedReference() {
   expect(nextToken(), {TokenType::kQuote});
-  IdentDeclaration *declaration = parseIdentDeclaration();
+  IdentReference *declaration = parseIdentReference();
   expect(nextToken(), {TokenType::kQuote});
   return declaration;
 }
 
-IdentDeclaration *QueryParser::parseIdentDeclaration() {
-  Token *symbol = nextToken();
-  expect(symbol, {TokenType::kSymbol});
-  return new IdentDeclaration(symbol->value);
+IdentReference *QueryParser::parseIdentReference() {
+  expect(peekToken(), {TokenType::kSymbol});
+  return new IdentReference(nextToken()->value);
+}
+WildcardReference *QueryParser::parseWildcardReference() {
+  expect(nextToken(), {TokenType::kWildCard});
+  return new WildcardReference();
 }
 
 QuerySynonym *QueryParser::parseSynonym() {
-  Token *synonym = nextToken();
-  expect(synonym, {TokenType::kSymbol});
-  return new QuerySynonym(synonym->value);
+  expect(peekToken(), {TokenType::kSymbol});
+  return new QuerySynonym(nextToken()->value);
 }
 
 QueryCall *QueryParser::parseQueryCall() {
@@ -135,12 +132,19 @@ QueryCall *QueryParser::parseQueryCall() {
   if (!QueryKeywords::isValidCallKeyword(call->value)) {
     throw ParseSyntaxError("Unknown query call: " + call->value);
   }
-  SynonymDeclaration *synonym_declaration = parseInlineSynonymDeclaration();
-  while (*peekToken() != EndOfFileToken()) {
-    maybe_clauses_.push_back(parseClause());
-  }
-  return new SelectCall(synonym_declaration, maybe_clauses_);
+  SynonymReference *synonym_reference = parseSynonymReference();
+
+  return new SelectCall(synonym_reference);
 }
+Clauses QueryParser::parseClauses() {
+  Clauses clauses;
+  while (*peekToken() != EndOfFileToken()) {
+    clauses.push_back(parseClause());
+  }
+  this->clauses_ = clauses;
+  return clauses_;
+}
+
 QueryClause *QueryParser::parseClause() {
   Token *clause = nextToken();
   if (*clause == KeywordToken("such") && *nextToken() == KeywordToken("that")) {
@@ -154,58 +158,82 @@ QueryClause *QueryParser::parseClause() {
 
 SuchThatClause *QueryParser::parseSuchThat() {
   Token *relationship = nextToken();
-  std::vector<SyntaxRuleType> syntax_rules;
+  expect(relationship, {TokenType::kSymbol});
   RsType rs_type;
+  std::string rs_keyword = relationship->value;
+
+  // Check for *
+  if (*peekToken() == OperatorToken("*")) {
+    rs_keyword.append(nextToken()->value);
+  }
+  // Convert string to rs type
   try {
-    rs_type = QueryKeywords::relationshipKeywordToType(relationship->value);
-    if (*peekToken() == OperatorToken("*")) {
-      nextToken();
-      rs_type = allow_star_relationship_map.at(rs_type);
-    }
-    syntax_rules = such_that_syntax_rules.at(rs_type);
+    rs_type = QueryKeywords::relationshipKeywordToType(rs_keyword);
   }
   catch (std::out_of_range &oor) {
     throw ParseSyntaxError("Unknown such-that relationship: " + relationship->value);
   }
   expect(nextToken(), {TokenType::kRoundOpenBracket});
-  QueryDeclaration *first = parseReference(syntax_rules[0]);
+  QueryReference *first = parseReference();
   expect(nextToken(), {TokenType::kComma});
-  QueryDeclaration *second = parseReference(syntax_rules[1]);;
+  QueryReference *second = parseReference();;
   expect(nextToken(), {TokenType::kRoundCloseBracket});
+  SuchThatClause *clause = parseSuchThat(rs_type, first, second);
+  if (!clause->isSyntacticallyCorrect()) {
+    throw ParseSyntaxError("Incorrect parameter syntax");
+  }
   spdlog::debug("SuchThat parsed: {}({}, {})", RsTypeToString(rs_type), first->toString(), second->toString());
-  return new SuchThatClause(rs_type, first, second);
+  return clause;
 }
+
+SuchThatClause *QueryParser::parseSuchThat(RsType rs_type, QueryReference *first, QueryReference *second) {
+  switch (rs_type) {
+    case RsType::kFollows:return new FollowsClause(first, second);
+    case RsType::kFollowsT:return new FollowsTClause(first, second);
+    case RsType::kParent:return new ParentClause(first, second);
+    case RsType::kParentT:return new ParentTClause(first, second);
+    case RsType::kUses:return new UsesClause(first, second);
+    case RsType::kModifies:return new ModifiesClause(first, second);
+    case RsType::kCalls:return new CallsClause(first, second);
+    case RsType::kCallsT:return new CallsTClause(first, second);
+    case RsType::kNext:return new NextClause(first, second);
+    case RsType::kNextT:return new NextTClause(first, second);
+    case RsType::kAffects:return new AffectsClause(first, second);
+    case RsType::kAffectsT:return new AffectsTClause(first, second);
+    default:
+      throw ParseSyntaxError("Unsupported such-that relationship: " + RsTypeToString(rs_type));
+  }
+}
+
 
 PatternClause *QueryParser::parsePattern() {
   expect(peekToken(), {TokenType::kSymbol});
-  SynonymDeclaration *syn_assign = parseInlineSynonymDeclaration();
+  SynonymReference *syn_assign = parseSynonymReference();
   expect(nextToken(), {TokenType::kRoundOpenBracket});
-  QueryDeclaration *ent_ref = parseReference(pattern_syntax_rule);
+  QueryReference *ent_ref = parseReference();
   expect(nextToken(), {TokenType::kComma});
-  StaticDeclaration *expression_spec = parseExpression();
+  ExpressionSpec *expression_spec = parseExpression();
   expect(nextToken(), {TokenType::kRoundCloseBracket});
-  return new AssignPatternClause(syn_assign, ent_ref, expression_spec);
+  return new PatternClause(syn_assign, ent_ref, expression_spec);
 }
 
-StaticDeclaration *QueryParser::parseExpression() {
-  bool wild_expression = false;
+ExpressionSpec *QueryParser::parseExpression() {
+  bool is_wild = false;
   Token *expr = peekToken();
   if (expr->type == TokenType::kWildCard) {
     nextToken();
-    wild_expression = true;
+    is_wild = true;
     expr = peekToken();
   }
   if (expr->type == TokenType::kQuote) {
     std::string expression = parseFlattenedExpression();
-    if (wild_expression) {
+    if (is_wild) {
       expect(nextToken(), {TokenType::kWildCard});
-      return new WildCardExpressionDeclaration(expression);
+      return new WildExpression(expression);
     }
-    return new ExpressionDeclaration(expression);
-
+    return new ExactExpression(expression);
   }
-  return new WildCardExpressionDeclaration("");
-
+  return new WildExpression();
 }
 
 std::string QueryParser::parseFlattenedExpression() {
@@ -220,17 +248,8 @@ std::string QueryParser::parseFlattenedExpression() {
   return Parser::ParseExpression(expr_tokens)->ToString();
 }
 
-WildcardDeclaration *QueryParser::parseWildcard() {
-  expect(nextToken(), {TokenType::kWildCard});
-  return new WildcardDeclaration();
-}
-
 void QueryParser::expect(Token *token, const std::unordered_set<TokenType> &expected_types) {
   if (expected_types.count(token->type) == 0) {
     throw ParseSyntaxError("Invalid token type: " + token->value);
   }
 }
-
-
-
-

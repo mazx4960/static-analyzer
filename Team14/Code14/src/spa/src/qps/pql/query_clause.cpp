@@ -8,31 +8,68 @@ ClauseType QueryClause::getClauseType() {
 RsType SuchThatClause::getSuchThatType() const {
   return this->type_;
 }
-QueryDeclaration *SuchThatClause::getFirst() const {
+QueryReference *SuchThatClause::getFirst() const {
   return this->first_;
 }
-QueryDeclaration *SuchThatClause::getSecond() const {
+QueryReference *SuchThatClause::getSecond() const {
   return this->second_;
 }
-void SuchThatClause::setFirst(SynonymDeclaration *synonym_declaration) {
+void SuchThatClause::setFirst(SynonymReference *synonym_declaration) {
   this->first_ = synonym_declaration;
 }
-void SuchThatClause::setSecond(SynonymDeclaration *synonym_declaration) {
+void SuchThatClause::setSecond(SynonymReference *synonym_declaration) {
   this->second_ = synonym_declaration;
 }
-
-RsType PatternClause::getPatternType() const {
-  return this->type_;
+bool ParentClause::isSyntacticallyCorrect() const {
+  return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
-SynonymDeclaration *PatternClause::getSynonymDeclaration() const {
+bool ParentTClause::isSyntacticallyCorrect() const {
+  return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
+}
+bool FollowsClause::isSyntacticallyCorrect() const {
+  return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
+}
+bool FollowsTClause::isSyntacticallyCorrect() const {
+  return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
+}
+bool UsesClause::isSyntacticallyCorrect() const {
+  return (this->getFirst()->isStmtRef() || this->getFirst()->isEntRef()) && this->getSecond()->isEntRef();
+}
+bool ModifiesClause::isSyntacticallyCorrect() const {
+  return (this->getFirst()->isStmtRef() || this->getFirst()->isEntRef()) && this->getSecond()->isEntRef();
+}
+bool CallsClause::isSyntacticallyCorrect() const {
+  return this->getFirst()->isEntRef() && this->getSecond()->isEntRef();
+}
+bool CallsTClause::isSyntacticallyCorrect() const {
+  return this->getFirst()->isEntRef() && this->getSecond()->isEntRef();
+}
+bool NextClause::isSyntacticallyCorrect() const {
+  return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
+}
+bool NextTClause::isSyntacticallyCorrect() const {
+  return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
+}
+bool AffectsClause::isSyntacticallyCorrect() const {
+  return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
+}
+bool AffectsTClause::isSyntacticallyCorrect() const {
+  return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
+}
+
+
+SynonymReference *PatternClause::getSynonymDeclaration() const {
   return this->synonym_declaration_;
 }
-QueryDeclaration *PatternClause::getEntRef() const {
+QueryReference *PatternClause::getEntRef() const {
   return this->ent_ref_;
 }
-StaticDeclaration *PatternClause::getExpression() const {
+ExpressionSpec *PatternClause::getExpression() const {
   return this->expression_;
 }
-void PatternClause::setSynonymDeclaration(SynonymDeclaration *synonym_declaration) {
+void PatternClause::setSynonymDeclaration(SynonymReference *synonym_declaration) {
   this->synonym_declaration_ = synonym_declaration;
+}
+bool PatternClause::isSyntacticallyCorrect() const {
+  return true;
 }

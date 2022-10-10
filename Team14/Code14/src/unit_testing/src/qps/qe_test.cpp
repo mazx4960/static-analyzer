@@ -87,12 +87,12 @@ class TestStorage {
 class QueryEvaluatorMock : public QueryEvaluator {
  public:
   QueryEvaluatorMock(IPKBQuerier *pkb, Query &query) : QueryEvaluator(pkb, query) {};
-  std::unordered_set<QueryDeclaration *,
+  std::unordered_set<QueryReference *,
                      QueryDeclarationHashFunction,
                      QueryDeclarationPointerEquality> mockCopyDeclarations() {
     return this->copyDeclarations();
   };
-  std::unordered_set<QueryDeclaration *,
+  std::unordered_set<QueryReference *,
                      QueryDeclarationHashFunction,
                      QueryDeclarationPointerEquality> mockFetchContext() {
     return this->fetchContext();
@@ -144,11 +144,11 @@ TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
   auto *proc_dec = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
 
 
-  std::vector<SynonymDeclaration *> declarations_vector = {
+  std::vector<SynonymReference *> declarations_vector = {
       stmt_dec, read_dec, print_dec, call_dec, while_dec,
       if_dec, assign_dec, var_dec, const_dec, proc_dec,
   };
-  std::unordered_set<QueryDeclaration *,
+  std::unordered_set<QueryReference *,
                      QueryDeclarationHashFunction,
                      QueryDeclarationPointerEquality> declarations_set = {
       stmt_dec, read_dec, print_dec, call_dec, while_dec,
@@ -159,7 +159,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
   Query query = Query(declarations_vector, select_call);
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
-  std::unordered_set<QueryDeclaration *, QueryDeclarationHashFunction, QueryDeclarationPointerEquality>
+  std::unordered_set<QueryReference *, QueryDeclarationHashFunction, QueryDeclarationPointerEquality>
       returned_declaration_set = query_evaluator->mockCopyDeclarations();
 
   ASSERT_EQ(declarations_set, returned_declaration_set);
@@ -190,14 +190,14 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec_2"));
 
 
-  std::vector<SynonymDeclaration *> declarations_vector = {
+  std::vector<SynonymReference *> declarations_vector = {
       stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
       if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
 
       stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
       if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2
   };
-  std::unordered_set<QueryDeclaration *,
+  std::unordered_set<QueryReference *,
                      QueryDeclarationHashFunction,
                      QueryDeclarationPointerEquality> declarations_set = {
       stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
@@ -212,7 +212,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   Query query = Query(declarations_vector, select_call);
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
-  std::unordered_set<QueryDeclaration *,
+  std::unordered_set<QueryReference *,
                      QueryDeclarationHashFunction,
                      QueryDeclarationPointerEquality>
       returned_declaration_set = query_evaluator->mockCopyDeclarations();
@@ -245,14 +245,14 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
   auto *const_dec_2 = new ConstantDeclaration(new QuerySynonym("const_dec"));
   auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
 
-  std::vector<SynonymDeclaration *> declarations_vector = {
+  std::vector<SynonymReference *> declarations_vector = {
       stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
       if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
 
       stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
       if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
   };
-  std::unordered_set<QueryDeclaration *,
+  std::unordered_set<QueryReference *,
                      QueryDeclarationHashFunction,
                      QueryDeclarationPointerEquality> declarations_set = {
       stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
@@ -266,7 +266,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
   Query query = Query(declarations_vector, select_call);
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
-  std::unordered_set<QueryDeclaration *,
+  std::unordered_set<QueryReference *,
                      QueryDeclarationHashFunction,
                      QueryDeclarationPointerEquality>
       returned_declaration_set = query_evaluator->mockCopyDeclarations();
@@ -285,7 +285,7 @@ TEST(QeFetchContextTest, StatementDeclaration) {
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::all_stmt_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::all_stmt_entities_);
 }
 
 TEST(QeFetchContextTest, ProcedureDeclaration) {
@@ -297,7 +297,7 @@ TEST(QeFetchContextTest, ProcedureDeclaration) {
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::procedure_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::procedure_entities_);
 }
 
 TEST(QeFetchContextTest, VariableDeclaration) {
@@ -309,7 +309,7 @@ TEST(QeFetchContextTest, VariableDeclaration) {
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::variable_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::variable_entities_);
 }
 
 TEST(QeFetchContextTest, ConstantDeclaration) {
@@ -321,7 +321,7 @@ TEST(QeFetchContextTest, ConstantDeclaration) {
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::constant_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::constant_entities_);
 }
 
 TEST(QeFetchContextTest, StmtAssignDeclaration) {
@@ -333,7 +333,7 @@ TEST(QeFetchContextTest, StmtAssignDeclaration) {
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::stmt_assign_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_assign_entities_);
 }
 
 TEST(QeFetchContextTest, StmtCallDeclaration) {
@@ -345,7 +345,7 @@ TEST(QeFetchContextTest, StmtCallDeclaration) {
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::stmt_call_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_call_entities_);
 }
 
 TEST(QeFetchContextTest, StmtIfDeclaration) {
@@ -357,7 +357,7 @@ TEST(QeFetchContextTest, StmtIfDeclaration) {
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::stmt_if_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_if_entities_);
 }
 
 TEST(QeFetchContextTest, StmtWhileDeclaration) {
@@ -369,7 +369,7 @@ TEST(QeFetchContextTest, StmtWhileDeclaration) {
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::stmt_while_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_while_entities_);
 }
 
 TEST(QeFetchContextTest, StmtPrintDeclaration) {
@@ -381,7 +381,7 @@ TEST(QeFetchContextTest, StmtPrintDeclaration) {
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::stmt_print_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_print_entities_);
 }
 
 TEST(QeFetchContextTest, StmtReadDeclaration) {
@@ -393,5 +393,5 @@ TEST(QeFetchContextTest, StmtReadDeclaration) {
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::stmt_read_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_read_entities_);
 }

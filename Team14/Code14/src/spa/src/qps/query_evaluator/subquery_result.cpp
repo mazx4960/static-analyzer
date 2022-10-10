@@ -7,14 +7,14 @@
 
 #include "spdlog/spdlog.h"
 
-SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDeclaration *first, QueryDeclaration *second) {
+SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryReference *first, QueryReference *second) {
 
-  if (first->getDeclarationType() == DeclarationType::kSynonym) {
-    QuerySynonym *first_synonym = static_cast<SynonymDeclaration *>(first)->getSynonym();
+  if (first->getRefType() == ReferenceType::kSynonym) {
+    QuerySynonym *first_synonym = static_cast<SynonymReference *>(first)->getSynonym();
     spdlog::debug("First synonym used");
     synonyms_.push_back(first_synonym);
-    if (second->getDeclarationType() == DeclarationType::kSynonym) {
-      QuerySynonym *second_synonym = static_cast<SynonymDeclaration *>(second)->getSynonym();
+    if (second->getRefType() == ReferenceType::kSynonym) {
+      QuerySynonym *second_synonym = static_cast<SynonymReference *>(second)->getSynonym();
       spdlog::debug("Second synonym used");
       // Corner case: first and second synonyms are the same
       if (*first_synonym == *second_synonym) {
@@ -39,8 +39,8 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDecl
         }
       }
     }
-  } else if (second->getDeclarationType() == DeclarationType::kSynonym) {
-    QuerySynonym *second_synonym = static_cast<SynonymDeclaration *>(second)->getSynonym();
+  } else if (second->getRefType() == ReferenceType::kSynonym) {
+    QuerySynonym *second_synonym = static_cast<SynonymReference *>(second)->getSynonym();
     spdlog::debug("Second synonym used");
     synonyms_.push_back(second_synonym);
     for (auto [entity, entity_set] : table) {

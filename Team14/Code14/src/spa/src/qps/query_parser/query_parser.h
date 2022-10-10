@@ -8,45 +8,40 @@
 #include "commons/lexer/token.h"
 #include "commons/parser/parser_exceptions.h"
 #include "qps/pql/query.h"
-#include "qps/pql/query_declaration.h"
+#include "qps/pql/query_reference.h"
 #include "query_builder.h"
-#include "query_syntax_rules.h"
 
 class QueryParser {
  private:
   std::vector<Token *> tokens_;
-  std::vector<SynonymDeclaration *> maybe_declarations_;
-  Query *maybe_query_;
-  std::vector<QueryClause *> maybe_clauses_;
-
+  Declarations declarations_;
+  Clauses clauses_;
   int token_index_ = 0;
 
   Token *nextToken();
   Token *peekToken();
   bool outOfTokens();
-  void parseDeclaration();
-  void checkReferenceSyntax(SyntaxRuleType syntax_type);
 
  public:
   explicit QueryParser(std::vector<Token *> tokens);
   Query *parse();
-
-  QueryCall *parseQueryCall();
-
-  QuerySynonym *parseSynonym();
-  std::vector<SynonymDeclaration *> parseDeclarations();
-  QueryClause *parseClause();
-  PatternClause *parsePattern();
-  SuchThatClause *parseSuchThat();
-
-  QueryDeclaration *parseReference(SyntaxRuleType syntax_type);
-  IdentDeclaration *parseQuotedDeclaration();
-  IntegerDeclaration *parseLiteralDeclaration();
-  IdentDeclaration *parseIdentDeclaration();
-  WildcardDeclaration *parseWildcard();
-  StaticDeclaration *parseExpression();
-  std::string parseFlattenedExpression();
-  SynonymDeclaration *parseInlineSynonymDeclaration();
-
   static void expect(Token *token, const std::unordered_set<TokenType> &expected_types);
+
+  Declarations parseDeclarations();
+  QueryCall *parseQueryCall();
+  Clauses parseClauses();
+  QueryReference *parseReference();
+  IdentReference * parseQuotedReference();
+  SynonymReference *parseSynonymReference();
+  WildcardReference *parseWildcardReference();
+  IntegerReference *parseIntegerReference();
+  QuerySynonym *parseSynonym();
+  IdentReference *parseIdentReference();
+  QueryClause *parseClause();
+  SuchThatClause *parseSuchThat();
+  static SuchThatClause *parseSuchThat(RsType rs_type, QueryReference *first, QueryReference *second);
+  PatternClause *parsePattern();
+  ExpressionSpec *parseExpression();
+  std::string parseFlattenedExpression();
+  SynonymReference *parseDeclaration(EntityType type);
 };

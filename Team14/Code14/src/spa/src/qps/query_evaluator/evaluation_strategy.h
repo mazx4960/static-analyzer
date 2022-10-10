@@ -21,8 +21,8 @@ class EvaluationStrategy {
  public:
   static EvaluationStrategy *getStrategy(IPKBQuerier *, QueryClause *);
   virtual SubqueryResult evaluate() = 0;
-  EntityPointerUnorderedSet getCandidates(QueryDeclaration *);
-  static bool shouldIntersect(QueryDeclaration *);
+  EntityPointerUnorderedSet getCandidates(QueryReference *);
+  static bool shouldIntersect(QueryReference *);
   static EntityPointerUnorderedSet intersect(const EntityPointerUnorderedSet &first, const EntityPointerUnorderedSet &second);
 };
 
@@ -37,7 +37,7 @@ class SuchThatStrategy : public EvaluationStrategy {
   SuchThatStrategy(IPKBQuerier *pkb, SuchThatClause *query_clause) : EvaluationStrategy(pkb), clause_(query_clause) {
   };
   SubqueryResult evaluate() override;
-  EntityPointerUnorderedMap evaluateParameter(QueryDeclaration *, RsType, bool, const EntityPointerUnorderedSet &);
+  EntityPointerUnorderedMap evaluateParameter(QueryReference *, RsType, bool, const EntityPointerUnorderedSet &);
 };
 
 /*
@@ -50,5 +50,5 @@ class PatternStrategy : public EvaluationStrategy {
   PatternStrategy(IPKBQuerier *pkb, PatternClause *query_clause) : EvaluationStrategy(pkb), clause_(query_clause) {
   };
   SubqueryResult evaluate() override;
-  EntityPointerUnorderedMap evaluateParameter(QueryDeclaration *, QueryDeclaration *, const EntityPointerUnorderedSet &);
+  EntityPointerUnorderedMap evaluateParameter(QueryReference *, QueryReference *, const EntityPointerUnorderedSet &);
 };

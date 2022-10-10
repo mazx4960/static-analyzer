@@ -27,13 +27,13 @@ EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClaus
  * @param query_declaration query declaration.
  * @return set of Entity candidates.
  */
-EntityPointerUnorderedSet EvaluationStrategy::getCandidates(QueryDeclaration *declaration) {
+EntityPointerUnorderedSet EvaluationStrategy::getCandidates(QueryReference *declaration) {
   EntityPointerUnorderedSet candidates;
   if (declaration->getEntityType() == EntityType::kIdent || declaration->getEntityType() == EntityType::kInteger) {
     std::basic_string<char> value = declaration->toString();
     candidates = pkb_->getEntitiesByString(value);
   } else if (declaration->getEntityType() == EntityType::kWildcard) {
-    auto *wildcard_declaration = static_cast<WildcardDeclaration *>(declaration);
+    auto *wildcard_declaration = static_cast<WildcardReference *>(declaration);
     EntityPointerUnorderedSet all_variables;
     for (EntityType type : wildcard_declaration->getWildcardType()) {
       all_variables = pkb_->getEntities(type);
@@ -51,7 +51,7 @@ EntityPointerUnorderedSet EvaluationStrategy::getCandidates(QueryDeclaration *de
  * @param declaration query declaration.
  * @return true if the context should be intersected, false otherwise.
  */
-bool EvaluationStrategy::shouldIntersect(QueryDeclaration *declaration) {
+bool EvaluationStrategy::shouldIntersect(QueryReference *declaration) {
   return !declaration->getContext().empty();
 }
 
@@ -77,8 +77,8 @@ SubqueryResult SuchThatStrategy::evaluate() {
   RsType rs_type = this->clause_->getSuchThatType();
   spdlog::debug("Evaluating SuchThat clause with relationship {}", RsTypeToString(rs_type));
 
-  QueryDeclaration *first_param = this->clause_->getFirst();
-  QueryDeclaration *second_param = this->clause_->getSecond();
+  QueryReference *first_param = this->clause_->getFirst();
+  QueryReference *second_param = this->clause_->getSecond();
   EntityPointerUnorderedSet first_param_context = first_param->getContext();
   EntityPointerUnorderedSet second_param_context = second_param->getContext();
   EntityPointerUnorderedSet first_param_candidates = this->getCandidates(first_param);
@@ -101,7 +101,7 @@ SubqueryResult SuchThatStrategy::evaluate() {
  * @param invert_search true if searching by second parameter (e.g. searching by s2 in Follows(s1, s2)).
  * @return set of Entity pointers matching the parameter and relationship type.
  */
-EntityPointerUnorderedMap SuchThatStrategy::evaluateParameter(QueryDeclaration *param, RsType rs_type,
+EntityPointerUnorderedMap SuchThatStrategy::evaluateParameter(QueryReference *param, RsType rs_type,
                                                               bool invert_search,
                                                               const EntityPointerUnorderedSet &potential_matches) {
   spdlog::debug("Evaluating SuchThat parameter {} for {}, inverse = {}", param->toString(), RsTypeToString(rs_type), invert_search);
@@ -125,9 +125,9 @@ EntityPointerUnorderedMap SuchThatStrategy::evaluateParameter(QueryDeclaration *
 SubqueryResult PatternStrategy::evaluate() {
   spdlog::debug("Evaluating Pattern clause");
 
-  QueryDeclaration *stmt_param = this->clause_->getSynonymDeclaration();
-  QueryDeclaration *var_param = this->clause_->getEntRef();
-  QueryDeclaration *expr_param = this->clause_->getExpression();
+  QueryReference *stmt_param = this->clause_->getSynonymDeclaration();
+  QueryReference *var_param = this->clause_->getEntRef();
+  QueryReference *expr_param = this->clause_->getExpression();
   EntityPointerUnorderedSet stmt_param_context = stmt_param->getContext();
 
   auto stmt_matches = this->evaluateParameter(var_param, expr_param, stmt_param_context);
@@ -140,7 +140,7 @@ SubqueryResult PatternStrategy::evaluate() {
  * @param expr_param Right-hand side expression.
  * @return set of Entity pointers matching the parameter and expression.
  */
-EntityPointerUnorderedMap PatternStrategy::evaluateParameter(QueryDeclaration *var_param, QueryDeclaration *expr_param,
+EntityPointerUnorderedMap PatternStrategy::evaluateParameter(QueryReference *var_param, QueryReference *expr_param,
                                                              const EntityPointerUnorderedSet &potential_matches) {
   spdlog::debug("Evaluating Pattern parameter {} for {}", var_param->toString(), expr_param->toString());
   EntityPointerUnorderedSet candidates = this->getCandidates(var_param);

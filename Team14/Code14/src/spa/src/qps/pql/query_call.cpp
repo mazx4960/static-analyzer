@@ -2,15 +2,6 @@
 
 #include "query_call.h"
 
-CallType QueryCall::getType() const {
-  return this->type_;
-}
-SynonymDeclaration *QueryCall::getDeclaration() const {
-  return this->query_declaration_;
-}
-std::vector<QueryClause *> QueryCall::getClauseVector() const {
-  return this->clause_vector_;
-}
-bool QueryCall::hasSubClauses() const {
-  return !this->getClauseVector().empty();
+SynonymReference *QueryCall::getReference() const {
+  return this->synonym_reference_;
 }
