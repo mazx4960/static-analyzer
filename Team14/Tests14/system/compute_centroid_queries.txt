@@ -468,3 +468,23 @@ assign a1, a2;
 Select a1 such that Affects(a1, a2) pattern a2 ("normSq", _)
 10, 11, 12, 16, 17, 21, 22
 5000
+818 - select all assign stmts that Affects itself
+assign a;
+Select a such that Affects(a, a)
+15, 16, 17
+5000
+819 - select all stmts that Affects itself (syn should be down-casted to assign)
+stmt s;
+Select s such that Affects(s, s)
+15, 16, 17
+5000
+820 - select all assign stmts that Affects* itself
+assign a;
+Select a such that Affects*(a, a)
+15, 16, 17
+5000
+821 - select all stmts that Affects* itself (syn should be down-casted to assign)
+stmt s;
+Select s such that Affects*(s, s)
+15, 16, 17
+5000

@@ -203,3 +203,13 @@ variable v;
 Select v such that Affects*(5, 4)
 none
 5000
+808 - select all assign stmts that Affects itself
+assign a;
+Select a such that Affects(a, a)
+none
+5000
+809 - select all stmts that Affects itself (synonym should be down-casted to assign)
+stmt s;
+Select s such that Affects(s, s)
+none
+5000
