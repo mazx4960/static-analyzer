@@ -93,7 +93,7 @@ procedure p;
 Select p such that Affects(15, 19)
 none
 5000
-402 - invalid Affects relationship
+402 - invalid Affects relationship (line 16 is not assignment)
 procedure p;
 Select p such that Affects(16, 17)
 none
