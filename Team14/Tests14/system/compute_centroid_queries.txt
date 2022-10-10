@@ -253,10 +253,10 @@ procedure p, q;
 Select p such that Calls(q, _)
 main, computeCentroid, readPoint, printResults
 5000
-620 - select all procedures that modifies "x" and are called on by another procedure
+619 - select all procedures that modifies "x", directly or indirectly, and are called on by another procedure
 procedure p, q;
 Select q such that Calls(p, q) such that Modifies(q, "x")
-readPoint
+readPoint, computeCentroid
 5000
 701 - select all stmts that can be executed directly after some other stmt
 stmt s1, s2;
@@ -301,12 +301,12 @@ none
 709 - select all stmts that are directly after another assign stmt that modifies "cenX"
 stmt s; assign a;
 Select s such that Next(a, s) pattern a ("cenX", _)
-17, 22
+12, 17, 22
 5000
 710 - select all stmts that are directly or indirectly after stmt 17
 stmt s;
 Select s such that Next*(17, s)
-18, 19, 20, 21, 22, 23
+14, 15, 16, 17, 18, 19, 20, 21, 22, 23
 5000
 711 - select all stmts that are directly or indirectly after stmt 20
 stmt s;
