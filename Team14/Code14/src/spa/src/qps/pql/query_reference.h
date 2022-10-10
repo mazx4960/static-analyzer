@@ -100,92 +100,72 @@ class SynonymReference : public QueryReference {
 };
 
 class StatementDeclaration : public SynonymReference {
- private:
-  QuerySynonym *query_synonym_;
  public:
   explicit StatementDeclaration(QuerySynonym *query_synonym)
-      : SynonymReference(query_synonym, EntityType::kStatement), query_synonym_(query_synonym) {
+      : SynonymReference(query_synonym, EntityType::kStatement) {
   };
 };
 
 class IfDeclaration : public SynonymReference {
- private:
-  QuerySynonym *query_synonym_;
  public:
   explicit IfDeclaration(QuerySynonym *query_synonym)
-      : SynonymReference(query_synonym, EntityType::kIfStmt), query_synonym_(query_synonym) {
+      : SynonymReference(query_synonym, EntityType::kIfStmt) {
   };
 };
 
 class ReadDeclaration : public SynonymReference {
- private:
-  QuerySynonym *query_synonym_;
  public:
   explicit ReadDeclaration(QuerySynonym *query_synonym)
-      : SynonymReference(query_synonym, EntityType::kReadStmt), query_synonym_(query_synonym) {
+      : SynonymReference(query_synonym, EntityType::kReadStmt) {
   };
 };
 
 class CallDeclaration : public SynonymReference {
- private:
-  QuerySynonym *query_synonym_;
  public:
   explicit CallDeclaration(QuerySynonym *query_synonym)
-      : SynonymReference(query_synonym, EntityType::kCallStmt), query_synonym_(query_synonym) {
+      : SynonymReference(query_synonym, EntityType::kCallStmt) {
   };
 };
 
 class PrintDeclaration : public SynonymReference {
- private:
-  QuerySynonym *query_synonym_;
  public:
   explicit PrintDeclaration(QuerySynonym *query_synonym)
-      : SynonymReference(query_synonym, EntityType::kPrintStmt), query_synonym_(query_synonym) {
+      : SynonymReference(query_synonym, EntityType::kPrintStmt) {
   };
 };
 
 class WhileDeclaration : public SynonymReference {
- private:
-  QuerySynonym *query_synonym_;
  public:
   explicit WhileDeclaration(QuerySynonym *query_synonym)
-      : SynonymReference(query_synonym, EntityType::kWhileStmt), query_synonym_(query_synonym) {
+      : SynonymReference(query_synonym, EntityType::kWhileStmt) {
   };
 };
 
 class AssignDeclaration : public SynonymReference {
- private:
-  QuerySynonym *query_synonym_;
  public:
   explicit AssignDeclaration(QuerySynonym *query_synonym)
-      : SynonymReference(query_synonym, EntityType::kAssignStmt), query_synonym_(query_synonym) {
+      : SynonymReference(query_synonym, EntityType::kAssignStmt) {
   };
 };
 
 class VariableDeclaration : public SynonymReference {
- private:
-  QuerySynonym *query_synonym_;
  public:
   explicit VariableDeclaration(QuerySynonym *query_synonym)
-      : SynonymReference(query_synonym, EntityType::kVariable), query_synonym_(query_synonym) {
+      : SynonymReference(query_synonym, EntityType::kVariable) {
   };
 };
 
 class ConstantDeclaration : public SynonymReference {
- private:
-  QuerySynonym *query_synonym_;
  public:
   explicit ConstantDeclaration(QuerySynonym *query_synonym)
-      : SynonymReference(query_synonym, EntityType::kConstant), query_synonym_(query_synonym) {
+      : SynonymReference(query_synonym, EntityType::kConstant) {
   };
 };
 
 class ProcedureDeclaration : public SynonymReference {
- private:
-  QuerySynonym *query_synonym_;
  public:
   explicit ProcedureDeclaration(QuerySynonym *query_synonym)
-      : SynonymReference(query_synonym, EntityType::kProcedure), query_synonym_(query_synonym) {
+      : SynonymReference(query_synonym, EntityType::kProcedure) {
   };
 };
 
