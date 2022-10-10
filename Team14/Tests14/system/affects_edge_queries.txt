@@ -11,82 +11,82 @@ none
 201 - valid Affects relationship
 procedure p;
 Select p such that Affects(9, 11)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 202 - valid Affects relationship
 procedure p;
 Select p such that Affects(10, 12)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 203 - valid Affects relationship
 procedure p;
 Select p such that Affects(11, 13)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 204 - valid Affects relationship
 procedure p;
 Select p such that Affects(12, 13)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 205 - valid Affects relationship
 procedure p;
 Select p such that Affects(12, 15)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 206 - valid Affects relationship
 procedure p;
 Select p such that Affects(13, 15)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 207 - valid Affects relationship
 procedure p;
 Select p such that Affects(14, 15)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 208 - valid Affects relationship
 procedure p;
 Select p such that Affects(15, 17)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 209 - valid Affects relationship
 procedure p;
 Select p such that Affects(15, 18)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 301 - valid Affects* relationship
 procedure p;
 Select p such that Affects*(9, 13)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 302 - valid Affects* relationship
 procedure p;
 Select p such that Affects*(9, 15)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 303 - valid Affects* relationship
 procedure p;
 Select p such that Affects*(9, 17)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 304 - valid Affects* relationship
 procedure p;
 Select p such that Affects*(9, 18)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 305 - valid Affects* relationship
 procedure p;
 Select p such that Affects*(9, 19)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 306 - valid Affects* relationship
 procedure p;
 Select p such that Affects*(14, 19)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 307 - valid Affects* relationship
 procedure p;
 Select p such that Affects*(15, 19)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 401 - invalid Affects relationship
 procedure p;
@@ -101,15 +101,50 @@ none
 501 - valid Affects relationship
 procedure p;
 Select p such that Affects(20, 22)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 502 - valid Affects relationship
 procedure p;
 Select p such that Affects(22, 22)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
 5000
 503 - valid Affects* relationship
 procedure p;
 Select p such that Affects*(22, 22)
-f1, f2, fAssign, fRead, fAffectT, fWhile
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
+5000
+504 - assign stmts that Affect itself
+assign a;
+Select a such that Affects(a, a)
+22
+5000
+505 - statements that Affect itself
+stmt s;
+Select s such that Affects(s, s)
+22
+5000
+601 - valid Affects relationship
+procedure p;
+Select p such that Affects(29, 28)
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
+5000
+602 - invalid Affects relationship (should be Affects*, see next test)
+procedure p;
+Select p such that Affects(29, 27)
+none
+5000
+603 - valid Affects* relationship
+procedure p;
+Select p such that Affects*(29, 27)
+f1, f2, fAssign, fRead, fAffectT, fWhile, fWhile2
+5000
+604 - assign statements that Affect* itself
+assign a;
+Select a such that Affects*(a, a)
+22, 27, 28, 29
+5000
+605 - stmts that Affect* itself (syn should be down-casted to assign)
+stmt s;
+Select s such that Affects*(s, s)
+22, 27, 28, 29
 5000
