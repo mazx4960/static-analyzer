@@ -383,3 +383,88 @@ print p;
 Select p such that Next(_, p)
 6, 7, 8
 5000
+801 - select all assign stmts that Affects some other stmt
+assign a1, a2;
+Select a1 such that Affects(a1, a2)
+10, 11, 12, 15, 16, 17, 21, 22
+5000
+802 - select all assign stmts that are affected by some other stmt
+assign a1, a2;
+Select a2 such that Affects(a1, a2)
+15, 16, 17, 21, 22, 23
+5000
+803 - select all assign stmts that Affects some other stmt, using wildcard
+assign a1;
+Select a1 such that Affects(a1, _)
+10, 11, 12, 15, 16, 17, 21, 22
+5000
+804 - select all assign stmts that are affected by some other stmt, using wildcard
+assign a2;
+Select a2 such that Affects(_, a2)
+15, 16, 17, 21, 22, 23
+5000
+805 - select all read stmts with valid wildcard Affects relationship
+read r;
+Select r such that Affects(_, _)
+4, 5
+5000
+806 - select all print stmts with valid Affects relationship
+print p;
+Select p such that Affects(11, 21)
+6, 7, 8, 9
+5000
+807 - select all call stmts with valid Affects relationship
+call c;
+Select c such that Affects(15, 15)
+2, 3, 13
+5000
+808 - select all call stmts with valid Affects relationship
+call c;
+Select c such that Affects(16, 16)
+2, 3, 13
+5000
+809 - select all call stmts with valid Affects relationship
+call c;
+Select c such that Affects(17, 17)
+2, 3, 13
+5000
+810 - select all variables with invalid Affects relationship
+variable v;
+Select v such that Affects(20, 23)
+none
+5000
+811 - select all variables with invalid Affects relationship
+variable v;
+Select v such that Affects(20, 21)
+none
+5000
+812 - select all variables with invalid Affects relationship, line is not assign
+variable v;
+Select v such that Affects(13, 16)
+none
+5000
+813 - select all variables with invalid Affects* relationship, line is not assign
+variable v;
+Select v such that Affects*(13, 23)
+none
+5000
+814 - select all assign that Affect some other stmt using valid pattern
+assign a1, a2;
+Select a1 such that Affects(a1, a2) pattern a1 ("cenX", _)
+11, 16, 21
+5000
+815 - select all stmts that Affect given stmt with valid pattern
+assign a1, a2;
+Select a1 such that Affects(a1, a2) pattern a2 ("normSq", _)
+11, 12, 16, 17, 21, 22
+5000
+816 - select all procedures with valid Affects* relationship
+procedure p;
+Select p such that Affects*(10, 23)
+main, readPoint, printResults, computeCentroid
+5000
+817 - select all stmts that Affects* given stmt with valid pattern
+assign a1, a2;
+Select a1 such that Affects(a1, a2) pattern a2 ("normSq", _)
+10, 11, 12, 16, 17, 21, 22
+5000
