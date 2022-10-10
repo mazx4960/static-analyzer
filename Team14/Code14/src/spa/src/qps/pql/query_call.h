@@ -22,7 +22,8 @@ class QueryCall {
       : type_(call_type), synonym_reference_(std::move(synonym_reference)) {
   };
 
-  [[nodiscard]] SynonymReference * getReference() const;
+  [[nodiscard]] SynonymReference *getReference() const;
+  [[nodiscard]] void setReference(SynonymReference *synonym_reference);
 };
 
 class SelectCall : public QueryCall {

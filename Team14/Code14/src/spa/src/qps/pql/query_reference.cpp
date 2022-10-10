@@ -37,6 +37,9 @@ bool WildcardReference::isStmtRef() const {
 bool WildcardReference::isEntRef() const {
   return true;
 }
+bool WildcardReference::isSyntacticallyCorrect() const {
+  return true;
+}
 
 // IdentDeclaration
 bool IdentReference::operator==(const QueryReference &other) const {
@@ -52,6 +55,9 @@ bool IdentReference::isStmtRef() const {
   return false;
 }
 bool IdentReference::isEntRef() const {
+  return true;
+}
+bool IdentReference::isSyntacticallyCorrect() const {
   return true;
 }
 
@@ -70,6 +76,9 @@ bool IntegerReference::isStmtRef() const {
 }
 bool IntegerReference::isEntRef() const {
   return false;
+}
+bool IntegerReference::isSyntacticallyCorrect() const {
+  return this->value_.length() <= 1 || value_[0] != '0';
 }
 
 // SynonymDeclaration
@@ -99,6 +108,9 @@ bool SynonymReference::isStmtRef() const {
   return true;
 }
 bool SynonymReference::isEntRef() const {
+  return true;
+}
+bool SynonymReference::isSyntacticallyCorrect() const {
   return true;
 }
 

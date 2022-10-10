@@ -8,6 +8,7 @@
 #include "commons/entity.h"
 #include "qps/exceptions.h"
 #include "query_synonym.h"
+#include "qps/pql/interface/check_syntax.h"
 
 using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
 
@@ -18,7 +19,7 @@ enum class ReferenceType {
   kIdent
 };
 
-class QueryReference {
+class QueryReference : public ICheckSyntax{
  private:
   ReferenceType reference_type_;
   EntityType entity_type_;
@@ -41,6 +42,7 @@ class QueryReference {
   virtual std::string toString() const = 0;
   virtual bool isStmtRef() const = 0;
   virtual bool isEntRef() const = 0;
+  bool isSyntacticallyCorrect() const override = 0;
 };
 
 class WildcardReference : public QueryReference {
@@ -53,6 +55,7 @@ class WildcardReference : public QueryReference {
   std::string toString() const override;
   bool isStmtRef() const override;
   bool isEntRef() const override;
+  bool isSyntacticallyCorrect() const override;
 };
 
 class IdentReference : public QueryReference {
@@ -67,6 +70,7 @@ class IdentReference : public QueryReference {
   std::string toString() const override;
   bool isStmtRef() const override;
   bool isEntRef() const override;
+  bool isSyntacticallyCorrect() const override;
 };
 
 class IntegerReference : public QueryReference {
@@ -81,6 +85,7 @@ class IntegerReference : public QueryReference {
   std::string toString() const override;
   bool isStmtRef() const override;
   bool isEntRef() const override;
+  bool isSyntacticallyCorrect() const override;
 };
 
 class SynonymReference : public QueryReference {
@@ -97,6 +102,7 @@ class SynonymReference : public QueryReference {
   std::string toString() const override;
   bool isStmtRef() const override;
   bool isEntRef() const override;
+  bool isSyntacticallyCorrect() const override;
 };
 
 class StatementDeclaration : public SynonymReference {

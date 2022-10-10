@@ -5,3 +5,6 @@
 SynonymReference *QueryCall::getReference() const {
   return this->synonym_reference_;
 }
+void QueryCall::setReference(SynonymReference *synonym_reference) {
+  this->synonym_reference_ = synonym_reference;
+}

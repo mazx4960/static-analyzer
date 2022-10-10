@@ -22,26 +22,28 @@ class QueryParser {
   Token *peekToken();
   bool outOfTokens();
 
- public:
-  explicit QueryParser(std::vector<Token *> tokens);
-  Query *parse();
-  static void expect(Token *token, const std::unordered_set<TokenType> &expected_types);
-
-  Declarations parseDeclarations();
-  QueryCall *parseQueryCall();
-  Clauses parseClauses();
-  QueryReference *parseReference();
+  void parseDeclarationStatement();
+  SynonymReference *parseDeclaration(EntityType type);
+  static SuchThatClause *parseSuchThat(RsType rs_type, QueryReference *first, QueryReference *second);
   IdentReference * parseQuotedReference();
   SynonymReference *parseSynonymReference();
   WildcardReference *parseWildcardReference();
   IntegerReference *parseIntegerReference();
-  QuerySynonym *parseSynonym();
   IdentReference *parseIdentReference();
+  std::string parseFlattenedExpression();
+ public:
+  explicit QueryParser(std::vector<Token *> tokens);
+  Query *parse();
+  Declarations parseDeclarations();
+
+  QuerySynonym *parseSynonym();
+  QueryCall *parseQueryCall();
+  Clauses parseClauses();
   QueryClause *parseClause();
   SuchThatClause *parseSuchThat();
-  static SuchThatClause *parseSuchThat(RsType rs_type, QueryReference *first, QueryReference *second);
+  QueryReference *parseReference();
   PatternClause *parsePattern();
   ExpressionSpec *parseExpression();
-  std::string parseFlattenedExpression();
-  SynonymReference *parseDeclaration(EntityType type);
+
+  static void expect(Token *token, const std::unordered_set<TokenType> &expected_types);
 };

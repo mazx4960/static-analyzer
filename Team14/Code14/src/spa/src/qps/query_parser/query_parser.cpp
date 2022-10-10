@@ -8,6 +8,10 @@
 #include "qps/pql/query_keywords.h"
 #include "spdlog/spdlog.h"
 
+QueryParser::QueryParser(std::vector<Token *> tokens) {
+  this->tokens_ = tokens;
+}
+
 Query *QueryParser::parse() {
   Declarations query_declarations = parseDeclarations();
   QueryCall *query_call = parseQueryCall();
@@ -35,7 +39,7 @@ bool QueryParser::outOfTokens() {
 
 Declarations QueryParser::parseDeclarations() {
   while (QueryKeywords::isValidDeclarationKeyword(peekToken()->value)) {
-    parseDeclarationStatement()
+    parseDeclarationStatement();
   }
   return this->declarations_;
 }
@@ -76,11 +80,9 @@ SynonymReference *QueryParser::parseDeclaration(EntityType type) {
     case EntityType::kWhileStmt: return new WhileDeclaration(parseSynonym());
     case EntityType::kPrintStmt: return new PrintDeclaration(parseSynonym());
     case EntityType::kReadStmt: return new ReadDeclaration(parseSynonym());
-    default:
-      throw ParseSyntaxError("Unknown declaration type:" + EntityTypeToString(type));
+    default:throw ParseSyntaxError("Unknown declaration type:" + EntityTypeToString(type));
   }
 }
-
 
 QueryReference *QueryParser::parseReference() {
   Token *reference = peekToken();
@@ -93,16 +95,14 @@ QueryReference *QueryParser::parseReference() {
   }
 }
 
-SynonymReference * QueryParser::parseSynonymReference() {
+SynonymReference *QueryParser::parseSynonymReference() {
   return new SynonymReference(parseSynonym());
 }
 
 IntegerReference *QueryParser::parseIntegerReference() {
   expect(peekToken(), {TokenType::kLiteral});
   std::string literal_string = nextToken()->value;
-  if (literal_string.length() > 1 && literal_string[0] == '0') {
-    throw ParseSyntaxError("INTEGER cannot have leading zero: " + literal_string);
-  }
+
   return new IntegerReference(literal_string);
 }
 
@@ -200,11 +200,9 @@ SuchThatClause *QueryParser::parseSuchThat(RsType rs_type, QueryReference *first
     case RsType::kNextT:return new NextTClause(first, second);
     case RsType::kAffects:return new AffectsClause(first, second);
     case RsType::kAffectsT:return new AffectsTClause(first, second);
-    default:
-      throw ParseSyntaxError("Unsupported such-that relationship: " + RsTypeToString(rs_type));
+    default:throw ParseSyntaxError("Unsupported such-that relationship: " + RsTypeToString(rs_type));
   }
 }
-
 
 PatternClause *QueryParser::parsePattern() {
   expect(peekToken(), {TokenType::kSymbol});
@@ -253,3 +251,4 @@ void QueryParser::expect(Token *token, const std::unordered_set<TokenType> &expe
     throw ParseSyntaxError("Invalid token type: " + token->value);
   }
 }
+
