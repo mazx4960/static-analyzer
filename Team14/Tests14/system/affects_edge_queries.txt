@@ -25,7 +25,7 @@ f1, f2, fAssign, fRead, fAffectT, fWhile
 5000
 204 - valid Affects relationship
 procedure p;
-Select p such that Affects(12, 14)
+Select p such that Affects(12, 13)
 f1, f2, fAssign, fRead, fAffectT, fWhile
 5000
 205 - valid Affects relationship
@@ -51,11 +51,6 @@ f1, f2, fAssign, fRead, fAffectT, fWhile
 209 - valid Affects relationship
 procedure p;
 Select p such that Affects(15, 18)
-f1, f2, fAssign, fRead, fAffectT, fWhile
-5000
-210 - valid Affects relationship
-procedure p;
-Select p such that Affects(15, 19)
 f1, f2, fAssign, fRead, fAffectT, fWhile
 5000
 301 - valid Affects* relationship
@@ -100,7 +95,7 @@ none
 5000
 402 - invalid Affects relationship
 procedure p;
-Select p such that Affects(16, 17 )
+Select p such that Affects(16, 17)
 none
 5000
 501 - valid Affects relationship
@@ -111,10 +106,10 @@ f1, f2, fAssign, fRead, fAffectT, fWhile
 502 - valid Affects relationship
 procedure p;
 Select p such that Affects(22, 22)
-f1, f2, fAssign, fRead, fAffectT
+f1, f2, fAssign, fRead, fAffectT, fWhile
 5000
 503 - valid Affects* relationship
 procedure p;
 Select p such that Affects*(22, 22)
-f1, f2, fAssign, fRead, fAffectT
+f1, f2, fAssign, fRead, fAffectT, fWhile
 5000
