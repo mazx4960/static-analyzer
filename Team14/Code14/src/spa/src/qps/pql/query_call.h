@@ -23,7 +23,7 @@ class QueryCall {
   };
 
   [[nodiscard]] SynonymReference *getReference() const;
-  [[nodiscard]] void setReference(SynonymReference *synonym_reference);
+  void setReference(SynonymReference *synonym_reference);
 };
 
 class SelectCall : public QueryCall {

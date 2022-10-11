@@ -1,6 +1,6 @@
 #include "expression_spec.h"
 
-std::string ExpressionSpec::getExpr() {
+std::string ExpressionSpec::toString() {
   return this->expr_;
 }
 bool ExactExpression::isWild() {

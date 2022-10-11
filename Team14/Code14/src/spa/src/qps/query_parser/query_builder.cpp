@@ -19,25 +19,21 @@ Query *QueryBuilder::build() {
   spdlog::info("Building declarations...");
   this->declarations_ = buildDeclarations(query_->getSynonymDeclarations());
   spdlog::info("Declarations built successfully");
-
-  if (query_->getQueryCall() == nullptr) {
-    throw ParseSemanticError("Bad Select creation");
-  }
-  if (query_->getQueryCall()->getReference() == nullptr) {
-    throw ParseSemanticError("Synonym in Select is not declared!");
-  }
+  spdlog::info("Building query call...");
+  buildQueryCall(query_->getQueryCall());
+  spdlog::info("Call built successfully");
   spdlog::info("Building clauses...");
-  buildClauses(query_->getQueryCall()->getClauseVector());
+  buildClauses(query_->getClauses());
   spdlog::info("Clauses built successfully");
   spdlog::info("Query built successfully");
   return query_;
 }
 
-std::vector<SynonymReference *> QueryBuilder::buildDeclarations(const std::vector<SynonymReference *>& maybe_declarations) {
-  for (auto *maybe_declaration: maybe_declarations) {
-    buildDeclaration(maybe_declaration);
+std::vector<SynonymReference *> QueryBuilder::buildDeclarations(const std::vector<SynonymReference *> &declaration_blueprints) {
+  for (auto *declaration_blueprint : declaration_blueprints) {
+    buildDeclaration(declaration_blueprint);
   }
-  return maybe_declarations;
+  return declaration_blueprints;
 }
 
 SynonymReference *QueryBuilder::buildDeclaration(SynonymReference *declaration_blueprint) {
@@ -71,20 +67,17 @@ SynonymReference *QueryBuilder::getDeclaration(const QuerySynonym *synonym) {
 std::vector<QueryClause *> QueryBuilder::buildClauses(const std::vector<QueryClause *> &clauses_blueprint) {
   for (auto *clause : clauses_blueprint) {
     switch (clause->getClauseType()) {
-      case ClauseType::kPattern:
-        buildAssignPattern(static_cast<PatternClause *>(clause));
+      case ClauseType::kPattern:buildPattern(static_cast<PatternClause *>(clause));
         break;
-      case ClauseType::kSuchThat:
-        buildSuchThat(static_cast<SuchThatClause *>(clause));
+      case ClauseType::kSuchThat:buildSuchThat(static_cast<SuchThatClause *>(clause));
         break;
-      default:
-        throw ParseSemanticError("Unsupported clause type!");
+      default:throw ParseSemanticError("Unsupported clause type!");
     }
   }
   return clauses_blueprint;
 }
 
-PatternClause *QueryBuilder::buildAssignPattern(PatternClause *clause_blueprint) {
+PatternClause *QueryBuilder::buildPattern(PatternClause *clause_blueprint) {
   SynonymReference *syn_assign = clause_blueprint->getSynonymDeclaration();
   QueryReference *ent_ref = clause_blueprint->getEntRef();
   ExpressionSpec *expression_spec = clause_blueprint->getExpression();
@@ -92,29 +85,26 @@ PatternClause *QueryBuilder::buildAssignPattern(PatternClause *clause_blueprint)
     throw ParseSemanticError("Missing parameters");
   }
   clause_blueprint->setSynonymDeclaration(getDeclaration(syn_assign->getSynonym()));
-
+  if (!clause_blueprint->IsSemanticallyCorrect()) {
+    throw ParseSemanticError("Invalid parameter type");
+  }
   return clause_blueprint;
 }
 
-SuchThatClause *QueryBuilder::buildSuchThat(SuchThatClause *maybe_clause) {
-  RsType type = maybe_clause->getSuchThatType();
-  QueryReference *first = maybe_clause->getFirst();
-  QueryReference *second = maybe_clause->getSecond();
+SuchThatClause *QueryBuilder::buildSuchThat(SuchThatClause *clause_blueprint) {
+  QueryReference *first = clause_blueprint->getFirst();
+  QueryReference *second = clause_blueprint->getSecond();
   if (first == nullptr || second == nullptr) {
     throw ParseSemanticError("Missing parameters!");
   }
   if (first->getRefType() == ReferenceType::kSynonym) {
-    maybe_clause->setFirst(getDeclaration(static_cast<SynonymReference *>(first)->getSynonym()));
+    clause_blueprint->setFirst(getDeclaration(static_cast<SynonymReference *>(first)->getSynonym()));
   }
   if (second->getRefType() == ReferenceType::kSynonym) {
-    maybe_clause->setSecond(getDeclaration(static_cast<SynonymReference *>(second)->getSynonym()));
+    clause_blueprint->setSecond(getDeclaration(static_cast<SynonymReference *>(second)->getSynonym()));
   }
-  auto st_rules = such_that_semantic_rules;
-  if (st_rules.find(type) == st_rules.end()) {
-    throw ParseSemanticError("Unsupported relationship type: " + RsTypeToString(type));
+  if (!clause_blueprint->IsSemanticallyCorrect()) {
+    throw ParseSemanticError("Invalid parameter type");
   }
-  auto relationship_rules = st_rules[type];
-  checkParamSemantics(relationship_rules, first, 0);
-  checkParamSemantics(relationship_rules, second, 1);
-  return maybe_clause;
+  return clause_blueprint;
 }

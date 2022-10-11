@@ -12,7 +12,7 @@ class ExpressionSpec {
   explicit ExpressionSpec(std::string expr) : expr_(std::move(expr))  {
   };
  public:
-  std::string getExpr();
+  std::string toString();
   virtual bool isWild() = 0;
 };
 

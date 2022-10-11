@@ -50,5 +50,6 @@ class PatternStrategy : public EvaluationStrategy {
   PatternStrategy(IPKBQuerier *pkb, PatternClause *query_clause) : EvaluationStrategy(pkb), clause_(query_clause) {
   };
   SubqueryResult evaluate() override;
-  EntityPointerUnorderedMap evaluateParameter(QueryReference *, QueryReference *, const EntityPointerUnorderedSet &);
+  EntityPointerUnorderedMap evaluateParameter(QueryReference *var_param, ExpressionSpec *expr_param,
+                                              const EntityPointerUnorderedSet &potential_matches);
 };

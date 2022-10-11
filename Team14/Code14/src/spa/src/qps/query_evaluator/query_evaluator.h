@@ -10,9 +10,9 @@
 #include "result_projector.h"
 #include "subquery_evaluator.h"
 
-using QueryDeclarationPointerUnorderedSet = std::unordered_set<QueryReference *,
-                                                               QueryDeclarationHashFunction,
-                                                               QueryDeclarationPointerEquality>;
+using SynonymReferencePointerUnorderedSet = std::unordered_set<SynonymReference *,
+                                                               SynonymReferenceHashFunction,
+                                                               SynonymReferencePointerEquality>;
 
 class QueryEvaluator {
  protected:
@@ -23,11 +23,11 @@ class QueryEvaluator {
   // Used to check if subquery clauses have any results, initially assumed to be true
   bool has_result_ = true;
 
-  QueryDeclarationPointerUnorderedSet declarations_;
+  SynonymReferencePointerUnorderedSet declarations_;
 
-  QueryDeclarationPointerUnorderedSet copyDeclarations();
-  QueryDeclarationPointerUnorderedSet fetchContext();
-  QueryDeclarationPointerUnorderedSet getDeclarationAsSet();
+  SynonymReferencePointerUnorderedSet copyDeclarations();
+  SynonymReferencePointerUnorderedSet fetchContext();
+  SynonymReferencePointerUnorderedSet getDeclarationAsSet();
   std::vector<SubqueryResult> evaluateSubqueries();
 
  public:

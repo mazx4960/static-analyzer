@@ -34,7 +34,6 @@ class QueryReference : public ICheckSyntax{
   ReferenceType getRefType() const;
   EntityType getEntityType() const;
   EntityPointerUnorderedSet getContext() const;
-  void setEntityType(EntityType entity_type);
   void setContext(EntityPointerUnorderedSet);
 
   virtual bool operator==(const QueryReference &other) const = 0;
@@ -43,6 +42,7 @@ class QueryReference : public ICheckSyntax{
   virtual bool isStmtRef() const = 0;
   virtual bool isEntRef() const = 0;
   bool isSyntacticallyCorrect() const override = 0;
+  void setEntityType(EntityType entity_type);
 };
 
 class WildcardReference : public QueryReference {
@@ -175,24 +175,17 @@ class ProcedureDeclaration : public SynonymReference {
   };
 };
 
-struct QueryDeclarationHashFunction {
-  size_t operator()(const QueryReference &declaration) const {
-    if (declaration.getRefType() == ReferenceType::kSynonym) {
-      return QuerySynonymHashFunction().operator()(static_cast<const SynonymReference &>(declaration).getSynonym());
-    }
-    return QuerySynonymHashFunction().operator()(QuerySynonym::empty());
+struct SynonymReferenceHashFunction {
+  size_t operator()(const SynonymReference &declaration) const {
+    return QuerySynonymHashFunction().operator()(declaration.getSynonym());
   }
-  size_t operator()(const QueryReference *declaration) const {
-    if (declaration->getRefType() == ReferenceType::kSynonym) {
-      return QuerySynonymHashFunction().operator()(static_cast<const SynonymReference *>(declaration)->getSynonym());
-    }
-    return QuerySynonymHashFunction().operator()(QuerySynonym::empty());
+  size_t operator()(const SynonymReference *declaration) const {
+    return QuerySynonymHashFunction().operator()(declaration->getSynonym());
   }
 };
 
-struct QueryDeclarationPointerEquality {
-  bool operator()(const QueryReference *lhs, const QueryReference *rhs) const {
-    if (lhs->getEntityType() == EntityType::kWildcard || rhs->getEntityType() == EntityType::kWildcard) { return true; }
+struct SynonymReferencePointerEquality {
+  bool operator()(const SynonymReference *lhs, const SynonymReference *rhs) const {
     return (*lhs) == (*rhs);
   }
 };

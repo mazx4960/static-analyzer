@@ -6,8 +6,8 @@
  * Used to ensure immutability.
  * @return duplicated set of query declarations.
  */
-QueryDeclarationPointerUnorderedSet QueryEvaluator::getDeclarationAsSet() {
-  QueryDeclarationPointerUnorderedSet declaration_set;
+SynonymReferencePointerUnorderedSet QueryEvaluator::getDeclarationAsSet() {
+  SynonymReferencePointerUnorderedSet declaration_set;
 
   std::copy(this->declarations_.begin(), this->declarations_.end(),
             std::inserter(declaration_set, declaration_set.begin()));
@@ -18,12 +18,12 @@ QueryDeclarationPointerUnorderedSet QueryEvaluator::getDeclarationAsSet() {
  * Copy declarations from Query into a set.
  * @return set of query declarations.
  */
-QueryDeclarationPointerUnorderedSet QueryEvaluator::copyDeclarations() {
+SynonymReferencePointerUnorderedSet QueryEvaluator::copyDeclarations() {
   Query &query = this->query_;
   std::vector<SynonymReference *> query_declarations = query.getSynonymDeclarations();
-  this->declarations_ = std::unordered_set <QueryReference *,
-                                            QueryDeclarationHashFunction,
-                                            QueryDeclarationPointerEquality > (
+  this->declarations_ = std::unordered_set <SynonymReference *,
+                                            SynonymReferenceHashFunction,
+                                            SynonymReferencePointerEquality > (
           query_declarations.begin(), query_declarations.end()
       );
   return this->getDeclarationAsSet();
@@ -33,7 +33,7 @@ QueryDeclarationPointerUnorderedSet QueryEvaluator::copyDeclarations() {
  * Calls PKB to fetch context for each query declaration.
  * @return set of query declarations.
  */
-QueryDeclarationPointerUnorderedSet QueryEvaluator::fetchContext() {
+SynonymReferencePointerUnorderedSet QueryEvaluator::fetchContext() {
   this->copyDeclarations();
 
   for (auto *declaration : this->declarations_) {
@@ -49,7 +49,7 @@ QueryDeclarationPointerUnorderedSet QueryEvaluator::fetchContext() {
  * @return vector of SubqueryResults.
  */
 std::vector<SubqueryResult> QueryEvaluator::evaluateSubqueries() {
-  std::vector<QueryClause *> subquery_clauses = this->query_.getQueryCall()->getClauseVector();
+  std::vector<QueryClause *> subquery_clauses = this->query_.getClauses();
   std::vector<SubqueryResult> subquery_results_list;
   for (auto *clause : subquery_clauses) {
     SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, clause);

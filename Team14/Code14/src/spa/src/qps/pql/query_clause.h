@@ -183,7 +183,6 @@ class PatternClause : public QueryClause {
   [[nodiscard]] SynonymReference *getSynonymDeclaration() const;
   [[nodiscard]] QueryReference *getEntRef() const;
   [[nodiscard]] ExpressionSpec *getExpression() const;
-
-  bool isSyntacticallyCorrect() const override;
+  [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
 };

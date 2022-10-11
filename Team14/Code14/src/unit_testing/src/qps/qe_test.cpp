@@ -87,14 +87,14 @@ class TestStorage {
 class QueryEvaluatorMock : public QueryEvaluator {
  public:
   QueryEvaluatorMock(IPKBQuerier *pkb, Query &query) : QueryEvaluator(pkb, query) {};
-  std::unordered_set<QueryReference *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> mockCopyDeclarations() {
+  std::unordered_set<SynonymReference *,
+                     SynonymReferenceHashFunction,
+                     SynonymReferencePointerEquality> mockCopyDeclarations() {
     return this->copyDeclarations();
   };
-  std::unordered_set<QueryReference *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> mockFetchContext() {
+  std::unordered_set<SynonymReference *,
+                     SynonymReferenceHashFunction,
+                     SynonymReferencePointerEquality> mockFetchContext() {
     return this->fetchContext();
   };
 };
@@ -148,18 +148,18 @@ TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
       stmt_dec, read_dec, print_dec, call_dec, while_dec,
       if_dec, assign_dec, var_dec, const_dec, proc_dec,
   };
-  std::unordered_set<QueryReference *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> declarations_set = {
+  std::unordered_set<SynonymReference *,
+                     SynonymReferenceHashFunction,
+                     SynonymReferencePointerEquality> declarations_set = {
       stmt_dec, read_dec, print_dec, call_dec, while_dec,
       if_dec, assign_dec, var_dec, const_dec, proc_dec,
   };
 
-  auto *select_call = new SelectCall(stmt_dec, {});
-  Query query = Query(declarations_vector, select_call);
+  auto *select_call = new SelectCall(stmt_dec);
+  Query query = Query(declarations_vector, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
-  std::unordered_set<QueryReference *, QueryDeclarationHashFunction, QueryDeclarationPointerEquality>
+  std::unordered_set<SynonymReference *, SynonymReferenceHashFunction, SynonymReferencePointerEquality>
       returned_declaration_set = query_evaluator->mockCopyDeclarations();
 
   ASSERT_EQ(declarations_set, returned_declaration_set);
@@ -197,9 +197,9 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
       stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
       if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2
   };
-  std::unordered_set<QueryReference *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> declarations_set = {
+  std::unordered_set<SynonymReference *,
+                     SynonymReferenceHashFunction,
+                     SynonymReferencePointerEquality> declarations_set = {
       stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
       if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
 
@@ -208,13 +208,13 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
       if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
   };
 
-  auto *select_call = new SelectCall(stmt_dec_1, {});
-  Query query = Query(declarations_vector, select_call);
+  auto *select_call = new SelectCall(stmt_dec_1);
+  Query query = Query(declarations_vector, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
-  std::unordered_set<QueryReference *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality>
+  std::unordered_set<SynonymReference *,
+                     SynonymReferenceHashFunction,
+                     SynonymReferencePointerEquality>
       returned_declaration_set = query_evaluator->mockCopyDeclarations();
 
   ASSERT_EQ(declarations_set, returned_declaration_set);
@@ -252,9 +252,9 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
       stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
       if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
   };
-  std::unordered_set<QueryReference *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> declarations_set = {
+  std::unordered_set<SynonymReference *,
+                     SynonymReferenceHashFunction,
+                     SynonymReferencePointerEquality> declarations_set = {
       stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
       if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
 
@@ -262,13 +262,13 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
       if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
   };
 
-  auto *select_call = new SelectCall(stmt_dec_1, {});
-  Query query = Query(declarations_vector, select_call);
+  auto *select_call = new SelectCall(stmt_dec_1);
+  Query query = Query(declarations_vector, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
-  std::unordered_set<QueryReference *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality>
+  std::unordered_set<SynonymReference *,
+                     SynonymReferenceHashFunction,
+                     SynonymReferencePointerEquality>
       returned_declaration_set = query_evaluator->mockCopyDeclarations();
 
   ASSERT_EQ(declarations_set.size(), 13);
@@ -279,8 +279,8 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
 TEST(QeFetchContextTest, StatementDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new StatementDeclaration(new QuerySynonym("stmt"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
@@ -291,8 +291,8 @@ TEST(QeFetchContextTest, StatementDeclaration) {
 TEST(QeFetchContextTest, ProcedureDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new ProcedureDeclaration(new QuerySynonym("proc"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
@@ -303,8 +303,8 @@ TEST(QeFetchContextTest, ProcedureDeclaration) {
 TEST(QeFetchContextTest, VariableDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new VariableDeclaration(new QuerySynonym("stmt"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
@@ -315,8 +315,8 @@ TEST(QeFetchContextTest, VariableDeclaration) {
 TEST(QeFetchContextTest, ConstantDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new ConstantDeclaration(new QuerySynonym("stmt"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
@@ -327,8 +327,8 @@ TEST(QeFetchContextTest, ConstantDeclaration) {
 TEST(QeFetchContextTest, StmtAssignDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new AssignDeclaration(new QuerySynonym("as"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
@@ -339,8 +339,8 @@ TEST(QeFetchContextTest, StmtAssignDeclaration) {
 TEST(QeFetchContextTest, StmtCallDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new CallDeclaration(new QuerySynonym("cl"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
@@ -351,8 +351,8 @@ TEST(QeFetchContextTest, StmtCallDeclaration) {
 TEST(QeFetchContextTest, StmtIfDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new IfDeclaration(new QuerySynonym("ifs"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
@@ -363,8 +363,8 @@ TEST(QeFetchContextTest, StmtIfDeclaration) {
 TEST(QeFetchContextTest, StmtWhileDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new WhileDeclaration(new QuerySynonym("w"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
@@ -375,8 +375,8 @@ TEST(QeFetchContextTest, StmtWhileDeclaration) {
 TEST(QeFetchContextTest, StmtPrintDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new PrintDeclaration(new QuerySynonym("prt"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
@@ -387,8 +387,8 @@ TEST(QeFetchContextTest, StmtPrintDeclaration) {
 TEST(QeFetchContextTest, StmtReadDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new ReadDeclaration(new QuerySynonym("rd"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
