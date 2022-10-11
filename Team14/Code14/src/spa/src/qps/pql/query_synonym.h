@@ -32,3 +32,9 @@ struct QuerySynonymPointerEquality {
   }
 };
 
+struct QuerySynonymPointerComparison {
+  bool operator()(const QuerySynonym *lhs, const QuerySynonym *rhs) const {
+    return lhs->toString().compare(rhs->toString()) < 0;
+  }
+};
+
