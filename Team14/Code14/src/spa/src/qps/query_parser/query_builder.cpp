@@ -1,6 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "query_builder.h"
+#include "spdlog/spdlog.h"
 
 QueryBuilder::QueryBuilder(Query *query_blueprint) {
   if (query_blueprint == nullptr) {

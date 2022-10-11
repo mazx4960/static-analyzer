@@ -3,7 +3,7 @@
 #include <utility>
 
 #include "commons/parser/parser.h"
-
+#include "spdlog/spdlog.h"
 
 QueryParser::QueryParser(std::vector<Token *> tokens) {
   this->tokens_ = std::move(tokens);
