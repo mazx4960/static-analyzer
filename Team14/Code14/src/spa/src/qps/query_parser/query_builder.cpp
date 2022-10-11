@@ -2,11 +2,6 @@
 
 #include "query_builder.h"
 
-#include <utility>
-
-#include "qps/exceptions.h"
-#include "spdlog/spdlog.h"
-
 QueryBuilder::QueryBuilder(Query *query_blueprint) {
   if (query_blueprint == nullptr) {
     throw ParseSemanticError("No query given");

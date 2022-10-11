@@ -1,15 +1,12 @@
 #include "query_parser.h"
 
-#include <algorithm>
 #include <utility>
-#include <functional>
 
 #include "commons/parser/parser.h"
-#include "qps/pql/query_keywords.h"
-#include "spdlog/spdlog.h"
+
 
 QueryParser::QueryParser(std::vector<Token *> tokens) {
-  this->tokens_ = tokens;
+  this->tokens_ = std::move(tokens);
 }
 
 Query *QueryParser::parse() {

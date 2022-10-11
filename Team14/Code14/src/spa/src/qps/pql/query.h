@@ -24,7 +24,7 @@ class Query {
   Query(Declarations synonym_declarations, QueryCall *query_call, Clauses query_clauses)
       : synonym_declarations_(std::move(synonym_declarations)),
         query_call_(query_call),
-        query_clauses_(query_clauses) {
+        query_clauses_(std::move(query_clauses)) {
   }
 
   [[nodiscard]] Declarations getSynonymDeclarations() const;

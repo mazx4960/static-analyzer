@@ -4,6 +4,8 @@
 #include <utility>
 #include <vector>
 
+#include "qps/exceptions.h"
+#include "spdlog/spdlog.h"
 #include "commons/lexer/token.h"
 #include "commons/parser/parser_exceptions.h"
 #include "qps/pql/query.h"
