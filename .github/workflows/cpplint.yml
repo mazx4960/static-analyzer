@@ -6,7 +6,7 @@ on:
     branches:
       - master
     paths:
-      - 'Team14/**'
+      - 'Team14/Code14/**'
 
 jobs:
   build:
