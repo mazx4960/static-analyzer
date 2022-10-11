@@ -17,8 +17,7 @@ using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunctio
 TEST(PopulateEntityTest, VariableTest) {
   std::vector<std::string> entity_names({"a", "b", "c", "d", "e", "f"});
   std::vector<Entity *> entities; 
-  EntityPointerUnorderedSet expected;
-  auto *test_helper = new PKBTestHelper();
+  EntityPointerUnorderedSet expected; 
   int length = entity_names.size();
   entities.reserve(length);
 
@@ -30,7 +29,7 @@ TEST(PopulateEntityTest, VariableTest) {
   auto *entity_manager = new EntityManager();
   entity_manager->Populate(entities);
   auto *entity_table = entity_manager->GetTable(EntityType::kVariable);
-  bool compare = test_helper->set_compare(entity_table->get(), expected);
+  bool compare = PKBTestHelper::set_compare(entity_table->get(), expected);
   ASSERT_EQ(entity_table->get().size(), length);
   ASSERT_EQ(compare, true);
 } 
@@ -40,8 +39,7 @@ TEST(PopulateEntityTest, ConstantTest) {
   std::vector<Entity *> entities; 
   EntityPointerUnorderedSet expected;
   int length = entity_names.size();
-  entities.reserve(length);
-  auto *test_helper = new PKBTestHelper(); 
+  entities.reserve(length); 
 
   for (int i = 0; i < length; i++) { 
 	entities.push_back(new ConstantEntity(entity_names[i])); 
@@ -51,7 +49,7 @@ TEST(PopulateEntityTest, ConstantTest) {
   auto *entity_manager = new EntityManager();
   entity_manager->Populate(entities);
   auto *entity_table = entity_manager->GetTable(EntityType::kConstant);
-  bool compare = test_helper->set_compare(entity_table->get(), expected);
+  bool compare = PKBTestHelper::set_compare(entity_table->get(), expected);
   ASSERT_EQ(entity_table->get().size(), length);
   ASSERT_EQ(compare, true);
 } 
@@ -60,8 +58,7 @@ TEST(PopulateEntityTest, ProcedureTest) {
   std::vector<std::string> procedure_names({"a", "b", "c", "d", "e", "f"});
   std::vector<Entity *> entities;
   EntityPointerUnorderedSet expected;
-  int length = procedure_names.size();
-  auto *test_helper = new PKBTestHelper();
+  int length = procedure_names.size(); 
   entities.reserve(length);
 
   for (int i = 0; i < length; i++) {
@@ -72,7 +69,7 @@ TEST(PopulateEntityTest, ProcedureTest) {
   auto *entity_manager = new EntityManager();
   entity_manager->Populate(entities);
   auto *entity_table = entity_manager->GetTable(EntityType::kProcedure);
-  bool compare = test_helper->set_compare(entity_table->get(), expected);
+  bool compare = PKBTestHelper::set_compare(entity_table->get(), expected);
   ASSERT_EQ(entity_table->get().size(), length);
   ASSERT_EQ(compare, true);
 }
@@ -82,8 +79,7 @@ TEST(PopulateEntityTest, CallStatementTest) {
   std::vector<Entity *> entities;
   int length = stmt_no.size();
   entities.reserve(length);
-  EntityPointerUnorderedSet expected;
-  auto *test_helper = new PKBTestHelper();
+  EntityPointerUnorderedSet expected; 
 
   for (int i = 0; i < length; i++) { 
 	entities.push_back(new CallStmtEntity(stmt_no[i]));
@@ -93,7 +89,7 @@ TEST(PopulateEntityTest, CallStatementTest) {
   auto *entity_manager = new EntityManager();
   entity_manager->Populate(entities);
   auto *entity_table = entity_manager->GetTable(EntityType::kCallStmt);
-  bool compare = test_helper->set_compare(entity_table->get(), expected);
+  bool compare = PKBTestHelper::set_compare(entity_table->get(), expected);
   ASSERT_EQ(entity_table->get().size(), length);
   ASSERT_EQ(compare, true);
 }
@@ -103,8 +99,7 @@ TEST(PopulateEntityTest, IfStatementTest) {
   std::vector<Entity *> entities;
   int length = stmt_no.size();
   entities.reserve(length);
-  EntityPointerUnorderedSet expected;
-  auto *test_helper = new PKBTestHelper();
+  EntityPointerUnorderedSet expected; 
 
   for (int i = 0; i < length; i++) {
     entities.push_back(new IfStmtEntity(stmt_no[i]));
@@ -114,7 +109,7 @@ TEST(PopulateEntityTest, IfStatementTest) {
   auto *entity_manager = new EntityManager();
   entity_manager->Populate(entities);
   auto *entity_table = entity_manager->GetTable(EntityType::kIfStmt);
-  bool compare = test_helper->set_compare(entity_table->get(), expected); 
+  bool compare = PKBTestHelper::set_compare(entity_table->get(), expected); 
   ASSERT_EQ(entity_table->get().size(), length);
   ASSERT_EQ(compare, true);
 }
@@ -124,8 +119,7 @@ TEST(PopulateEntityTest, WhileStatementTest) {
   std::vector<Entity *> entities;
   int length = stmt_no.size();
   entities.reserve(length);
-  EntityPointerUnorderedSet expected;
-  auto *test_helper = new PKBTestHelper();
+  EntityPointerUnorderedSet expected; 
 
   for (int i = 0; i < length; i++) {
     entities.push_back(new WhileStmtEntity(stmt_no[i]));
@@ -135,7 +129,7 @@ TEST(PopulateEntityTest, WhileStatementTest) {
   auto *entity_manager = new EntityManager();
   entity_manager->Populate(entities);
   auto *entity_table = entity_manager->GetTable(EntityType::kWhileStmt);
-  bool compare = test_helper->set_compare(entity_table->get(), expected); 
+  bool compare = PKBTestHelper::set_compare(entity_table->get(), expected); 
   ASSERT_EQ(entity_table->get().size(), length);
   ASSERT_EQ(compare, true);
 }
@@ -145,8 +139,7 @@ TEST(PopulateEntityTest, PrintStatementTest) {
   std::vector<Entity *> entities;
   int length = stmt_no.size();
   entities.reserve(length);
-  EntityPointerUnorderedSet expected;
-  auto *test_helper = new PKBTestHelper();
+  EntityPointerUnorderedSet expected; 
 
   for (int i = 0; i < length; i++) { 
 	entities.push_back(new PrintStmtEntity(stmt_no[i]));
@@ -156,7 +149,7 @@ TEST(PopulateEntityTest, PrintStatementTest) {
   auto *entity_manager = new EntityManager();
   entity_manager->Populate(entities);
   auto *entity_table = entity_manager->GetTable(EntityType::kPrintStmt);
-  bool compare = test_helper->set_compare(entity_table->get(), expected);
+  bool compare = PKBTestHelper::set_compare(entity_table->get(), expected);
   ASSERT_EQ(entity_table->get().size(), length);
   ASSERT_EQ(compare, true);
 }
@@ -166,8 +159,7 @@ TEST(PopulateEntityTest, ReadStatementTest) {
   std::vector<Entity *> entities;
   int length = stmt_no.size();
   entities.reserve(length);
-  EntityPointerUnorderedSet expected;
-  auto *test_helper = new PKBTestHelper();
+  EntityPointerUnorderedSet expected; 
 
   for (int i = 0; i < length; i++) { 
 	entities.push_back(new ReadStmtEntity(stmt_no[i]));
@@ -177,7 +169,7 @@ TEST(PopulateEntityTest, ReadStatementTest) {
   auto *entity_manager = new EntityManager();
   entity_manager->Populate(entities);
   auto *entity_table = entity_manager->GetTable(EntityType::kReadStmt);
-  bool compare = test_helper->set_compare(entity_table->get(), expected);
+  bool compare = PKBTestHelper::set_compare(entity_table->get(), expected);
   ASSERT_EQ(entity_table->get().size(), length);
   ASSERT_EQ(compare, true);
 }
@@ -187,8 +179,7 @@ TEST(PopulateEntityTest, AssignStatementTest) {
   std::vector<Entity *> entities;
   int length = stmt_no.size();
   entities.reserve(length);
-  EntityPointerUnorderedSet expected;
-  auto *test_helper = new PKBTestHelper();
+  EntityPointerUnorderedSet expected; 
 
   for (int i = 0; i < length; i++) { 
 	entities.push_back(new AssignStmtEntity(stmt_no[i]));
@@ -199,7 +190,7 @@ TEST(PopulateEntityTest, AssignStatementTest) {
   auto *entity_manager = new EntityManager();
   entity_manager->Populate(entities);
   auto *entity_table = entity_manager->GetTable(EntityType::kAssignStmt);
-  bool compare = test_helper->set_compare(entity_table->get(), expected);
+  bool compare = PKBTestHelper::set_compare(entity_table->get(), expected);
   ASSERT_EQ(entity_table->get().size(), length);
   ASSERT_EQ(compare, true);
 }
@@ -208,8 +199,7 @@ TEST(PopulateEntityTest, SingleEntityStressTest) {
   std::vector<Entity *> entities;
   int length = 1000;
   entities.reserve(length);
-  EntityPointerUnorderedSet expected;
-  auto *test_helper = new PKBTestHelper();
+  EntityPointerUnorderedSet expected; 
   for (int i = 0; i < length; i++) {
     std::string stmt_no = std::to_string(i);
     entities.push_back(new AssignStmtEntity(stmt_no));
@@ -219,7 +209,7 @@ TEST(PopulateEntityTest, SingleEntityStressTest) {
   auto *entity_manager = new EntityManager();
   entity_manager->Populate(entities);
   auto *entity_table = entity_manager->GetTable(EntityType::kAssignStmt);
-  bool compare = test_helper->set_compare(entity_table->get(), expected);
+  bool compare = PKBTestHelper::set_compare(entity_table->get(), expected);
   ASSERT_EQ(entity_table->get().size(), 1000);
   ASSERT_EQ(compare, true);
 }
@@ -229,8 +219,7 @@ TEST(PopulateEntityTest, DuplicateVariableEntityTest) {
   std::vector<Entity *> entities;
   int length = entity_names.size();
   entities.reserve(length);
-  EntityPointerUnorderedSet expected;
-  auto *test_helper = new PKBTestHelper();
+  EntityPointerUnorderedSet expected; 
 
   for (int i = 0; i < length; i++) {
     entities.push_back(new VariableEntity(entity_names[i]));
@@ -240,7 +229,7 @@ TEST(PopulateEntityTest, DuplicateVariableEntityTest) {
   auto *entity_manager = new EntityManager();
   entity_manager->Populate(entities);
   auto *entity_table = entity_manager->GetTable(EntityType::kVariable);
-  bool compare = test_helper->set_compare(entity_table->get(), expected);
+  bool compare = PKBTestHelper::set_compare(entity_table->get(), expected);
   ASSERT_EQ(entity_table->get().size(), 1);
   ASSERT_EQ(compare, true);
 }
@@ -250,8 +239,7 @@ TEST(PopulateEntityTest, DuplicateStatementEntityTest) {
   std::vector<Entity *> entities;
   int length = stmt_no.size();
   entities.reserve(length);
-  EntityPointerUnorderedSet expected;
-  auto *test_helper = new PKBTestHelper();
+  EntityPointerUnorderedSet expected; 
 
   for (int i = 0; i < length; i++) { 
 	entities.push_back(new AssignStmtEntity(stmt_no[i]));
@@ -261,7 +249,7 @@ TEST(PopulateEntityTest, DuplicateStatementEntityTest) {
   auto *entity_manager = new EntityManager();
   entity_manager->Populate(entities);
   auto *entity_table = entity_manager->GetTable(EntityType::kAssignStmt);
-  bool compare = test_helper->set_compare(entity_table->get(), expected);
+  bool compare = PKBTestHelper::set_compare(entity_table->get(), expected);
   ASSERT_EQ(entity_table->get().size(), 1);
   ASSERT_EQ(compare, true);
 }
@@ -285,8 +273,7 @@ TEST(PopulateEntityTest, MultipleEntitiesTest) {
   EntityPointerUnorderedSet expected_assign;
   EntityPointerUnorderedSet expected_read;
   EntityPointerUnorderedSet expected_if;
-  EntityPointerUnorderedSet expected_while;
-  auto *test_helper = new PKBTestHelper();
+  EntityPointerUnorderedSet expected_while; 
 
   int length = variable_entity_names.size() + 
 			   constant_entity_names.size() + 
@@ -335,13 +322,13 @@ TEST(PopulateEntityTest, MultipleEntitiesTest) {
   auto *read_table = entity_manager->GetTable(EntityType::kReadStmt);
   auto *if_table = entity_manager->GetTable(EntityType::kIfStmt);
   auto *while_table = entity_manager->GetTable(EntityType::kWhileStmt);
-  bool compare_variable = test_helper->set_compare(variable_table->get(), expected_variable);
-  bool compare_constant = test_helper->set_compare(constant_table->get(), expected_constant);
-  bool compare_procedure = test_helper->set_compare(procedure_table->get(), expected_procedure);
-  bool compare_assign = test_helper->set_compare(assign_table->get(), expected_assign);
-  bool compare_read = test_helper->set_compare(read_table->get(), expected_read);
-  bool compare_if = test_helper->set_compare(if_table->get(), expected_if);
-  bool compare_while = test_helper->set_compare(while_table->get(), expected_while);
+  bool compare_variable = PKBTestHelper::set_compare(variable_table->get(), expected_variable);
+  bool compare_constant = PKBTestHelper::set_compare(constant_table->get(), expected_constant);
+  bool compare_procedure = PKBTestHelper::set_compare(procedure_table->get(), expected_procedure);
+  bool compare_assign = PKBTestHelper::set_compare(assign_table->get(), expected_assign);
+  bool compare_read = PKBTestHelper::set_compare(read_table->get(), expected_read);
+  bool compare_if = PKBTestHelper::set_compare(if_table->get(), expected_if);
+  bool compare_while = PKBTestHelper::set_compare(while_table->get(), expected_while);
 
   ASSERT_EQ(compare_variable, true);
   ASSERT_EQ(compare_constant, true);
@@ -364,8 +351,7 @@ TEST(PopulateEntityTest, MixedEntityStressTest) {
   int length = 2000;
   entities.reserve(length);
   EntityPointerUnorderedSet expected_assign;
-  EntityPointerUnorderedSet expected_read;
-  auto *test_helper = new PKBTestHelper(); 
+  EntityPointerUnorderedSet expected_read; 
 
   for (int i = 0; i < length; i = i + 2) {
     std::string assign_stmt_no = std::to_string(i);
@@ -379,8 +365,8 @@ TEST(PopulateEntityTest, MixedEntityStressTest) {
   entity_manager->Populate(entities);
   auto *assign_stmt_table = entity_manager->GetTable(EntityType::kAssignStmt);
   auto *read_stmt_table = entity_manager->GetTable(EntityType::kReadStmt);
-  bool compare_assign = test_helper->set_compare(assign_stmt_table->get(), expected_assign);
-  bool compare_read = test_helper->set_compare(read_stmt_table->get(), expected_read);  
+  bool compare_assign = PKBTestHelper::set_compare(assign_stmt_table->get(), expected_assign);
+  bool compare_read = PKBTestHelper::set_compare(read_stmt_table->get(), expected_read);  
 
   ASSERT_EQ(assign_stmt_table->get().size(), 1000);
   ASSERT_EQ(read_stmt_table->get().size(), 1000);
@@ -403,8 +389,7 @@ TEST(PopulateEntityTest, MultipleDuplicateEntitiesTest) {
   EntityPointerUnorderedSet expected_assign;
   EntityPointerUnorderedSet expected_read;
   EntityPointerUnorderedSet expected_if;
-  EntityPointerUnorderedSet expected_while;
-  auto *test_helper = new PKBTestHelper();
+  EntityPointerUnorderedSet expected_while; 
 
   for (const auto &s : variable_entity_names) { 
 	entities.push_back(new VariableEntity(s)); 
@@ -457,13 +442,13 @@ TEST(PopulateEntityTest, MultipleDuplicateEntitiesTest) {
   auto *read_table = entity_manager->GetTable(EntityType::kReadStmt);
   auto *if_table = entity_manager->GetTable(EntityType::kIfStmt);
   auto *while_table = entity_manager->GetTable(EntityType::kWhileStmt);
-  bool compare_variable = test_helper->set_compare(variable_table->get(), expected_variable);
-  bool compare_constant = test_helper->set_compare(constant_table->get(), expected_constant);
-  bool compare_procedure = test_helper->set_compare(procedure_table->get(), expected_procedure);
-  bool compare_assign = test_helper->set_compare(assign_table->get(), expected_assign);
-  bool compare_read = test_helper->set_compare(read_table->get(), expected_read);
-  bool compare_if = test_helper->set_compare(if_table->get(), expected_if);
-  bool compare_while = test_helper->set_compare(while_table->get(), expected_while);
+  bool compare_variable = PKBTestHelper::set_compare(variable_table->get(), expected_variable);
+  bool compare_constant = PKBTestHelper::set_compare(constant_table->get(), expected_constant);
+  bool compare_procedure = PKBTestHelper::set_compare(procedure_table->get(), expected_procedure);
+  bool compare_assign = PKBTestHelper::set_compare(assign_table->get(), expected_assign);
+  bool compare_read = PKBTestHelper::set_compare(read_table->get(), expected_read);
+  bool compare_if = PKBTestHelper::set_compare(if_table->get(), expected_if);
+  bool compare_while = PKBTestHelper::set_compare(while_table->get(), expected_while);
 
   ASSERT_EQ(variable_table->get().size(), 4);
   ASSERT_EQ(constant_table->get().size(), 5);

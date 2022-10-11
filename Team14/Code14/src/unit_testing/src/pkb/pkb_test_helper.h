@@ -16,6 +16,6 @@ class PKBTestHelper {
   }
   static bool set_pair_compare(EntityStringPairUnorderedSet const& lhs, EntityStringPairUnorderedSet const& rhs) {
     if (lhs.size() != rhs.size()) { return false; }
-    return std::all_of(lhs.begin(), lhs.end(), [&rhs](EntityStringPair pair) { return rhs.find(pair) != rhs.end(); });
+    return std::all_of(lhs.begin(), lhs.end(), [&rhs](EntityStringPair const& pair) { return rhs.find(pair) != rhs.end(); });
   }
 };

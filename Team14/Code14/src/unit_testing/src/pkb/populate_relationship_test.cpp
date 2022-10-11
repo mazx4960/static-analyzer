@@ -24,7 +24,6 @@ TEST(PopulateRelationshipTest, ModifiesSingleStatementTest) {
   relationships.reserve(length);
   EntityPointerUnorderedSet expected;
   EntityPointerUnorderedSet expected_inverse;
-  auto *test_helper = new PKBTestHelper();
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
@@ -38,15 +37,15 @@ TEST(PopulateRelationshipTest, ModifiesSingleStatementTest) {
   relationship_manager->Populate(relationships);
   auto *relationship_table = relationship_manager->GetTable(RsType::kModifies);
   bool compare = 
-      test_helper->set_compare(expected, relationship_table->get(new AssignStmtEntity("1"), false));
+      PKBTestHelper::set_compare(expected, relationship_table->get(new AssignStmtEntity("1"), false));
   bool compare_inverse_w = 
-      test_helper->set_compare(expected_inverse, relationship_table->get(new VariableEntity("w"), true));
+      PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("w"), true));
   bool compare_inverse_x =
-      test_helper->set_compare(expected_inverse, relationship_table->get(new VariableEntity("x"), true));
+      PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("x"), true));
   bool compare_inverse_y =
-      test_helper->set_compare(expected_inverse, relationship_table->get(new VariableEntity("y"), true));
+      PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("y"), true));
   bool compare_inverse_z =
-      test_helper->set_compare(expected_inverse, relationship_table->get(new VariableEntity("z"), true));
+      PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("z"), true));
 
 
   int count = 0;
@@ -90,7 +89,6 @@ TEST(PopulateRelationshipTest, ModifiesSingleProcedureTest) {
   relationships.reserve(length);
   EntityPointerUnorderedSet expected;
   EntityPointerUnorderedSet expected_inverse;
-  auto *test_helper = new PKBTestHelper();
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
@@ -103,15 +101,15 @@ TEST(PopulateRelationshipTest, ModifiesSingleProcedureTest) {
   auto *relationship_manager = new RelationshipManager();
   relationship_manager->Populate(relationships);
   auto *relationship_table = relationship_manager->GetTable(RsType::kModifies);
-  bool compare = test_helper->set_compare(expected, relationship_table->get(new ProcedureEntity("One"), false));
+  bool compare = PKBTestHelper::set_compare(expected, relationship_table->get(new ProcedureEntity("One"), false));
   bool compare_inverse_w =
-      test_helper->set_compare(expected_inverse, relationship_table->get(new VariableEntity("w"), true));
+      PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("w"), true));
   bool compare_inverse_x =
-      test_helper->set_compare(expected_inverse, relationship_table->get(new VariableEntity("x"), true));
+      PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("x"), true));
   bool compare_inverse_y =
-      test_helper->set_compare(expected_inverse, relationship_table->get(new VariableEntity("y"), true));
+      PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("y"), true));
   bool compare_inverse_z =
-      test_helper->set_compare(expected_inverse, relationship_table->get(new VariableEntity("z"), true));
+      PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("z"), true));
 
   int count = 0;
   int inverse_count = 0;
@@ -163,7 +161,6 @@ TEST(PopulateRelationshipTest, ModifiesMultipleProceduresTest) {
   relationships.reserve(length);
   EntityPointerUnorderedSet expected;
   EntityPointerUnorderedSet expected_inverse;
-  auto *test_helper = new PKBTestHelper();
   expected.insert(new VariableEntity("w"));
   expected.insert(new VariableEntity("x"));
   expected.insert(new VariableEntity("y"));
@@ -184,17 +181,17 @@ TEST(PopulateRelationshipTest, ModifiesMultipleProceduresTest) {
   auto *relationship_manager = new RelationshipManager();
   relationship_manager->Populate(relationships);
   auto *relationship_table = relationship_manager->GetTable(RsType::kModifies);
-  bool compare_one = test_helper->set_compare(expected, relationship_table->get(new ProcedureEntity("One"), false));
-  bool compare_two = test_helper->set_compare(expected, relationship_table->get(new ProcedureEntity("Two"), false));
-  bool compare_three = test_helper->set_compare(expected, relationship_table->get(new ProcedureEntity("Three"), false)); 
+  bool compare_one = PKBTestHelper::set_compare(expected, relationship_table->get(new ProcedureEntity("One"), false));
+  bool compare_two = PKBTestHelper::set_compare(expected, relationship_table->get(new ProcedureEntity("Two"), false));
+  bool compare_three = PKBTestHelper::set_compare(expected, relationship_table->get(new ProcedureEntity("Three"), false)); 
   bool compare_inverse_w =
-      test_helper->set_compare(expected_inverse, relationship_table->get(new VariableEntity("w"), true));
+      PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("w"), true));
   bool compare_inverse_x =
-      test_helper->set_compare(expected_inverse, relationship_table->get(new VariableEntity("x"), true));
+      PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("x"), true));
   bool compare_inverse_y =
-      test_helper->set_compare(expected_inverse, relationship_table->get(new VariableEntity("y"), true));
+      PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("y"), true));
   bool compare_inverse_z =
-      test_helper->set_compare(expected_inverse, relationship_table->get(new VariableEntity("z"), true));
+      PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("z"), true));
 
   int count = 0;
   int inverse_count = 0;
@@ -245,7 +242,6 @@ TEST(PopulateRelationshipTest, ModifiesDifferentVariableTest) {
   EntityPointerUnorderedSet expected_inverse_z = {new AssignStmtEntity("2")};
   EntityPointerUnorderedSet expected_inverse_y = {new AssignStmtEntity("3")};
   EntityPointerUnorderedSet expected_inverse_x = {new AssignStmtEntity("4")}; 
-  auto *test_helper = new PKBTestHelper();  
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
@@ -264,21 +260,21 @@ TEST(PopulateRelationshipTest, ModifiesDifferentVariableTest) {
   EntityPointerUnorderedMap table = relationship_table->GetTable();
   EntityPointerUnorderedMap inverse_table = relationship_table->GetTable(true);
   bool compare_1 = 
-      test_helper->set_compare(expected_1, relationship_table->get(new AssignStmtEntity("1"), false));
+      PKBTestHelper::set_compare(expected_1, relationship_table->get(new AssignStmtEntity("1"), false));
   bool compare_2 = 
-      test_helper->set_compare(expected_2, relationship_table->get(new AssignStmtEntity("2"), false));
+      PKBTestHelper::set_compare(expected_2, relationship_table->get(new AssignStmtEntity("2"), false));
   bool compare_3 = 
-      test_helper->set_compare(expected_3, relationship_table->get(new AssignStmtEntity("3"), false));
+      PKBTestHelper::set_compare(expected_3, relationship_table->get(new AssignStmtEntity("3"), false));
   bool compare_4 = 
-      test_helper->set_compare(expected_4, relationship_table->get(new AssignStmtEntity("4"), false));
+      PKBTestHelper::set_compare(expected_4, relationship_table->get(new AssignStmtEntity("4"), false));
   bool compare_inverse_w =
-      test_helper->set_compare(expected_inverse_w, relationship_table->get(new VariableEntity("w"), true));
+      PKBTestHelper::set_compare(expected_inverse_w, relationship_table->get(new VariableEntity("w"), true));
   bool compare_inverse_x =
-      test_helper->set_compare(expected_inverse_z, relationship_table->get(new VariableEntity("z"), true));
+      PKBTestHelper::set_compare(expected_inverse_z, relationship_table->get(new VariableEntity("z"), true));
   bool compare_inverse_y =
-      test_helper->set_compare(expected_inverse_y, relationship_table->get(new VariableEntity("y"), true));
+      PKBTestHelper::set_compare(expected_inverse_y, relationship_table->get(new VariableEntity("y"), true));
   bool compare_inverse_z =
-      test_helper->set_compare(expected_inverse_x, relationship_table->get(new VariableEntity("x"), true));
+      PKBTestHelper::set_compare(expected_inverse_x, relationship_table->get(new VariableEntity("x"), true));
 
   for (auto &key : table) { 
     count += key.second.size();
@@ -318,7 +314,7 @@ TEST(PopulateRelationshipTest, ModifiesSingleVariableTest) {
   EntityPointerUnorderedSet expected = {new VariableEntity("w")}; 
   EntityPointerUnorderedSet expected_inverse = {new AssignStmtEntity("1"), new AssignStmtEntity("2"),
                                                   new AssignStmtEntity("3"), new AssignStmtEntity("4")}; 
-  auto *test_helper = new PKBTestHelper();  
+
   for (int i = 0; i < length; i++) {
     relationships.push_back(
         new ModifiesRelationship(new AssignStmtEntity(modifies[i].first), 
@@ -336,15 +332,15 @@ TEST(PopulateRelationshipTest, ModifiesSingleVariableTest) {
   EntityPointerUnorderedMap table = relationship_table->GetTable();
   EntityPointerUnorderedMap inverse_table = relationship_table->GetTable(true);
   bool compare_1 = 
-      test_helper->set_compare(expected, relationship_table->get(new AssignStmtEntity("1"), false));
+      PKBTestHelper::set_compare(expected, relationship_table->get(new AssignStmtEntity("1"), false));
   bool compare_2 = 
-      test_helper->set_compare(expected, relationship_table->get(new AssignStmtEntity("2"), false));
+      PKBTestHelper::set_compare(expected, relationship_table->get(new AssignStmtEntity("2"), false));
   bool compare_3 = 
-      test_helper->set_compare(expected, relationship_table->get(new AssignStmtEntity("3"), false));
+      PKBTestHelper::set_compare(expected, relationship_table->get(new AssignStmtEntity("3"), false));
   bool compare_4 = 
-      test_helper->set_compare(expected, relationship_table->get(new AssignStmtEntity("4"), false)); 
+      PKBTestHelper::set_compare(expected, relationship_table->get(new AssignStmtEntity("4"), false)); 
   bool compare_inverse =
-      test_helper->set_compare(expected_inverse, relationship_table->get(new VariableEntity("w"), true));
+      PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("w"), true));
 
   for (auto &key : table) {
     count += key.second.size();
@@ -391,7 +387,6 @@ TEST(PopulateRelationshipTest, ModifiesMultipleTypeStatementsTest) {
   EntityPointerUnorderedSet actual_inverse;
   EntityPointerUnorderedSet expected; 
   EntityPointerUnorderedSet expected_inverse; 
-  auto *test_helper = new PKBTestHelper();  
 
   for (int i = 0; i < recurse; i++) {
     relationships.push_back(new ModifiesRelationship(new AssignStmtEntity(modifies_assign[i].first),
@@ -431,8 +426,8 @@ TEST(PopulateRelationshipTest, ModifiesMultipleTypeStatementsTest) {
     inverse_key_count++; 
   }
 
-  bool compare = test_helper->set_compare(expected, actual);
-  bool compare_inverse = test_helper->set_compare(expected_inverse, actual_inverse);
+  bool compare = PKBTestHelper::set_compare(expected, actual);
+  bool compare_inverse = PKBTestHelper::set_compare(expected_inverse, actual_inverse);
 
   ASSERT_EQ(count, 12);
   ASSERT_EQ(inverse_count, 12);
@@ -462,7 +457,6 @@ TEST(PopulateRelationshipTest, ModifiesMixedTest) {
   EntityPointerUnorderedSet actual_inverse;
   EntityPointerUnorderedSet expected;
   EntityPointerUnorderedSet expected_inverse;
-  auto *test_helper = new PKBTestHelper();   
 
   for (int i = 0; i < recurse; i++) {
     relationships.push_back(new ModifiesRelationship(new AssignStmtEntity(modifies_stmt[i].first),
@@ -498,8 +492,8 @@ TEST(PopulateRelationshipTest, ModifiesMixedTest) {
     inverse_key_count++;
   }
 
-  bool compare = test_helper->set_compare(expected, actual);
-  bool compare_inverse = test_helper->set_compare(expected_inverse, actual_inverse);
+  bool compare = PKBTestHelper::set_compare(expected, actual);
+  bool compare_inverse = PKBTestHelper::set_compare(expected_inverse, actual_inverse);
 
   ASSERT_EQ(count, 8);
   ASSERT_EQ(inverse_count, 8); 
@@ -524,7 +518,6 @@ TEST(PopulateRelationshipTest, FollowsSingleStatementTypeTest) {
   EntityPointerUnorderedSet actual_inverse;
   EntityPointerUnorderedSet expected;
   EntityPointerUnorderedSet expected_inverse;
-  auto *test_helper = new PKBTestHelper();
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
@@ -557,8 +550,8 @@ TEST(PopulateRelationshipTest, FollowsSingleStatementTypeTest) {
     inverse_key_count++;
   }
 
-  bool compare = test_helper->set_compare(expected, actual);
-  bool compare_inverse = test_helper->set_compare(expected_inverse, actual_inverse);
+  bool compare = PKBTestHelper::set_compare(expected, actual);
+  bool compare_inverse = PKBTestHelper::set_compare(expected_inverse, actual_inverse);
 
   ASSERT_EQ(count, 4);
   ASSERT_EQ(inverse_count, 4);
@@ -588,7 +581,6 @@ TEST(PopulateRelationshipTest, FollowsMultipleStatementTypeTest) {
   EntityPointerUnorderedSet actual_inverse;
   EntityPointerUnorderedSet expected;
   EntityPointerUnorderedSet expected_inverse;
-  auto *test_helper = new PKBTestHelper();
 
   for (int i = 0; i < recurse; i++) {
     relationships.push_back(
@@ -626,8 +618,8 @@ TEST(PopulateRelationshipTest, FollowsMultipleStatementTypeTest) {
     inverse_key_count++;
   }
 
-  bool compare = test_helper->set_compare(expected, actual);
-  bool compare_inverse = test_helper->set_compare(expected_inverse, actual_inverse);
+  bool compare = PKBTestHelper::set_compare(expected, actual);
+  bool compare_inverse = PKBTestHelper::set_compare(expected_inverse, actual_inverse);
    
   ASSERT_EQ(count, 8);
   ASSERT_EQ(inverse_count, 8);
@@ -652,7 +644,6 @@ TEST(PopulateRelationshipTest, CallsMultipleProcedureTest) {
   EntityPointerUnorderedSet actual_inverse;
   EntityPointerUnorderedSet expected;
   EntityPointerUnorderedSet expected_inverse;
-  auto *test_helper = new PKBTestHelper();
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
@@ -685,8 +676,8 @@ TEST(PopulateRelationshipTest, CallsMultipleProcedureTest) {
     inverse_key_count++;
   }
 
-  bool compare = test_helper->set_compare(expected, actual);
-  bool compare_inverse = test_helper->set_compare(expected_inverse, actual_inverse);
+  bool compare = PKBTestHelper::set_compare(expected, actual);
+  bool compare_inverse = PKBTestHelper::set_compare(expected_inverse, actual_inverse);
 
   ASSERT_EQ(count, 4);
   ASSERT_EQ(inverse_count, 4);
@@ -711,7 +702,6 @@ TEST(PopulateRelationshipTest, CallsSameProcedureTest) {
   EntityPointerUnorderedSet actual_inverse;
   EntityPointerUnorderedSet expected;
   EntityPointerUnorderedSet expected_inverse;
-  auto *test_helper = new PKBTestHelper();
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
@@ -763,7 +753,6 @@ TEST(PopulateRelationshipTest, CallsMultipleUniqueProcedureTest) {
   EntityPointerUnorderedSet actual_inverse;
   EntityPointerUnorderedSet expected;
   EntityPointerUnorderedSet expected_inverse;
-  auto *test_helper = new PKBTestHelper();
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
@@ -796,8 +785,8 @@ TEST(PopulateRelationshipTest, CallsMultipleUniqueProcedureTest) {
     inverse_key_count++;
   }
   
-  bool compare = test_helper->set_compare(expected, actual);
-  bool compare_inverse = test_helper->set_compare(expected_inverse, actual_inverse);
+  bool compare = PKBTestHelper::set_compare(expected, actual);
+  bool compare_inverse = PKBTestHelper::set_compare(expected_inverse, actual_inverse);
 
   ASSERT_EQ(count, 4);
   ASSERT_EQ(inverse_count, 4);
@@ -817,7 +806,6 @@ TEST(PopulateRelationshipTest, DuplicateSingleRelationshipTest) {
   relationships.reserve(length); 
   EntityPointerUnorderedSet expected = {new VariableEntity("x")};
   EntityPointerUnorderedSet expected_inverse = {new AssignStmtEntity("1")};
-  auto *test_helper = new PKBTestHelper();
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
@@ -836,9 +824,9 @@ TEST(PopulateRelationshipTest, DuplicateSingleRelationshipTest) {
   EntityPointerUnorderedMap table = relationship_table->GetTable();
   EntityPointerUnorderedMap inverse_table = relationship_table->GetTable(true);
   bool compare = 
-      test_helper->set_compare(expected, relationship_table->get(new AssignStmtEntity("1"), false));
+      PKBTestHelper::set_compare(expected, relationship_table->get(new AssignStmtEntity("1"), false));
   bool compare_inverse = 
-      test_helper->set_compare(expected_inverse, relationship_table->get(new VariableEntity("x"), true));
+      PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("x"), true));
 
   for (auto &key : table) {
     count += key.second.size();
@@ -869,7 +857,6 @@ TEST(PopulateRelationshipTest, SingleRelationshipStressTest) {
   EntityPointerUnorderedSet actual_inverse;
   EntityPointerUnorderedSet expected;
   EntityPointerUnorderedSet expected_inverse;
-  auto *test_helper = new PKBTestHelper(); 
 
   for (int i = 0; i < length; i = i + 2) {
     std::string stmt_a = std::to_string(i);
@@ -903,8 +890,8 @@ TEST(PopulateRelationshipTest, SingleRelationshipStressTest) {
     inverse_key_count++;
   }
   
-  bool compare = test_helper->set_compare(expected, actual);
-  bool compare_inverse = test_helper->set_compare(expected_inverse, actual_inverse);
+  bool compare = PKBTestHelper::set_compare(expected, actual);
+  bool compare_inverse = PKBTestHelper::set_compare(expected_inverse, actual_inverse);
 
   ASSERT_EQ(count, 500);
   ASSERT_EQ(inverse_count, 500);
@@ -946,7 +933,6 @@ TEST(PopulateRelationshipTest, MultipleRelationshipsTest) {
   EntityPointerUnorderedSet actual_calls_inverse;
   EntityPointerUnorderedSet expected_calls;
   EntityPointerUnorderedSet expected_calls_inverse;
-  auto *test_helper = new PKBTestHelper(); 
 
   for (int i = 0; i < recurse; i++) {
     relationships.push_back(
@@ -1022,12 +1008,12 @@ TEST(PopulateRelationshipTest, MultipleRelationshipsTest) {
     inverse_calls_key_count++;
   }
 
-  bool compare_modifies = test_helper->set_compare(expected_modifies, actual_modifies);
-  bool compare_modifies_inverse = test_helper->set_compare(expected_modifies_inverse, actual_modifies_inverse);
-  bool compare_follows = test_helper->set_compare(expected_follows, actual_follows);
-  bool compare_follows_inverse = test_helper->set_compare(expected_follows_inverse, actual_follows_inverse);
-  bool compare_calls = test_helper->set_compare(expected_calls, actual_calls);
-  bool compare_calls_inverse = test_helper->set_compare(expected_calls_inverse, actual_calls_inverse);
+  bool compare_modifies = PKBTestHelper::set_compare(expected_modifies, actual_modifies);
+  bool compare_modifies_inverse = PKBTestHelper::set_compare(expected_modifies_inverse, actual_modifies_inverse);
+  bool compare_follows = PKBTestHelper::set_compare(expected_follows, actual_follows);
+  bool compare_follows_inverse = PKBTestHelper::set_compare(expected_follows_inverse, actual_follows_inverse);
+  bool compare_calls = PKBTestHelper::set_compare(expected_calls, actual_calls);
+  bool compare_calls_inverse = PKBTestHelper::set_compare(expected_calls_inverse, actual_calls_inverse);
 
   ASSERT_EQ(modifies_count, 4);
   ASSERT_EQ(modifies_key_count, 4);
@@ -1074,7 +1060,6 @@ TEST(PopulatieRelationshipTest, DuplicateMultipleRelationshipTest) {
   EntityPointerUnorderedSet expected_follows_inverse = {new AssignStmtEntity("2")}; 
   EntityPointerUnorderedSet expected_calls = {new ProcedureEntity("Two")};
   EntityPointerUnorderedSet expected_calls_inverse = {new ProcedureEntity("One")};
-  auto *test_helper = new PKBTestHelper(); 
 
   for (int i = 0; i < recurse; i++) {
     relationships.push_back(
@@ -1113,17 +1098,17 @@ TEST(PopulatieRelationshipTest, DuplicateMultipleRelationshipTest) {
   EntityPointerUnorderedMap calls_map = calls_table->GetTable();
   EntityPointerUnorderedMap inverse_calls_map = calls_table->GetTable(true);
   bool compare_modifies =
-      test_helper->set_compare(expected_modifies, modifies_table->get(new AssignStmtEntity("1"), false));
+      PKBTestHelper::set_compare(expected_modifies, modifies_table->get(new AssignStmtEntity("1"), false));
   bool compare_modifies_inverse =
-      test_helper->set_compare(expected_modifies_inverse, modifies_table->get(new VariableEntity("w"), true));
+      PKBTestHelper::set_compare(expected_modifies_inverse, modifies_table->get(new VariableEntity("w"), true));
   bool compare_follows =
-      test_helper->set_compare(expected_follows, follows_table->get(new AssignStmtEntity("2"), false));
+      PKBTestHelper::set_compare(expected_follows, follows_table->get(new AssignStmtEntity("2"), false));
   bool compare_follows_inverse =
-      test_helper->set_compare(expected_follows_inverse, follows_table->get(new ReadStmtEntity("3"), true));
+      PKBTestHelper::set_compare(expected_follows_inverse, follows_table->get(new ReadStmtEntity("3"), true));
   bool compare_calls =
-      test_helper->set_compare(expected_calls, calls_table->get(new ProcedureEntity("One"), false));
+      PKBTestHelper::set_compare(expected_calls, calls_table->get(new ProcedureEntity("One"), false));
   bool compare_calls_inverse =
-      test_helper->set_compare(expected_calls_inverse, calls_table->get(new ProcedureEntity("Two"), true));
+      PKBTestHelper::set_compare(expected_calls_inverse, calls_table->get(new ProcedureEntity("Two"), true));
 
   for (auto &key : modifies_map) {
     modifies_count += key.second.size();
@@ -1188,7 +1173,6 @@ TEST(PopulateRelationshipTest, MultipleRelationshipStressTest) {
   EntityPointerUnorderedSet actual_follows_inverse;
   EntityPointerUnorderedSet expected_follows;
   EntityPointerUnorderedSet expected_follows_inverse; 
-  auto *test_helper = new PKBTestHelper(); 
 
   for (int i = 0; i < recurse; i = i + 2) {
     std::string stmt_a = std::to_string(i); 
@@ -1244,10 +1228,10 @@ TEST(PopulateRelationshipTest, MultipleRelationshipStressTest) {
     inverse_follows_key_count++;
   }
 
-  bool compare_modifies = test_helper->set_compare(expected_modifies, actual_modifies);
-  bool compare_modifies_inverse = test_helper->set_compare(expected_modifies_inverse, actual_modifies_inverse);
-  bool compare_follows = test_helper->set_compare(expected_follows, actual_follows);
-  bool compare_follows_inverse = test_helper->set_compare(expected_follows_inverse, actual_follows_inverse);
+  bool compare_modifies = PKBTestHelper::set_compare(expected_modifies, actual_modifies);
+  bool compare_modifies_inverse = PKBTestHelper::set_compare(expected_modifies_inverse, actual_modifies_inverse);
+  bool compare_follows = PKBTestHelper::set_compare(expected_follows, actual_follows);
+  bool compare_follows_inverse = PKBTestHelper::set_compare(expected_follows_inverse, actual_follows_inverse);
 
   ASSERT_EQ(modifies_count, 500);
   ASSERT_EQ(modifies_key_count, 500);
