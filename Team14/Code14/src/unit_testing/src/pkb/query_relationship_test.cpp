@@ -108,7 +108,7 @@ TEST(QueryTest, ModifiesRelationship) {
   auto result_invalid_variable = pkb.getByRelationship(RsType::kModifies, new VariableEntity("C"), false);
   auto result_invalid_read = pkb.getByRelationship(RsType::kModifies, new ReadStmtEntity("15"), false);
   auto result_invalid_if = pkb.getByRelationship(RsType::kModifies, new IfStmtEntity("16"), false);
-  auto result_invalid_while = pkb.getByRelationship(RsType::kModifies, new IfStmtEntity("17"), false);
+  auto result_invalid_while = pkb.getByRelationship(RsType::kModifies, new WhileStmtEntity("17"), false);
   auto result_multiple_inverse_true = pkb.getByRelationship(RsType::kModifies, new VariableEntity("X"), true);
   auto result_inference_from_while = pkb.getByRelationship(RsType::kModifies, new WhileStmtEntity("2"), false);
   auto result_inference_from_if = pkb.getByRelationship(RsType::kModifies, new IfStmtEntity("6"), false);
@@ -330,4 +330,154 @@ TEST(QueryTest, NextRelationship) {
   ASSERT_TRUE(PKBTestHelper::set_compare(result_traverse_inverse_true, expected_result_traverse_inverse_true));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_no_preceding_statement, expected_result_empty));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_no_subsequent_statement, expected_result_empty));
+}
+
+TEST(QueryTest, AffectsRelationship) {
+  std::vector<Relationship *> relationships = {
+      new NextRelationship(new AssignStmtEntity("1"), new AssignStmtEntity("2")),
+      new NextRelationship(new AssignStmtEntity("2"), new AssignStmtEntity("3")),
+      new NextRelationship(new AssignStmtEntity("3"), new AssignStmtEntity("4")),
+      new NextRelationship(new AssignStmtEntity("4"), new AssignStmtEntity("5")),
+      new NextRelationship(new AssignStmtEntity("5"), new AssignStmtEntity("6")),
+      new NextRelationship(new AssignStmtEntity("6"), new WhileStmtEntity("7")),
+      new NextRelationship(new WhileStmtEntity("7"), new IfStmtEntity("8")),
+      new NextRelationship(new IfStmtEntity("8"), new AssignStmtEntity("9")),
+      new NextRelationship(new AssignStmtEntity("9"), new AssignStmtEntity("10")),
+      new NextRelationship(new AssignStmtEntity("10"), new CallStmtEntity("11")),
+      new NextRelationship(new IfStmtEntity("8"), new AssignStmtEntity("12")),
+      new NextRelationship(new AssignStmtEntity("12"), new AssignStmtEntity("13")),
+      new NextRelationship(new CallStmtEntity("11"), new AssignStmtEntity("14")),
+      new NextRelationship(new AssignStmtEntity("13"), new AssignStmtEntity("14")),
+      new NextRelationship(new AssignStmtEntity("14"), new ReadStmtEntity("15")),
+      new NextRelationship(new ReadStmtEntity("15"), new PrintStmtEntity("16")),
+      new NextRelationship(new PrintStmtEntity("16"), new WhileStmtEntity("7")),
+      new NextRelationship(new PrintStmtEntity("16"), new AssignStmtEntity("17")),
+      new NextRelationship(new AssignStmtEntity("17"), new IfStmtEntity("18")),
+      new NextRelationship(new IfStmtEntity("18"), new CallStmtEntity("19")),
+      new NextRelationship(new IfStmtEntity("18"), new AssignStmtEntity("20")),
+      new NextRelationship(new CallStmtEntity("19"), new AssignStmtEntity("21")),
+      new NextRelationship(new AssignStmtEntity("20"), new AssignStmtEntity("21")),
+      new NextRelationship(new AssignStmtEntity("21"), new AssignStmtEntity("22")),
+      new NextRelationship(new AssignStmtEntity("23"), new AssignStmtEntity("24")),
+      new NextRelationship(new AssignStmtEntity("24"), new AssignStmtEntity("25")),
+
+      new ModifiesRelationship(new AssignStmtEntity("1"), new VariableEntity("x")),
+      new ModifiesRelationship(new AssignStmtEntity("2"), new VariableEntity("y")),
+      new ModifiesRelationship(new AssignStmtEntity("3"), new VariableEntity("a")),
+      new ModifiesRelationship(new AssignStmtEntity("4"), new VariableEntity("z")),
+      new ModifiesRelationship(new AssignStmtEntity("5"), new VariableEntity("b")),
+      new ModifiesRelationship(new AssignStmtEntity("6"), new VariableEntity("n")),
+      new ModifiesRelationship(new AssignStmtEntity("9"), new VariableEntity("m")),
+      new ModifiesRelationship(new AssignStmtEntity("10"), new VariableEntity("n")),
+      new ModifiesRelationship(new AssignStmtEntity("12"), new VariableEntity("y")),
+      new ModifiesRelationship(new AssignStmtEntity("13"), new VariableEntity("east")),
+      new ModifiesRelationship(new AssignStmtEntity("14"), new VariableEntity("x")),
+      new ModifiesRelationship(new ReadStmtEntity("15"), new VariableEntity("y")),
+      new ModifiesRelationship(new AssignStmtEntity("17"), new VariableEntity("c")),
+      new ModifiesRelationship(new AssignStmtEntity("20"), new VariableEntity("c")),
+      new ModifiesRelationship(new AssignStmtEntity("21"), new VariableEntity("z")),
+      new ModifiesRelationship(new AssignStmtEntity("22"), new VariableEntity("cenX")),
+      new ModifiesRelationship(new AssignStmtEntity("23"), new VariableEntity("x")),
+      new ModifiesRelationship(new AssignStmtEntity("24"), new VariableEntity("y")),
+      new ModifiesRelationship(new AssignStmtEntity("25"), new VariableEntity("z")),
+
+      new UsesRelationship(new AssignStmtEntity("2"), new VariableEntity("x")),
+      new UsesRelationship(new AssignStmtEntity("2"), new VariableEntity("a")),
+      new UsesRelationship(new AssignStmtEntity("5"), new VariableEntity("b")),
+      new UsesRelationship(new WhileStmtEntity("7"), new VariableEntity("x")),
+      new UsesRelationship(new IfStmtEntity("8"), new VariableEntity("z")),
+      new UsesRelationship(new AssignStmtEntity("9"), new VariableEntity("x")),
+      new UsesRelationship(new AssignStmtEntity("9"), new VariableEntity("z")),
+      new UsesRelationship(new AssignStmtEntity("10"), new VariableEntity("n")),
+      new UsesRelationship(new AssignStmtEntity("13"), new VariableEntity("y")),
+      new UsesRelationship(new AssignStmtEntity("13"), new VariableEntity("a")),
+      new UsesRelationship(new AssignStmtEntity("14"), new VariableEntity("y")),
+      new UsesRelationship(new AssignStmtEntity("14"), new VariableEntity("z")),
+      new UsesRelationship(new AssignStmtEntity("14"), new VariableEntity("a")),
+      new UsesRelationship(new PrintStmtEntity("16"), new VariableEntity("x")),
+      new UsesRelationship(new IfStmtEntity("18"), new VariableEntity("m")),
+      new UsesRelationship(new AssignStmtEntity("20"), new VariableEntity("x")),
+      new UsesRelationship(new AssignStmtEntity("21"), new VariableEntity("c")),
+      new UsesRelationship(new AssignStmtEntity("22"), new VariableEntity("z")),
+      new UsesRelationship(new AssignStmtEntity("22"), new VariableEntity("a")),
+      new UsesRelationship(new AssignStmtEntity("24"), new VariableEntity("x")),
+      new UsesRelationship(new AssignStmtEntity("25"), new VariableEntity("y")),
+
+      new ParentRelationship(new ProcedureEntity("main"), new AssignStmtEntity("1")),
+      new ParentRelationship(new ProcedureEntity("main"), new AssignStmtEntity("2")),
+      new ParentRelationship(new ProcedureEntity("main"), new AssignStmtEntity("3")),
+      new ParentRelationship(new ProcedureEntity("main"), new AssignStmtEntity("4")),
+      new ParentRelationship(new ProcedureEntity("main"), new AssignStmtEntity("5")),
+      new ParentRelationship(new ProcedureEntity("main"), new AssignStmtEntity("6")),
+      new ParentRelationship(new ProcedureEntity("main"), new WhileStmtEntity("7")),
+      new ParentRelationship(new WhileStmtEntity("7"), new IfStmtEntity("8")),
+      new ParentRelationship(new WhileStmtEntity("7"), new AssignStmtEntity("14")),
+      new ParentRelationship(new WhileStmtEntity("7"), new ReadStmtEntity("15")),
+      new ParentRelationship(new WhileStmtEntity("7"), new PrintStmtEntity("16")),
+      new ParentRelationship(new IfStmtEntity("8"), new AssignStmtEntity("9")),
+      new ParentRelationship(new IfStmtEntity("8"), new AssignStmtEntity("10")),
+      new ParentRelationship(new IfStmtEntity("8"), new CallStmtEntity("11")),
+      new ParentRelationship(new IfStmtEntity("8"), new AssignStmtEntity("12")),
+      new ParentRelationship(new IfStmtEntity("8"), new CallStmtEntity("13")),
+      new ParentRelationship(new ProcedureEntity("main"), new AssignStmtEntity("17")),
+      new ParentRelationship(new ProcedureEntity("main"), new IfStmtEntity("18")),
+      new ParentRelationship(new IfStmtEntity("18"), new CallStmtEntity("19")),
+      new ParentRelationship(new IfStmtEntity("18"), new AssignStmtEntity("20")),
+      new ParentRelationship(new ProcedureEntity("main"), new AssignStmtEntity("21")),
+      new ParentRelationship(new ProcedureEntity("main"), new AssignStmtEntity("22")),
+      new ParentRelationship(new ProcedureEntity("second"), new AssignStmtEntity("23")),
+      new ParentRelationship(new ProcedureEntity("second"), new AssignStmtEntity("24")),
+      new ParentRelationship(new ProcedureEntity("second"), new AssignStmtEntity("25")),
+
+      new CallsRelationship(new CallStmtEntity("11"), new ProcedureEntity("second")),
+      new CallsRelationship(new CallStmtEntity("19"), new ProcedureEntity("second")),
+  };
+
+  PKB pkb;
+  pkb.populate(relationships);
+
+  auto result_get_uses_simple = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("20"), false);
+  auto result_get_uses_block_by_call = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("2"), false);
+  auto result_get_uses_multiple = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("1"), false);
+  auto result_get_uses_same_stmt = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("5"), false);
+  auto result_get_uses_same_stmt_in_loop = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("10"), false);
+  auto result_get_uses_none = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("16"), false);
+  auto result_get_uses_split_on_if = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("6"), false);
+  auto result_get_uses_chain_simple = pkb.getByRelationship(RsType::kAffectsT, new AssignStmtEntity("23"), false);
+  auto result_get_uses_chain_multiple = pkb.getByRelationship(RsType::kAffectsT, new AssignStmtEntity("12"), false);
+  auto result_get_modify_simple = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("2"), true);
+  auto result_get_modify_multiple = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("22"), true);
+  auto result_get_modify_multiple_in_loop = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("13"), true);
+  auto result_get_modify_none = pkb.getByRelationship(RsType::kAffects, new AssignStmtEntity("4"), true);
+  auto result_get_modify_chain_simple = pkb.getByRelationship(RsType::kAffectsT, new AssignStmtEntity("25"), true);
+
+  EntityPointerUnorderedSet expected_result_get_uses_simple = {new AssignStmtEntity("21")};
+  EntityPointerUnorderedSet expected_result_get_uses_multiple = {new AssignStmtEntity("2"), new AssignStmtEntity("9")};
+  EntityPointerUnorderedSet expected_result_get_uses_same_stmt_in_loop = {new AssignStmtEntity("10")};
+  EntityPointerUnorderedSet expected_result_get_uses_chain_simple = {new AssignStmtEntity("24"), new AssignStmtEntity("25")};
+  EntityPointerUnorderedSet expected_result_get_uses_chain_multiple = {new AssignStmtEntity("9"), new AssignStmtEntity("13"),
+                                                                       new AssignStmtEntity("14"), new AssignStmtEntity("20"),
+                                                                       new AssignStmtEntity("21"), new AssignStmtEntity("22")};
+  EntityPointerUnorderedSet expected_result_get_uses_split_on_if = {new AssignStmtEntity("10")};
+  EntityPointerUnorderedSet expected_result_get_modify_simple = {new AssignStmtEntity("1")};
+  EntityPointerUnorderedSet expected_result_get_modify_multiple = {new AssignStmtEntity("21"), new AssignStmtEntity("3")};
+  EntityPointerUnorderedSet expected_result_get_modify_multiple_in_loop = {new AssignStmtEntity("12"), new AssignStmtEntity("3")};
+  EntityPointerUnorderedSet expected_result_get_modify_chain_simple = {new AssignStmtEntity("24"), new AssignStmtEntity("23")};
+
+  EntityPointerUnorderedSet expected_result_empty = {};
+
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_simple, expected_result_get_uses_simple));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_block_by_call, expected_result_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_multiple, expected_result_get_uses_multiple));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_same_stmt, expected_result_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_same_stmt_in_loop, expected_result_get_uses_same_stmt_in_loop));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_none, expected_result_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_split_on_if, expected_result_get_uses_split_on_if));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_chain_simple, expected_result_get_uses_chain_simple));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_chain_multiple, expected_result_get_uses_chain_multiple));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_modify_simple, expected_result_get_modify_simple));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_modify_multiple, expected_result_get_modify_multiple));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_modify_multiple_in_loop, expected_result_get_modify_multiple_in_loop));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_modify_none, expected_result_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_modify_chain_simple, expected_result_get_modify_chain_simple));
 }

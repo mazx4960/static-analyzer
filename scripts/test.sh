@@ -3,7 +3,19 @@
 # run system tests
 test_folder="Team14/Tests14/system"
 result_folder="Team14/Code14/tests"
-test_names=("pql_error" "basic" "compute_ave" "compute_centroid" "extreme_nesting" "patterns" "intertwined_procedures" "stress" "stress2")
+test_names=(
+  "pql_error"
+  "basic"
+  "compute_ave"
+  "compute_centroid"
+  "extreme_nesting"
+  "patterns"
+  "intertwined_procedures"
+  "affects_edge"
+  "qps_stress_1"
+  "sp_stress_1"
+  "stress_1"
+)
 num_failed=0
 
 for test_name in "${test_names[@]}"; do
