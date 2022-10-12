@@ -4,6 +4,27 @@
 
 #include "qps/query_parser/query_parser.h"
 
+
+TEST(QueryParserTest, SynonymParseTest) {
+  std::vector<Token *> tokens = {
+      new KeywordToken("syn")
+  };
+  auto *expected = new QuerySynonym("syn");
+  QueryParser parser = QueryParser(tokens);
+  auto *synonym = parser.parseSynonym();
+  ASSERT_EQ(*synonym, *expected);
+}
+
+TEST(QueryParserTest, SelectCallParseTest) {
+  std::vector<Token *> tokens = {
+      new KeywordToken("Select"), new SymbolToken("v")
+  };
+  auto *expected = new SelectCall(new SynonymReference(new QuerySynonym("v")));
+  QueryParser parser = QueryParser(tokens);
+  auto *select = parser.parseQueryCall();
+  ASSERT_EQ(*select->getReference(), *expected->getReference());
+}
+
 TEST(QueryParserTest, AssignDeclarationParseTest) {
   std::vector<Token *> tokens = {
       new KeywordToken("assign"), new SymbolToken("a"), new SemicolonToken()
@@ -295,3 +316,42 @@ TEST(QueryParserTest, SameSynonymMultiMixedDeclarationParseTest) {
   }
 }
 
+TEST(QueryParserTest, IntegerStmtReferenceParseTest) {
+  std::vector<Token *> tokens = {
+      new LiteralToken("1")
+  };
+  auto *expected = new IntegerReference("1");
+  QueryParser parser = QueryParser(tokens);
+  auto *reference = parser.parseReference();
+  ASSERT_EQ(*reference, *expected);
+}
+
+TEST(QueryParserTest, IdentEntReferenceParseTest) {
+  std::vector<Token *> tokens = {
+      new QuoteToken(), new SymbolToken("ident"), new QuoteToken()
+  };
+  auto *expected = new IdentReference("ident");
+  QueryParser parser = QueryParser(tokens);
+  auto *reference = parser.parseReference();
+  ASSERT_EQ(*reference, *expected);
+}
+
+TEST(QueryParserTest, SynonymReferenceParseTest) {
+  std::vector<Token *> tokens = {
+      new SymbolToken("s")
+  };
+  auto *expected = new SynonymReference(new QuerySynonym("s"));
+  QueryParser parser = QueryParser(tokens);
+  auto *reference = parser.parseReference();
+  ASSERT_EQ(*reference, *expected);
+}
+
+TEST(QueryParserTest, WildcardReferenceParseTest) {
+  std::vector<Token *> tokens = {
+      new WildCardToken()
+  };
+  auto *expected = new WildcardReference();
+  QueryParser parser = QueryParser(tokens);
+  auto *reference = parser.parseReference();
+  ASSERT_EQ(*reference, *expected);
+}
