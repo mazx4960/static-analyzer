@@ -26,7 +26,7 @@ class QueryEvaluator {
   SynonymReferencePointerUnorderedSet declarations_;
 
   /**
-   * * Copy declarations from Query into a set.
+   * Copy declarations from Query into a set.
    * @return set of query declarations.
    */
   SynonymReferencePointerUnorderedSet copyDeclarations();
