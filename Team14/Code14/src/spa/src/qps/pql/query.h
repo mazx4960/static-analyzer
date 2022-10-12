@@ -30,4 +30,5 @@ class Query {
   [[nodiscard]] Declarations getSynonymDeclarations() const;
   [[nodiscard]] QueryCall *getQueryCall() const;
   [[nodiscard]] Clauses getClauses() const;
+  [[nodiscard]] std::string toString() const;
 };

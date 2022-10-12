@@ -22,8 +22,9 @@ class QueryCall {
       : type_(call_type), synonym_reference_(std::move(synonym_reference)) {
   };
 
-  [[nodiscard]] SynonymReference *getReference() const;
   void setReference(SynonymReference *synonym_reference);
+  [[nodiscard]] SynonymReference *getReference() const;
+  [[nodiscard]] virtual std::string toString() const = 0;
 };
 
 class SelectCall : public QueryCall {
@@ -31,4 +32,5 @@ class SelectCall : public QueryCall {
   explicit SelectCall(SynonymReference *query_declaration)
       : QueryCall(CallType::kSelect, std::move(query_declaration)) {
   };
+  std::string toString() const override;
 };

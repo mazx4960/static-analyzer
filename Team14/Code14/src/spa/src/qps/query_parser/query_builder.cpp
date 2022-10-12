@@ -1,7 +1,6 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "query_builder.h"
-#include "spdlog/spdlog.h"
 
 QueryBuilder::QueryBuilder(Query *query_blueprint) {
   if (query_blueprint == nullptr) {
@@ -11,17 +10,9 @@ QueryBuilder::QueryBuilder(Query *query_blueprint) {
 }
 
 Query *QueryBuilder::build() {
-  spdlog::info("Building query...");
-  spdlog::info("Building declarations...");
   this->declarations_ = buildDeclarations(query_->getSynonymDeclarations());
-  spdlog::info("Declarations built successfully");
-  spdlog::info("Building query call...");
   buildQueryCall(query_->getQueryCall());
-  spdlog::info("Call built successfully");
-  spdlog::info("Building clauses...");
   buildClauses(query_->getClauses());
-  spdlog::info("Clauses built successfully");
-  spdlog::info("Query built successfully");
   return query_;
 }
 
@@ -36,8 +27,8 @@ SynonymReference *QueryBuilder::buildDeclaration(SynonymReference *declaration_b
   if (declaration_blueprint == nullptr) {
     throw ParseSemanticError("Missing declaration");
   }
-  if (!synonyms_.insert(declaration_blueprint->toString()).second) {
-    throw ParseSemanticError("Synonym already declared: " + declaration_blueprint->toString());
+  if (!synonyms_.insert(declaration_blueprint->getReferenceValue()).second) {
+    throw ParseSemanticError("Synonym already declared: " + declaration_blueprint->getReferenceValue());
   }
   return declaration_blueprint;
 }

@@ -34,7 +34,7 @@ EntityPointerUnorderedSet EvaluationStrategy::getCandidates(QueryReference *decl
     case ReferenceType::kWildcard:return pkb_->getEntities(declaration->getEntityType());
     case ReferenceType::kInteger:
     case ReferenceType::kIdent:
-      std::basic_string<char> value = declaration->toString();
+      std::basic_string<char> value = declaration->getReferenceValue();
       return pkb_->getEntitiesByString(value);
   }
 }
@@ -98,7 +98,8 @@ SubqueryResult SuchThatStrategy::evaluate() {
 EntityPointerUnorderedMap SuchThatStrategy::evaluateParameter(QueryReference *param, RsType rs_type,
                                                               bool invert_search,
                                                               const EntityPointerUnorderedSet &potential_matches) {
-  spdlog::debug("Evaluating SuchThat parameter {} for {}, inverse = {}", param->toString(), RsTypeToString(rs_type), invert_search);
+  spdlog::debug("Evaluating SuchThat parameter {} for {}, inverse = {}",
+                param->getReferenceValue(), RsTypeToString(rs_type), invert_search);
   EntityPointerUnorderedSet candidates = this->getCandidates(param);
   std::string candidate_string;
   for (auto *candidate : candidates) { candidate_string += candidate->ToString() + ", "; }
@@ -136,7 +137,7 @@ SubqueryResult PatternStrategy::evaluate() {
  */
 EntityPointerUnorderedMap PatternStrategy::evaluateParameter(QueryReference *var_param, ExpressionSpec *expr_param,
                                                              const EntityPointerUnorderedSet &potential_matches) {
-  spdlog::debug("Evaluating Pattern parameter {} for {}", var_param->toString(), expr_param->toString());
+  spdlog::debug("Evaluating Pattern parameter {} for {}", var_param->getReferenceValue(), expr_param->toString());
   EntityPointerUnorderedSet candidates = this->getCandidates(var_param);
   std::string candidate_string;
   for (auto *candidate : candidates) { candidate_string += candidate->ToString() + ", "; }

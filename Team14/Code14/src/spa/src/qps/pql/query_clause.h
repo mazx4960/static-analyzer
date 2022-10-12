@@ -34,6 +34,7 @@ class QueryClause : public ICheckSyntax, public ICheckSemantics {
   ClauseType getClauseType();
   [[nodiscard]]bool isSyntacticallyCorrect() const override = 0;
   [[nodiscard]] bool IsSemanticallyCorrect() const override = 0;
+  virtual std::string toString() const = 0;
 };
 
 class SuchThatClause : public QueryClause {
@@ -57,6 +58,7 @@ class SuchThatClause : public QueryClause {
   void setSecond(SynonymReference *synonym_declaration);
   [[nodiscard]] bool isSyntacticallyCorrect() const override = 0;
   [[nodiscard]] bool IsSemanticallyCorrect() const override = 0;
+  std::string toString() const override;
 };
 
 class ParentClause : public SuchThatClause {
@@ -186,4 +188,5 @@ class PatternClause : public QueryClause {
   [[nodiscard]] ExpressionSpec *getExpression() const;
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
+  std::string toString() const override;
 };

@@ -38,9 +38,10 @@ class QueryReference : public ICheckSyntax{
 
   virtual bool operator==(const QueryReference &other) const = 0;
   virtual bool operator==(const QueryReference *other) const = 0;
-  virtual std::string toString() const = 0;
+  virtual std::string getReferenceValue() const = 0;
   virtual bool isStmtRef() const = 0;
   virtual bool isEntRef() const = 0;
+  virtual std::string toString() const = 0;
   bool isSyntacticallyCorrect() const override = 0;
   void setEntityType(EntityType entity_type);
 };
@@ -52,10 +53,11 @@ class WildcardReference : public QueryReference {
   };
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;
-  std::string toString() const override;
+  std::string getReferenceValue() const override;
   bool isStmtRef() const override;
   bool isEntRef() const override;
   bool isSyntacticallyCorrect() const override;
+  std::string toString() const override;
 };
 
 class IdentReference : public QueryReference {
@@ -67,10 +69,11 @@ class IdentReference : public QueryReference {
   }
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;
-  std::string toString() const override;
+  std::string getReferenceValue() const override;
   bool isStmtRef() const override;
   bool isEntRef() const override;
   bool isSyntacticallyCorrect() const override;
+  std::string toString() const override;
 };
 
 class IntegerReference : public QueryReference {
@@ -82,10 +85,11 @@ class IntegerReference : public QueryReference {
   }
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;
-  std::string toString() const override;
+  std::string getReferenceValue() const override;
   bool isStmtRef() const override;
   bool isEntRef() const override;
   bool isSyntacticallyCorrect() const override;
+  std::string toString() const override;
 };
 
 class SynonymReference : public QueryReference {
@@ -99,10 +103,11 @@ class SynonymReference : public QueryReference {
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;
   QuerySynonym *getSynonym() const;
-  std::string toString() const override;
+  std::string getReferenceValue() const override;
   bool isStmtRef() const override;
   bool isEntRef() const override;
   bool isSyntacticallyCorrect() const override;
+  std::string toString() const override;
 };
 
 class StatementDeclaration : public SynonymReference {

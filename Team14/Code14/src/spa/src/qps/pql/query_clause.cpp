@@ -20,6 +20,12 @@ void SuchThatClause::setFirst(SynonymReference *synonym_declaration) {
 void SuchThatClause::setSecond(SynonymReference *synonym_declaration) {
   this->second_ = synonym_declaration;
 }
+std::string SuchThatClause::toString() const {
+  std::string str;
+  str.append(RsTypeToString(this->getSuchThatType()) + "(" + this->getFirst()->toString() + ", "
+                 + this->getSecond()->toString() + ")");
+  return str;
+}
 bool ParentClause::isSyntacticallyCorrect() const {
   return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
@@ -455,4 +461,10 @@ bool PatternClause::IsSemanticallyCorrect() const {
     getEntRef()->setEntityType(EntityType::kVariable);
   }
   return getSynonymDeclaration()->getEntityType() == EntityType::kAssignStmt;
+}
+std::string PatternClause::toString() const {
+  std::string str;
+  str.append("pattern " + this->synonym_declaration_->toString() + "(" + this->getEntRef()->toString() + ", "
+                 + this->expression_->toString() + ")");
+  return str;
 }

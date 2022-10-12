@@ -15,25 +15,24 @@ Result *QPS::EvaluateQuery(std::istream *query_stream) {
   }
   spdlog::debug("Tokens[{}]: ", tokens.size(), token_string);
 
-  QueryParser parser(tokens);
-  spdlog::info("Parsing tokens...");
 
+  spdlog::info("Parsing tokens...");
   Query *query;
   try {
-    QueryBuilder builder = QueryBuilder(parser.parse());
+    QueryParser parser(tokens);
+    query = parser.parse();
+    spdlog::info("Query parsed");
+    spdlog::debug("Query: {}", query->toString());
+    spdlog::info("Building Query...");
+    QueryBuilder builder = QueryBuilder(query);
     query = builder.build();
+    spdlog::info("Query built");
+    spdlog::debug("Query: {}", query->toString());
   } catch (ParseSemanticError &e) {
     return Result::semanticError();
   } catch (ParseSyntaxError &e) {
     return Result::syntacticError();
   }
-
-  std::string declaration_string;
-  for (auto *declaration : query->getSynonymDeclarations()) {
-    declaration_string += EntityTypeToString(declaration->getEntityType()) + ":" + declaration->toString() + " ";
-  }
-  spdlog::debug("Declarations[{}]: {}", query->getSynonymDeclarations().size(), declaration_string);
-  spdlog::info("Query parsed");
   Result *result = (new QueryEvaluator(this->pkb_, *query))->evaluate();
   return result;
 }

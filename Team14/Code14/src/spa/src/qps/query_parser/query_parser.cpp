@@ -3,7 +3,6 @@
 #include <utility>
 
 #include "commons/parser/parser.h"
-#include "spdlog/spdlog.h"
 
 QueryParser::QueryParser(std::vector<Token *> tokens) {
   this->tokens_ = std::move(tokens);
@@ -179,7 +178,6 @@ SuchThatClause *QueryParser::parseSuchThat() {
   if (!clause->isSyntacticallyCorrect()) {
     throw ParseSyntaxError("Incorrect parameter syntax");
   }
-  spdlog::debug("SuchThat parsed: {}({}, {})", RsTypeToString(rs_type), first->toString(), second->toString());
   return clause;
 }
 

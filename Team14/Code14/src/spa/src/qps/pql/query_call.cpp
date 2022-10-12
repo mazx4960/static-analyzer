@@ -8,3 +8,6 @@ SynonymReference *QueryCall::getReference() const {
 void QueryCall::setReference(SynonymReference *synonym_reference) {
   this->synonym_reference_ = synonym_reference;
 }
+std::string SelectCall::toString() const {
+  return "Select " + this->getReference()->toString();
+}

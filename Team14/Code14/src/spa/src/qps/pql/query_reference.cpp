@@ -28,8 +28,8 @@ bool WildcardReference::operator==(const QueryReference &other) const {
 bool WildcardReference::operator==(const QueryReference *other) const {
   return other->getRefType() == ReferenceType::kWildcard;
 }
-std::string WildcardReference::toString() const {
-  return "_";
+std::string WildcardReference::getReferenceValue() const {
+  return "";
 }
 bool WildcardReference::isStmtRef() const {
   return true;
@@ -40,15 +40,18 @@ bool WildcardReference::isEntRef() const {
 bool WildcardReference::isSyntacticallyCorrect() const {
   return true;
 }
+std::string WildcardReference::toString() const {
+  return "_";
+}
 
 // IdentDeclaration
 bool IdentReference::operator==(const QueryReference &other) const {
-  return other.getRefType() == ReferenceType::kIdent && this->toString() == other.toString();
+  return other.getRefType() == ReferenceType::kIdent && this->getReferenceValue() == other.getReferenceValue();
 }
 bool IdentReference::operator==(const QueryReference *other) const {
-  return other->getRefType() == ReferenceType::kIdent && this->toString() == other->toString();
+  return other->getRefType() == ReferenceType::kIdent && this->getReferenceValue() == other->getReferenceValue();
 }
-std::string IdentReference::toString() const {
+std::string IdentReference::getReferenceValue() const {
   return this->value_;
 }
 bool IdentReference::isStmtRef() const {
@@ -60,15 +63,18 @@ bool IdentReference::isEntRef() const {
 bool IdentReference::isSyntacticallyCorrect() const {
   return true;
 }
+std::string IdentReference::toString() const {
+  return "Ident:" + this->value_;
+}
 
 // IntegerDeclaration
 bool IntegerReference::operator==(const QueryReference &other) const {
-  return other.getRefType() == ReferenceType::kInteger && this->toString() == other.toString();
+  return other.getRefType() == ReferenceType::kInteger && this->getReferenceValue() == other.getReferenceValue();
 }
 bool IntegerReference::operator==(const QueryReference *other) const {
-  return other->getRefType() == ReferenceType::kInteger && this->toString() == other->toString();
+  return other->getRefType() == ReferenceType::kInteger && this->getReferenceValue() == other->getReferenceValue();
 }
-std::string IntegerReference::toString() const {
+std::string IntegerReference::getReferenceValue() const {
   return this->value_;
 }
 bool IntegerReference::isStmtRef() const {
@@ -79,6 +85,9 @@ bool IntegerReference::isEntRef() const {
 }
 bool IntegerReference::isSyntacticallyCorrect() const {
   return this->value_.length() <= 1 || value_[0] != '0';
+}
+std::string IntegerReference::toString() const {
+  return "Integer" + this->value_;
 }
 
 // SynonymDeclaration
@@ -101,8 +110,8 @@ bool SynonymReference::operator==(const QueryReference *other) const {
   }
   return false;
 }
-std::string SynonymReference::toString() const {
-  return this->query_synonym_->toString();
+std::string SynonymReference::getReferenceValue() const {
+  return this->getSynonym()->toString();
 }
 bool SynonymReference::isStmtRef() const {
   return true;
@@ -112,6 +121,9 @@ bool SynonymReference::isEntRef() const {
 }
 bool SynonymReference::isSyntacticallyCorrect() const {
   return true;
+}
+std::string SynonymReference::toString() const {
+  return EntityTypeToString(this->getEntityType()) + ":" + this->getSynonym()->toString();
 }
 
 

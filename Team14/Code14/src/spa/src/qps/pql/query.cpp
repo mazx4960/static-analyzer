@@ -11,3 +11,14 @@ QueryCall *Query::getQueryCall() const {
 Clauses Query::getClauses() const {
   return this->query_clauses_;
 }
+std::string Query::toString() const {
+  std::string str;
+  for (auto *declaration:synonym_declarations_) {
+    str.append(declaration->toString() + "; ");
+  }
+  str.append(query_call_->toString());
+  for (auto *clause:query_clauses_) {
+    str.append(clause->toString() + " ");
+  }
+  return str;
+}
