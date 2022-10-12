@@ -12,9 +12,6 @@ test_names=(
   "patterns"
   "intertwined_procedures"
   "affects_edge"
-  "qps_stress_1"
-  "sp_stress_1"
-  "stress_1"
 )
 num_failed=0
 

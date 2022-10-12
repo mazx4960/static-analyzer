@@ -6,7 +6,7 @@ result_folder="Team14/Code14/tests"
 test_names=(
   "qps_stress_1"
   "sp_stress_1"
-  "multi_component_stress_1"
+  "stress_1"
 )
 
 for test_name in "${test_names[@]}"; do
