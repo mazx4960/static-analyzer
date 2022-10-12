@@ -6,9 +6,9 @@
 
 TEST(BuilderTest, QueryBuilderTest) {
   auto *query_synonym = new QuerySynonym("v");
-  auto *query_declaration = new SynonymReference(query_synonym, EntityType::kVariable);
-  std::vector<SynonymReference *> query_declarations = {query_declaration};
+  auto *synonym_reference = new SynonymReference(query_synonym, EntityType::kVariable);
+  auto *query = new Query({synonym_reference}, new SelectCall(new SynonymReference(query_synonym)), {});
 
-  QueryBuilder builder = QueryBuilder();
-  ASSERT_EQ(*builder.buildDeclaration(new SynonymReference(query_synonym, EntityType::kVariable)), *query_declaration);
+  QueryBuilder builder = QueryBuilder(query);
+  ASSERT_EQ(builder.build(), query);
 }

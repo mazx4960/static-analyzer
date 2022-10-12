@@ -37,7 +37,6 @@ class QueryParser {
   explicit QueryParser(std::vector<Token *> tokens);
   Query *parse();
   Declarations parseDeclarations();
-
   QuerySynonym *parseSynonym();
   QueryCall *parseQueryCall();
   Clauses parseClauses();
