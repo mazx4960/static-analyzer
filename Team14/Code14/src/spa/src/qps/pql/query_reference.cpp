@@ -87,7 +87,7 @@ bool IntegerReference::isSyntacticallyCorrect() const {
   return this->value_.length() <= 1 || value_[0] != '0';
 }
 std::string IntegerReference::toString() const {
-  return "Integer" + this->value_;
+  return "Integer:" + this->value_;
 }
 
 // SynonymDeclaration
@@ -98,7 +98,7 @@ bool SynonymReference::operator==(const QueryReference &other) const {
   if (other.getRefType() == this->getRefType()) {
     const auto &synonym_other = static_cast<const SynonymReference &>(other);
     return synonym_other.getEntityType() == this->getEntityType()
-        && *synonym_other.getSynonym() == *this->getSynonym();
+        && (*synonym_other.getSynonym()) == (*this->getSynonym());
   }
   return false;
 }
@@ -106,7 +106,7 @@ bool SynonymReference::operator==(const QueryReference *other) const {
   if (other->getRefType() == this->getRefType()) {
     const auto &synonym_other = static_cast<const SynonymReference *>(other);
     return synonym_other->getEntityType() == this->getEntityType()
-        && *synonym_other->getSynonym() == *this->getSynonym();
+        && (*synonym_other->getSynonym()) == (*this->getSynonym());
   }
   return false;
 }
