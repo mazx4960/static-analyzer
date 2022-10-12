@@ -263,14 +263,24 @@ bool CallsClause::IsSemanticallyCorrect() const {
     case ReferenceType::kIdent:break;
     case ReferenceType::kWildcard:getFirst()->setEntityType(EntityType::kProcedure);
       break;
-    case ReferenceType::kSynonym:return getFirst()->getEntityType() == EntityType::kProcedure;
+    case ReferenceType::kSynonym:
+      switch (getFirst()->getEntityType()) {
+        case EntityType::kProcedure:break;
+        default:return false;
+      }
+      break;
     default:return false;
   }
   switch (getSecond()->getRefType()) {
     case ReferenceType::kIdent:break;
     case ReferenceType::kWildcard:getSecond()->setEntityType(EntityType::kProcedure);
       break;
-    case ReferenceType::kSynonym:return getSecond()->getEntityType() == EntityType::kProcedure;
+    case ReferenceType::kSynonym:
+      switch (getSecond()->getEntityType()) {
+        case EntityType::kProcedure:break;
+        default:return false;
+      }
+      break;
     default:return false;
   }
   return true;
@@ -288,6 +298,7 @@ bool CallsTClause::IsSemanticallyCorrect() const {
         case EntityType::kProcedure:break;
         default:return false;
       }
+      break;
     default:return false;
   }
   switch (getSecond()->getRefType()) {
@@ -299,6 +310,7 @@ bool CallsTClause::IsSemanticallyCorrect() const {
         case EntityType::kProcedure:break;
         default:return false;
       }
+      break;
     default:return false;
   }
   return true;
