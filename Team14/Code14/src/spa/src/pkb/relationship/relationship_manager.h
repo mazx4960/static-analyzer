@@ -4,6 +4,7 @@
 
 #include <unordered_map>
 #include <unordered_set>
+#include <stack>
 
 #include "commons/entity.h"
 #include "commons/relationship.h"
@@ -26,9 +27,15 @@ class RelationshipManager {
   EntityPointerUnorderedSet GetInferenceGivenProcedure(RelationshipTable *, Entity *);
   EntityPointerUnorderedSet GetInferenceFromChildren(RelationshipTable *, Entity *);
   EntityPointerUnorderedSet GetInferenceGivenVariable(RelationshipTable *, Entity *);
+  EntityPointerUnorderedSet GetAffects(Entity *, bool);
   EntityPointerUnorderedSet GetCalls(Entity *, bool);
+  EntityPointerUnorderedSet GetAllAffects(Entity *, bool);
   EntityPointerUnorderedSet GetAllCalls(Entity *, bool);
+  EntityPointerUnorderedSet GetAffectsHelper(std::stack<std::pair<Entity *, EntityPointerUnorderedSet>> *);
+  EntityPointerUnorderedSet GetAffectsInverseHelper(std::stack<std::pair<Entity *, EntityPointerUnorderedSet>> *);
   Entity *GetProcedureEntity(Entity *, bool);
+  bool IsVariableUsed(EntityPointerUnorderedSet *, Entity *);
+  bool IsVariableModified(EntityPointerUnorderedSet *, Entity *);
   static EntityPointerUnorderedSet Empty();
 
  public:
