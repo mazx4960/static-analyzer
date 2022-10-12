@@ -32,5 +32,5 @@ class SelectCall : public QueryCall {
   explicit SelectCall(SynonymReference *query_declaration)
       : QueryCall(CallType::kSelect, std::move(query_declaration)) {
   };
-  std::string toString() const override;
+  [[nodiscard]] std::string toString() const override;
 };
