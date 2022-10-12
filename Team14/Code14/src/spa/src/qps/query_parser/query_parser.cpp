@@ -4,18 +4,16 @@
 
 #include "commons/parser/parser.h"
 
-QueryParser::QueryParser(std::vector<Token *> tokens) {
-  this->tokens_ = std::move(tokens);
-}
+QueryParser::QueryParser(std::vector<Token *> tokens) { this->tokens_ = std::move(tokens); }
 
 Query *QueryParser::parse() {
   Declarations query_declarations = parseDeclarations();
   QueryCall *query_call = parseQueryCall();
   Clauses query_clauses = parseClauses();
-  if (!outOfTokens()) {
-    throw ParseSyntaxError("Unexpected token");
-  }
-  return new Query(query_declarations, query_call, query_clauses);
+  if (!outOfTokens()) { throw ParseSyntaxError("Unexpected token"); }
+  QueryBuilder builder = QueryBuilder(new Query(query_declarations, query_call, query_clauses));
+  auto *query = builder.build();
+  return query;
 }
 
 Token *QueryParser::nextToken() {
@@ -25,9 +23,7 @@ Token *QueryParser::nextToken() {
   return tokens_[this->token_index_++];
 }
 
-Token *QueryParser::peekToken() {
-  return tokens_[this->token_index_];
-}
+Token *QueryParser::peekToken() { return tokens_[this->token_index_]; }
 
 bool QueryParser::outOfTokens() {
   return this->token_index_ == this->tokens_.size() || *peekToken() == EndOfFileToken();
@@ -45,10 +41,7 @@ void QueryParser::parseDeclarationStatement() {
   EntityType type;
   try {
     type = QueryKeywords::declarationKeywordToType(prefix->value);
-  }
-  catch (std::out_of_range &oor) {
-    throw ParseSyntaxError("Unknown declaration type: " + prefix->value);
-  }
+  } catch (std::out_of_range &oor) { throw ParseSyntaxError("Unknown declaration type: " + prefix->value); }
 
   Declarations declarations;
   // Initial declaration
@@ -76,7 +69,7 @@ SynonymReference *QueryParser::parseDeclaration(EntityType type) {
     case EntityType::kWhileStmt: return new WhileDeclaration(parseSynonym());
     case EntityType::kPrintStmt: return new PrintDeclaration(parseSynonym());
     case EntityType::kReadStmt: return new ReadDeclaration(parseSynonym());
-    default:throw ParseSyntaxError("Unknown declaration type:" + EntityTypeToString(type));
+    default: throw ParseSyntaxError("Unknown declaration type:" + EntityTypeToString(type));
   }
 }
 
@@ -87,13 +80,11 @@ QueryReference *QueryParser::parseReference() {
     case TokenType::kLiteral: return parseIntegerReference();
     case TokenType::kSymbol: return parseSynonymReference();
     case TokenType::kWildCard: return parseWildcardReference();
-    default:throw ParseSyntaxError("Unknown Reference: " + reference->value);
+    default: throw ParseSyntaxError("Unknown Reference: " + reference->value);
   }
 }
 
-SynonymReference *QueryParser::parseSynonymReference() {
-  return new SynonymReference(parseSynonym());
-}
+SynonymReference *QueryParser::parseSynonymReference() { return new SynonymReference(parseSynonym()); }
 
 IntegerReference *QueryParser::parseIntegerReference() {
   expect(peekToken(), {TokenType::kLiteral});
@@ -125,30 +116,22 @@ QuerySynonym *QueryParser::parseSynonym() {
 
 QueryCall *QueryParser::parseQueryCall() {
   Token *call = nextToken();
-  if (!QueryKeywords::isValidCallKeyword(call->value)) {
-    throw ParseSyntaxError("Unknown query call: " + call->value);
-  }
+  if (!QueryKeywords::isValidCallKeyword(call->value)) { throw ParseSyntaxError("Unknown query call: " + call->value); }
   SynonymReference *synonym_reference = parseSynonymReference();
 
   return new SelectCall(synonym_reference);
 }
 Clauses QueryParser::parseClauses() {
   Clauses clauses;
-  while (*peekToken() != EndOfFileToken()) {
-    clauses.push_back(parseClause());
-  }
+  while (*peekToken() != EndOfFileToken()) { clauses.push_back(parseClause()); }
   this->clauses_ = clauses;
   return clauses_;
 }
 
 QueryClause *QueryParser::parseClause() {
   Token *clause = nextToken();
-  if (*clause == KeywordToken("such") && *nextToken() == KeywordToken("that")) {
-    return parseSuchThat();
-  }
-  if (*clause == KeywordToken("pattern")) {
-    return parsePattern();
-  }
+  if (*clause == KeywordToken("such") && *nextToken() == KeywordToken("that")) { return parseSuchThat(); }
+  if (*clause == KeywordToken("pattern")) { return parsePattern(); }
   throw ParseSyntaxError("Unknown clause: " + clause->value);
 }
 
@@ -159,43 +142,37 @@ SuchThatClause *QueryParser::parseSuchThat() {
   std::string rs_keyword = relationship->value;
 
   // Check for *
-  if (*peekToken() == OperatorToken("*")) {
-    rs_keyword.append(nextToken()->value);
-  }
+  if (*peekToken() == OperatorToken("*")) { rs_keyword.append(nextToken()->value); }
   // Convert string to rs type
   try {
     rs_type = QueryKeywords::relationshipKeywordToType(rs_keyword);
-  }
-  catch (std::out_of_range &oor) {
-    throw ParseSyntaxError("Unknown such-that relationship: " + relationship->value);
-  }
+  } catch (std::out_of_range &oor) { throw ParseSyntaxError("Unknown such-that relationship: " + relationship->value); }
   expect(nextToken(), {TokenType::kRoundOpenBracket});
   QueryReference *first = parseReference();
   expect(nextToken(), {TokenType::kComma});
-  QueryReference *second = parseReference();;
+  QueryReference *second = parseReference();
+  ;
   expect(nextToken(), {TokenType::kRoundCloseBracket});
   SuchThatClause *clause = parseSuchThat(rs_type, first, second);
-  if (!clause->isSyntacticallyCorrect()) {
-    throw ParseSyntaxError("Incorrect parameter syntax");
-  }
+  if (!clause->isSyntacticallyCorrect()) { throw ParseSyntaxError("Incorrect parameter syntax"); }
   return clause;
 }
 
 SuchThatClause *QueryParser::parseSuchThat(RsType rs_type, QueryReference *first, QueryReference *second) {
   switch (rs_type) {
-    case RsType::kFollows:return new FollowsClause(first, second);
-    case RsType::kFollowsT:return new FollowsTClause(first, second);
-    case RsType::kParent:return new ParentClause(first, second);
-    case RsType::kParentT:return new ParentTClause(first, second);
-    case RsType::kUses:return new UsesClause(first, second);
-    case RsType::kModifies:return new ModifiesClause(first, second);
-    case RsType::kCalls:return new CallsClause(first, second);
-    case RsType::kCallsT:return new CallsTClause(first, second);
-    case RsType::kNext:return new NextClause(first, second);
-    case RsType::kNextT:return new NextTClause(first, second);
-    case RsType::kAffects:return new AffectsClause(first, second);
-    case RsType::kAffectsT:return new AffectsTClause(first, second);
-    default:throw ParseSyntaxError("Unsupported such-that relationship: " + RsTypeToString(rs_type));
+    case RsType::kFollows: return new FollowsClause(first, second);
+    case RsType::kFollowsT: return new FollowsTClause(first, second);
+    case RsType::kParent: return new ParentClause(first, second);
+    case RsType::kParentT: return new ParentTClause(first, second);
+    case RsType::kUses: return new UsesClause(first, second);
+    case RsType::kModifies: return new ModifiesClause(first, second);
+    case RsType::kCalls: return new CallsClause(first, second);
+    case RsType::kCallsT: return new CallsTClause(first, second);
+    case RsType::kNext: return new NextClause(first, second);
+    case RsType::kNextT: return new NextTClause(first, second);
+    case RsType::kAffects: return new AffectsClause(first, second);
+    case RsType::kAffectsT: return new AffectsTClause(first, second);
+    default: throw ParseSyntaxError("Unsupported such-that relationship: " + RsTypeToString(rs_type));
   }
 }
 
@@ -242,8 +219,5 @@ std::string QueryParser::parseFlattenedExpression() {
 }
 
 void QueryParser::expect(Token *token, const std::unordered_set<TokenType> &expected_types) {
-  if (expected_types.count(token->type) == 0) {
-    throw ParseSyntaxError("Invalid token type: " + token->value);
-  }
+  if (expected_types.count(token->type) == 0) { throw ParseSyntaxError("Invalid token type: " + token->value); }
 }
-

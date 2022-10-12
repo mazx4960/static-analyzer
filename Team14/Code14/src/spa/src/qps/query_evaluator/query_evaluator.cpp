@@ -1,5 +1,4 @@
 #include "query_evaluator.h"
-#include "spdlog/spdlog.h"
 
 SynonymReferencePointerUnorderedSet QueryEvaluator::getDeclarationAsSet() {
   SynonymReferencePointerUnorderedSet declaration_set;
