@@ -14,14 +14,6 @@ enum class ClauseType {
   kPattern,
 };
 
-inline std::string ClauseTypeToString(ClauseType type) {
-  switch (type) {
-    case ClauseType::kSuchThat:return "SuchThat-clause";
-    case ClauseType::kPattern:return "Pattern-clause";
-    default:return "unknown clause type";
-  }
-}
-
 class QueryClause : public ICheckSyntax, public ICheckSemantics {
  private:
   ClauseType clause_type_;
@@ -32,7 +24,7 @@ class QueryClause : public ICheckSyntax, public ICheckSemantics {
 
  public:
   ClauseType getClauseType();
-  [[nodiscard]]bool isSyntacticallyCorrect() const override = 0;
+  [[nodiscard]] bool isSyntacticallyCorrect() const override = 0;
   [[nodiscard]] bool IsSemanticallyCorrect() const override = 0;
   [[nodiscard]] virtual std::string toString() const = 0;
 };
