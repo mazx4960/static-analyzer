@@ -76,7 +76,7 @@ PatternClause *QueryBuilder::buildPattern(PatternClause *clause_blueprint) {
     clause_blueprint->setEntReference(getDeclaration(static_cast<SynonymReference *>(ent_ref)->getSynonym()));
   }
   if (!clause_blueprint->IsSemanticallyCorrect()) {
-    throw ParseSemanticError("Invalid parameter type");
+    throw ParseSemanticError("Invalid pattern parameter type");
   }
   return clause_blueprint;
 }
@@ -94,7 +94,7 @@ SuchThatClause *QueryBuilder::buildSuchThat(SuchThatClause *clause_blueprint) {
     clause_blueprint->setSecond(getDeclaration(static_cast<SynonymReference *>(second)->getSynonym()));
   }
   if (!clause_blueprint->IsSemanticallyCorrect()) {
-    throw ParseSemanticError("Invalid parameter type");
+    throw ParseSemanticError("Invalid such that parameter type");
   }
   return clause_blueprint;
 }

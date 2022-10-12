@@ -4,12 +4,14 @@
 
 #include <string>
 #include <utility>
-
+/*
+ * Expression used in pattern
+ */
 class ExpressionSpec {
  private:
   std::string expr_;
  protected:
-  explicit ExpressionSpec(std::string expr) : expr_(std::move(expr))  {
+  explicit ExpressionSpec(std::string expr) : expr_(std::move(expr)) {
   };
  public:
   std::string toString();

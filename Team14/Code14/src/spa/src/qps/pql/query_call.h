@@ -23,8 +23,10 @@ class QueryCall {
   };
 
   void setReference(SynonymReference *synonym_reference);
+  [[nodiscard]] CallType getCallType() const;
   [[nodiscard]] SynonymReference *getReference() const;
   [[nodiscard]] virtual std::string toString() const = 0;
+
 };
 
 class SelectCall : public QueryCall {

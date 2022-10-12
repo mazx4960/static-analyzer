@@ -37,6 +37,7 @@ EntityPointerUnorderedSet EvaluationStrategy::getCandidates(QueryReference *decl
       std::basic_string<char> value = declaration->getReferenceValue();
       return pkb_->getEntitiesByString(value);
   }
+  return candidates;
 }
 
 /**

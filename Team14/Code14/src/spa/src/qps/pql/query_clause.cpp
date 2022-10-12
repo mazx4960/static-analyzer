@@ -1,6 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "query_clause.h"
+#include "spdlog/spdlog.h"
 
 ClauseType QueryClause::getClauseType() {
   return this->clause_type_;
@@ -392,6 +393,7 @@ bool AffectsClause::IsSemanticallyCorrect() const {
         case EntityType::kAssignStmt:break;
         default:return false;
       }
+      break;
     default:return false;
   }
   switch (getSecond()->getRefType()) {
@@ -404,6 +406,7 @@ bool AffectsClause::IsSemanticallyCorrect() const {
         case EntityType::kAssignStmt:break;
         default:return false;
       }
+      break;
     default:return false;
   }
   return true;
@@ -422,6 +425,7 @@ bool AffectsTClause::IsSemanticallyCorrect() const {
         case EntityType::kAssignStmt:break;
         default:return false;
       }
+      break;
     default:return false;
   }
   switch (getSecond()->getRefType()) {
@@ -434,6 +438,7 @@ bool AffectsTClause::IsSemanticallyCorrect() const {
         case EntityType::kAssignStmt:break;
         default:return false;
       }
+      break;
     default:return false;
   }
   return true;
