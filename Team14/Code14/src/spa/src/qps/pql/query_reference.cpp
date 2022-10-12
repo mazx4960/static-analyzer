@@ -41,7 +41,7 @@ bool WildcardReference::isSyntacticallyCorrect() const {
   return true;
 }
 std::string WildcardReference::toString() const {
-  return "_";
+  return EntityTypeToString(this->getEntityType()) + ":_";
 }
 
 // IdentDeclaration
