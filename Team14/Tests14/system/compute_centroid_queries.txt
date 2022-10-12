@@ -281,7 +281,7 @@ Select s1 such that Next*(s1, s2)
 705 - select all assign stmts that have another assign stmt directly after
 assign a1, a2;
 Select a1 such that Next(a1, a2)
-10, 11, 15, 16, 21
+10, 11, 15, 16, 20, 21, 22
 5000
 706 - select all WHILE blocks that have another WHILE block directly after
 while w1, w2;
@@ -319,6 +319,7 @@ Select a such that Next(1, 2)
 1, 10, 11, 12, 15, 16, 17, 20, 21, 22, 23
 5000
 713 - select all procedures given valid Next relationship
+procedure p;
 Select p such that Next(19, 21)
 main, readPoint, printResults, computeCentroid
 5000

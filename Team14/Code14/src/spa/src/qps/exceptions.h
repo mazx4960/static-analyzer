@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <string>
 #include <stdexcept>
 
 class BuilderError : public std::runtime_error {
