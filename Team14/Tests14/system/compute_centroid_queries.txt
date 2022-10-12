@@ -356,7 +356,7 @@ none
 720 - select all stmts given invalid Next* relationship
 stmt s;
 Select s such that Next*(s, s)
-none
+14, 15, 16, 17, 18
 5000
 721 - select all stmts given invalid Next relationship
 stmt s;
@@ -381,7 +381,7 @@ Select r such that Next(r, _)
 725 - select all print stmt that are executed after another stmt, using wildcard
 print p;
 Select p such that Next(_, p)
-6, 7, 8
+7, 8, 9
 5000
 801 - select all assign stmts that Affects some other stmt
 assign a1, a2;
@@ -416,17 +416,17 @@ Select p such that Affects(11, 21)
 807 - select all call stmts with valid Affects relationship
 call c;
 Select c such that Affects(15, 15)
-2, 3, 13
+2, 3, 13, 18
 5000
 808 - select all call stmts with valid Affects relationship
 call c;
 Select c such that Affects(16, 16)
-2, 3, 13
+2, 3, 13, 18
 5000
 809 - select all call stmts with valid Affects relationship
 call c;
 Select c such that Affects(17, 17)
-2, 3, 13
+2, 3, 13, 18
 5000
 810 - select all variables with invalid Affects relationship
 variable v;
@@ -465,8 +465,8 @@ main, readPoint, printResults, computeCentroid
 5000
 817 - select all stmts that Affects* given stmt with valid pattern
 assign a1, a2;
-Select a1 such that Affects(a1, a2) pattern a2 ("normSq", _)
-10, 11, 12, 16, 17, 21, 22
+Select a1 such that Affects*(a1, a2) pattern a2 ("normSq", _)
+10, 11, 12, 15, 16, 17, 21, 22
 5000
 818 - select all assign stmts that Affects itself
 assign a;
