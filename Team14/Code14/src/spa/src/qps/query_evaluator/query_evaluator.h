@@ -25,14 +25,38 @@ class QueryEvaluator {
 
   SynonymReferencePointerUnorderedSet declarations_;
 
+  /**
+   * * Copy declarations from Query into a set.
+   * @return set of query declarations.
+   */
   SynonymReferencePointerUnorderedSet copyDeclarations();
+
+  /**
+   * Calls PKB to fetch context for each query declaration.
+   * @return set of query declarations.
+   */
   SynonymReferencePointerUnorderedSet fetchContext();
+
+  /**
+   * Copies query declarations into a set.
+   * Used to ensure immutability.
+   * @return duplicated set of query declarations.
+   */
   SynonymReferencePointerUnorderedSet getDeclarationAsSet();
+
+  /**
+   * Evaluate sub-queries.
+   * @return vector of SubqueryResults.
+   */
   std::vector<SubqueryResult> evaluateSubqueries();
 
  public:
   QueryEvaluator(IPKBQuerier *pkb, Query &query) : pkb_(pkb), query_(query) {
   };
 
+  /**
+   * Evaluate query.
+   * @return Result of query with set of Entity instances.
+   */
   Result *evaluate();
 };
