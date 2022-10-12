@@ -99,11 +99,6 @@ Select p such that Next(v, p)
 SemanticError
 5000
 215 - semantic error, wrong argument type in Affects
-stmt s; assign a;
-Select s such that Affects(a, s)
-SemanticError
-5000
-216 - semantic error, wrong argument type in Affects
 while w; assign a;
 Select w such that Affects(a, w)
 SemanticError

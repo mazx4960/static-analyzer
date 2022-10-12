@@ -16,13 +16,12 @@ Result *QPS::EvaluateQuery(std::istream *query_stream) {
   spdlog::debug("Tokens[{}]: ", tokens.size(), token_string);
 
   Query *query;
-
   try {
     spdlog::info("Parsing tokens...");
     QueryParser parser(tokens);
     query = parser.parse();
-    spdlog::info("Query parsed");
-    spdlog::debug("Query: {}", query->toString());
+    spdlog::info("Tokens parsed");
+    spdlog::debug("QueryBlueprint: {}", query->toString());
     spdlog::info("Building Query...");
     QueryBuilder builder = QueryBuilder(query);
     query = builder.build();
