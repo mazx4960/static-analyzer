@@ -34,7 +34,7 @@ bool QueryParser::outOfTokens() {
 }
 
 Declarations QueryParser::parseDeclarations() {
-  while (!outOfTokens() || QueryKeywords::isValidDeclarationKeyword(peekToken()->value)) {
+  while (!outOfTokens() && QueryKeywords::isValidDeclarationKeyword(peekToken()->value)) {
     parseDeclarationStatement();
   }
   return this->declarations_;
