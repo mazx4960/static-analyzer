@@ -21,22 +21,22 @@ Select a such that Uses(a, "y")
 105 - Select base read
 read r;
 Select r such that Uses(r, "x")
-none
+SemanticError
 5000
 106 - Select base read
 read r;
 Select r such that Uses(r, "y")
-none
+SemanticError
 5000
 201 - Select base print
 print pn;
 Select pn such that Modifies(pn, "x")
-none
+SemanticError
 5000
 202 - Select base print
 print pn;
 Select pn such that Modifies(pn, "y")
-none
+SemanticError
 5000
 203 - Select base assignment
 assign a;

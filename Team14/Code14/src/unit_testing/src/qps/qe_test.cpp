@@ -87,14 +87,14 @@ class TestStorage {
 class QueryEvaluatorMock : public QueryEvaluator {
  public:
   QueryEvaluatorMock(IPKBQuerier *pkb, Query &query) : QueryEvaluator(pkb, query) {};
-  std::unordered_set<QueryDeclaration *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> mockCopyDeclarations() {
+  std::unordered_set<SynonymReference *,
+                     SynonymReferenceHashFunction,
+                     SynonymReferencePointerEquality> mockCopyDeclarations() {
     return this->copyDeclarations();
   };
-  std::unordered_set<QueryDeclaration *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> mockFetchContext() {
+  std::unordered_set<SynonymReference *,
+                     SynonymReferenceHashFunction,
+                     SynonymReferencePointerEquality> mockFetchContext() {
     return this->fetchContext();
   };
 };
@@ -142,29 +142,24 @@ TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
   auto *var_dec = new VariableDeclaration(new QuerySynonym("var_dec"));
   auto *const_dec = new ConstantDeclaration(new QuerySynonym("const_dec"));
   auto *proc_dec = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
-  auto *expr_dec = new ExpressionDeclaration("x+y");
-  auto *str_dec = new StringDeclaration("string_dec");
-  auto *int_dec = new IntegerDeclaration("123");
-  auto *wild_dec = new WildCardStmtDeclaration();
 
-  std::vector<QueryDeclaration *> declarations_vector = {
+
+  std::vector<SynonymReference *> declarations_vector = {
       stmt_dec, read_dec, print_dec, call_dec, while_dec,
       if_dec, assign_dec, var_dec, const_dec, proc_dec,
-      expr_dec, str_dec, int_dec, wild_dec
   };
-  std::unordered_set<QueryDeclaration *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> declarations_set = {
+  std::unordered_set<SynonymReference *,
+                     SynonymReferenceHashFunction,
+                     SynonymReferencePointerEquality> declarations_set = {
       stmt_dec, read_dec, print_dec, call_dec, while_dec,
       if_dec, assign_dec, var_dec, const_dec, proc_dec,
-      expr_dec, str_dec, int_dec, wild_dec
   };
 
-  auto *select_call = new SelectCall(stmt_dec, {});
-  Query query = Query(declarations_vector, select_call);
+  auto *select_call = new SelectCall(stmt_dec);
+  Query query = Query(declarations_vector, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
-  std::unordered_set<QueryDeclaration *, QueryDeclarationHashFunction, QueryDeclarationPointerEquality>
+  std::unordered_set<SynonymReference *, SynonymReferenceHashFunction, SynonymReferencePointerEquality>
       returned_declaration_set = query_evaluator->mockCopyDeclarations();
 
   ASSERT_EQ(declarations_set, returned_declaration_set);
@@ -182,10 +177,6 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   auto *var_dec_1 = new VariableDeclaration(new QuerySynonym("var_dec_1"));
   auto *const_dec_1 = new ConstantDeclaration(new QuerySynonym("const_dec_1"));
   auto *proc_dec_1 = new ProcedureDeclaration(new QuerySynonym("proc_dec_1"));
-  auto *expr_dec_1 = new ExpressionDeclaration("x+y");
-  auto *str_dec_1 = new StringDeclaration("string_dec_1");
-  auto *int_dec_1 = new IntegerDeclaration("123");
-  auto *wild_dec_1 = new WildCardStmtDeclaration();
 
   auto *stmt_dec_2 = new StatementDeclaration(new QuerySynonym("stmt_dec_2"));
   auto *read_dec_2 = new ReadDeclaration(new QuerySynonym("read_dec_2"));
@@ -197,39 +188,33 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   auto *var_dec_2 = new VariableDeclaration(new QuerySynonym("var_dec_2"));
   auto *const_dec_2 = new ConstantDeclaration(new QuerySynonym("const_dec_2"));
   auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec_2"));
-  auto *expr_dec_2 = new ExpressionDeclaration("x+y");
-  auto *str_dec_2 = new StringDeclaration("string_dec_2");
-  auto *int_dec_2 = new IntegerDeclaration("123");
-  auto *wild_dec_2 = new WildCardStmtDeclaration();
 
-  std::vector<QueryDeclaration *> declarations_vector = {
+
+  std::vector<SynonymReference *> declarations_vector = {
       stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
       if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
-      expr_dec_1, str_dec_1, int_dec_1, wild_dec_1,
+
+      stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
+      if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2
+  };
+  std::unordered_set<SynonymReference *,
+                     SynonymReferenceHashFunction,
+                     SynonymReferencePointerEquality> declarations_set = {
+      stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
+      if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
+
 
       stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
       if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
-      expr_dec_2, str_dec_2, int_dec_2, wild_dec_2
-  };
-  std::unordered_set<QueryDeclaration *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> declarations_set = {
-      stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
-      if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
-      expr_dec_1, str_dec_1, int_dec_1, wild_dec_1,
-
-      stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
-      if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
-      expr_dec_2, str_dec_2, int_dec_2, wild_dec_2
   };
 
-  auto *select_call = new SelectCall(stmt_dec_1, {});
-  Query query = Query(declarations_vector, select_call);
+  auto *select_call = new SelectCall(stmt_dec_1);
+  Query query = Query(declarations_vector, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
-  std::unordered_set<QueryDeclaration *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality>
+  std::unordered_set<SynonymReference *,
+                     SynonymReferenceHashFunction,
+                     SynonymReferencePointerEquality>
       returned_declaration_set = query_evaluator->mockCopyDeclarations();
 
   ASSERT_EQ(declarations_set, returned_declaration_set);
@@ -248,10 +233,6 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
   auto *var_dec_1 = new VariableDeclaration(new QuerySynonym("var_dec"));
   auto *const_dec_1 = new ConstantDeclaration(new QuerySynonym("const_dec"));
   auto *proc_dec_1 = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
-  auto *expr_dec_1 = new ExpressionDeclaration("x+y");
-  auto *str_dec_1 = new StringDeclaration("string_dec");
-  auto *int_dec_1 = new IntegerDeclaration("123");
-  auto *wild_dec_1 = new WildCardStmtDeclaration();
 
   auto *stmt_dec_2 = new StatementDeclaration(new QuerySynonym("stmt_dec"));
   auto *read_dec_2 = new ReadDeclaration(new QuerySynonym("read_dec"));
@@ -263,162 +244,154 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
   auto *var_dec_2 = new VariableDeclaration(new QuerySynonym("var_dec"));
   auto *const_dec_2 = new ConstantDeclaration(new QuerySynonym("const_dec"));
   auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
-  auto *expr_dec_2 = new ExpressionDeclaration("x+y");
-  auto *str_dec_2 = new StringDeclaration("string_dec");
-  auto *int_dec_2 = new IntegerDeclaration("123");
-  auto *wild_dec_2 = new WildCardStmtDeclaration();
 
-  std::vector<QueryDeclaration *> declarations_vector = {
+  std::vector<SynonymReference *> declarations_vector = {
       stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
       if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
-      expr_dec_1, str_dec_1, int_dec_1, wild_dec_1,
 
       stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
       if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
-      expr_dec_2, str_dec_2, int_dec_2, wild_dec_2
   };
-  std::unordered_set<QueryDeclaration *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality> declarations_set = {
+  std::unordered_set<SynonymReference *,
+                     SynonymReferenceHashFunction,
+                     SynonymReferencePointerEquality> declarations_set = {
       stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
       if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
-      expr_dec_1, str_dec_1, int_dec_1, wild_dec_1,
 
       stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
       if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
-      expr_dec_2, str_dec_2, int_dec_2, wild_dec_2
   };
 
-  auto *select_call = new SelectCall(stmt_dec_1, {});
-  Query query = Query(declarations_vector, select_call);
+  auto *select_call = new SelectCall(stmt_dec_1);
+  Query query = Query(declarations_vector, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
-  std::unordered_set<QueryDeclaration *,
-                     QueryDeclarationHashFunction,
-                     QueryDeclarationPointerEquality>
+  std::unordered_set<SynonymReference *,
+                     SynonymReferenceHashFunction,
+                     SynonymReferencePointerEquality>
       returned_declaration_set = query_evaluator->mockCopyDeclarations();
 
-  ASSERT_EQ(declarations_set.size(), 13);
-  ASSERT_EQ(returned_declaration_set.size(), 13);
+  ASSERT_EQ(declarations_set.size(), 10);
+  ASSERT_EQ(returned_declaration_set.size(), 10);
   ASSERT_EQ(declarations_set, returned_declaration_set);
 }
 
 TEST(QeFetchContextTest, StatementDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new StatementDeclaration(new QuerySynonym("stmt"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::all_stmt_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::all_stmt_entities_);
 }
 
 TEST(QeFetchContextTest, ProcedureDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new ProcedureDeclaration(new QuerySynonym("proc"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::procedure_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::procedure_entities_);
 }
 
 TEST(QeFetchContextTest, VariableDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new VariableDeclaration(new QuerySynonym("stmt"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::variable_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::variable_entities_);
 }
 
 TEST(QeFetchContextTest, ConstantDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new ConstantDeclaration(new QuerySynonym("stmt"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::constant_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::constant_entities_);
 }
 
 TEST(QeFetchContextTest, StmtAssignDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new AssignDeclaration(new QuerySynonym("as"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::stmt_assign_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_assign_entities_);
 }
 
 TEST(QeFetchContextTest, StmtCallDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new CallDeclaration(new QuerySynonym("cl"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::stmt_call_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_call_entities_);
 }
 
 TEST(QeFetchContextTest, StmtIfDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new IfDeclaration(new QuerySynonym("ifs"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::stmt_if_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_if_entities_);
 }
 
 TEST(QeFetchContextTest, StmtWhileDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new WhileDeclaration(new QuerySynonym("w"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::stmt_while_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_while_entities_);
 }
 
 TEST(QeFetchContextTest, StmtPrintDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new PrintDeclaration(new QuerySynonym("prt"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::stmt_print_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_print_entities_);
 }
 
 TEST(QeFetchContextTest, StmtReadDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new ReadDeclaration(new QuerySynonym("rd"));
-  auto *select_call = new SelectCall(declaration, {});
-  Query query = Query({declaration}, select_call);
+  auto *select_call = new SelectCall(declaration);
+  Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getDeclaration()->getContext(), TestStorage::stmt_read_entities_);
+  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_read_entities_);
 }

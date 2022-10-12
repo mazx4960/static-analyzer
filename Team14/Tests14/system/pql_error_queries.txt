@@ -45,7 +45,7 @@ SemanticError
 5000
 203 - semantic error, "a" not defined in Pattern
 assign a1;
-Select a1 pattern a (_, _"x + 1 + y"_);
+Select a1 pattern a (_, _"x + 1 + y"_)
 SemanticError
 5000
 204 - semantic error, synonym cannot be used as pattern left
@@ -93,39 +93,14 @@ stmt s; variable v;
 Select s such that Next(s, v)
 SemanticError
 5000
-213 - semantic error, wrong argument type in Next
-stmt s; call c;
-Select s such that Next(c, s)
-SemanticError
-5000
 214 - semantic error, wrong argument type in Next
 variable v; procedure p;
 Select p such that Next(v, p)
 SemanticError
 5000
 215 - semantic error, wrong argument type in Affects
-stmt s; assign a;
-Select s such that Affects(a, s)
-SemanticError
-5000
-216 - semantic error, wrong argument type in Affects
-while; assign a;
+while w; assign a;
 Select w such that Affects(a, w)
-SemanticError
-5000
-217 - semantic error, wrong argument type in Affects
-stmt s1, s2;
-Select s2 such that Affects(s1, s2)
-SemanticError
-5000
-218 - semantic error, wrong argument type in Affects
-stmt s;
-Select s such that Affects*(s, _)
-SemanticError
-5000
-219 - semantic error, wrong argument type in Affects
-stmt s;
-Select s such that Affects*(_, s)
 SemanticError
 5000
 301 - error in both syntax (extra "+" in pattern, same as 33) and semantics (undefined synonym), syntax error should be prioritised

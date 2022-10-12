@@ -6,36 +6,33 @@
 #include <vector>
 
 #include "query_clause.h"
-#include "query_declaration.h"
+#include "query_reference.h"
 
 enum class CallType {
   kSelect,
 };
 
 class QueryCall {
- protected:
+ private:
   CallType type_;
 
-  QueryDeclaration *query_declaration_;
-
-  std::vector<QueryClause *> clause_vector_;
-
+  SynonymReference *synonym_reference_;
  public:
-  QueryCall(CallType call_type, QueryDeclaration *query_declaration, std::vector<QueryClause *> clause_vector)
-      : type_(call_type),
-        query_declaration_(std::move(query_declaration)),
-        clause_vector_(std::move(clause_vector)) {
+  QueryCall(CallType call_type, SynonymReference *synonym_reference)
+      : type_(call_type), synonym_reference_(std::move(synonym_reference)) {
   };
 
-  [[nodiscard]] CallType getType() const;
-  [[nodiscard]] QueryDeclaration *getDeclaration() const;
-  [[nodiscard]] bool hasSubClauses() const;
-  [[nodiscard]] std::vector<QueryClause *> getClauseVector() const;
+  void setReference(SynonymReference *synonym_reference);
+  [[nodiscard]] CallType getCallType() const;
+  [[nodiscard]] SynonymReference *getReference() const;
+  [[nodiscard]] virtual std::string toString() const = 0;
+
 };
 
 class SelectCall : public QueryCall {
  public:
-  SelectCall(QueryDeclaration *query_declaration, std::vector<QueryClause *> clause_vector)
-      : QueryCall(CallType::kSelect, std::move(query_declaration), std::move(clause_vector)) {
+  explicit SelectCall(SynonymReference *query_declaration)
+      : QueryCall(CallType::kSelect, std::move(query_declaration)) {
   };
+  [[nodiscard]] std::string toString() const override;
 };
