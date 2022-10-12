@@ -14,8 +14,7 @@ Result *QPS::EvaluateQuery(std::istream *query_stream) {
     token_string += token->ToString() + " ";
   }
   spdlog::debug("Tokens[{}]: ", tokens.size(), token_string);
-
-
+  
   spdlog::info("Parsing tokens...");
   Query *query;
   try {
@@ -29,8 +28,12 @@ Result *QPS::EvaluateQuery(std::istream *query_stream) {
     spdlog::info("Query built");
     spdlog::debug("Query: {}", query->toString());
   } catch (ParseSemanticError &e) {
+    spdlog::info("Building failed");
+    spdlog::debug("SemanticError: {}", e.what());
     return Result::semanticError();
   } catch (ParseSyntaxError &e) {
+    spdlog::info("Parsing failed");
+    spdlog::debug("SyntaxError: {}", e.what());
     return Result::syntacticError();
   }
   Result *result = (new QueryEvaluator(this->pkb_, *query))->evaluate();
