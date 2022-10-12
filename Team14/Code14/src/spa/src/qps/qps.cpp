@@ -15,9 +15,10 @@ Result *QPS::EvaluateQuery(std::istream *query_stream) {
   }
   spdlog::debug("Tokens[{}]: ", tokens.size(), token_string);
 
-  spdlog::info("Parsing tokens...");
   Query *query;
+
   try {
+    spdlog::info("Parsing tokens...");
     QueryParser parser(tokens);
     query = parser.parse();
     spdlog::info("Query parsed");

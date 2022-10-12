@@ -1,11 +1,6 @@
 #include "query_evaluator.h"
 #include "spdlog/spdlog.h"
 
-/**
- * Copies query declarations into a set.
- * Used to ensure immutability.
- * @return duplicated set of query declarations.
- */
 SynonymReferencePointerUnorderedSet QueryEvaluator::getDeclarationAsSet() {
   SynonymReferencePointerUnorderedSet declaration_set;
 
@@ -14,25 +9,13 @@ SynonymReferencePointerUnorderedSet QueryEvaluator::getDeclarationAsSet() {
   return declaration_set;
 }
 
-/**
- * Copy declarations from Query into a set.
- * @return set of query declarations.
- */
 SynonymReferencePointerUnorderedSet QueryEvaluator::copyDeclarations() {
   Query &query = this->query_;
   std::vector<SynonymReference *> query_declarations = query.getSynonymDeclarations();
-  this->declarations_ = std::unordered_set <SynonymReference *,
-                                            SynonymReferenceHashFunction,
-                                            SynonymReferencePointerEquality > (
-          query_declarations.begin(), query_declarations.end()
-      );
+  this->declarations_ = SynonymReferencePointerUnorderedSet(query_declarations.begin(), query_declarations.end());
   return this->getDeclarationAsSet();
 }
 
-/**
- * Calls PKB to fetch context for each query declaration.
- * @return set of query declarations.
- */
 SynonymReferencePointerUnorderedSet QueryEvaluator::fetchContext() {
   this->copyDeclarations();
 
@@ -44,10 +27,6 @@ SynonymReferencePointerUnorderedSet QueryEvaluator::fetchContext() {
   return this->getDeclarationAsSet();
 }
 
-/**
- * Evaluate sub-queries.
- * @return vector of SubqueryResults.
- */
 std::vector<SubqueryResult> QueryEvaluator::evaluateSubqueries() {
   std::vector<QueryClause *> subquery_clauses = this->query_.getClauses();
   std::vector<SubqueryResult> subquery_results_list;
@@ -59,10 +38,6 @@ std::vector<SubqueryResult> QueryEvaluator::evaluateSubqueries() {
   return subquery_results_list;
 }
 
-/**
- * Evaluate query.
- * @return Result of query with set of Entity instances.
- */
 Result *QueryEvaluator::evaluate() {
   this->fetchContext();
 
