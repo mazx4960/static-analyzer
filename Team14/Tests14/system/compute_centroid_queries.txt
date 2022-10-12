@@ -335,7 +335,7 @@ Select a pattern a ("cenX", _) such that Next(1, 2)
 5000
 716 - select all assign stmts with specified pattern given valid Next relationship
 assign a;
-Select a such that Next(18, 19) pattern a (_, _"y"_)
+Select a such that Next(18, 14) pattern a (_, _"y"_)
 17
 5000
 717 - select all call stmts given invalid Next relationship
