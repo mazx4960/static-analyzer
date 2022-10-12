@@ -462,8 +462,16 @@ bool PatternClause::isSyntacticallyCorrect() const {
   return true;
 }
 bool PatternClause::IsSemanticallyCorrect() const {
-  if (getEntRef()->getRefType() == ReferenceType::kWildcard) {
-    getEntRef()->setEntityType(EntityType::kVariable);
+  switch (getEntRef()->getRefType()) {
+    case ReferenceType::kIdent:break;
+    case ReferenceType::kWildcard:getEntRef()->setEntityType(EntityType::kVariable);
+      break;
+    case ReferenceType::kSynonym:
+      switch (getEntRef()->getEntityType()) {
+        case EntityType::kVariable:break;
+        default:return false;
+      }
+    default:return false;
   }
   return getSynonymDeclaration()->getEntityType() == EntityType::kAssignStmt;
 }
