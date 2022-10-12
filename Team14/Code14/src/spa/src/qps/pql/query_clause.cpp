@@ -491,6 +491,7 @@ bool PatternClause::IsSemanticallyCorrect() const {
         case EntityType::kVariable:break;
         default:return false;
       }
+      break;
     default:return false;
   }
   return getSynonymDeclaration()->getEntityType() == EntityType::kAssignStmt;
