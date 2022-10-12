@@ -80,7 +80,10 @@ PatternClause *QueryBuilder::buildPattern(PatternClause *clause_blueprint) {
   if (syn_assign == nullptr || ent_ref == nullptr || expression_spec == nullptr) {
     throw ParseSemanticError("Missing parameters");
   }
-  clause_blueprint->setSynonymDeclaration(getDeclaration(syn_assign->getSynonym()));
+  clause_blueprint->setSynonymReference(getDeclaration(syn_assign->getSynonym()));
+  if (ent_ref->getRefType() == ReferenceType::kSynonym) {
+    clause_blueprint->setEntReference(getDeclaration(static_cast<SynonymReference *>(ent_ref)->getSynonym()));
+  }
   if (!clause_blueprint->IsSemanticallyCorrect()) {
     throw ParseSemanticError("Invalid parameter type");
   }

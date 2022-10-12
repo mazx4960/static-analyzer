@@ -441,8 +441,11 @@ QueryReference *PatternClause::getEntRef() const {
 ExpressionSpec *PatternClause::getExpression() const {
   return this->expression_;
 }
-void PatternClause::setSynonymDeclaration(SynonymReference *synonym_declaration) {
+void PatternClause::setSynonymReference(SynonymReference *synonym_declaration) {
   this->synonym_declaration_ = synonym_declaration;
+}
+void PatternClause::setEntReference(QueryReference *ent_ref) {
+  this->ent_ref_ = ent_ref;
 }
 bool PatternClause::isSyntacticallyCorrect() const {
   return true;

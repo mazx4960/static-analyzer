@@ -179,7 +179,8 @@ class PatternClause : public QueryClause {
   explicit PatternClause(SynonymReference *synonym_declaration, QueryReference *ent_ref, ExpressionSpec *expression)
       : QueryClause(ClauseType::kPattern), synonym_declaration_(synonym_declaration), ent_ref_(ent_ref), expression_(expression) {
   };
-  void setSynonymDeclaration(SynonymReference *synonym_declaration);
+  void setSynonymReference(SynonymReference *synonym_declaration);
+  void setEntReference(QueryReference *ent_ref);
   [[nodiscard]] SynonymReference *getSynonymDeclaration() const;
   [[nodiscard]] QueryReference *getEntRef() const;
   [[nodiscard]] ExpressionSpec *getExpression() const;
