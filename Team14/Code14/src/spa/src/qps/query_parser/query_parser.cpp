@@ -121,6 +121,7 @@ QueryCall *QueryParser::parseQueryCall() {
 
   return new SelectCall(synonym_reference);
 }
+
 Clauses QueryParser::parseClauses() {
   Clauses clauses;
   while (*peekToken() != EndOfFileToken()) { clauses.push_back(parseClause()); }
@@ -130,9 +131,22 @@ Clauses QueryParser::parseClauses() {
 
 QueryClause *QueryParser::parseClause() {
   Token *clause = nextToken();
+  if (*clause == KeywordToken("and")) {
+    switch (getPreviousClause()->getClauseType()) {
+      case ClauseType::kSuchThat: return parseSuchThat();
+      case ClauseType::kPattern: return parsePattern();
+    }
+  }
   if (*clause == KeywordToken("such") && *nextToken() == KeywordToken("that")) { return parseSuchThat(); }
   if (*clause == KeywordToken("pattern")) { return parsePattern(); }
   throw ParseSyntaxError("Unknown clause: " + clause->value);
+}
+
+QueryClause *QueryParser::getPreviousClause() {
+  if (clauses_.empty()) {
+    throw ParseSyntaxError("No previous clause");
+  }
+  return clauses_.back();
 }
 
 SuchThatClause *QueryParser::parseSuchThat() {
@@ -151,7 +165,6 @@ SuchThatClause *QueryParser::parseSuchThat() {
   QueryReference *first = parseReference();
   expect(nextToken(), {TokenType::kComma});
   QueryReference *second = parseReference();
-  ;
   expect(nextToken(), {TokenType::kRoundCloseBracket});
   SuchThatClause *clause = parseSuchThat(rs_type, first, second);
   if (!clause->isSyntacticallyCorrect()) { throw ParseSyntaxError("Incorrect parameter syntax"); }

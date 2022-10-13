@@ -20,6 +20,9 @@ class QueryKeywords {
   inline static const std::unordered_set<std::string> kSuchThatKeywords{
       "such", "that"};
 
+  inline static const std::unordered_set<std::string> kAndKeywords{
+      "and"};
+
   inline static const std::unordered_map<std::string, EntityType> kDeclarationKeywordsMap{
       {"stmt", EntityType::kStatement},
       {"read", EntityType::kReadStmt},
@@ -58,7 +61,9 @@ class QueryKeywords {
   static bool isValidRelationshipKeyword(const std::string &keyword);
   static bool isValidPatternKeyword(const std::string &keyword);
   static bool isValidAssignOperator(const std::string &keyword);
+  static bool isValidAndKeyword(const std::string &keyword);
   static EntityType declarationKeywordToType(const std::string &keyword);
   static RsType relationshipKeywordToType(const std::string &keyword);
   static RsType patternKeywordToType(const std::string &keyword);
+
 };

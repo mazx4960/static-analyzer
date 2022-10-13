@@ -47,4 +47,5 @@ class QueryParser {
   ExpressionSpec *parseExpression();
 
   static void expect(Token *token, const std::unordered_set<TokenType> &expected_types);
+  QueryClause *getPreviousClause();
 };
