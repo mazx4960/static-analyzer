@@ -16,7 +16,7 @@
 class QueryParser {
  private:
   std::vector<Token *> tokens_;
-  Declarations declarations_;
+  SynonymReferences declarations_;
   Clauses clauses_;
   int token_index_ = 0;
 
@@ -36,7 +36,7 @@ class QueryParser {
  public:
   explicit QueryParser(std::vector<Token *> tokens);
   Query *parse();
-  Declarations parseDeclarations();
+  SynonymReferences parseDeclarations();
   QuerySynonym *parseSynonym();
   QueryCall *parseQueryCall();
   Clauses parseClauses();

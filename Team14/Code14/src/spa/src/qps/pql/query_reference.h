@@ -9,6 +9,10 @@
 #include "qps/exceptions.h"
 #include "query_synonym.h"
 #include "qps/pql/interface/check_syntax.h"
+#include "qps/pql/interface/query_elem.h"
+#include "qps/pql/interface/stmt_ref.h"
+#include "qps/pql/interface/ent_ref.h"
+#include "query_attribute.h"
 
 using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
 
@@ -16,15 +20,15 @@ enum class ReferenceType {
   kSynonym,
   kWildcard,
   kInteger,
-  kIdent
+  kIdent,
+  kAttribute
 };
 
-class QueryReference : public ICheckSyntax{
+class QueryReference : public ICheckSyntax, public IStmtRef, public IEntRef, public IElem{
  private:
   ReferenceType reference_type_;
   EntityType entity_type_;
   EntityPointerUnorderedSet context_;
-
  protected:
   explicit QueryReference(ReferenceType reference_type, EntityType entity_type)
       : reference_type_(reference_type), entity_type_(entity_type) {
@@ -35,15 +39,17 @@ class QueryReference : public ICheckSyntax{
   EntityType getEntityType() const;
   EntityPointerUnorderedSet getContext() const;
   void setContext(EntityPointerUnorderedSet);
+  void setEntityType(EntityType entity_type);
+  bool isStmtRef() const override;
+  bool isEntRef() const override;
+  bool isElem() const override;
 
   virtual bool operator==(const QueryReference &other) const = 0;
   virtual bool operator==(const QueryReference *other) const = 0;
   virtual std::string getReferenceValue() const = 0;
-  virtual bool isStmtRef() const = 0;
-  virtual bool isEntRef() const = 0;
   virtual std::string toString() const = 0;
   bool isSyntacticallyCorrect() const override = 0;
-  void setEntityType(EntityType entity_type);
+
 };
 
 class WildcardReference : public QueryReference {
@@ -70,7 +76,6 @@ class IdentReference : public QueryReference {
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;
   std::string getReferenceValue() const override;
-  bool isStmtRef() const override;
   bool isEntRef() const override;
   bool isSyntacticallyCorrect() const override;
   std::string toString() const override;
@@ -87,8 +92,25 @@ class IntegerReference : public QueryReference {
   bool operator==(const QueryReference *other) const override;
   std::string getReferenceValue() const override;
   bool isStmtRef() const override;
-  bool isEntRef() const override;
   bool isSyntacticallyCorrect() const override;
+  std::string toString() const override;
+};
+
+class AttributeReference : public QueryReference {
+ private:
+  QuerySynonym *query_synonym_;
+
+  QueryAttribute *query_attribute_;
+
+ public:
+  explicit AttributeReference(QuerySynonym *query_synonym, EntityType entity_type = EntityType::kUnknown)
+      : QueryReference(ReferenceType::kSynonym, entity_type), query_synonym_(query_synonym) {
+  };
+  bool operator==(const QueryReference &other) const override;
+  bool operator==(const QueryReference *other) const override;
+  QuerySynonym *getSynonym() const;
+  QueryAttribute *getAttribute() const;
+  bool isElem() const override;
   std::string toString() const override;
 };
 
@@ -107,8 +129,10 @@ class SynonymReference : public QueryReference {
   bool isStmtRef() const override;
   bool isEntRef() const override;
   bool isSyntacticallyCorrect() const override;
+  bool isElem() const override;
   std::string toString() const override;
 };
+
 
 class StatementDeclaration : public SynonymReference {
  public:

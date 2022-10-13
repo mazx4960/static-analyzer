@@ -7,7 +7,7 @@
 QueryParser::QueryParser(std::vector<Token *> tokens) { this->tokens_ = std::move(tokens); }
 
 Query *QueryParser::parse() {
-  Declarations query_declarations = parseDeclarations();
+  SynonymReferences query_declarations = parseDeclarations();
   QueryCall *query_call = parseQueryCall();
   Clauses query_clauses = parseClauses();
   if (!outOfTokens()) { throw ParseSyntaxError("Unexpected token"); }
@@ -29,7 +29,23 @@ bool QueryParser::outOfTokens() {
   return this->token_index_ == this->tokens_.size() || *peekToken() == EndOfFileToken();
 }
 
-Declarations QueryParser::parseDeclarations() {
+SynonymReferences QueryParser::parseQueryCallReferences() {
+  SynonymReferences references;
+  if (*peekToken() == AngleOpenBracketToken()) {
+    expect(nextToken(), {TokenType::kAngleOpenBracket});
+    references.push_back(parseResultReference());
+    while (*peekToken() != AngleCloseBracketToken()) {
+      expect(nextToken(), {TokenType::kComma});
+      references.push_back(parseResultReference());
+    }
+    expect(nextToken(), {TokenType::kAngleCloseBracket});
+  }
+  return new SynonymReference(parseSynonym());
+}
+
+
+
+SynonymReferences QueryParser::parseDeclarations() {
   while (!outOfTokens() && QueryKeywords::isValidDeclarationKeyword(peekToken()->value)) {
     parseDeclarationStatement();
   }
@@ -43,7 +59,7 @@ void QueryParser::parseDeclarationStatement() {
     type = QueryKeywords::declarationKeywordToType(prefix->value);
   } catch (std::out_of_range &oor) { throw ParseSyntaxError("Unknown declaration type: " + prefix->value); }
 
-  Declarations declarations;
+  SynonymReferences declarations;
   // Initial declaration
   declarations_.push_back(parseDeclaration(type));
 
@@ -83,7 +99,6 @@ QueryReference *QueryParser::parseReference() {
     default: throw ParseSyntaxError("Unknown Reference: " + reference->value);
   }
 }
-
 SynonymReference *QueryParser::parseSynonymReference() { return new SynonymReference(parseSynonym()); }
 
 IntegerReference *QueryParser::parseIntegerReference() {

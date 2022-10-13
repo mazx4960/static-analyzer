@@ -4,7 +4,6 @@
 
 #include <utility>
 
-
 ReferenceType QueryReference::getRefType() const {
   return this->reference_type_;
 }
@@ -19,6 +18,15 @@ EntityPointerUnorderedSet QueryReference::getContext() const {
 }
 void QueryReference::setContext(EntityPointerUnorderedSet context) {
   this->context_ = std::move(context);
+}
+bool QueryReference::isStmtRef() const {
+  return false;
+}
+bool QueryReference::isEntRef() const {
+  return false;
+}
+bool QueryReference::isElem() const {
+  return false;
 }
 
 // WildcardDeclaration
@@ -54,9 +62,6 @@ bool IdentReference::operator==(const QueryReference *other) const {
 std::string IdentReference::getReferenceValue() const {
   return this->value_;
 }
-bool IdentReference::isStmtRef() const {
-  return false;
-}
 bool IdentReference::isEntRef() const {
   return true;
 }
@@ -79,9 +84,6 @@ std::string IntegerReference::getReferenceValue() const {
 }
 bool IntegerReference::isStmtRef() const {
   return true;
-}
-bool IntegerReference::isEntRef() const {
-  return false;
 }
 bool IntegerReference::isSyntacticallyCorrect() const {
   return this->value_.length() <= 1 || value_[0] != '0';
@@ -122,8 +124,39 @@ bool SynonymReference::isEntRef() const {
 bool SynonymReference::isSyntacticallyCorrect() const {
   return true;
 }
+bool SynonymReference::isElem() const {
+  return true;
+}
 std::string SynonymReference::toString() const {
   return EntityTypeToString(this->getEntityType()) + ":" + this->getSynonym()->toString();
 }
 
+bool AttributeReference::operator==(const QueryReference &other) const {
+  if (other.getRefType() == this->getRefType()) {
+    const auto &attr_other = static_cast<const AttributeReference &>(other);
+    return (*attr_other.getSynonym()) == (*this->getSynonym()) &&
+        (attr_other.getAttribute()->toString()) == this->getAttribute()->toString();
+  }
+  return false;
+}
+bool AttributeReference::operator==(const QueryReference *other) const {
+  if (other->getRefType() == this->getRefType()) {
+    const auto &attr_other = static_cast<const AttributeReference *>(other);
+    return (*attr_other->getSynonym()) == (*this->getSynonym()) &&
+        (*attr_other->getAttribute()) == (*this->getAttribute());
+  }
+  return false;
+}
+QuerySynonym *AttributeReference::getSynonym() const {
+  return this->query_synonym_;
+}
+QueryAttribute *AttributeReference::getAttribute() const {
+  return this->query_attribute_;
+}
+bool AttributeReference::isElem() const {
+  return true;
+}
+std::string AttributeReference::toString() const {
+  return "attrRef:" + this->getSynonym()->toString() + "." + this->getAttribute()->toString();
+}
 

@@ -16,6 +16,8 @@ enum class TokenType {
   kRoundCloseBracket,
   kCurlyOpenBracket,
   kCurlyCloseBracket,
+  kAngleOpenBracket,
+  kAngleCloseBracket,
   kWildCard,
   kEndOfFile
 };
@@ -97,6 +99,19 @@ class CurlyCloseBracketToken : public Token {
  public:
   explicit CurlyCloseBracketToken()
       : Token(TokenType::kCurlyCloseBracket, "}") {
+  }
+};
+
+class AngleOpenBracketToken : public Token {
+ public:
+  explicit AngleOpenBracketToken() : Token(TokenType::kCurlyOpenBracket, "<") {
+  }
+};
+
+class AngleCloseBracketToken : public Token {
+ public:
+  explicit AngleCloseBracketToken()
+      : Token(TokenType::kCurlyCloseBracket, ">") {
   }
 };
 
