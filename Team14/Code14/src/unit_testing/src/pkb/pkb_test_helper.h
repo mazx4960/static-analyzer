@@ -5,7 +5,8 @@
 #include "commons/pattern.h"
 
 using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
-using EntityStringPair = std::pair<Entity *, std::string>; 
+using EntityStringPair = std::pair<Entity *, std::string>;
+using EntityStringPairUnorderedSet = std::unordered_set<EntityStringPair, PairHash>;
 
 class PKBTestHelper {
  public:
