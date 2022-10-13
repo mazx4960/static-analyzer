@@ -5,9 +5,8 @@
 #include "pkb/pattern/pattern_manager.h" 
 #include "pkb_test_helper.h"
 
-using EntityStringPair = std::pair<Entity *, std::string>;
-using EntityStringPairUnorderedSet = std::unordered_set<EntityStringPair, StmtExprHashFunction>; 
- 
+using EntityStringPair = std::pair<Entity *, std::string>; 
+
 /*
 * A single statement with multiple expressions
 */ 
