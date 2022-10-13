@@ -123,9 +123,8 @@ QueryCall *QueryParser::parseQueryCall() {
 }
 
 Clauses QueryParser::parseClauses() {
-  Clauses clauses;
-  while (*peekToken() != EndOfFileToken()) { clauses.push_back(parseClause()); }
-  this->clauses_ = clauses;
+  clauses_.clear();
+  while (*peekToken() != EndOfFileToken()) { clauses_.push_back(parseClause()); }
   return clauses_;
 }
 
