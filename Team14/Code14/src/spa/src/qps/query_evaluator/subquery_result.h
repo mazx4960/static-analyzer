@@ -4,7 +4,7 @@
 #pragma once
 
 #include "pkb/relationship/relationship_table.h"
-#include "qps/pql/query_declaration.h"
+#include "qps/pql/query_reference.h"
 using ResultRow = std::unordered_map<QuerySynonym *,
                                      Entity *,
                                      QuerySynonymHashFunction,
@@ -18,7 +18,7 @@ class SubqueryResult {
 
   SubqueryResult(std::vector<QuerySynonym *>, std::vector<ResultRow>);
  public:
-  SubqueryResult(const EntityPointerUnorderedMap &, QueryDeclaration *, QueryDeclaration *);
+  SubqueryResult(const EntityPointerUnorderedMap &, QueryReference *, QueryReference *);
   [[nodiscard]] bool IsEmpty();
   bool Uses(QuerySynonym *synonym);
   std::vector<QuerySynonym *> GetCommonSynonyms(SubqueryResult other);

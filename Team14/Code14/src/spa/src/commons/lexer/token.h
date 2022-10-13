@@ -37,16 +37,12 @@ class SymbolToken : public Token {
  public:
   explicit SymbolToken(std::string value) : Token(TokenType::kSymbol, std::move(value)) {
   }
-
-  const bool isKeyword = false;
 };
 
 class KeywordToken : public SymbolToken {
  public:
   explicit KeywordToken(std::string value) : SymbolToken(std::move(value)) {
   }
-
-  const bool isKeyword = true;
 };
 
 class LiteralToken : public Token {

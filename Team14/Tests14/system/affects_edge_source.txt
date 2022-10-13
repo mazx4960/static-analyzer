@@ -1,0 +1,51 @@
+procedure f1 {
+    x = 1;
+    call fAssign;
+    x = x + 1;
+}
+
+procedure f2 {
+    x = 0;
+    call fRead;
+    x = x + 1;
+}
+
+procedure fAssign {
+    x = 2;
+}
+
+procedure fRead {
+    read x;
+}
+
+procedure fAffectT {
+    x = 1;              # 9
+    y = 2;              # 10
+    a = x + 1;          # 11
+    b = y + 2;          # 12
+    c = a + b;          # 13
+    d = c * 2;          # 14
+    e = b - c + d;      # 15
+    read g;             # 16
+    g = g + e;          # 17
+    e = e + 1;          # 18
+    h = d + e;          # 19
+}
+
+procedure fWhile {
+    x = 0;              # 20
+    while (x >= 0) {    # 21
+        x = x + 1;      # 22
+    }
+}
+
+procedure fWhile2 {
+    x = 0;                          # 23
+    y = 0;                          # 24
+    z = 0;                          # 25
+    while ((x >= 0) && (y >= 0)) {  # 26
+        x = y + 1;                  # 27
+        y = z + 1;                  # 28
+        z = x + 1;                  # 29
+    }
+}

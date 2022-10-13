@@ -8,7 +8,7 @@
 #include <unordered_map>
 
 #include "query_call.h"
-#include "query_declaration.h"
+#include "query_reference.h"
 
 class QueryKeywords {
  private:
@@ -34,12 +34,17 @@ class QueryKeywords {
 
   inline static const std::unordered_map<std::string, RsType> kRelationshipKeywordsMap{
       {"Follows", RsType::kFollows},
+      {"Follows*", RsType::kFollowsT},
       {"Parent", RsType::kParent},
+      {"Parent*", RsType::kParentT},
       {"Uses", RsType::kUses},
       {"Modifies", RsType::kModifies},
       {"Calls", RsType::kCalls},
+      {"Calls*", RsType::kCallsT},
       {"Next", RsType::kNext},
+      {"Next*", RsType::kNextT},
       {"Affects", RsType::kAffects},
+      {"Affects*", RsType::kAffectsT},
       {"pattern", RsType::kAssignPattern}};
 
   inline static const std::unordered_map<std::string, RsType> kPatternKeywordsMap{

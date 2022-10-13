@@ -18,12 +18,7 @@ enum class EntityType {
   kPrintStmt,
   kReadStmt,
   // Used by PQL
-  kWildcardStmt,
-  kWildcardEnt,
-  kExpression,
-  kWildcardExpression,
-  kString,
-  kInteger,
+  kUnknown,
 };
 
 enum class RsType {
@@ -43,6 +38,7 @@ enum class RsType {
   kAssignPattern,
 };
 
+
 inline std::string EntityTypeToString(EntityType type) {
   switch (type) {
     case EntityType::kProcedure: return "Procedure";
@@ -55,12 +51,6 @@ inline std::string EntityTypeToString(EntityType type) {
     case EntityType::kWhileStmt: return "WhileStmt";
     case EntityType::kPrintStmt: return "PrintStmt";
     case EntityType::kReadStmt: return "ReadStmt";
-    case EntityType::kWildcardEnt: return "EntWildcard";
-    case EntityType::kWildcardStmt: return "StmtWildcard";
-    case EntityType::kExpression: return "Expression";
-    case EntityType::kWildcardExpression: return "WildcardExpression";
-    case EntityType::kString: return "String";
-    case EntityType::kInteger: return "Integer";
     default: return "Unknown";
   }
 }
@@ -87,17 +77,7 @@ inline std::string RsTypeToString(RsType type) {
 inline std::unordered_set<EntityType> all_stmt_types = {EntityType::kAssignStmt, EntityType::kCallStmt,
                                                         EntityType::kIfStmt, EntityType::kPrintStmt,
                                                         EntityType::kReadStmt, EntityType::kWhileStmt};
-inline std::unordered_set<EntityType> stmt_ref_types = {EntityType::kAssignStmt, EntityType::kCallStmt,
-                                                        EntityType::kIfStmt, EntityType::kPrintStmt,
-                                                        EntityType::kReadStmt, EntityType::kWhileStmt,
-                                                        EntityType::kStatement};
-inline std::unordered_set<EntityType> ent_ref_types = {EntityType::kVariable, EntityType::kConstant, EntityType::kProcedure};
+
 inline std::unordered_set<EntityType> GetAllStmtTypes() {
   return all_stmt_types;
-}
-inline std::unordered_set<EntityType> GetStmtRefTypes() {
-  return stmt_ref_types;
-}
-inline std::unordered_set<EntityType> GetEntRefTypes() {
-  return ent_ref_types;
 }

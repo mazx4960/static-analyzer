@@ -11,9 +11,7 @@ test_names=(
   "extreme_nesting"
   "patterns"
   "intertwined_procedures"
-  "qps_stress_1"
-  "sp_stress_1"
-  "multi_component_stress_1"
+  "affects_edge"
 )
 num_failed=0
 

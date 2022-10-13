@@ -6,21 +6,29 @@
 #include <vector>
 
 #include "query_call.h"
-#include "query_declaration.h"
+#include "query_reference.h"
+#include "query_clause.h"
+
+using Declarations = std::vector<SynonymReference *>;
+using Clauses = std::vector<QueryClause *>;
 
 class Query {
  private:
-  std::vector<QueryDeclaration *> query_declarations_;
+  Declarations synonym_declarations_;
 
   QueryCall *query_call_;
 
+  Clauses query_clauses_;
+
  public:
-  Query(std::vector<QueryDeclaration *> query_declarations, QueryCall *query_call)
-      : query_declarations_(std::move(query_declarations)),
-        query_call_(query_call) {
+  Query(Declarations synonym_declarations, QueryCall *query_call, Clauses query_clauses)
+      : synonym_declarations_(std::move(synonym_declarations)),
+        query_call_(query_call),
+        query_clauses_(std::move(query_clauses)) {
   }
 
-  [[nodiscard]] std::vector<QueryDeclaration *> getDeclarations() const;
-  [[nodiscard]] QueryCall getQueryCall() const;
-  [[nodiscard]] bool hasSubClauses() const;
+  [[nodiscard]] Declarations getSynonymDeclarations() const;
+  [[nodiscard]] QueryCall *getQueryCall() const;
+  [[nodiscard]] Clauses getClauses() const;
+  [[nodiscard]] std::string toString() const;
 };

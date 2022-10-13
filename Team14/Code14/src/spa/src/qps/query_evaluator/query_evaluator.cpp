@@ -1,55 +1,33 @@
 #include "query_evaluator.h"
-#include "spdlog/spdlog.h"
 
-/**
- * Copies query declarations into a set.
- * Used to ensure immutability.
- * @return duplicated set of query declarations.
- */
-QueryDeclarationPointerUnorderedSet QueryEvaluator::getDeclarationAsSet() {
-  QueryDeclarationPointerUnorderedSet declaration_set;
+SynonymReferencePointerUnorderedSet QueryEvaluator::getDeclarationAsSet() {
+  SynonymReferencePointerUnorderedSet declaration_set;
 
   std::copy(this->declarations_.begin(), this->declarations_.end(),
             std::inserter(declaration_set, declaration_set.begin()));
   return declaration_set;
 }
 
-/**
- * Copy declarations from Query into a set.
- * @return set of query declarations.
- */
-QueryDeclarationPointerUnorderedSet QueryEvaluator::copyDeclarations() {
+SynonymReferencePointerUnorderedSet QueryEvaluator::copyDeclarations() {
   Query &query = this->query_;
-  std::vector<QueryDeclaration *> query_declarations = query.getDeclarations();
-  this->declarations_ = std::unordered_set < QueryDeclaration *,
-      QueryDeclarationHashFunction,
-      QueryDeclarationPointerEquality > (
-          query_declarations.begin(), query_declarations.end()
-      );
+  std::vector<SynonymReference *> query_declarations = query.getSynonymDeclarations();
+  this->declarations_ = SynonymReferencePointerUnorderedSet(query_declarations.begin(), query_declarations.end());
   return this->getDeclarationAsSet();
 }
 
-/**
- * Calls PKB to fetch context for each query declaration.
- * @return set of query declarations.
- */
-QueryDeclarationPointerUnorderedSet QueryEvaluator::fetchContext() {
+SynonymReferencePointerUnorderedSet QueryEvaluator::fetchContext() {
   this->copyDeclarations();
 
   for (auto *declaration : this->declarations_) {
     std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> query_declaration_context_set;
-    query_declaration_context_set = this->pkb_->getEntities(declaration->getType());
+    query_declaration_context_set = this->pkb_->getEntities(declaration->getEntityType());
     declaration->setContext(query_declaration_context_set);
   }
   return this->getDeclarationAsSet();
 }
 
-/**
- * Evaluate sub-queries.
- * @return vector of SubqueryResults.
- */
 std::vector<SubqueryResult> QueryEvaluator::evaluateSubqueries() {
-  std::vector<QueryClause *> subquery_clauses = this->query_.getQueryCall().getClauseVector();
+  std::vector<QueryClause *> subquery_clauses = this->query_.getClauses();
   std::vector<SubqueryResult> subquery_results_list;
   for (auto *clause : subquery_clauses) {
     SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, clause);
@@ -59,15 +37,11 @@ std::vector<SubqueryResult> QueryEvaluator::evaluateSubqueries() {
   return subquery_results_list;
 }
 
-/**
- * Evaluate query.
- * @return Result of query with set of Entity instances.
- */
 Result *QueryEvaluator::evaluate() {
   this->fetchContext();
 
   // Query declaration for whose subquery_results are to be returned.
-  QueryDeclaration *called_declaration = this->query_.getQueryCall().getDeclaration();
+  SynonymReference *called_declaration = this->query_.getQueryCall()->getReference();
   QuerySynonym *synonym = called_declaration->getSynonym();
 
   std::vector<SubqueryResult> subquery_results = this->evaluateSubqueries();

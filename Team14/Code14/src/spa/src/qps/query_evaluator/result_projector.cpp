@@ -36,7 +36,7 @@ EntityPointerUnorderedSet ResultProjector::project() {
                     return subquery_result.Uses(synonym);
                   })) {
     spdlog::debug("No tables use the synonym");
-    return pkb_->getEntities(called_declaration_->getType());
+    return pkb_->getEntities(called_declaration_->getEntityType());
   }
 
   SubqueryResult intermediate_result = subquery_results_[0];

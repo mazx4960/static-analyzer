@@ -7,14 +7,14 @@
 
 #include "spdlog/spdlog.h"
 
-SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDeclaration *first, QueryDeclaration *second)
-{
-  QuerySynonym* first_synonym = first->getSynonym();
-  QuerySynonym* second_synonym = second->getSynonym();
-  if (*first_synonym != *QuerySynonym::empty()) {
+SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryReference *first, QueryReference *second) {
+
+  if (first->getRefType() == ReferenceType::kSynonym) {
+    QuerySynonym *first_synonym = static_cast<SynonymReference *>(first)->getSynonym();
     spdlog::debug("First synonym used");
     synonyms_.push_back(first_synonym);
-    if (*second_synonym != *QuerySynonym::empty()) {
+    if (second->getRefType() == ReferenceType::kSynonym) {
+      QuerySynonym *second_synonym = static_cast<SynonymReference *>(second)->getSynonym();
       spdlog::debug("Second synonym used");
       // Corner case: first and second synonyms are the same
       if (*first_synonym == *second_synonym) {
@@ -24,8 +24,7 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDecl
             table_rows_.push_back(ResultRow({{first_synonym, entity}}));
           }
         }
-      }
-      else {
+      } else {
         synonyms_.push_back(second_synonym);
         for (auto [entity, entity_set] : table) {
           for (auto *other_entity : entity_set) {
@@ -33,16 +32,15 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDecl
           }
         }
       }
-    }
-    else {
+    } else {
       for (auto [entity, entity_set] : table) {
         if (!entity_set.empty()) {
           table_rows_.push_back(ResultRow{{first_synonym, entity}});
         }
       }
     }
-  }
-  else if (*second_synonym != *QuerySynonym::empty()) {
+  } else if (second->getRefType() == ReferenceType::kSynonym) {
+    QuerySynonym *second_synonym = static_cast<SynonymReference *>(second)->getSynonym();
     spdlog::debug("Second synonym used");
     synonyms_.push_back(second_synonym);
     for (auto [entity, entity_set] : table) {
@@ -51,7 +49,7 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDecl
       }
     }
   }
-  // In this case there are no synonyms, but still need to add an entry if there are entries in the table
+    // In this case there are no synonyms, but still need to add an entry if there are entries in the table
   else {
     spdlog::debug("No synonyms used");
     for (auto [entity, entity_set] : table) {
@@ -64,11 +62,13 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDecl
     }
   }
   std::string synonym_string;
-  for (auto *syn : synonyms_) synonym_string += syn->toString() + ", ";
+  for (auto *syn : synonyms_)
+    synonym_string += syn->toString() + ", ";
   spdlog::debug("Creating new table with synonyms: {} and tuples:", synonym_string);
   for (auto row : table_rows_) {
     std::string row_string;
-    for (auto *syn : synonyms_) row_string += row[syn]->ToString() + ", ";
+    for (auto *syn : synonyms_)
+      row_string += row[syn]->ToString() + ", ";
     spdlog::debug("({})", row_string);
   }
 }
@@ -76,11 +76,13 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryDecl
 SubqueryResult::SubqueryResult(std::vector<QuerySynonym *> synonyms, std::vector<ResultRow> result_rows)
     : synonyms_(std::move(synonyms)), table_rows_(std::move(result_rows)) {
   std::string synonym_string;
-  for (auto *syn : synonyms_) synonym_string += syn->toString() + ", ";
+  for (auto *syn : synonyms_)
+    synonym_string += syn->toString() + ", ";
   spdlog::debug("Creating new table with synonyms: {} and tuples:", synonym_string);
   for (auto row : table_rows_) {
     std::string row_string;
-    for (auto *syn : synonyms_) row_string += row[syn]->ToString() + ", ";
+    for (auto *syn : synonyms_)
+      row_string += row[syn]->ToString() + ", ";
     spdlog::debug("({})", row_string);
   }
 }
@@ -91,17 +93,19 @@ bool SubqueryResult::IsEmpty() {
 
 bool SubqueryResult::Uses(QuerySynonym *synonym) {
   // Need to use find_if for pointer comparison
-  return std::find_if(synonyms_.begin(), synonyms_.end(), [synonym](QuerySynonym* searched_synonym){
-           return *synonym == *searched_synonym;
-         }) != synonyms_.end();
+  return std::find_if(synonyms_.begin(), synonyms_.end(), [synonym](QuerySynonym *searched_synonym) {
+    return *synonym == *searched_synonym;
+  }) != synonyms_.end();
 }
 
 std::vector<QuerySynonym *> SubqueryResult::GetCommonSynonyms(SubqueryResult other) {
   std::vector<QuerySynonym *> common_synonyms{};
-  for (auto *syn : synonyms_) spdlog::debug("This synonym: {}", syn->toString());
-  for (auto *syn : other.synonyms_) spdlog::debug("Other synonym: {}", syn->toString());
-  spdlog::debug("Equal? : {}", QuerySynonymPointerEquality()(synonyms_[0], other.synonyms_[0]));
-  spdlog::debug("Strings equal? : {}", synonyms_[0]->toString() == other.synonyms_[0]->toString());
+  for (auto *syn : synonyms_) {
+    spdlog::debug("This synonym: {}", syn->toString());
+  }
+  for (auto *syn : other.synonyms_) {
+    spdlog::debug("Other synonym: {}", syn->toString());
+  }
   for (auto *synonym : synonyms_) {
     if (other.Uses(synonym)) {
       common_synonyms.push_back(synonym);
@@ -127,16 +131,18 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
   all_synonyms.reserve(synonyms_.size() + other.synonyms_.size());
   all_synonyms.insert(all_synonyms.end(), synonyms_.begin(), synonyms_.end());
   all_synonyms.insert(all_synonyms.end(), other.synonyms_.begin(), other.synonyms_.end());
-  std::sort(all_synonyms.begin(), all_synonyms.end(), QuerySynonymPointerEquality());
+  std::sort(all_synonyms.begin(), all_synonyms.end(), QuerySynonymPointerComparison());
   all_synonyms.erase(std::unique(all_synonyms.begin(), all_synonyms.end(), QuerySynonymPointerEquality()), all_synonyms.end());
 
-  std::vector<ResultRow > new_rows{};
+  std::vector<ResultRow> new_rows{};
   for (auto this_row : table_rows_) {
     std::string first_row_string;
-    for (auto *syn : common_synonyms) first_row_string += this_row[syn]->ToString() + ", ";
+    for (auto *syn : common_synonyms)
+      first_row_string += this_row[syn]->ToString() + ", ";
     for (auto that_row : other.table_rows_) {
       std::string second_row_string;
-      for (auto *syn : common_synonyms) second_row_string += that_row[syn]->ToString() + ", ";
+      for (auto *syn : common_synonyms)
+        second_row_string += that_row[syn]->ToString() + ", ";
       bool can_join = true;
       spdlog::debug("Comparing ({}) to ({})", first_row_string, second_row_string);
       for (auto *syn : common_synonyms) {
