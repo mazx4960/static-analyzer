@@ -24,8 +24,8 @@ TEST(CacheTest, Relationships) {
 
   auto *v1 = new VariableEntity("v1");
   auto *v2 = new VariableEntity("v2");
-  auto *s1 = new StmtEntity("1");
-  auto *s2 = new StmtEntity("2");
+  auto *s1 = new StmtEntity(EntityType::kStatement, "1", "");
+  auto *s2 = new StmtEntity(EntityType::kStatement, "2", "");
   auto result1 = EntitySet({v1, v2});
   auto result2 = EntitySet({v1});
 

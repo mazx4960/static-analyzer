@@ -18,7 +18,7 @@ class QueryBuilder {
  public:
   explicit QueryBuilder(Query *query_blueprint = nullptr);
   Query *build();
-  std::vector<SynonymReference *> buildDeclarations(const std::vector<SynonymReference *>& declaration_blueprint);
+  std::vector<SynonymReference *> buildDeclarations(const std::vector<SynonymReference *> &declaration_blueprint);
   SynonymReference *buildDeclaration(SynonymReference *declaration_blueprint);
   SynonymReference *getDeclaration(const QuerySynonym *synonym);
 

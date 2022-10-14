@@ -1,0 +1,8 @@
+procedure a {
+    print x;
+}
+
+procedure b {
+    call a;
+    call b;
+}

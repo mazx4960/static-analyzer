@@ -24,8 +24,10 @@ TEST(QueryTest, FollowsRelationship) {
   auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kFollowsT, new AssignStmtEntity("4"), true);
   auto result_no_preceding_statement = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("1"), true);
   auto result_no_subsequent_statement = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("10"), false);
-  auto result_invalid_statement_inverse_false = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("99"), false);
-  auto result_invalid_statement_inverse_true = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("99"), true);
+  auto result_invalid_statement_inverse_false =
+      pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("99"), false);
+  auto result_invalid_statement_inverse_true =
+      pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("99"), true);
 
   EntityPointerUnorderedSet expected_result_inverse_false = {new AssignStmtEntity("10")};
   EntityPointerUnorderedSet expected_result_inverse_true = {new AssignStmtEntity("8")};
@@ -63,7 +65,8 @@ TEST(QueryTest, ParentRelationship) {
   auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kParentT, new AssignStmtEntity("4"), true);
   auto result_no_parent = pkb.getByRelationship(RsType::kParentT, new ProcedureEntity("main"), true);
   auto result_no_child = pkb.getByRelationship(RsType::kParent, new AssignStmtEntity("10"), false);
-  auto result_invalid_statement_inverse_false = pkb.getByRelationship(RsType::kParent, new AssignStmtEntity("99"), false);
+  auto result_invalid_statement_inverse_false =
+      pkb.getByRelationship(RsType::kParent, new AssignStmtEntity("99"), false);
   auto result_invalid_statement_inverse_true = pkb.getByRelationship(RsType::kParent, new AssignStmtEntity("99"), true);
 
   EntityPointerUnorderedSet expected_result_inverse_false = {new AssignStmtEntity("10")};
@@ -89,13 +92,13 @@ TEST(QueryTest, ModifiesRelationship) {
       new ParentRelationship(new ProcedureEntity("main"), new AssignStmtEntity("1")),
       new ParentRelationship(new ProcedureEntity("main"), new WhileStmtEntity("2")),
       new ParentRelationship(new WhileStmtEntity("2"), new AssignStmtEntity("3")),
-      new ParentRelationship(new ProcedureEntity("main"), new CallStmtEntity("4")),
+      new ParentRelationship(new ProcedureEntity("main"), new CallStmtEntity("4", std::string())),
       new ParentRelationship(new ProcedureEntity("main"), new ReadStmtEntity("5")),
       new ParentRelationship(new ProcedureEntity("main"), new IfStmtEntity("6")),
       new ParentRelationship(new IfStmtEntity("6"), new AssignStmtEntity("7")),
       new ParentRelationship(new IfStmtEntity("6"), new AssignStmtEntity("8")),
       new ParentRelationship(new ProcedureEntity("main"), new AssignStmtEntity("9")),
-      new ParentRelationship(new ProcedureEntity("second_procedure"), new CallStmtEntity("10")),
+      new ParentRelationship(new ProcedureEntity("second_procedure"), new CallStmtEntity("10", std::string())),
       new ParentRelationship(new ProcedureEntity("second_procedure"), new AssignStmtEntity("11")),
       new ModifiesRelationship(new AssignStmtEntity("1"), new VariableEntity("X")),
       new ModifiesRelationship(new AssignStmtEntity("3"), new VariableEntity("Y")),
@@ -104,7 +107,7 @@ TEST(QueryTest, ModifiesRelationship) {
       new ModifiesRelationship(new AssignStmtEntity("8"), new VariableEntity("Z")),
       new ModifiesRelationship(new AssignStmtEntity("9"), new VariableEntity("B")),
       new ModifiesRelationship(new AssignStmtEntity("11"), new VariableEntity("cenX")),
-      new CallsRelationship(new CallStmtEntity("10"), new ProcedureEntity("main")),
+      new CallsRelationship(new CallStmtEntity("10", std::string()), new ProcedureEntity("main")),
   };
 
   PKB pkb;
@@ -121,36 +124,28 @@ TEST(QueryTest, ModifiesRelationship) {
   auto result_inference_from_while = pkb.getByRelationship(RsType::kModifies, new WhileStmtEntity("2"), false);
   auto result_inference_from_if = pkb.getByRelationship(RsType::kModifies, new IfStmtEntity("6"), false);
   auto result_inference_from_procedure = pkb.getByRelationship(RsType::kModifies, new ProcedureEntity("main"), false);
-  auto result_inference_from_call_stmt = pkb.getByRelationship(RsType::kModifies, new CallStmtEntity("10"), false);
+  auto result_inference_from_call_stmt =
+      pkb.getByRelationship(RsType::kModifies, new CallStmtEntity("10", std::string()), false);
   auto result_inference_from_variable = pkb.getByRelationship(RsType::kModifies, new VariableEntity("Y"), true);
-  auto result_another_procedure = pkb.getByRelationship(RsType::kModifies, new ProcedureEntity("second_procedure"), false);
+  auto result_another_procedure =
+      pkb.getByRelationship(RsType::kModifies, new ProcedureEntity("second_procedure"), false);
 
   EntityPointerUnorderedSet expected_result_inverse_false = {new VariableEntity("A")};
-  EntityPointerUnorderedSet expected_result_inverse_true = {new AssignStmtEntity("9"),
-                                                            new ProcedureEntity("main"),
+  EntityPointerUnorderedSet expected_result_inverse_true = {new AssignStmtEntity("9"), new ProcedureEntity("main"),
                                                             new ProcedureEntity("second_procedure")};
-  EntityPointerUnorderedSet expected_result_multiple_inverse_true = {new AssignStmtEntity("1"),
-                                                                     new AssignStmtEntity("7"),
-                                                                     new ProcedureEntity("main"),
-                                                                     new ProcedureEntity("second_procedure")};
+  EntityPointerUnorderedSet expected_result_multiple_inverse_true = {
+      new AssignStmtEntity("1"), new AssignStmtEntity("7"), new ProcedureEntity("main"),
+      new ProcedureEntity("second_procedure")};
   EntityPointerUnorderedSet expected_result_inference_from_while = {new VariableEntity("Y")};
-  EntityPointerUnorderedSet expected_result_inference_from_if = {new VariableEntity("X"),
-                                                                 new VariableEntity("Z")};
-  EntityPointerUnorderedSet expected_result_all_variable_in_procedure = {new VariableEntity("A"),
-                                                                         new VariableEntity("B"),
-                                                                         new VariableEntity("X"),
-                                                                         new VariableEntity("Y"),
-                                                                         new VariableEntity("Z")};
-  EntityPointerUnorderedSet expected_result_inference_from_variable = {new AssignStmtEntity("3"),
-                                                                       new ProcedureEntity("main"),
-                                                                       new ProcedureEntity("second_procedure")};
-  EntityPointerUnorderedSet expected_result_another_procedure = {new VariableEntity("A"),
-                                                                 new VariableEntity("B"),
-                                                                 new VariableEntity("X"),
-                                                                 new VariableEntity("Y"),
-                                                                 new VariableEntity("Z"),
-                                                                 new VariableEntity("cenX"),
-                                                                 new ProcedureEntity("main")};
+  EntityPointerUnorderedSet expected_result_inference_from_if = {new VariableEntity("X"), new VariableEntity("Z")};
+  EntityPointerUnorderedSet expected_result_all_variable_in_procedure = {
+      new VariableEntity("A"), new VariableEntity("B"), new VariableEntity("X"), new VariableEntity("Y"),
+      new VariableEntity("Z")};
+  EntityPointerUnorderedSet expected_result_inference_from_variable = {
+      new AssignStmtEntity("3"), new ProcedureEntity("main"), new ProcedureEntity("second_procedure")};
+  EntityPointerUnorderedSet expected_result_another_procedure = {
+      new VariableEntity("A"), new VariableEntity("B"),    new VariableEntity("X"),    new VariableEntity("Y"),
+      new VariableEntity("Z"), new VariableEntity("cenX"), new ProcedureEntity("main")};
   EntityPointerUnorderedSet expected_result_empty = {};
 
   ASSERT_TRUE(PKBTestHelper::set_compare(result_inverse_false, expected_result_inverse_false));
@@ -174,13 +169,13 @@ TEST(QueryTest, UsesRelationship) {
       new ParentRelationship(new ProcedureEntity("main"), new AssignStmtEntity("1")),
       new ParentRelationship(new ProcedureEntity("main"), new WhileStmtEntity("2")),
       new ParentRelationship(new WhileStmtEntity("2"), new AssignStmtEntity("3")),
-      new ParentRelationship(new ProcedureEntity("main"), new CallStmtEntity("4")),
+      new ParentRelationship(new ProcedureEntity("main"), new CallStmtEntity("4", std::string())),
       new ParentRelationship(new ProcedureEntity("main"), new PrintStmtEntity("5")),
       new ParentRelationship(new ProcedureEntity("main"), new IfStmtEntity("6")),
       new ParentRelationship(new IfStmtEntity("6"), new AssignStmtEntity("7")),
       new ParentRelationship(new IfStmtEntity("6"), new AssignStmtEntity("8")),
       new ParentRelationship(new ProcedureEntity("main"), new AssignStmtEntity("9")),
-      new ParentRelationship(new ProcedureEntity("second_procedure"), new CallStmtEntity("10")),
+      new ParentRelationship(new ProcedureEntity("second_procedure"), new CallStmtEntity("10", std::string())),
       new ParentRelationship(new ProcedureEntity("second_procedure"), new PrintStmtEntity("11")),
       new UsesRelationship(new AssignStmtEntity("1"), new VariableEntity("X")),
       new UsesRelationship(new AssignStmtEntity("1"), new VariableEntity("A")),
@@ -190,7 +185,7 @@ TEST(QueryTest, UsesRelationship) {
       new UsesRelationship(new AssignStmtEntity("8"), new VariableEntity("Z")),
       new UsesRelationship(new AssignStmtEntity("9"), new VariableEntity("B")),
       new UsesRelationship(new PrintStmtEntity("11"), new VariableEntity("cenX")),
-      new CallsRelationship(new CallStmtEntity("10"), new ProcedureEntity("main")),
+      new CallsRelationship(new CallStmtEntity("10", std::string()), new ProcedureEntity("main")),
   };
 
   PKB pkb;
@@ -208,40 +203,30 @@ TEST(QueryTest, UsesRelationship) {
   auto result_inference_from_while = pkb.getByRelationship(RsType::kUses, new WhileStmtEntity("2"), false);
   auto result_inference_from_if = pkb.getByRelationship(RsType::kUses, new IfStmtEntity("6"), false);
   auto result_inference_from_procedure = pkb.getByRelationship(RsType::kUses, new ProcedureEntity("main"), false);
-  auto result_inference_from_call_stmt = pkb.getByRelationship(RsType::kUses, new CallStmtEntity("10"), false);
+  auto result_inference_from_call_stmt =
+      pkb.getByRelationship(RsType::kUses, new CallStmtEntity("10", std::string()), false);
   auto result_inference_from_variable = pkb.getByRelationship(RsType::kUses, new VariableEntity("X"), true);
   auto result_another_procedure = pkb.getByRelationship(RsType::kUses, new ProcedureEntity("second_procedure"), false);
   auto a = pkb.getByRelationship(RsType::kUses, new ProcedureEntity("main"), true);
 
   EntityPointerUnorderedSet expected_result_inverse_false = {new VariableEntity("A")};
-  EntityPointerUnorderedSet expected_result_inverse_true = {new AssignStmtEntity("9"),
-                                                            new ProcedureEntity("main"),
+  EntityPointerUnorderedSet expected_result_inverse_true = {new AssignStmtEntity("9"), new ProcedureEntity("main"),
                                                             new ProcedureEntity("second_procedure")};
-  EntityPointerUnorderedSet expected_result_multiple_inverse_false = {new VariableEntity("X"),
-                                                                      new VariableEntity("A")};
-  EntityPointerUnorderedSet expected_result_multiple_inverse_true = {new AssignStmtEntity("1"),
-                                                                     new AssignStmtEntity("7"),
-                                                                     new ProcedureEntity("main"),
-                                                                     new ProcedureEntity("second_procedure")};
+  EntityPointerUnorderedSet expected_result_multiple_inverse_false = {new VariableEntity("X"), new VariableEntity("A")};
+  EntityPointerUnorderedSet expected_result_multiple_inverse_true = {
+      new AssignStmtEntity("1"), new AssignStmtEntity("7"), new ProcedureEntity("main"),
+      new ProcedureEntity("second_procedure")};
   EntityPointerUnorderedSet expected_result_inference_from_while = {new VariableEntity("Y")};
-  EntityPointerUnorderedSet expected_result_inference_from_if = {new VariableEntity("X"),
-                                                                 new VariableEntity("Z")};
-  EntityPointerUnorderedSet expected_result_all_variable_in_procedure = {new VariableEntity("A"),
-                                                                         new VariableEntity("B"),
-                                                                         new VariableEntity("X"),
-                                                                         new VariableEntity("Y"),
-                                                                         new VariableEntity("Z")};
-  EntityPointerUnorderedSet expected_result_inference_from_variable = {new AssignStmtEntity("1"),
-                                                                       new AssignStmtEntity("7"),
-                                                                       new ProcedureEntity("main"),
-                                                                       new ProcedureEntity("second_procedure")};
-  EntityPointerUnorderedSet expected_result_another_procedure = {new VariableEntity("A"),
-                                                                 new VariableEntity("B"),
-                                                                 new VariableEntity("X"),
-                                                                 new VariableEntity("Y"),
-                                                                 new VariableEntity("Z"),
-                                                                 new VariableEntity("cenX"),
-                                                                 new ProcedureEntity("main")};
+  EntityPointerUnorderedSet expected_result_inference_from_if = {new VariableEntity("X"), new VariableEntity("Z")};
+  EntityPointerUnorderedSet expected_result_all_variable_in_procedure = {
+      new VariableEntity("A"), new VariableEntity("B"), new VariableEntity("X"), new VariableEntity("Y"),
+      new VariableEntity("Z")};
+  EntityPointerUnorderedSet expected_result_inference_from_variable = {
+      new AssignStmtEntity("1"), new AssignStmtEntity("7"), new ProcedureEntity("main"),
+      new ProcedureEntity("second_procedure")};
+  EntityPointerUnorderedSet expected_result_another_procedure = {
+      new VariableEntity("A"), new VariableEntity("B"),    new VariableEntity("X"),    new VariableEntity("Y"),
+      new VariableEntity("Z"), new VariableEntity("cenX"), new ProcedureEntity("main")};
   EntityPointerUnorderedSet expected_result_empty = {};
 
   ASSERT_TRUE(PKBTestHelper::set_compare(result_inverse_false, expected_result_inverse_false));
@@ -263,16 +248,16 @@ TEST(QueryTest, UsesRelationship) {
 
 TEST(QueryTest, CallsRelationship) {
   std::vector<Relationship *> relationships = {
-      new CallsRelationship(new CallStmtEntity("1"), new ProcedureEntity("Autobots")),
-      new CallsRelationship(new CallStmtEntity("2"), new ProcedureEntity("B")),
-      new CallsRelationship(new CallStmtEntity("3"), new ProcedureEntity("C")),
-      new CallsRelationship(new CallStmtEntity("4"), new ProcedureEntity("D")),
-      new CallsRelationship(new CallStmtEntity("8"), new ProcedureEntity("E")),
-      new ParentRelationship(new ProcedureEntity("main"), new CallStmtEntity("1")),
-      new ParentRelationship(new ProcedureEntity("main"), new CallStmtEntity("2")),
-      new ParentRelationship(new ProcedureEntity("A"), new CallStmtEntity("3")),
-      new ParentRelationship(new ProcedureEntity("B"), new CallStmtEntity("4")),
-      new ParentRelationship(new ProcedureEntity("D"), new CallStmtEntity("8")),
+      new CallsRelationship(new CallStmtEntity("1", std::string()), new ProcedureEntity("Autobots")),
+      new CallsRelationship(new CallStmtEntity("2", std::string()), new ProcedureEntity("B")),
+      new CallsRelationship(new CallStmtEntity("3", std::string()), new ProcedureEntity("C")),
+      new CallsRelationship(new CallStmtEntity("4", std::string()), new ProcedureEntity("D")),
+      new CallsRelationship(new CallStmtEntity("8", std::string()), new ProcedureEntity("E")),
+      new ParentRelationship(new ProcedureEntity("main"), new CallStmtEntity("1", std::string())),
+      new ParentRelationship(new ProcedureEntity("main"), new CallStmtEntity("2", std::string())),
+      new ParentRelationship(new ProcedureEntity("A"), new CallStmtEntity("3", std::string())),
+      new ParentRelationship(new ProcedureEntity("B"), new CallStmtEntity("4", std::string())),
+      new ParentRelationship(new ProcedureEntity("D"), new CallStmtEntity("8", std::string())),
   };
 
   PKB pkb;
@@ -288,8 +273,8 @@ TEST(QueryTest, CallsRelationship) {
 
   EntityPointerUnorderedSet expected_result_single_inverse_false = {new ProcedureEntity("E")};
   EntityPointerUnorderedSet expected_result_single_inverse_true = {new ProcedureEntity("D")};
-  EntityPointerUnorderedSet expected_result_traverse_inverse_false = {new ProcedureEntity("Autobots"), new ProcedureEntity("B"),
-                                                                      new ProcedureEntity("D"), new ProcedureEntity("E")};
+  EntityPointerUnorderedSet expected_result_traverse_inverse_false = {
+      new ProcedureEntity("Autobots"), new ProcedureEntity("B"), new ProcedureEntity("D"), new ProcedureEntity("E")};
   EntityPointerUnorderedSet expected_result_traverse_inverse_true = {new ProcedureEntity("D"), new ProcedureEntity("B"),
                                                                      new ProcedureEntity("main")};
   EntityPointerUnorderedSet expected_result_empty = {};
@@ -325,10 +310,10 @@ TEST(QueryTest, NextRelationship) {
 
   EntityPointerUnorderedSet expected_result_single_inverse_false = {new AssignStmtEntity("2")};
   EntityPointerUnorderedSet expected_result_single_inverse_true = {new AssignStmtEntity("3")};
-  EntityPointerUnorderedSet expected_result_traverse_inverse_false = {new AssignStmtEntity("2"), new AssignStmtEntity("3"),
-                                                                      new AssignStmtEntity("4"), new AssignStmtEntity("5")};
-  EntityPointerUnorderedSet expected_result_traverse_inverse_true = {new AssignStmtEntity("4"), new AssignStmtEntity("3"),
-                                                                     new AssignStmtEntity("2"), new AssignStmtEntity("1")};
+  EntityPointerUnorderedSet expected_result_traverse_inverse_false = {
+      new AssignStmtEntity("2"), new AssignStmtEntity("3"), new AssignStmtEntity("4"), new AssignStmtEntity("5")};
+  EntityPointerUnorderedSet expected_result_traverse_inverse_true = {
+      new AssignStmtEntity("4"), new AssignStmtEntity("3"), new AssignStmtEntity("2"), new AssignStmtEntity("1")};
   EntityPointerUnorderedSet expected_result_empty = {};
 
   ASSERT_TRUE(PKBTestHelper::set_compare(result_single_inverse_false, expected_result_single_inverse_false));
@@ -351,19 +336,19 @@ TEST(QueryTest, AffectsRelationship) {
       new NextRelationship(new WhileStmtEntity("7"), new IfStmtEntity("8")),
       new NextRelationship(new IfStmtEntity("8"), new AssignStmtEntity("9")),
       new NextRelationship(new AssignStmtEntity("9"), new AssignStmtEntity("10")),
-      new NextRelationship(new AssignStmtEntity("10"), new CallStmtEntity("11")),
+      new NextRelationship(new AssignStmtEntity("10"), new CallStmtEntity("11", std::string())),
       new NextRelationship(new IfStmtEntity("8"), new AssignStmtEntity("12")),
       new NextRelationship(new AssignStmtEntity("12"), new AssignStmtEntity("13")),
-      new NextRelationship(new CallStmtEntity("11"), new AssignStmtEntity("14")),
+      new NextRelationship(new CallStmtEntity("11", std::string()), new AssignStmtEntity("14")),
       new NextRelationship(new AssignStmtEntity("13"), new AssignStmtEntity("14")),
       new NextRelationship(new AssignStmtEntity("14"), new ReadStmtEntity("15")),
       new NextRelationship(new ReadStmtEntity("15"), new PrintStmtEntity("16")),
       new NextRelationship(new PrintStmtEntity("16"), new WhileStmtEntity("7")),
       new NextRelationship(new PrintStmtEntity("16"), new AssignStmtEntity("17")),
       new NextRelationship(new AssignStmtEntity("17"), new IfStmtEntity("18")),
-      new NextRelationship(new IfStmtEntity("18"), new CallStmtEntity("19")),
+      new NextRelationship(new IfStmtEntity("18"), new CallStmtEntity("19", std::string())),
       new NextRelationship(new IfStmtEntity("18"), new AssignStmtEntity("20")),
-      new NextRelationship(new CallStmtEntity("19"), new AssignStmtEntity("21")),
+      new NextRelationship(new CallStmtEntity("19", std::string()), new AssignStmtEntity("21")),
       new NextRelationship(new AssignStmtEntity("20"), new AssignStmtEntity("21")),
       new NextRelationship(new AssignStmtEntity("21"), new AssignStmtEntity("22")),
       new NextRelationship(new AssignStmtEntity("23"), new AssignStmtEntity("24")),
@@ -424,12 +409,12 @@ TEST(QueryTest, AffectsRelationship) {
       new ParentRelationship(new WhileStmtEntity("7"), new PrintStmtEntity("16")),
       new ParentRelationship(new IfStmtEntity("8"), new AssignStmtEntity("9")),
       new ParentRelationship(new IfStmtEntity("8"), new AssignStmtEntity("10")),
-      new ParentRelationship(new IfStmtEntity("8"), new CallStmtEntity("11")),
+      new ParentRelationship(new IfStmtEntity("8"), new CallStmtEntity("11", std::string())),
       new ParentRelationship(new IfStmtEntity("8"), new AssignStmtEntity("12")),
-      new ParentRelationship(new IfStmtEntity("8"), new CallStmtEntity("13")),
+      new ParentRelationship(new IfStmtEntity("8"), new CallStmtEntity("13", std::string())),
       new ParentRelationship(new ProcedureEntity("main"), new AssignStmtEntity("17")),
       new ParentRelationship(new ProcedureEntity("main"), new IfStmtEntity("18")),
-      new ParentRelationship(new IfStmtEntity("18"), new CallStmtEntity("19")),
+      new ParentRelationship(new IfStmtEntity("18"), new CallStmtEntity("19", std::string())),
       new ParentRelationship(new IfStmtEntity("18"), new AssignStmtEntity("20")),
       new ParentRelationship(new ProcedureEntity("main"), new AssignStmtEntity("21")),
       new ParentRelationship(new ProcedureEntity("main"), new AssignStmtEntity("22")),
@@ -437,8 +422,8 @@ TEST(QueryTest, AffectsRelationship) {
       new ParentRelationship(new ProcedureEntity("second"), new AssignStmtEntity("24")),
       new ParentRelationship(new ProcedureEntity("second"), new AssignStmtEntity("25")),
 
-      new CallsRelationship(new CallStmtEntity("11"), new ProcedureEntity("second")),
-      new CallsRelationship(new CallStmtEntity("19"), new ProcedureEntity("second")),
+      new CallsRelationship(new CallStmtEntity("11", std::string()), new ProcedureEntity("second")),
+      new CallsRelationship(new CallStmtEntity("19", std::string()), new ProcedureEntity("second")),
   };
 
   PKB pkb;
@@ -462,15 +447,19 @@ TEST(QueryTest, AffectsRelationship) {
   EntityPointerUnorderedSet expected_result_get_uses_simple = {new AssignStmtEntity("21")};
   EntityPointerUnorderedSet expected_result_get_uses_multiple = {new AssignStmtEntity("2"), new AssignStmtEntity("9")};
   EntityPointerUnorderedSet expected_result_get_uses_same_stmt_in_loop = {new AssignStmtEntity("10")};
-  EntityPointerUnorderedSet expected_result_get_uses_chain_simple = {new AssignStmtEntity("24"), new AssignStmtEntity("25")};
-  EntityPointerUnorderedSet expected_result_get_uses_chain_multiple = {new AssignStmtEntity("9"), new AssignStmtEntity("13"),
-                                                                       new AssignStmtEntity("14"), new AssignStmtEntity("20"),
-                                                                       new AssignStmtEntity("21"), new AssignStmtEntity("22")};
+  EntityPointerUnorderedSet expected_result_get_uses_chain_simple = {new AssignStmtEntity("24"),
+                                                                     new AssignStmtEntity("25")};
+  EntityPointerUnorderedSet expected_result_get_uses_chain_multiple = {
+      new AssignStmtEntity("9"),  new AssignStmtEntity("13"), new AssignStmtEntity("14"),
+      new AssignStmtEntity("20"), new AssignStmtEntity("21"), new AssignStmtEntity("22")};
   EntityPointerUnorderedSet expected_result_get_uses_split_on_if = {new AssignStmtEntity("10")};
   EntityPointerUnorderedSet expected_result_get_modify_simple = {new AssignStmtEntity("1")};
-  EntityPointerUnorderedSet expected_result_get_modify_multiple = {new AssignStmtEntity("21"), new AssignStmtEntity("3")};
-  EntityPointerUnorderedSet expected_result_get_modify_multiple_in_loop = {new AssignStmtEntity("12"), new AssignStmtEntity("3")};
-  EntityPointerUnorderedSet expected_result_get_modify_chain_simple = {new AssignStmtEntity("24"), new AssignStmtEntity("23")};
+  EntityPointerUnorderedSet expected_result_get_modify_multiple = {new AssignStmtEntity("21"),
+                                                                   new AssignStmtEntity("3")};
+  EntityPointerUnorderedSet expected_result_get_modify_multiple_in_loop = {new AssignStmtEntity("12"),
+                                                                           new AssignStmtEntity("3")};
+  EntityPointerUnorderedSet expected_result_get_modify_chain_simple = {new AssignStmtEntity("24"),
+                                                                       new AssignStmtEntity("23")};
 
   EntityPointerUnorderedSet expected_result_empty = {};
 
@@ -478,14 +467,16 @@ TEST(QueryTest, AffectsRelationship) {
   ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_block_by_call, expected_result_empty));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_multiple, expected_result_get_uses_multiple));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_same_stmt, expected_result_empty));
-  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_same_stmt_in_loop, expected_result_get_uses_same_stmt_in_loop));
+  ASSERT_TRUE(
+      PKBTestHelper::set_compare(result_get_uses_same_stmt_in_loop, expected_result_get_uses_same_stmt_in_loop));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_none, expected_result_empty));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_split_on_if, expected_result_get_uses_split_on_if));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_chain_simple, expected_result_get_uses_chain_simple));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_get_uses_chain_multiple, expected_result_get_uses_chain_multiple));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_get_modify_simple, expected_result_get_modify_simple));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_get_modify_multiple, expected_result_get_modify_multiple));
-  ASSERT_TRUE(PKBTestHelper::set_compare(result_get_modify_multiple_in_loop, expected_result_get_modify_multiple_in_loop));
+  ASSERT_TRUE(
+      PKBTestHelper::set_compare(result_get_modify_multiple_in_loop, expected_result_get_modify_multiple_in_loop));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_get_modify_none, expected_result_empty));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_get_modify_chain_simple, expected_result_get_modify_chain_simple));
 }

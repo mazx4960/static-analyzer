@@ -24,7 +24,9 @@ class Cache {
   std::list<std::pair<K, V>> access_list_;
   std::unordered_map<K, typename std::list<std::pair<K, V>>::iterator, KHash> map_;
 
-  void UpdateAccess(const K &key) { access_list_.splice(access_list_.begin(), access_list_, map_[key]); }
+  void UpdateAccess(const K &key) {
+    access_list_.splice(access_list_.begin(), access_list_, map_[key]);
+  }
 
   void Evict() {
     if (map_.size() == capacity_) {
@@ -35,7 +37,9 @@ class Cache {
   }
 
  public:
-  explicit Cache(int capacity) { this->capacity_ = capacity; };
+  explicit Cache(int capacity) {
+    this->capacity_ = capacity;
+  };
   /**
    * Puts a key-value pair into the cache.
    * If the key already exists, the value will be updated.
@@ -82,7 +86,13 @@ class Cache {
     this->map_.clear();
     this->access_list_.clear();
   };
-  [[nodiscard]] int Size() const { return this->map_.size(); };
-  [[nodiscard]] int Hits() const { return this->hits_; };
-  [[nodiscard]] int Misses() const { return this->misses_; };
+  [[nodiscard]] int Size() const {
+    return this->map_.size();
+  };
+  [[nodiscard]] int Hits() const {
+    return this->hits_;
+  };
+  [[nodiscard]] int Misses() const {
+    return this->misses_;
+  };
 };

@@ -151,7 +151,8 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
   all_synonyms.insert(all_synonyms.end(), synonyms_.begin(), synonyms_.end());
   all_synonyms.insert(all_synonyms.end(), other.synonyms_.begin(), other.synonyms_.end());
   std::sort(all_synonyms.begin(), all_synonyms.end(), QuerySynonymPointerComparison());
-  all_synonyms.erase(std::unique(all_synonyms.begin(), all_synonyms.end(), QuerySynonymPointerEquality()), all_synonyms.end());
+  all_synonyms.erase(std::unique(all_synonyms.begin(), all_synonyms.end(), QuerySynonymPointerEquality()),
+                     all_synonyms.end());
 
   std::vector<ResultRow> new_rows{};
   for (auto this_row : table_rows_) {

@@ -6,11 +6,11 @@
 #include <unordered_set>
 
 #include "commons/entity.h"
-#include "commons/relationship.h"
 #include "commons/pattern.h"
+#include "commons/relationship.h"
 #include "pkb/entity/entity_manager.h"
-#include "pkb/relationship/relationship_manager.h"
 #include "pkb/pattern/pattern_manager.h"
+#include "pkb/relationship/relationship_manager.h"
 
 using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
 

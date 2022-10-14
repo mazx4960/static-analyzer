@@ -8,21 +8,35 @@
 
 #include "sp/simple_definition/simple_ast.h"
 
-CFGNode::CFGNode(Entity *stmt) : Node(NodeType::kStatement), stmt_(stmt) {}
-Entity *CFGNode::GetStmt() { return this->stmt_; }
-void CFGNode::AddChild(Node *child) { this->children_.push_back(child); }
+CFGNode::CFGNode(Entity *stmt) : Node(NodeType::kStatement), stmt_(stmt) {
+}
+Entity *CFGNode::GetStmt() {
+  return this->stmt_;
+}
+void CFGNode::AddChild(Node *child) {
+  this->children_.push_back(child);
+}
 void CFGNode::SetChild(Node *child, int pos) {
-  if (pos >= this->children_.size()) { return; }
+  if (pos >= this->children_.size()) {
+    return;
+  }
   this->children_[pos] = child;
 }
-bool CFGNode::IsTerminal() { return this->stmt_->GetValue() == "-1"; }
-std::vector<Node *> CFGNode::GetChildren() { return this->children_; }
-std::string CFGNode::ToString() { return stmt_->ToString(); }
+bool CFGNode::IsTerminal() {
+  return this->stmt_->GetValue() == "-1";
+}
+std::vector<Node *> CFGNode::GetChildren() {
+  return this->children_;
+}
+std::string CFGNode::ToString() {
+  return stmt_->ToString();
+}
 
 /**
  * Builder class for control flow graph
  */
-CFGBuilder::CFGBuilder() { this->start_node_ = new CFGNode(new StmtEntity("-1")); }
+CFGBuilder::CFGBuilder() { this->start_node_ = new CFGNode(new StmtEntity(EntityType::kStatement, "-1", "")); }
+
 /**
  * Build the control flow graph for a given procedure node
  * @param node procedure node
@@ -35,7 +49,7 @@ CFGNode *CFGBuilder::Build(Node *node) {
   }
   auto *proc_node = static_cast<ProcedureNode *>(node);
   auto *stmt_list_node = proc_node->GetStatementList();
-  auto *terminal_node = new CFGNode(new StmtEntity("-1"));
+  auto *terminal_node = new CFGNode(new StmtEntity(EntityType::kStatement, "-1", ""));
   BuildBlock(stmt_list_node, start_node_, terminal_node);
   spdlog::debug("Control flow graph for procedure {} built", proc_node->GetProcName());
   Clean();
@@ -67,7 +81,9 @@ void CFGBuilder::Clean() {
   this->start_node_->VisitAll(op);
 }
 CFGNode *CFGBuilder::ToCFGNode(Node *node) {
-  if (node->GetNodeType() != NodeType::kStatement) { return nullptr; }
+  if (node->GetNodeType() != NodeType::kStatement) {
+    return nullptr;
+  }
   auto *stmt = static_cast<StatementNode *>(node);
   auto stmt_type = stmt->GetStmtType();
   auto stmt_no = stmt->GetStmtNo();
@@ -79,7 +95,9 @@ CFGNode *CFGBuilder::ToCFGNode(Node *node) {
  * @param parent
  * @param child
  */
-void CFGBuilder::ConnectNode(CFGNode *parent, CFGNode *child) { parent->AddChild(child); }
+void CFGBuilder::ConnectNode(CFGNode *parent, CFGNode *child) {
+  parent->AddChild(child);
+}
 /**
  * Build a block of statements
  * @param node statement list node
@@ -98,9 +116,12 @@ CFGNode *CFGBuilder::BuildBlock(Node *node, CFGNode *parent, CFGNode *terminal) 
     auto *stmt_node = static_cast<StatementNode *>(node);
     ConnectNode(parent, child);
     switch (stmt_node->GetStmtType()) {
-      case EntityType::kIfStmt: parent = BuildIf(node, child); break;
-      case EntityType::kWhileStmt: parent = BuildWhile(node, child); break;
-      default: parent = child; break;
+      case EntityType::kIfStmt: parent = BuildIf(node, child);
+        break;
+      case EntityType::kWhileStmt: parent = BuildWhile(node, child);
+        break;
+      default: parent = child;
+        break;
     }
   };
   node->VisitChildren(op);
@@ -120,7 +141,7 @@ CFGNode *CFGBuilder::BuildIf(Node *node, CFGNode *parent) {
   auto *if_node = static_cast<IfNode *>(node);
   auto *then_node = if_node->GetThenStatementList();
   auto *else_node = if_node->GetElseStatementList();
-  auto *terminal_node = new CFGNode(new StmtEntity("-1"));
+  auto *terminal_node = new CFGNode(new StmtEntity(EntityType::kStatement, "-1", ""));
   BuildBlock(then_node, parent, terminal_node);
   BuildBlock(else_node, parent, terminal_node);
   return terminal_node;

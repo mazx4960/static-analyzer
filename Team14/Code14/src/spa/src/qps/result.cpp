@@ -10,7 +10,8 @@ Result::Result(QuerySynonym *synonym, const EntityPointerUnorderedSet &results_s
 }
 
 Result::Result(QuerySynonym *synonym, std::unordered_set<std::string> results_set)
-    : synonyms_({std::move(synonym)}), results_(std::move(results_set)) {};
+    : synonyms_({std::move(synonym)}), results_(std::move(results_set)) {
+};
 
 Result *Result::empty() {
   auto *empty_synonym = new QuerySynonym("empty");

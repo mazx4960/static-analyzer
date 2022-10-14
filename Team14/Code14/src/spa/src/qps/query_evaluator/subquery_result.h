@@ -14,7 +14,7 @@ class SubqueryResult {
  private:
 
   std::vector<QuerySynonym *> synonyms_;
-  std::vector<ResultRow > table_rows_;
+  std::vector<ResultRow> table_rows_;
 
  private:
   SubqueryResult(std::vector<QuerySynonym *>, std::vector<ResultRow>);

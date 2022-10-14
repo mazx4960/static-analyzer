@@ -8,10 +8,13 @@
  * @param second second set of Entity pointers.
  * @return intersection of sets of Entity pointers.
  */
-EntityPointerUnorderedSet ResultProjector::intersect(const EntityPointerUnorderedSet &first, const EntityPointerUnorderedSet &second) {
+EntityPointerUnorderedSet ResultProjector::intersect(const EntityPointerUnorderedSet &first,
+                                                     const EntityPointerUnorderedSet &second) {
   EntityPointerUnorderedSet result;
   for (auto *entity : first) {
-    if (second.find(entity) != second.end()) { result.insert(entity); }
+    if (second.find(entity) != second.end()) {
+      result.insert(entity);
+    }
   }
   return result;
 }

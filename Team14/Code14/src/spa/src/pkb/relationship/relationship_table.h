@@ -2,20 +2,18 @@
 
 #pragma once
 
-#include <string>
-#include <unordered_set>
-#include <unordered_map>
 #include <queue>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
 
-#include "commons/types.h"
 #include "commons/entity.h"
 #include "commons/relationship.h"
+#include "commons/types.h"
 
 using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
-using EntityPointerUnorderedMap = std::unordered_map<Entity *,
-                                                     EntityPointerUnorderedSet,
-                                                     EntityHashFunction,
-                                                     EntityPointerEquality>;
+using EntityPointerUnorderedMap =
+    std::unordered_map<Entity *, EntityPointerUnorderedSet, EntityHashFunction, EntityPointerEquality>;
 
 class RelationshipTable {
  protected:

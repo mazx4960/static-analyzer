@@ -18,7 +18,8 @@ class ResultProjector {
 
   std::vector<SubqueryResult> subquery_results_;
 
-  static EntityPointerUnorderedSet intersect(const EntityPointerUnorderedSet &first, const EntityPointerUnorderedSet &second);
+  static EntityPointerUnorderedSet intersect(const EntityPointerUnorderedSet &first,
+                                             const EntityPointerUnorderedSet &second);
 
  public:
   ResultProjector(std::vector<ElemReference *> declarations, std::vector<SubqueryResult> subquery_results, IPKBQuerier *pkb)

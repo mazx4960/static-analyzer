@@ -38,7 +38,6 @@ enum class RsType {
   kAssignPattern,
 };
 
-
 inline std::string EntityTypeToString(EntityType type) {
   switch (type) {
     case EntityType::kProcedure: return "Procedure";
