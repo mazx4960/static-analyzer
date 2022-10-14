@@ -210,7 +210,7 @@ void RelationshipExtractor::ExtractCalls(std::vector<Relationship *> &relationsh
     return;
   }
   auto *call_node = static_cast<CallNode *>(stmt);
-  Entity *parent = new CallStmtEntity(std::to_string(stmt->GetStmtNo()));
+  Entity *parent = new CallStmtEntity(std::to_string(stmt->GetStmtNo()), call_node->GetProcedureName());
   Entity *child = new ProcedureEntity(call_node->GetProcedureName());
   relationships.push_back(new Relationship(RsType::kCalls, parent, child));
 }

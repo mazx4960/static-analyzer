@@ -58,7 +58,17 @@ void EntityExtractor::ExtractStatement(std::vector<Entity *> &entities, Node *no
   auto *stmt = static_cast<StatementNode *>(node);
   auto stmt_type = stmt->GetStmtType();
   auto stmt_no = stmt->GetStmtNo();
-  auto *entity = new Entity(stmt_type, std::to_string(stmt_no));
+  Entity *entity;
+  switch (stmt_type) {
+    case EntityType::kCallStmt: {
+        auto proc_name = static_cast<CallNode *>(stmt)->GetProcedureName();
+        entity = new CallStmtEntity(std::to_string(stmt_no), proc_name);
+        break;
+    }
+    default:
+        entity = new Entity(stmt_type, std::to_string(stmt_no));
+        break;
+  }
   entities.push_back(entity);
 }
 void EntityExtractor::ExtractVariable(std::vector<Entity *> &entities, Node *node) {
