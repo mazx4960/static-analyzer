@@ -27,10 +27,10 @@ TEST(QueryEntityTest, VariableTest) {
 }
 
 TEST(QueryEntityTest, ConstantTest) {
-  std::vector<Entity *> entities = {new ConstantEntity("a"), 
-                                    new ConstantEntity("b"), 
-                                    new ConstantEntity("c"),
-                                    new ConstantEntity("d")};
+  std::vector<Entity *> entities = {new ConstantEntity("1"), 
+                                    new ConstantEntity("2"), 
+                                    new ConstantEntity("3"),
+                                    new ConstantEntity("4")};
 
   EntityPointerUnorderedSet expected;
   for (int i = 0; i < 4; i++) { 
@@ -197,9 +197,9 @@ TEST(QueryEntityTest, SingleEntityStressTest) {
 }
 
 TEST(QueryEntityTest, MultipleEntitiesTest) {
-  std::vector<Entity *> entities = {new ConstantEntity("a"),     
-                                    new ConstantEntity("b"),
-                                    new ConstantEntity("c"),   
+  std::vector<Entity *> entities = {new ConstantEntity("1"),     
+                                    new ConstantEntity("2"),
+                                    new ConstantEntity("3"),   
                                     new VariableEntity("w"),
                                     new VariableEntity("x"),
                                     new VariableEntity("y"),
