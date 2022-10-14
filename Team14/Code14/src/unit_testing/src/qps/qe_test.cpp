@@ -155,7 +155,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
       if_dec, assign_dec, var_dec, const_dec, proc_dec,
   };
 
-  auto *select_call = new SelectCall(stmt_dec);
+  auto *select_call = new SelectCall(new ElemReference(stmt_dec));
   Query query = Query(declarations_vector, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
@@ -208,7 +208,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
       if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
   };
 
-  auto *select_call = new SelectCall(stmt_dec_1);
+  auto *select_call = new SelectCall(new ElemReference(stmt_dec_1));
   Query query = Query(declarations_vector, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
@@ -262,7 +262,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
       if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
   };
 
-  auto *select_call = new SelectCall(stmt_dec_1);
+  auto *select_call = new SelectCall(new ElemReference(stmt_dec_1));
   Query query = Query(declarations_vector, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
@@ -279,119 +279,119 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
 TEST(QeFetchContextTest, StatementDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new StatementDeclaration(new QuerySynonym("stmt"));
-  auto *select_call = new SelectCall(declaration);
+  auto *select_call = new SelectCall(new ElemReference(declaration));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::all_stmt_entities_);
+  ASSERT_EQ(select_call->getReferences().front()->getContext(), TestStorage::all_stmt_entities_);
 }
 
 TEST(QeFetchContextTest, ProcedureDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new ProcedureDeclaration(new QuerySynonym("proc"));
-  auto *select_call = new SelectCall(declaration);
+  auto *select_call = new SelectCall(new ElemReference(declaration));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::procedure_entities_);
+  ASSERT_EQ(select_call->getReferences().front()->getContext(), TestStorage::procedure_entities_);
 }
 
 TEST(QeFetchContextTest, VariableDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new VariableDeclaration(new QuerySynonym("stmt"));
-  auto *select_call = new SelectCall(declaration);
+  auto *select_call = new SelectCall(new ElemReference(declaration));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::variable_entities_);
+  ASSERT_EQ(select_call->getReferences().front()->getContext(), TestStorage::variable_entities_);
 }
 
 TEST(QeFetchContextTest, ConstantDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new ConstantDeclaration(new QuerySynonym("stmt"));
-  auto *select_call = new SelectCall(declaration);
+  auto *select_call = new SelectCall(new ElemReference(declaration));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::constant_entities_);
+  ASSERT_EQ(select_call->getReferences().front()->getContext(), TestStorage::constant_entities_);
 }
 
 TEST(QeFetchContextTest, StmtAssignDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new AssignDeclaration(new QuerySynonym("as"));
-  auto *select_call = new SelectCall(declaration);
+  auto *select_call = new SelectCall(new ElemReference(declaration));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_assign_entities_);
+  ASSERT_EQ(select_call->getReferences().front()->getContext(), TestStorage::stmt_assign_entities_);
 }
 
 TEST(QeFetchContextTest, StmtCallDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new CallDeclaration(new QuerySynonym("cl"));
-  auto *select_call = new SelectCall(declaration);
+  auto *select_call = new SelectCall(new ElemReference(declaration));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_call_entities_);
+  ASSERT_EQ(select_call->getReferences().front()->getContext(), TestStorage::stmt_call_entities_);
 }
 
 TEST(QeFetchContextTest, StmtIfDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new IfDeclaration(new QuerySynonym("ifs"));
-  auto *select_call = new SelectCall(declaration);
+  auto *select_call = new SelectCall(new ElemReference(declaration));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_if_entities_);
+  ASSERT_EQ(select_call->getReferences().front()->getContext(), TestStorage::stmt_if_entities_);
 }
 
 TEST(QeFetchContextTest, StmtWhileDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new WhileDeclaration(new QuerySynonym("w"));
-  auto *select_call = new SelectCall(declaration);
+  auto *select_call = new SelectCall(new ElemReference(declaration));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_while_entities_);
+  ASSERT_EQ(select_call->getReferences().front()->getContext(), TestStorage::stmt_while_entities_);
 }
 
 TEST(QeFetchContextTest, StmtPrintDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new PrintDeclaration(new QuerySynonym("prt"));
-  auto *select_call = new SelectCall(declaration);
+  auto *select_call = new SelectCall(new ElemReference(declaration));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_print_entities_);
+  ASSERT_EQ(select_call->getReferences().front()->getContext(), TestStorage::stmt_print_entities_);
 }
 
 TEST(QeFetchContextTest, StmtReadDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new ReadDeclaration(new QuerySynonym("rd"));
-  auto *select_call = new SelectCall(declaration);
+  auto *select_call = new SelectCall(new ElemReference(declaration));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
   query_evaluator->mockFetchContext();
 
-  ASSERT_EQ(select_call->getReference()->getContext(), TestStorage::stmt_read_entities_);
+  ASSERT_EQ(select_call->getReferences().front()->getContext(), TestStorage::stmt_read_entities_);
 }

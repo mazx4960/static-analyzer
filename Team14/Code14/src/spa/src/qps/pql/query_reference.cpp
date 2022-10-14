@@ -4,7 +4,6 @@
 
 #include <utility>
 
-
 ReferenceType QueryReference::getRefType() const {
   return this->reference_type_;
 }
@@ -19,6 +18,12 @@ EntityPointerUnorderedSet QueryReference::getContext() const {
 }
 void QueryReference::setContext(EntityPointerUnorderedSet context) {
   this->context_ = std::move(context);
+}
+bool QueryReference::isStmtRef() const {
+  return false;
+}
+bool QueryReference::isEntRef() const {
+  return false;
 }
 
 // WildcardDeclaration
@@ -54,9 +59,6 @@ bool IdentReference::operator==(const QueryReference *other) const {
 std::string IdentReference::getReferenceValue() const {
   return this->value_;
 }
-bool IdentReference::isStmtRef() const {
-  return false;
-}
 bool IdentReference::isEntRef() const {
   return true;
 }
@@ -79,9 +81,6 @@ std::string IntegerReference::getReferenceValue() const {
 }
 bool IntegerReference::isStmtRef() const {
   return true;
-}
-bool IntegerReference::isEntRef() const {
-  return false;
 }
 bool IntegerReference::isSyntacticallyCorrect() const {
   return this->value_.length() <= 1 || value_[0] != '0';
@@ -125,5 +124,68 @@ bool SynonymReference::isSyntacticallyCorrect() const {
 std::string SynonymReference::toString() const {
   return EntityTypeToString(this->getEntityType()) + ":" + this->getSynonym()->toString();
 }
+void SynonymReference::setBooleanRef(bool is_boolean_Ref) {
+  this->is_boolean_ref_ = is_boolean_Ref;
+}
+bool SynonymReference::isBooleanRef() const{
+  return this->is_boolean_ref_;
+}
 
+bool ElemReference::operator==(const QueryReference &other) const {
+  if (other.getRefType() == this->getRefType()) {
+    const auto &elem_other = static_cast<const ElemReference &>(other);
+    return (*elem_other.getSynonymReference()) == (*this->getSynonymReference()) &&
+        (*elem_other.getAttribute()) == (*this->getAttribute());
+  }
+  return false;
+}
+bool ElemReference::operator==(const QueryReference *other) const {
+  if (other->getRefType() == this->getRefType()) {
+    const auto &elem_other = static_cast<const ElemReference *>(other);
+    return (*elem_other->getSynonymReference()) == (*this->getSynonymReference()) &&
+        (*elem_other->getAttribute()) == (*this->getAttribute());
+  }
+  return false;
+}
+SynonymReference *ElemReference::getSynonymReference() const {
+  return this->synonym_reference_;
+}
+QueryAttribute *ElemReference::getAttribute() const {
+  return this->query_attribute_;
+}
+std::string ElemReference::toString() const {
+  std::string str = this->getSynonymReference()->toString();
+  if (this->getAttribute() != nullptr) {
+    str.append(".");
+    str.append(this->getAttribute()->toString());
+  }
+  return str;
+}
+EntityType ElemReference::getEntityType() const {
+  return this->getSynonymReference()->getEntityType();
+}
+EntityPointerUnorderedSet ElemReference::getContext() const {
+  return this->getSynonymReference()->getContext();
+}
+void ElemReference::setContext(EntityPointerUnorderedSet context) {
+  this->getSynonymReference()->setContext(context);
+}
+void ElemReference::setEntityType(EntityType entity_type) {
+  this->getSynonymReference()->setEntityType(entity_type);
+}
+void ElemReference::setSynonymReference(SynonymReference *synonym_reference) {
+  this->synonym_reference_ = synonym_reference;
+}
+std::string ElemReference::getReferenceValue() const {
+  return this->getSynonymReference()->getReferenceValue();
+}
+bool ElemReference::isStmtRef() const {
+  return this->getSynonymReference()->isStmtRef();
+}
+bool ElemReference::isEntRef() const {
+  return this->getSynonymReference()->isEntRef();
+}
+bool ElemReference::isSyntacticallyCorrect() const {
+  return this->getSynonymReference()->isSyntacticallyCorrect();
+}
 

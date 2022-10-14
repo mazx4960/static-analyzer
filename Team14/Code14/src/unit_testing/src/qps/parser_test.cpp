@@ -19,10 +19,10 @@ TEST(QueryParserTest, SelectCallParseTest) {
   std::vector<Token *> tokens = {
       new KeywordToken("Select"), new SymbolToken("v")
   };
-  auto *expected = new SelectCall(new SynonymReference(new QuerySynonym("v")));
+  auto *expected = new SelectCall(new ElemReference(new SynonymReference(new QuerySynonym("v"))));
   QueryParser parser = QueryParser(tokens);
   auto *select = parser.parseQueryCall();
-  ASSERT_EQ(*select->getReference(), *expected->getReference());
+  ASSERT_EQ(*select->getReferences().front(), *expected->getReferences().front());
 }
 
 TEST(QueryParserTest, AssignDeclarationParseTest) {
@@ -130,8 +130,8 @@ TEST(QueryParserTest, MultiAssignDeclarationParseTest) {
       new KeywordToken("assign"), new SymbolToken("a1"), new CommaToken(), new SymbolToken("a2"), new CommaToken(),
       new SymbolToken("a3"), new SemicolonToken()
   };
-  Declarations expected = {new AssignDeclaration(new QuerySynonym("a1")), new AssignDeclaration(new QuerySynonym("a2")),
-                           new AssignDeclaration(new QuerySynonym("a3"))};
+  SynonymReferences expected = {new AssignDeclaration(new QuerySynonym("a1")), new AssignDeclaration(new QuerySynonym("a2")),
+                                new AssignDeclaration(new QuerySynonym("a3"))};
   QueryParser parser = QueryParser(tokens);
   auto declarations = parser.parseDeclarations();
   for (int i = 0; i < expected.size(); ++i) {
@@ -144,7 +144,7 @@ TEST(QueryParserTest, MultiStmtDeclarationParseTest) {
       new KeywordToken("stmt"), new SymbolToken("s1"), new CommaToken(), new SymbolToken("s2"), new CommaToken(),
       new SymbolToken("s3"), new SemicolonToken()
   };
-  Declarations expected =
+  SynonymReferences expected =
       {new StatementDeclaration(new QuerySynonym("s1")), new StatementDeclaration(new QuerySynonym("s2")),
        new StatementDeclaration(new QuerySynonym("s3"))};
   QueryParser parser = QueryParser(tokens);
@@ -159,7 +159,7 @@ TEST(QueryParserTest, MultiVariableDeclarationParseTest) {
       new KeywordToken("variable"), new SymbolToken("v1"), new CommaToken(), new SymbolToken("v2"), new CommaToken(),
       new SymbolToken("v3"), new SemicolonToken()
   };
-  Declarations expected =
+  SynonymReferences expected =
       {new VariableDeclaration(new QuerySynonym("v1")), new VariableDeclaration(new QuerySynonym("v2")),
        new VariableDeclaration(new QuerySynonym("v3"))};
   QueryParser parser = QueryParser(tokens);
@@ -174,7 +174,7 @@ TEST(QueryParserTest, MultiConstantDeclarationParseTest) {
       new KeywordToken("constant"), new SymbolToken("c1"), new CommaToken(), new SymbolToken("c2"), new CommaToken(),
       new SymbolToken("c3"), new SemicolonToken()
   };
-  Declarations expected =
+  SynonymReferences expected =
       {new ConstantDeclaration(new QuerySynonym("c1")), new ConstantDeclaration(new QuerySynonym("c2")),
        new ConstantDeclaration(new QuerySynonym("c3"))};
   QueryParser parser = QueryParser(tokens);
@@ -189,7 +189,7 @@ TEST(QueryParserTest, MultiProcedureDeclarationParseTest) {
       new KeywordToken("procedure"), new SymbolToken("p1"), new CommaToken(), new SymbolToken("p2"), new CommaToken(),
       new SymbolToken("p3"), new SemicolonToken()
   };
-  Declarations expected =
+  SynonymReferences expected =
       {new ProcedureDeclaration(new QuerySynonym("p1")), new ProcedureDeclaration(new QuerySynonym("p2")),
        new ProcedureDeclaration(new QuerySynonym("p3"))};
   QueryParser parser = QueryParser(tokens);
@@ -204,8 +204,8 @@ TEST(QueryParserTest, MultiReadDeclarationParseTest) {
       new KeywordToken("read"), new SymbolToken("rd1"), new CommaToken(), new SymbolToken("rd2"), new CommaToken(),
       new SymbolToken("rd3"), new SemicolonToken()
   };
-  Declarations expected = {new ReadDeclaration(new QuerySynonym("rd1")), new ReadDeclaration(new QuerySynonym("rd2")),
-                           new ReadDeclaration(new QuerySynonym("rd3"))};
+  SynonymReferences expected = {new ReadDeclaration(new QuerySynonym("rd1")), new ReadDeclaration(new QuerySynonym("rd2")),
+                                new ReadDeclaration(new QuerySynonym("rd3"))};
   QueryParser parser = QueryParser(tokens);
   auto declarations = parser.parseDeclarations();
   for (int i = 0; i < expected.size(); ++i) {
@@ -218,8 +218,8 @@ TEST(QueryParserTest, MultiPrintDeclarationParseTest) {
       new KeywordToken("print"), new SymbolToken("pr1"), new CommaToken(), new SymbolToken("pr2"), new CommaToken(),
       new SymbolToken("pr3"), new SemicolonToken()
   };
-  Declarations expected = {new PrintDeclaration(new QuerySynonym("pr1")), new PrintDeclaration(new QuerySynonym("pr2")),
-                           new PrintDeclaration(new QuerySynonym("pr3"))};
+  SynonymReferences expected = {new PrintDeclaration(new QuerySynonym("pr1")), new PrintDeclaration(new QuerySynonym("pr2")),
+                                new PrintDeclaration(new QuerySynonym("pr3"))};
   QueryParser parser = QueryParser(tokens);
   auto declarations = parser.parseDeclarations();
   for (int i = 0; i < expected.size(); ++i) {
@@ -232,8 +232,8 @@ TEST(QueryParserTest, MultiCallDeclarationParseTest) {
       new KeywordToken("call"), new SymbolToken("cl1"), new CommaToken(), new SymbolToken("cl2"), new CommaToken(),
       new SymbolToken("cl3"), new SemicolonToken()
   };
-  Declarations expected = {new CallDeclaration(new QuerySynonym("cl1")), new CallDeclaration(new QuerySynonym("cl2")),
-                           new CallDeclaration(new QuerySynonym("cl3"))};
+  SynonymReferences expected = {new CallDeclaration(new QuerySynonym("cl1")), new CallDeclaration(new QuerySynonym("cl2")),
+                                new CallDeclaration(new QuerySynonym("cl3"))};
   QueryParser parser = QueryParser(tokens);
   auto declarations = parser.parseDeclarations();
   for (int i = 0; i < expected.size(); ++i) {
@@ -246,8 +246,8 @@ TEST(QueryParserTest, MultiWhileDeclarationParseTest) {
       new KeywordToken("while"), new SymbolToken("wh1"), new CommaToken(), new SymbolToken("wh2"), new CommaToken(),
       new SymbolToken("wh3"), new SemicolonToken()
   };
-  Declarations expected = {new WhileDeclaration(new QuerySynonym("wh1")), new WhileDeclaration(new QuerySynonym("wh2")),
-                           new WhileDeclaration(new QuerySynonym("wh3"))};
+  SynonymReferences expected = {new WhileDeclaration(new QuerySynonym("wh1")), new WhileDeclaration(new QuerySynonym("wh2")),
+                                new WhileDeclaration(new QuerySynonym("wh3"))};
   QueryParser parser = QueryParser(tokens);
   auto declarations = parser.parseDeclarations();
   for (int i = 0; i < expected.size(); ++i) {
@@ -260,8 +260,8 @@ TEST(QueryParserTest, MultiIfDeclarationParseTest) {
       new KeywordToken("if"), new SymbolToken("wh1"), new CommaToken(), new SymbolToken("wh2"), new CommaToken(),
       new SymbolToken("wh3"), new SemicolonToken()
   };
-  Declarations expected = {new IfDeclaration(new QuerySynonym("wh1")), new IfDeclaration(new QuerySynonym("wh2")),
-                           new IfDeclaration(new QuerySynonym("wh3"))};
+  SynonymReferences expected = {new IfDeclaration(new QuerySynonym("wh1")), new IfDeclaration(new QuerySynonym("wh2")),
+                                new IfDeclaration(new QuerySynonym("wh3"))};
   QueryParser parser = QueryParser(tokens);
   auto declarations = parser.parseDeclarations();
   for (int i = 0; i < expected.size(); ++i) {
@@ -277,14 +277,14 @@ TEST(QueryParserTest, MultiMixedDeclarationParseTest) {
       new KeywordToken("procedure"), new SymbolToken("p1"), new CommaToken(), new SymbolToken("p2"), new CommaToken(),
       new SymbolToken("p3"), new SemicolonToken()
   };
-  Declarations expected = {new StatementDeclaration(new QuerySynonym("s1")),
-                           new VariableDeclaration(new QuerySynonym("v1")),
-                           new VariableDeclaration(new QuerySynonym("v2")),
-                           new CallDeclaration(new QuerySynonym("c1")),
-                           new CallDeclaration(new QuerySynonym("c2")),
-                           new ProcedureDeclaration(new QuerySynonym("p1")),
-                           new ProcedureDeclaration(new QuerySynonym("p2")),
-                           new ProcedureDeclaration(new QuerySynonym("p3"))};
+  SynonymReferences expected = {new StatementDeclaration(new QuerySynonym("s1")),
+                                new VariableDeclaration(new QuerySynonym("v1")),
+                                new VariableDeclaration(new QuerySynonym("v2")),
+                                new CallDeclaration(new QuerySynonym("c1")),
+                                new CallDeclaration(new QuerySynonym("c2")),
+                                new ProcedureDeclaration(new QuerySynonym("p1")),
+                                new ProcedureDeclaration(new QuerySynonym("p2")),
+                                new ProcedureDeclaration(new QuerySynonym("p3"))};
   QueryParser parser = QueryParser(tokens);
   auto declarations = parser.parseDeclarations();
   for (int i = 0; i < expected.size(); ++i) {
@@ -301,14 +301,14 @@ TEST(QueryParserTest, SameSynonymMultiMixedDeclarationParseTest) {
       new KeywordToken("procedure"), new SymbolToken("s"), new CommaToken(), new SymbolToken("s"), new CommaToken(),
       new SymbolToken("s"), new SemicolonToken()
   };
-  Declarations expected = {new StatementDeclaration(new QuerySynonym("s")),
-                           new VariableDeclaration(new QuerySynonym("s")),
-                           new VariableDeclaration(new QuerySynonym("s")),
-                           new CallDeclaration(new QuerySynonym("s")),
-                           new CallDeclaration(new QuerySynonym("s")),
-                           new ProcedureDeclaration(new QuerySynonym("s")),
-                           new ProcedureDeclaration(new QuerySynonym("s")),
-                           new ProcedureDeclaration(new QuerySynonym("s"))};
+  SynonymReferences expected = {new StatementDeclaration(new QuerySynonym("s")),
+                                new VariableDeclaration(new QuerySynonym("s")),
+                                new VariableDeclaration(new QuerySynonym("s")),
+                                new CallDeclaration(new QuerySynonym("s")),
+                                new CallDeclaration(new QuerySynonym("s")),
+                                new ProcedureDeclaration(new QuerySynonym("s")),
+                                new ProcedureDeclaration(new QuerySynonym("s")),
+                                new ProcedureDeclaration(new QuerySynonym("s"))};
   QueryParser parser = QueryParser(tokens);
   auto declarations = parser.parseDeclarations();
   for (int i = 0; i < expected.size(); ++i) {
@@ -322,7 +322,7 @@ TEST(QueryParserTest, IntegerStmtReferenceParseTest) {
   };
   auto *expected = new IntegerReference("1");
   QueryParser parser = QueryParser(tokens);
-  auto *reference = parser.parseReference();
+  auto *reference = parser.parseClauseReference();
   ASSERT_EQ(*reference, *expected);
 }
 
@@ -332,7 +332,7 @@ TEST(QueryParserTest, IdentEntReferenceParseTest) {
   };
   auto *expected = new IdentReference("ident");
   QueryParser parser = QueryParser(tokens);
-  auto *reference = parser.parseReference();
+  auto *reference = parser.parseClauseReference();
   ASSERT_EQ(*reference, *expected);
 }
 
@@ -342,7 +342,7 @@ TEST(QueryParserTest, SynonymReferenceParseTest) {
   };
   auto *expected = new SynonymReference(new QuerySynonym("s"));
   QueryParser parser = QueryParser(tokens);
-  auto *reference = parser.parseReference();
+  auto *reference = parser.parseClauseReference();
   ASSERT_EQ(*reference, *expected);
 }
 
@@ -352,7 +352,7 @@ TEST(QueryParserTest, WildcardReferenceParseTest) {
   };
   auto *expected = new WildcardReference();
   QueryParser parser = QueryParser(tokens);
-  auto *reference = parser.parseReference();
+  auto *reference = parser.parseClauseReference();
   ASSERT_EQ(*reference, *expected);
 }
 

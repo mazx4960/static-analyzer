@@ -8,10 +8,12 @@
 #include "query_reference.h"
 #include "expression_spec.h"
 #include "qps/pql/interface/check_semantics.h"
+#include "attr_compare.h"
 
 enum class ClauseType {
   kSuchThat,
   kPattern,
+  kWith
 };
 
 class QueryClause : public ICheckSyntax, public ICheckSemantics {
@@ -180,6 +182,22 @@ class PatternClause : public QueryClause {
   [[nodiscard]] SynonymReference *getSynonymDeclaration() const;
   [[nodiscard]] QueryReference *getEntRef() const;
   [[nodiscard]] ExpressionSpec *getExpression() const;
+  [[nodiscard]] bool isSyntacticallyCorrect() const override;
+  [[nodiscard]] bool IsSemanticallyCorrect() const override;
+  [[nodiscard]] std::string toString() const override;
+  bool operator==(const QueryClause &other) const override;
+};
+
+
+class WithClause : public QueryClause {
+ private:
+  std::vector<AttrCompare *> compares_;
+ protected:
+  explicit WithClause(std::vector<AttrCompare *> compares)
+      : QueryClause(ClauseType::kWith), compares_(std::move(compares)) {
+  };
+ public:
+  [[nodiscard]] std::vector<AttrCompare *> getAttrConditions() const;
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
   [[nodiscard]] std::string toString() const override;

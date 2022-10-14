@@ -23,6 +23,9 @@ class QueryKeywords {
   inline static const std::unordered_set<std::string> kAndKeywords{
       "and"};
 
+  inline static const std::unordered_set<std::string> kSpecialSynonymKeywords{
+      "BOOLEAN"};
+
   inline static const std::unordered_map<std::string, EntityType> kDeclarationKeywordsMap{
       {"stmt", EntityType::kStatement},
       {"read", EntityType::kReadStmt},
@@ -50,6 +53,12 @@ class QueryKeywords {
       {"Affects*", RsType::kAffectsT},
       {"pattern", RsType::kAssignPattern}};
 
+  inline static const std::unordered_map<std::string, AttributeType> kAttributeKeywordsMap{
+      {"procName", AttributeType::kProcName},
+      {"varName", AttributeType::kVarName},
+      {"value", AttributeType::kValue},
+      {"stmt#", AttributeType::kStmtNo}};
+
   inline static const std::unordered_map<std::string, RsType> kPatternKeywordsMap{
       {"pattern", RsType::kAssignPattern}};
 
@@ -63,8 +72,10 @@ class QueryKeywords {
   static bool isValidAssignOperator(const std::string &keyword);
   static bool isValidAndKeyword(const std::string &keyword);
   static bool isValidClauseKeyword(const std::string &keyword);
+  static bool isValidAttributeKeyword(const std::string &keyword);
+  static bool isSpecialSynonymKeyword(const std::string &keyword);
   static EntityType declarationKeywordToType(const std::string &keyword);
   static RsType relationshipKeywordToType(const std::string &keyword);
   static RsType patternKeywordToType(const std::string &keyword);
-
+  static AttributeType attributeKeywordToType(const std::string &keyword);
 };
