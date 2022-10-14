@@ -48,3 +48,6 @@ bool QueryKeywords::isValidClauseKeyword(const std::string &keyword) {
 bool QueryKeywords::isValidAttributeKeyword(const std::string &keyword) {
   return kAttributeKeywordsMap.find(keyword) != kAttributeKeywordsMap.end();
 }
+bool QueryKeywords::isSpecialSynonymKeyword(const std::string &keyword) {
+  return kSpecialSynonymKeywords.find(keyword) != kSpecialSynonymKeywords.end();
+}

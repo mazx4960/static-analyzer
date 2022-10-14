@@ -13,6 +13,7 @@
 #include "qps/pql/interface/stmt_ref.h"
 #include "qps/pql/interface/ent_ref.h"
 #include "query_attribute.h"
+#include "qps/pql/interface/boolean_ref.h"
 
 using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
 
@@ -98,9 +99,10 @@ class IntegerReference : public QueryReference {
   std::string toString() const override;
 };
 
-class SynonymReference : public QueryReference {
+class SynonymReference : public QueryReference, public IBooleanRef {
  private:
   QuerySynonym *query_synonym_;
+  bool is_boolean_ref_;
 
  public:
   explicit SynonymReference(QuerySynonym *query_synonym, EntityType entity_type = EntityType::kUnknown)
@@ -113,6 +115,8 @@ class SynonymReference : public QueryReference {
   bool isStmtRef() const override;
   bool isEntRef() const override;
   bool isSyntacticallyCorrect() const override;
+  bool isBooleanRef() const override;
+  void setBooleanRef(bool is_boolean_Ref) override;
   std::string toString() const override;
 };
 

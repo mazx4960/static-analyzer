@@ -1,6 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "query_builder.h"
+#include "qps/pql/query_keywords.h"
 
 QueryBuilder::QueryBuilder(Query *query_blueprint) {
   if (query_blueprint == nullptr) {
@@ -46,10 +47,26 @@ std::vector<ElemReference *> QueryBuilder::buildQueryCallElemReferences(const st
     throw ParseSemanticError("Missing declarations");
   }
   for (auto *elem_ref : query_call_reference_blueprint) {
-    elem_ref->setSynonymReference(getDeclaration(elem_ref->getSynonymReference()->getSynonym()));
+    elem_ref->setSynonymReference(getDeclaration(elem_ref->getSynonymReference()));
   }
   return query_call_reference_blueprint;
 }
+
+SynonymReference *QueryBuilder::getDeclaration(SynonymReference *synonym_reference) {
+  auto *synonym = synonym_reference->getSynonym();
+  for (auto *declaration : declarations_) {
+    QuerySynonym *declaration_synonym = declaration->getSynonym();
+    if (*declaration_synonym == *synonym) {
+      return declaration;
+    }
+  }
+  if (QueryKeywords::isSpecialSynonymKeyword(synonym->toString())) {
+    synonym_reference->setBooleanRef(true);
+    return synonym_reference;
+  }
+  throw ParseSemanticError("Synonym is not declared: " + synonym->toString());
+}
+
 
 SynonymReference *QueryBuilder::getDeclaration(const QuerySynonym *synonym) {
   for (auto *declaration : declarations_) {
@@ -57,6 +74,9 @@ SynonymReference *QueryBuilder::getDeclaration(const QuerySynonym *synonym) {
     if (*declaration_synonym == *synonym) {
       return declaration;
     }
+  }
+  if (QueryKeywords::isSpecialSynonymKeyword(synonym->toString())) {
+
   }
   throw ParseSemanticError("Synonym is not declared: " + synonym->toString());
 }

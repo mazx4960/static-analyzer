@@ -124,6 +124,12 @@ bool SynonymReference::isSyntacticallyCorrect() const {
 std::string SynonymReference::toString() const {
   return EntityTypeToString(this->getEntityType()) + ":" + this->getSynonym()->toString();
 }
+void SynonymReference::setBooleanRef(bool is_boolean_Ref) {
+  this->is_boolean_ref_ = is_boolean_Ref;
+}
+bool SynonymReference::isBooleanRef() const{
+  return this->is_boolean_ref_;
+}
 
 bool ElemReference::operator==(const QueryReference &other) const {
   if (other.getRefType() == this->getRefType()) {
