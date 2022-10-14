@@ -34,7 +34,8 @@ bool EvaluationStrategy::shouldIntersect(QueryReference *declaration) {
   return !declaration->getContext().empty();
 }
 
-EntityPointerUnorderedSet EvaluationStrategy::intersect(const EntityPointerUnorderedSet &first, const EntityPointerUnorderedSet &second) {
+EntityPointerUnorderedSet EvaluationStrategy::intersect(const EntityPointerUnorderedSet &first,
+                                                        const EntityPointerUnorderedSet &second) {
   EntityPointerUnorderedSet result;
   for (auto *entity : first) {
     if (second.find(entity) != second.end()) {

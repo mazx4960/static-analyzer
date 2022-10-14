@@ -4,7 +4,6 @@
 
 #include <utility>
 
-
 ReferenceType QueryReference::getRefType() const {
   return this->reference_type_;
 }

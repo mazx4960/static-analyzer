@@ -7,14 +7,18 @@
 
 Token *QueryLexer::next_token() {
   this->ignore_whitespace();
-  if (this->source_stream_->eof()) { return nullptr; }
+  if (this->source_stream_->eof()) {
+    return nullptr;
+  }
 
   char c = this->advance();
   this->tmp_ = c;
   if (isalpha(c)) {
     // Keyword or symbol
     this->read_alphanumeric();
-    if (QueryKeywords::isValidKeyword(tmp_)) { return new KeywordToken(this->tmp_); }
+    if (QueryKeywords::isValidKeyword(tmp_)) {
+      return new KeywordToken(this->tmp_);
+    }
     return new SymbolToken(this->tmp_);
   } else if (isdigit(c)) {
     // Literal

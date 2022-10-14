@@ -19,10 +19,14 @@ void Node::VisitAll(const std::function<void(Node *)> &op) {
   while (!stack.empty()) {
     Node *node = stack.back();
     stack.pop_back();
-    if (visited[node]) { continue; }
+    if (visited[node]) {
+      continue;
+    }
     visited[node] = true;
     op(node);
-    for (Node *child : node->GetChildren()) { stack.push_back(child); }
+    for (Node *child : node->GetChildren()) {
+      stack.push_back(child);
+    }
   }
 }
 /**
@@ -31,5 +35,7 @@ void Node::VisitAll(const std::function<void(Node *)> &op) {
  * @param op function to be applied to each child
  */
 void Node::VisitChildren(const std::function<void(Node *)> &op) {
-  for (auto *child : this->GetChildren()) { op(child); }
+  for (auto *child : this->GetChildren()) {
+    op(child);
+  }
 }

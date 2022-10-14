@@ -22,6 +22,8 @@ Node *RecursiveGrammarRule::parseNode(TokenIterator &tokenStream) {
         break;
       }
     }
-    if (!match) { return node; }
+    if (!match) {
+      return node;
+    }
   }
 }

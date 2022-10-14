@@ -27,7 +27,7 @@ class QueryParser {
   void parseDeclarationStatement();
   SynonymReference *parseDeclaration(EntityType type);
   static SuchThatClause *parseSuchThat(RsType rs_type, QueryReference *first, QueryReference *second);
-  IdentReference * parseQuotedReference();
+  IdentReference *parseQuotedReference();
   SynonymReference *parseSynonymReference();
   WildcardReference *parseWildcardReference();
   IntegerReference *parseIntegerReference();

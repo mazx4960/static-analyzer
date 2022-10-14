@@ -50,7 +50,8 @@ class EvaluationStrategy {
    * @param second second set of Entity pointers.
    * @return intersection of sets of Entity pointers.
    */
-  static EntityPointerUnorderedSet intersect(const EntityPointerUnorderedSet &first, const EntityPointerUnorderedSet &second);
+  static EntityPointerUnorderedSet intersect(const EntityPointerUnorderedSet &first,
+                                             const EntityPointerUnorderedSet &second);
 };
 
 /*

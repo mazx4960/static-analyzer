@@ -19,7 +19,7 @@ enum class ReferenceType {
   kIdent
 };
 
-class QueryReference : public ICheckSyntax{
+class QueryReference : public ICheckSyntax {
  private:
   ReferenceType reference_type_;
   EntityType entity_type_;

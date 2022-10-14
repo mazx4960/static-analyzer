@@ -8,10 +8,13 @@
  * @param second second set of Entity pointers.
  * @return intersection of sets of Entity pointers.
  */
-EntityPointerUnorderedSet ResultProjector::intersect(const EntityPointerUnorderedSet &first, const EntityPointerUnorderedSet &second) {
+EntityPointerUnorderedSet ResultProjector::intersect(const EntityPointerUnorderedSet &first,
+                                                     const EntityPointerUnorderedSet &second) {
   EntityPointerUnorderedSet result;
   for (auto *entity : first) {
-    if (second.find(entity) != second.end()) { result.insert(entity); }
+    if (second.find(entity) != second.end()) {
+      result.insert(entity);
+    }
   }
   return result;
 }
@@ -32,9 +35,9 @@ EntityPointerUnorderedSet ResultProjector::project() {
     return EntityPointerUnorderedSet();
   }
   if (std::none_of(subquery_results_.begin(), subquery_results_.end(),
-                  [synonym](SubqueryResult subquery_result) {
-                    return subquery_result.Uses(synonym);
-                  })) {
+                   [synonym](SubqueryResult subquery_result) {
+                     return subquery_result.Uses(synonym);
+                   })) {
     spdlog::debug("No tables use the synonym");
     return pkb_->getEntities(called_declaration_->getEntityType());
   }
