@@ -82,8 +82,8 @@ TEST(PopulateEntityTest, CallStatementTest) {
   EntityPointerUnorderedSet expected; 
 
   for (int i = 0; i < length; i++) { 
-	entities.push_back(new CallStmtEntity(stmt_no[i]));
-    expected.insert(new CallStmtEntity(stmt_no[i])); 
+	entities.push_back(new CallStmtEntity(stmt_no[i], std::string()));
+    expected.insert(new CallStmtEntity(stmt_no[i], std::string()));
   }
 
   auto *entity_manager = new EntityManager();

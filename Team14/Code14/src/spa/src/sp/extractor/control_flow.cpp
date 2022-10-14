@@ -22,7 +22,7 @@ std::string CFGNode::ToString() { return stmt_->ToString(); }
 /**
  * Builder class for control flow graph
  */
-CFGBuilder::CFGBuilder() { this->start_node_ = new CFGNode(new StmtEntity("-1")); }
+CFGBuilder::CFGBuilder() { this->start_node_ = new CFGNode(new StmtEntity(EntityType::kStatement, "-1", "")); }
 /**
  * Build the control flow graph for a given procedure node
  * @param node procedure node
@@ -35,7 +35,7 @@ CFGNode *CFGBuilder::Build(Node *node) {
   }
   auto *proc_node = static_cast<ProcedureNode *>(node);
   auto *stmt_list_node = proc_node->GetStatementList();
-  auto *terminal_node = new CFGNode(new StmtEntity("-1"));
+  auto *terminal_node = new CFGNode(new StmtEntity(EntityType::kStatement, "-1", ""));
   BuildBlock(stmt_list_node, start_node_, terminal_node);
   spdlog::debug("Control flow graph for procedure {} built", proc_node->GetProcName());
   Clean();
@@ -120,7 +120,7 @@ CFGNode *CFGBuilder::BuildIf(Node *node, CFGNode *parent) {
   auto *if_node = static_cast<IfNode *>(node);
   auto *then_node = if_node->GetThenStatementList();
   auto *else_node = if_node->GetElseStatementList();
-  auto *terminal_node = new CFGNode(new StmtEntity("-1"));
+  auto *terminal_node = new CFGNode(new StmtEntity(EntityType::kStatement, "-1", ""));
   BuildBlock(then_node, parent, terminal_node);
   BuildBlock(else_node, parent, terminal_node);
   return terminal_node;

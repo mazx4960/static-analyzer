@@ -8,18 +8,14 @@
 using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
 
 TEST(QueryEntityTest, VariableTest) {
-  std::vector<Entity *> entities = {new VariableEntity("a"), 
-                                    new VariableEntity("b"), 
-                                    new VariableEntity("c"),
+  std::vector<Entity *> entities = {new VariableEntity("a"), new VariableEntity("b"), new VariableEntity("c"),
                                     new VariableEntity("d")};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { 
-    expected.insert(entities[i]); 
-  }
+  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
 
   PKB *pkb = new PKB();
-  pkb->populate(entities); 
+  pkb->populate(entities);
   EntityPointerUnorderedSet actual = pkb->getEntities(EntityType::kVariable);
   bool compare = PKBTestHelper::set_compare(actual, expected);
   ASSERT_EQ(actual.size(), 4);
@@ -27,18 +23,14 @@ TEST(QueryEntityTest, VariableTest) {
 }
 
 TEST(QueryEntityTest, ConstantTest) {
-  std::vector<Entity *> entities = {new ConstantEntity("1"), 
-                                    new ConstantEntity("2"), 
-                                    new ConstantEntity("3"),
+  std::vector<Entity *> entities = {new ConstantEntity("1"), new ConstantEntity("2"), new ConstantEntity("3"),
                                     new ConstantEntity("4")};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { 
-    expected.insert(entities[i]);
-  }
+  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
 
   PKB *pkb = new PKB();
-  pkb->populate(entities); 
+  pkb->populate(entities);
   EntityPointerUnorderedSet actual = pkb->getEntities(EntityType::kConstant);
   bool compare = PKBTestHelper::set_compare(actual, expected);
   ASSERT_EQ(actual.size(), 4);
@@ -46,18 +38,14 @@ TEST(QueryEntityTest, ConstantTest) {
 }
 
 TEST(QueryEntityTest, ProcedureTest) {
-  std::vector<Entity *> entities = {new ProcedureEntity("One"), 
-                                    new ProcedureEntity("Two"), 
-                                    new ProcedureEntity("Three"),
-                                    new ProcedureEntity("Four")};
+  std::vector<Entity *> entities = {new ProcedureEntity("One"), new ProcedureEntity("Two"),
+                                    new ProcedureEntity("Three"), new ProcedureEntity("Four")};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { 
-    expected.insert(entities[i]);
-  }
+  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
 
   PKB *pkb = new PKB();
-  pkb->populate(entities); 
+  pkb->populate(entities);
   EntityPointerUnorderedSet actual = pkb->getEntities(EntityType::kProcedure);
   bool compare = PKBTestHelper::set_compare(actual, expected);
   ASSERT_EQ(actual.size(), 4);
@@ -65,18 +53,14 @@ TEST(QueryEntityTest, ProcedureTest) {
 }
 
 TEST(QueryEntityTest, CallStatementTest) {
-  std::vector<Entity *> entities = {new CallStmtEntity("1"), 
-                                    new CallStmtEntity("2"), 
-                                    new CallStmtEntity("3"),
-                                    new CallStmtEntity("4")};
+  std::vector<Entity *> entities = {new CallStmtEntity("1", std::string()), new CallStmtEntity("2", std::string()),
+                                    new CallStmtEntity("3", std::string()), new CallStmtEntity("4", std::string())};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { 
-    expected.insert(entities[i]);
-  }
+  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
 
   PKB *pkb = new PKB();
-  pkb->populate(entities); 
+  pkb->populate(entities);
   EntityPointerUnorderedSet actual = pkb->getEntities(EntityType::kCallStmt);
   bool compare = PKBTestHelper::set_compare(actual, expected);
   ASSERT_EQ(actual.size(), 4);
@@ -84,18 +68,14 @@ TEST(QueryEntityTest, CallStatementTest) {
 }
 
 TEST(QueryEntityTest, IfStatementTest) {
-  std::vector<Entity *> entities = {new IfStmtEntity("1"), 
-                                    new IfStmtEntity("2"), 
-                                    new IfStmtEntity("3"),
+  std::vector<Entity *> entities = {new IfStmtEntity("1"), new IfStmtEntity("2"), new IfStmtEntity("3"),
                                     new IfStmtEntity("4")};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { 
-    expected.insert(entities[i]);
-  }
+  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
 
   PKB *pkb = new PKB();
-  pkb->populate(entities); 
+  pkb->populate(entities);
   EntityPointerUnorderedSet actual = pkb->getEntities(EntityType::kIfStmt);
   bool compare = PKBTestHelper::set_compare(actual, expected);
   ASSERT_EQ(actual.size(), 4);
@@ -103,18 +83,14 @@ TEST(QueryEntityTest, IfStatementTest) {
 }
 
 TEST(QueryEntityTest, WhileStatementTest) {
-  std::vector<Entity *> entities = {new WhileStmtEntity("1"), 
-                               new WhileStmtEntity("2"), 
-                               new WhileStmtEntity("3"),
-                               new WhileStmtEntity("4")};
+  std::vector<Entity *> entities = {new WhileStmtEntity("1"), new WhileStmtEntity("2"), new WhileStmtEntity("3"),
+                                    new WhileStmtEntity("4")};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { 
-    expected.insert(entities[i]);
-  }
+  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
 
   PKB *pkb = new PKB();
-  pkb->populate(entities); 
+  pkb->populate(entities);
   EntityPointerUnorderedSet actual = pkb->getEntities(EntityType::kWhileStmt);
   bool compare = PKBTestHelper::set_compare(actual, expected);
   ASSERT_EQ(actual.size(), 4);
@@ -122,18 +98,14 @@ TEST(QueryEntityTest, WhileStatementTest) {
 }
 
 TEST(QueryEntityTest, PrintStatementTest) {
-  std::vector<Entity *> entities = {new PrintStmtEntity("1"), 
-                                    new PrintStmtEntity("2"), 
-                                    new PrintStmtEntity("3"),
+  std::vector<Entity *> entities = {new PrintStmtEntity("1"), new PrintStmtEntity("2"), new PrintStmtEntity("3"),
                                     new PrintStmtEntity("4")};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { 
-    expected.insert(entities[i]);
-  }
+  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
 
   PKB *pkb = new PKB();
-  pkb->populate(entities); 
+  pkb->populate(entities);
   EntityPointerUnorderedSet actual = pkb->getEntities(EntityType::kPrintStmt);
   bool compare = PKBTestHelper::set_compare(actual, expected);
   ASSERT_EQ(actual.size(), 4);
@@ -141,18 +113,14 @@ TEST(QueryEntityTest, PrintStatementTest) {
 }
 
 TEST(QueryEntityTest, ReadStatementTest) {
-  std::vector<Entity *> entities = {new ReadStmtEntity("1"), 
-                                    new ReadStmtEntity("2"), 
-                                    new ReadStmtEntity("3"),
+  std::vector<Entity *> entities = {new ReadStmtEntity("1"), new ReadStmtEntity("2"), new ReadStmtEntity("3"),
                                     new ReadStmtEntity("4")};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { 
-    expected.insert(entities[i]);
-  }
+  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
 
   PKB *pkb = new PKB();
-  pkb->populate(entities); 
+  pkb->populate(entities);
   EntityPointerUnorderedSet actual = pkb->getEntities(EntityType::kReadStmt);
   bool compare = PKBTestHelper::set_compare(actual, expected);
   ASSERT_EQ(actual.size(), 4);
@@ -160,18 +128,14 @@ TEST(QueryEntityTest, ReadStatementTest) {
 }
 
 TEST(QueryEntityTest, AssignStatementTest) {
-  std::vector<Entity *> entities = {new AssignStmtEntity("1"), 
-                                    new AssignStmtEntity("2"), 
-                                    new AssignStmtEntity("3"),
+  std::vector<Entity *> entities = {new AssignStmtEntity("1"), new AssignStmtEntity("2"), new AssignStmtEntity("3"),
                                     new AssignStmtEntity("4")};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { 
-    expected.insert(entities[i]);
-  }
+  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
 
   PKB *pkb = new PKB();
-  pkb->populate(entities); 
+  pkb->populate(entities);
   EntityPointerUnorderedSet actual = pkb->getEntities(EntityType::kAssignStmt);
   bool compare = PKBTestHelper::set_compare(actual, expected);
   ASSERT_EQ(actual.size(), 4);
@@ -197,32 +161,18 @@ TEST(QueryEntityTest, SingleEntityStressTest) {
 }
 
 TEST(QueryEntityTest, MultipleEntitiesTest) {
-  std::vector<Entity *> entities = {new ConstantEntity("1"),     
-                                    new ConstantEntity("2"),
-                                    new ConstantEntity("3"),   
-                                    new VariableEntity("w"),
-                                    new VariableEntity("x"),
-                                    new VariableEntity("y"),
-                                    new VariableEntity("z"),
-                                    new ProcedureEntity("One"),   
-                                    new ProcedureEntity("Two"), 
-                                    new ReadStmtEntity("1"),   
-                                    new ReadStmtEntity("2"),
-                                    new ReadStmtEntity("3"),   
-                                    new ReadStmtEntity("4"),    
-                                    new ReadStmtEntity("5"),
-                                    new AssignStmtEntity("6"), 
-                                    new AssignStmtEntity("7"), 
-                                    new AssignStmtEntity("8"),
-                                    new AssignStmtEntity("9")};
+  std::vector<Entity *> entities = {new ConstantEntity("1"),   new ConstantEntity("2"),    new ConstantEntity("3"),
+                                    new VariableEntity("w"),   new VariableEntity("x"),    new VariableEntity("y"),
+                                    new VariableEntity("z"),   new ProcedureEntity("One"), new ProcedureEntity("Two"),
+                                    new ReadStmtEntity("1"),   new ReadStmtEntity("2"),    new ReadStmtEntity("3"),
+                                    new ReadStmtEntity("4"),   new ReadStmtEntity("5"),    new AssignStmtEntity("6"),
+                                    new AssignStmtEntity("7"), new AssignStmtEntity("8"),  new AssignStmtEntity("9")};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 18; i++) { 
-    expected.insert(entities[i]);
-  }
+  for (int i = 0; i < 18; i++) { expected.insert(entities[i]); }
 
   PKB *pkb = new PKB();
-  pkb->populate(entities); 
+  pkb->populate(entities);
   EntityPointerUnorderedSet actual_constant = pkb->getEntities(EntityType::kConstant);
   EntityPointerUnorderedSet actual_variable = pkb->getEntities(EntityType::kVariable);
   EntityPointerUnorderedSet actual_procedure = pkb->getEntities(EntityType::kProcedure);

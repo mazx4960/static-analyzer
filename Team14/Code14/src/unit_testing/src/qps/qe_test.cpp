@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+
 #include "qps/query_evaluator/query_evaluator.h"
 
 using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
@@ -8,10 +9,7 @@ using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunctio
 class TestStorage {
  public:
   inline static EntityPointerUnorderedSet procedure_entities_ = {
-      new ProcedureEntity("procedure1"),
-      new ProcedureEntity("procedure2"),
-      new ProcedureEntity("procedure3")
-  };
+      new ProcedureEntity("procedure1"), new ProcedureEntity("procedure2"), new ProcedureEntity("procedure3")};
 
   inline static EntityPointerUnorderedSet variable_entities_ = {
       new VariableEntity("x"),
@@ -32,9 +30,9 @@ class TestStorage {
   };
 
   inline static EntityPointerUnorderedSet stmt_call_entities_ = {
-      new CallStmtEntity("4"),
-      new CallStmtEntity("5"),
-      new CallStmtEntity("6"),
+      new CallStmtEntity("4", std::string()),
+      new CallStmtEntity("5", std::string()),
+      new CallStmtEntity("6", std::string()),
   };
 
   inline static EntityPointerUnorderedSet stmt_if_entities_ = {
@@ -65,9 +63,9 @@ class TestStorage {
       new AssignStmtEntity("1"),
       new AssignStmtEntity("2"),
       new AssignStmtEntity("3"),
-      new CallStmtEntity("4"),
-      new CallStmtEntity("5"),
-      new CallStmtEntity("6"),
+      new CallStmtEntity("4", std::string()),
+      new CallStmtEntity("5", std::string()),
+      new CallStmtEntity("6", std::string()),
       new IfStmtEntity("7"),
       new IfStmtEntity("8"),
       new IfStmtEntity("9"),
@@ -81,40 +79,35 @@ class TestStorage {
       new ReadStmtEntity("17"),
       new ReadStmtEntity("18"),
   };
-
 };
 
 class QueryEvaluatorMock : public QueryEvaluator {
  public:
-  QueryEvaluatorMock(IPKBQuerier *pkb, Query &query) : QueryEvaluator(pkb, query) {};
-  std::unordered_set<SynonymReference *,
-                     SynonymReferenceHashFunction,
-                     SynonymReferencePointerEquality> mockCopyDeclarations() {
+  QueryEvaluatorMock(IPKBQuerier *pkb, Query &query) : QueryEvaluator(pkb, query){};
+  std::unordered_set<SynonymReference *, SynonymReferenceHashFunction, SynonymReferencePointerEquality>
+  mockCopyDeclarations() {
     return this->copyDeclarations();
   };
-  std::unordered_set<SynonymReference *,
-                     SynonymReferenceHashFunction,
-                     SynonymReferencePointerEquality> mockFetchContext() {
+  std::unordered_set<SynonymReference *, SynonymReferenceHashFunction, SynonymReferencePointerEquality>
+  mockFetchContext() {
     return this->fetchContext();
   };
 };
 
 class MockPKB : public IPKBQuerier {
-  inline std::unordered_set<Entity *,
-                            EntityHashFunction,
-                            EntityPointerEquality> getEntities(EntityType entity_type)
-  override {
+  inline std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getEntities(
+      EntityType entity_type) override {
     switch (entity_type) {
-      case EntityType::kProcedure:return TestStorage::procedure_entities_;
-      case EntityType::kVariable:return TestStorage::variable_entities_;
-      case EntityType::kConstant:return TestStorage::constant_entities_;
-      case EntityType::kStatement:return TestStorage::all_stmt_entities_;
-      case EntityType::kAssignStmt:return TestStorage::stmt_assign_entities_;
-      case EntityType::kCallStmt :return TestStorage::stmt_call_entities_;
-      case EntityType::kIfStmt :return TestStorage::stmt_if_entities_;
-      case EntityType::kWhileStmt:return TestStorage::stmt_while_entities_;
-      case EntityType::kPrintStmt:return TestStorage::stmt_print_entities_;
-      case EntityType::kReadStmt :return TestStorage::stmt_read_entities_;
+      case EntityType::kProcedure: return TestStorage::procedure_entities_;
+      case EntityType::kVariable: return TestStorage::variable_entities_;
+      case EntityType::kConstant: return TestStorage::constant_entities_;
+      case EntityType::kStatement: return TestStorage::all_stmt_entities_;
+      case EntityType::kAssignStmt: return TestStorage::stmt_assign_entities_;
+      case EntityType::kCallStmt: return TestStorage::stmt_call_entities_;
+      case EntityType::kIfStmt: return TestStorage::stmt_if_entities_;
+      case EntityType::kWhileStmt: return TestStorage::stmt_while_entities_;
+      case EntityType::kPrintStmt: return TestStorage::stmt_print_entities_;
+      case EntityType::kReadStmt: return TestStorage::stmt_read_entities_;
       default: throw std::runtime_error("Invalid entity type!");
     };
   }
@@ -143,17 +136,13 @@ TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
   auto *const_dec = new ConstantDeclaration(new QuerySynonym("const_dec"));
   auto *proc_dec = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
 
-
   std::vector<SynonymReference *> declarations_vector = {
-      stmt_dec, read_dec, print_dec, call_dec, while_dec,
-      if_dec, assign_dec, var_dec, const_dec, proc_dec,
+      stmt_dec, read_dec, print_dec, call_dec, while_dec, if_dec, assign_dec, var_dec, const_dec, proc_dec,
   };
-  std::unordered_set<SynonymReference *,
-                     SynonymReferenceHashFunction,
-                     SynonymReferencePointerEquality> declarations_set = {
-      stmt_dec, read_dec, print_dec, call_dec, while_dec,
-      if_dec, assign_dec, var_dec, const_dec, proc_dec,
-  };
+  std::unordered_set<SynonymReference *, SynonymReferenceHashFunction, SynonymReferencePointerEquality>
+      declarations_set = {
+          stmt_dec, read_dec, print_dec, call_dec, while_dec, if_dec, assign_dec, var_dec, const_dec, proc_dec,
+      };
 
   auto *select_call = new SelectCall(new ElemReference(stmt_dec));
   Query query = Query(declarations_vector, select_call, {});
@@ -189,32 +178,26 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   auto *const_dec_2 = new ConstantDeclaration(new QuerySynonym("const_dec_2"));
   auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec_2"));
 
-
   std::vector<SynonymReference *> declarations_vector = {
-      stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
-      if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
+      stmt_dec_1, read_dec_1,   print_dec_1, call_dec_1,  while_dec_1,
+      if_dec_1,   assign_dec_1, var_dec_1,   const_dec_1, proc_dec_1,
 
-      stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
-      if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2
-  };
-  std::unordered_set<SynonymReference *,
-                     SynonymReferenceHashFunction,
-                     SynonymReferencePointerEquality> declarations_set = {
-      stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
-      if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
+      stmt_dec_2, read_dec_2,   print_dec_2, call_dec_2,  while_dec_2,
+      if_dec_2,   assign_dec_2, var_dec_2,   const_dec_2, proc_dec_2};
+  std::unordered_set<SynonymReference *, SynonymReferenceHashFunction, SynonymReferencePointerEquality>
+      declarations_set = {
+          stmt_dec_1, read_dec_1,   print_dec_1, call_dec_1,  while_dec_1,
+          if_dec_1,   assign_dec_1, var_dec_1,   const_dec_1, proc_dec_1,
 
-
-      stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
-      if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
-  };
+          stmt_dec_2, read_dec_2,   print_dec_2, call_dec_2,  while_dec_2,
+          if_dec_2,   assign_dec_2, var_dec_2,   const_dec_2, proc_dec_2,
+      };
 
   auto *select_call = new SelectCall(new ElemReference(stmt_dec_1));
   Query query = Query(declarations_vector, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
-  std::unordered_set<SynonymReference *,
-                     SynonymReferenceHashFunction,
-                     SynonymReferencePointerEquality>
+  std::unordered_set<SynonymReference *, SynonymReferenceHashFunction, SynonymReferencePointerEquality>
       returned_declaration_set = query_evaluator->mockCopyDeclarations();
 
   ASSERT_EQ(declarations_set, returned_declaration_set);
@@ -246,29 +229,26 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
   auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
 
   std::vector<SynonymReference *> declarations_vector = {
-      stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
-      if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
+      stmt_dec_1, read_dec_1,   print_dec_1, call_dec_1,  while_dec_1,
+      if_dec_1,   assign_dec_1, var_dec_1,   const_dec_1, proc_dec_1,
 
-      stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
-      if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
+      stmt_dec_2, read_dec_2,   print_dec_2, call_dec_2,  while_dec_2,
+      if_dec_2,   assign_dec_2, var_dec_2,   const_dec_2, proc_dec_2,
   };
-  std::unordered_set<SynonymReference *,
-                     SynonymReferenceHashFunction,
-                     SynonymReferencePointerEquality> declarations_set = {
-      stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1,
-      if_dec_1, assign_dec_1, var_dec_1, const_dec_1, proc_dec_1,
+  std::unordered_set<SynonymReference *, SynonymReferenceHashFunction, SynonymReferencePointerEquality>
+      declarations_set = {
+          stmt_dec_1, read_dec_1,   print_dec_1, call_dec_1,  while_dec_1,
+          if_dec_1,   assign_dec_1, var_dec_1,   const_dec_1, proc_dec_1,
 
-      stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2,
-      if_dec_2, assign_dec_2, var_dec_2, const_dec_2, proc_dec_2,
-  };
+          stmt_dec_2, read_dec_2,   print_dec_2, call_dec_2,  while_dec_2,
+          if_dec_2,   assign_dec_2, var_dec_2,   const_dec_2, proc_dec_2,
+      };
 
   auto *select_call = new SelectCall(new ElemReference(stmt_dec_1));
   Query query = Query(declarations_vector, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
-  std::unordered_set<SynonymReference *,
-                     SynonymReferenceHashFunction,
-                     SynonymReferencePointerEquality>
+  std::unordered_set<SynonymReference *, SynonymReferenceHashFunction, SynonymReferencePointerEquality>
       returned_declaration_set = query_evaluator->mockCopyDeclarations();
 
   ASSERT_EQ(declarations_set.size(), 10);
