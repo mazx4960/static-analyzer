@@ -24,6 +24,8 @@ TEST(QueryTest, FollowsRelationship) {
   auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kFollowsT, new AssignStmtEntity("4"), true);
   auto result_no_preceding_statement = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("1"), true);
   auto result_no_subsequent_statement = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("10"), false);
+  auto result_invalid_statement_inverse_false = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("99"), false);
+  auto result_invalid_statement_inverse_true = pkb.getByRelationship(RsType::kFollows, new AssignStmtEntity("99"), true);
 
   EntityPointerUnorderedSet expected_result_inverse_false = {new AssignStmtEntity("10")};
   EntityPointerUnorderedSet expected_result_inverse_true = {new AssignStmtEntity("8")};
@@ -31,14 +33,16 @@ TEST(QueryTest, FollowsRelationship) {
       new AssignStmtEntity("2"), new AssignStmtEntity("3"), new AssignStmtEntity("4")};
   EntityPointerUnorderedSet expected_result_traverse_inverse_true = {
       new AssignStmtEntity("1"), new AssignStmtEntity("2"), new AssignStmtEntity("3")};
-  EntityPointerUnorderedSet expected_empty = {};
+  EntityPointerUnorderedSet expected_result_empty = {};
 
   ASSERT_TRUE(PKBTestHelper::set_compare(result_inverse_false, expected_result_inverse_false));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_inverse_true, expected_result_inverse_true));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_traverse_inverse_false, expected_result_traverse_inverse_false));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_traverse_inverse_true, expected_result_traverse_inverse_true));
-  ASSERT_TRUE(PKBTestHelper::set_compare(result_no_preceding_statement, expected_empty));
-  ASSERT_TRUE(PKBTestHelper::set_compare(result_no_subsequent_statement, expected_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_no_preceding_statement, expected_result_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_no_subsequent_statement, expected_result_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_invalid_statement_inverse_false, expected_result_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_invalid_statement_inverse_true, expected_result_empty));
 }
 
 TEST(QueryTest, ParentRelationship) {
@@ -59,6 +63,8 @@ TEST(QueryTest, ParentRelationship) {
   auto result_traverse_inverse_true = pkb.getByRelationship(RsType::kParentT, new AssignStmtEntity("4"), true);
   auto result_no_parent = pkb.getByRelationship(RsType::kParentT, new ProcedureEntity("main"), true);
   auto result_no_child = pkb.getByRelationship(RsType::kParent, new AssignStmtEntity("10"), false);
+  auto result_invalid_statement_inverse_false = pkb.getByRelationship(RsType::kParent, new AssignStmtEntity("99"), false);
+  auto result_invalid_statement_inverse_true = pkb.getByRelationship(RsType::kParent, new AssignStmtEntity("99"), true);
 
   EntityPointerUnorderedSet expected_result_inverse_false = {new AssignStmtEntity("10")};
   EntityPointerUnorderedSet expected_result_inverse_true = {new ProcedureEntity("Megatron")};
@@ -74,6 +80,8 @@ TEST(QueryTest, ParentRelationship) {
   ASSERT_TRUE(PKBTestHelper::set_compare(result_traverse_inverse_true, expected_result_traverse_inverse_true));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_no_parent, expected_result_empty));
   ASSERT_TRUE(PKBTestHelper::set_compare(result_no_child, expected_result_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_invalid_statement_inverse_false, expected_result_empty));
+  ASSERT_TRUE(PKBTestHelper::set_compare(result_invalid_statement_inverse_true, expected_result_empty));
 }
 
 TEST(QueryTest, ModifiesRelationship) {
