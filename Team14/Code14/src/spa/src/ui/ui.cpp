@@ -91,6 +91,6 @@ void UI::DisplayResults(const Result *result) {
   for (const auto &curr : results_string_list) {
     result_string += curr + ", ";
   }
-  spdlog::info("Results for '{}'[{}]: {}", result->get_synonym()->toString(), results_string_list.size(), result_string);
+  spdlog::info("Results for '{}'[{}]: {}", result->get_synonyms(), results_string_list.size(), result_string);
   spdlog::info("=====================END QUERY RESULTS=====================");
 }

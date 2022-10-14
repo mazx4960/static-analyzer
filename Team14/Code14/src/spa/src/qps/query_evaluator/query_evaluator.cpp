@@ -43,15 +43,14 @@ Result *QueryEvaluator::evaluate() {
   // Query declarations for whose subquery_results are to be returned.
   std::vector<ElemReference *> called_declarations = this->query_.getQueryCall()->getReferences();
 
-  // TODO(gabriel): Return value for the vector of references
-  // TODO(gabriel): Update Result class to accept more than one selected declaration
-  QuerySynonym *synonym = called_declarations.front()->getSynonymReference()->getSynonym();
-  SynonymReference *called_declaration = called_declarations.front()->getSynonymReference();
-  // Placeholders
+  std::vector<QuerySynonym* > called_synonyms{};
+  for (auto *elem_ref : called_declarations) {
+    called_synonyms.push_back(elem_ref->getSynonymReference()->getSynonym());
+  }
 
   std::vector<SubqueryResult> subquery_results = this->evaluateSubqueries();
-  auto *result_projector = new ResultProjector(called_declaration, subquery_results, pkb_);
-  EntityPointerUnorderedSet result_context = result_projector->project();
+  auto *result_projector = new ResultProjector(called_declarations, subquery_results, pkb_);
+  SubqueryResult result_context = result_projector->project();
 
-  return new Result(synonym, result_context);
+  return new Result(called_synonyms, result_context);
 }

@@ -16,6 +16,7 @@ class SubqueryResult {
   std::vector<QuerySynonym *> synonyms_;
   std::vector<ResultRow > table_rows_;
 
+ private:
   SubqueryResult(std::vector<QuerySynonym *>, std::vector<ResultRow>);
  public:
   SubqueryResult(const EntityPointerUnorderedMap &, QueryReference *, QueryReference *);
@@ -28,4 +29,5 @@ class SubqueryResult {
   SubqueryResult AddColumn(QuerySynonym *, EntityPointerUnorderedSet);
   static SubqueryResult Empty(std::vector<QuerySynonym *> synonyms);
   static SubqueryResult FullNoSynonym();
+  [[nodiscard]] const std::vector<ResultRow> &GetRows() const;
 };

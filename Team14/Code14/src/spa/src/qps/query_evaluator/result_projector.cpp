@@ -33,8 +33,8 @@ SubqueryResult ResultProjector::project() {
     return SubqueryResult::Empty(called_synonyms);
   }
 
-  SubqueryResult intermediate_result = subquery_results_[0];
-  for (auto result = subquery_results_.begin() + 1; result != subquery_results_.end(); result++) {
+  SubqueryResult intermediate_result = SubqueryResult::FullNoSynonym();
+  for (auto result = subquery_results_.begin(); result != subquery_results_.end(); result++) {
     intermediate_result = intermediate_result.Join(*result);
   }
   for (auto *decl : called_declarations_) {

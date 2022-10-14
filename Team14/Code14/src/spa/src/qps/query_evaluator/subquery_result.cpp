@@ -202,3 +202,6 @@ SubqueryResult SubqueryResult::AddColumn(QuerySynonym *synonym, EntityPointerUno
   new_synonyms.push_back(synonym);
   return SubqueryResult(new_synonyms, new_rows);
 }
+const std::vector<ResultRow> &SubqueryResult::GetRows() const {
+  return table_rows_;
+}
