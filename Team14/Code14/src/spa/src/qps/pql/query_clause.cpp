@@ -3,7 +3,7 @@
 #include "query_clause.h"
 #include "spdlog/spdlog.h"
 
-ClauseType QueryClause::getClauseType() {
+ClauseType QueryClause::getClauseType() const {
   return this->clause_type_;
 }
 RsType SuchThatClause::getSuchThatType() const {
@@ -27,6 +27,14 @@ std::string SuchThatClause::toString() const {
                  + this->getSecond()->toString() + ")");
   return str;
 }
+bool SuchThatClause::operator==(const QueryClause &other) const {
+
+  return other.getClauseType() == this->getClauseType()
+      && (static_cast<const SuchThatClause &>(other).getSuchThatType()) == (this->getSuchThatType())
+      && (*static_cast<const SuchThatClause &>(other).getFirst()) == (*this->getFirst())
+      && (*static_cast<const SuchThatClause &>(other).getSecond()) == (*this->getSecond());
+}
+
 bool ParentClause::isSyntacticallyCorrect() const {
   return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
@@ -501,4 +509,13 @@ std::string PatternClause::toString() const {
   str.append("pattern " + this->synonym_declaration_->toString() + "(" + this->getEntRef()->toString() + ", "
                  + this->expression_->toString() + ")");
   return str;
+}
+bool PatternClause::operator==(const QueryClause &other) const {
+  if (other.getClauseType() != this->getClauseType()) {
+    return false;
+  }
+  auto other_clause = static_cast<const PatternClause &>(other);
+  return (*other_clause.getSynonymDeclaration()) == (*this->getSynonymDeclaration())
+      && (*other_clause.getEntRef()) == (*this->getEntRef())
+      && (*other_clause.getExpression()) == (*this->getExpression());
 }

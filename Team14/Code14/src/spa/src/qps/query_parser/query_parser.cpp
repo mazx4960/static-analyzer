@@ -4,7 +4,9 @@
 
 #include "commons/parser/parser.h"
 
-QueryParser::QueryParser(std::vector<Token *> tokens) { this->tokens_ = std::move(tokens); }
+QueryParser::QueryParser(std::vector<Token *> tokens) {
+  this->tokens_ = std::move(tokens);
+}
 
 Query *QueryParser::parse() {
   Declarations query_declarations = parseDeclarations();
@@ -23,7 +25,9 @@ Token *QueryParser::nextToken() {
   return tokens_[this->token_index_++];
 }
 
-Token *QueryParser::peekToken() { return tokens_[this->token_index_]; }
+Token *QueryParser::peekToken() {
+  return tokens_[this->token_index_];
+}
 
 bool QueryParser::outOfTokens() {
   return this->token_index_ == this->tokens_.size() || *peekToken() == EndOfFileToken();
@@ -84,7 +88,9 @@ QueryReference *QueryParser::parseReference() {
   }
 }
 
-SynonymReference *QueryParser::parseSynonymReference() { return new SynonymReference(parseSynonym()); }
+SynonymReference *QueryParser::parseSynonymReference() {
+  return new SynonymReference(parseSynonym());
+}
 
 IntegerReference *QueryParser::parseIntegerReference() {
   expect(peekToken(), {TokenType::kLiteral});
@@ -121,18 +127,32 @@ QueryCall *QueryParser::parseQueryCall() {
 
   return new SelectCall(synonym_reference);
 }
+
 Clauses QueryParser::parseClauses() {
-  Clauses clauses;
-  while (*peekToken() != EndOfFileToken()) { clauses.push_back(parseClause()); }
-  this->clauses_ = clauses;
+  clauses_.clear();
+  while (!outOfTokens()
+      && QueryKeywords::isValidClauseKeyword(peekToken()->value)) { clauses_.push_back(parseClause()); }
   return clauses_;
 }
 
 QueryClause *QueryParser::parseClause() {
   Token *clause = nextToken();
+  if (*clause == KeywordToken("and")) {
+    switch (getPreviousClause()->getClauseType()) {
+      case ClauseType::kSuchThat: return parseSuchThat();
+      case ClauseType::kPattern: return parsePattern();
+    }
+  }
   if (*clause == KeywordToken("such") && *nextToken() == KeywordToken("that")) { return parseSuchThat(); }
   if (*clause == KeywordToken("pattern")) { return parsePattern(); }
   throw ParseSyntaxError("Unknown clause: " + clause->value);
+}
+
+QueryClause *QueryParser::getPreviousClause() {
+  if (clauses_.empty()) {
+    throw ParseSyntaxError("No previous clause");
+  }
+  return clauses_.back();
 }
 
 SuchThatClause *QueryParser::parseSuchThat() {
@@ -151,7 +171,6 @@ SuchThatClause *QueryParser::parseSuchThat() {
   QueryReference *first = parseReference();
   expect(nextToken(), {TokenType::kComma});
   QueryReference *second = parseReference();
-  ;
   expect(nextToken(), {TokenType::kRoundCloseBracket});
   SuchThatClause *clause = parseSuchThat(rs_type, first, second);
   if (!clause->isSyntacticallyCorrect()) { throw ParseSyntaxError("Incorrect parameter syntax"); }
@@ -203,6 +222,7 @@ ExpressionSpec *QueryParser::parseExpression() {
     }
     return new ExactExpression(expression);
   }
+  if (!is_wild) { throw ParseSyntaxError("Invalid expression type: " + expr->value); }
   return new WildExpression();
 }
 

@@ -23,10 +23,11 @@ class QueryClause : public ICheckSyntax, public ICheckSemantics {
   };
 
  public:
-  ClauseType getClauseType();
+  [[nodiscard]] ClauseType getClauseType() const ;
   [[nodiscard]] bool isSyntacticallyCorrect() const override = 0;
   [[nodiscard]] bool IsSemanticallyCorrect() const override = 0;
   [[nodiscard]] virtual std::string toString() const = 0;
+  virtual bool operator==(const QueryClause &other) const = 0;
 };
 
 class SuchThatClause : public QueryClause {
@@ -51,6 +52,7 @@ class SuchThatClause : public QueryClause {
   [[nodiscard]] bool isSyntacticallyCorrect() const override = 0;
   [[nodiscard]] bool IsSemanticallyCorrect() const override = 0;
   [[nodiscard]] std::string toString() const override;
+  bool operator==(const QueryClause &other) const override;
 };
 
 class ParentClause : public SuchThatClause {
@@ -181,4 +183,5 @@ class PatternClause : public QueryClause {
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
   [[nodiscard]] std::string toString() const override;
+  bool operator==(const QueryClause &other) const override;
 };
