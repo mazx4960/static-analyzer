@@ -16,8 +16,7 @@ TEST(PopulatePatternTest, SingleStatementTest) {
   const auto *expr1 = "x + 1";
   const auto *expr2 = "y + 1";
   const auto *expr3 = "x + 1 + y + 1";  
-  EntityStringPairUnorderedSet expected;
-  auto *test_helper = new PKBTestHelper();
+  EntityStringPairUnorderedSet expected; 
   std::vector<Pattern *> patterns({
       new Pattern(stmt, v, expr1),
       new Pattern(stmt, v, expr2),

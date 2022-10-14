@@ -35,7 +35,7 @@ TEST(PopulateEntityTest, VariableTest) {
 } 
 
 TEST(PopulateEntityTest, ConstantTest) {
-  std::vector<std::string> entity_names({"a", "b", "c", "d", "e", "f"});
+  std::vector<std::string> entity_names({"1", "2", "3", "4", "5", "6"});
   std::vector<Entity *> entities; 
   EntityPointerUnorderedSet expected;
   int length = entity_names.size();
@@ -261,7 +261,7 @@ TEST(PopulateEntityTest, DuplicateStatementEntityTest) {
 TEST(PopulateEntityTest, MultipleEntitiesTest) {
   std::vector<Entity *> entities;  
   std::vector<std::string> variable_entity_names({"a", "b", "c", "d"});
-  std::vector<std::string> constant_entity_names({"v", "w", "x", "y", "z"});
+  std::vector<std::string> constant_entity_names({"30", "31", "32", "33", "34"});
   std::vector<std::string> procedure_entity_names({"one", "two", "three"});
   std::vector<std::string> assign_stmt_no({"1", "2", "3", "4", "5"});
   std::vector<std::string> read_stmt_no({"7", "8", "9", "10"});
@@ -377,7 +377,7 @@ TEST(PopulateEntityTest, MixedEntityStressTest) {
 TEST(PopulateEntityTest, MultipleDuplicateEntitiesTest) {
   std::vector<Entity *> entities;  
   std::vector<std::string> variable_entity_names({"a", "b", "c", "d"});
-  std::vector<std::string> constant_entity_names({"v", "w", "x", "y", "z"});
+  std::vector<std::string> constant_entity_names({"30", "31", "32", "33", "34"});
   std::vector<std::string> procedure_entity_names({"one", "two", "three"});
   std::vector<std::string> assign_stmt_no({"1", "2", "3", "4", "5"});
   std::vector<std::string> read_stmt_no({"7", "8", "9", "10"});
