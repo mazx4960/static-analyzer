@@ -20,23 +20,22 @@ class RelationshipManager {
   Cache<EntityRsInv, EntityPointerUnorderedSet, TripletHash> *cache_;
   std::unordered_map<RsType, RelationshipTable *> relationship_table_map_;
 
-  static EntityRsInv GetCacheQuery(Entity *entity, RsType rs_type, bool is_inverse);
-  void CreateTable(RsType);
-
-  EntityPointerUnorderedSet GetInference(RsType, Entity *, bool);
-  EntityPointerUnorderedSet GetInferenceGivenProcedure(RelationshipTable *, Entity *);
-  EntityPointerUnorderedSet GetInferenceFromChildren(RelationshipTable *, Entity *);
-  EntityPointerUnorderedSet GetInferenceGivenVariable(RelationshipTable *, Entity *);
+  bool IsVariableModified(EntityPointerUnorderedSet *, Entity *);
+  bool IsVariableUsed(EntityPointerUnorderedSet *, Entity *);
+  Entity *GetProcedureEntity(Entity *, bool);
   EntityPointerUnorderedSet GetAffects(Entity *, bool);
-  EntityPointerUnorderedSet GetCalls(Entity *, bool);
-  EntityPointerUnorderedSet GetAllAffects(Entity *, bool);
-  EntityPointerUnorderedSet GetAllCalls(Entity *, bool);
   EntityPointerUnorderedSet GetAffectsHelper(std::stack<std::pair<Entity *, EntityPointerUnorderedSet>> *);
   EntityPointerUnorderedSet GetAffectsInverseHelper(std::stack<std::pair<Entity *, EntityPointerUnorderedSet>> *);
-  Entity *GetProcedureEntity(Entity *, bool);
-  bool IsVariableUsed(EntityPointerUnorderedSet *, Entity *);
-  bool IsVariableModified(EntityPointerUnorderedSet *, Entity *);
+  EntityPointerUnorderedSet GetCalls(Entity *, bool);
+  EntityPointerUnorderedSet GetInference(RsType, Entity *, bool);
+  EntityPointerUnorderedSet GetInferenceFromChildren(RelationshipTable *, Entity *);
+  EntityPointerUnorderedSet GetInferenceGivenProcedure(RelationshipTable *, Entity *);
+  EntityPointerUnorderedSet GetInferenceGivenVariable(RelationshipTable *, Entity *);
+  EntityPointerUnorderedSet GetSubMatches(RsType, Entity *, bool);
+  void CreateTable(RsType);
+
   static EntityPointerUnorderedSet Empty();
+  static EntityRsInv GetCacheQuery(Entity *entity, RsType rs_type, bool is_inverse);
 
  public:
   RelationshipManager();
