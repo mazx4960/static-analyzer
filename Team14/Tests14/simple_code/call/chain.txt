@@ -15,5 +15,5 @@ procedure d {
 }
 
 procedure e {
-    call f;
+    print x;
 }
