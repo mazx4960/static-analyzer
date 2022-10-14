@@ -4,7 +4,9 @@
 
 #include "commons/parser/parser.h"
 
-QueryParser::QueryParser(std::vector<Token *> tokens) { this->tokens_ = std::move(tokens); }
+QueryParser::QueryParser(std::vector<Token *> tokens) {
+  this->tokens_ = std::move(tokens);
+}
 
 Query *QueryParser::parse() {
   SynonymReferences query_declarations = parseDeclarations();
@@ -23,29 +25,16 @@ Token *QueryParser::nextToken() {
   return tokens_[this->token_index_++];
 }
 
-Token *QueryParser::peekToken() { return tokens_[this->token_index_]; }
+Token *QueryParser::peekToken() {
+  return tokens_[this->token_index_];
+}
 
 bool QueryParser::outOfTokens() {
   return this->token_index_ == this->tokens_.size() || *peekToken() == EndOfFileToken();
 }
 
-SynonymReferences QueryParser::parseQueryCallReferences() {
-  SynonymReferences references;
-  if (*peekToken() == AngleOpenBracketToken()) {
-    expect(nextToken(), {TokenType::kAngleOpenBracket});
-    references.push_back(parseResultReference());
-    while (*peekToken() != AngleCloseBracketToken()) {
-      expect(nextToken(), {TokenType::kComma});
-      references.push_back(parseResultReference());
-    }
-    expect(nextToken(), {TokenType::kAngleCloseBracket});
-  }
-  return new SynonymReference(parseSynonym());
-}
-
-
-
 SynonymReferences QueryParser::parseDeclarations() {
+  declarations_.clear();
   while (!outOfTokens() && QueryKeywords::isValidDeclarationKeyword(peekToken()->value)) {
     parseDeclarationStatement();
   }
@@ -89,7 +78,7 @@ SynonymReference *QueryParser::parseDeclaration(EntityType type) {
   }
 }
 
-QueryReference *QueryParser::parseReference() {
+QueryReference *QueryParser::parseClauseReference() {
   Token *reference = peekToken();
   switch (reference->type) {
     case TokenType::kQuote: return parseQuotedReference();
@@ -99,7 +88,41 @@ QueryReference *QueryParser::parseReference() {
     default: throw ParseSyntaxError("Unknown Reference: " + reference->value);
   }
 }
-SynonymReference *QueryParser::parseSynonymReference() { return new SynonymReference(parseSynonym()); }
+
+ElemReference *QueryParser::parseElemReference() {
+  auto *synonym_reference = parseSynonymReference();
+  if (*peekToken() == DotToken()) {
+    nextToken();
+    return new ElemReference(synonym_reference, parseAttribute());
+  }
+  return new ElemReference(synonym_reference);
+}
+
+QueryAttribute *QueryParser::parseAttribute() {
+  expect(peekToken(), {TokenType::kSymbol});
+  std::string attr_name = nextToken()->value;
+  if (*peekToken() == HashtagToken()) {
+    attr_name.append(nextToken()->value);
+  }
+  try {
+    return parseAttribute(QueryKeywords::attributeKeywordToType(attr_name));
+  } catch (std::out_of_range &oor) { throw ParseSyntaxError("Unknown attribute: " + attr_name); }
+}
+
+QueryAttribute *QueryParser::parseAttribute(AttributeType type) {
+  switch (type) {
+    case AttributeType::kProcName: return new ProcAttribute();
+    case AttributeType::kVarName: return new VarAttribute();
+    case AttributeType::kValue: return new ValueAttribute();
+    case AttributeType::kStmtNo: return new StmtAttribute();
+    default:
+      throw ParseSyntaxError("Unknown attribute type");
+  }
+}
+
+SynonymReference *QueryParser::parseSynonymReference() {
+  return new SynonymReference(parseSynonym());
+}
 
 IntegerReference *QueryParser::parseIntegerReference() {
   expect(peekToken(), {TokenType::kLiteral});
@@ -131,23 +154,58 @@ QuerySynonym *QueryParser::parseSynonym() {
 
 QueryCall *QueryParser::parseQueryCall() {
   Token *call = nextToken();
-  if (!QueryKeywords::isValidCallKeyword(call->value)) { throw ParseSyntaxError("Unknown query call: " + call->value); }
-  SynonymReference *synonym_reference = parseSynonymReference();
-
-  return new SelectCall(synonym_reference);
+  if (!QueryKeywords::isValidCallKeyword(call->value)) {
+    throw ParseSyntaxError("Unknown query call: " + call->value);
+  }
+  std::vector<ElemReference *> elem_references = parseElemReferences();
+  return new SelectCall(elem_references);
 }
+
+std::vector<ElemReference *> QueryParser::parseElemReferences() {
+  std::vector<ElemReference *> references;
+  if (*peekToken() == AngleOpenBracketToken()) {
+    expect(nextToken(), {TokenType::kAngleOpenBracket});
+    references.push_back(parseElemReference());
+    while (*peekToken() != AngleCloseBracketToken()) {
+      expect(nextToken(), {TokenType::kComma});
+      references.push_back(parseElemReference());
+    }
+    expect(nextToken(), {TokenType::kAngleCloseBracket});
+  } else {
+    references.push_back(parseElemReference());
+  }
+  return references;
+}
+
 Clauses QueryParser::parseClauses() {
-  Clauses clauses;
-  while (*peekToken() != EndOfFileToken()) { clauses.push_back(parseClause()); }
-  this->clauses_ = clauses;
+  clauses_.clear();
+  while (!outOfTokens()
+      && QueryKeywords::isValidClauseKeyword(peekToken()->value)) { clauses_.push_back(parseClause()); }
   return clauses_;
 }
 
 QueryClause *QueryParser::parseClause() {
   Token *clause = nextToken();
-  if (*clause == KeywordToken("such") && *nextToken() == KeywordToken("that")) { return parseSuchThat(); }
-  if (*clause == KeywordToken("pattern")) { return parsePattern(); }
+  if (*clause == KeywordToken("and")) {
+    switch (getPreviousClause()->getClauseType()) {
+      case ClauseType::kSuchThat: return parseSuchThat();
+      case ClauseType::kPattern: return parsePattern();
+    }
+  }
+  if (*clause == KeywordToken("such") && *nextToken() == KeywordToken("that")) {
+    return parseSuchThat();
+  }
+  if (*clause == KeywordToken("pattern")) {
+    return parsePattern();
+  }
   throw ParseSyntaxError("Unknown clause: " + clause->value);
+}
+
+QueryClause *QueryParser::getPreviousClause() {
+  if (clauses_.empty()) {
+    throw ParseSyntaxError("No previous clause");
+  }
+  return clauses_.back();
 }
 
 SuchThatClause *QueryParser::parseSuchThat() {
@@ -163,10 +221,9 @@ SuchThatClause *QueryParser::parseSuchThat() {
     rs_type = QueryKeywords::relationshipKeywordToType(rs_keyword);
   } catch (std::out_of_range &oor) { throw ParseSyntaxError("Unknown such-that relationship: " + relationship->value); }
   expect(nextToken(), {TokenType::kRoundOpenBracket});
-  QueryReference *first = parseReference();
+  QueryReference *first = parseClauseReference();
   expect(nextToken(), {TokenType::kComma});
-  QueryReference *second = parseReference();
-  ;
+  QueryReference *second = parseClauseReference();
   expect(nextToken(), {TokenType::kRoundCloseBracket});
   SuchThatClause *clause = parseSuchThat(rs_type, first, second);
   if (!clause->isSyntacticallyCorrect()) { throw ParseSyntaxError("Incorrect parameter syntax"); }
@@ -195,7 +252,7 @@ PatternClause *QueryParser::parsePattern() {
   expect(peekToken(), {TokenType::kSymbol});
   SynonymReference *syn_assign = parseSynonymReference();
   expect(nextToken(), {TokenType::kRoundOpenBracket});
-  QueryReference *ent_ref = parseReference();
+  QueryReference *ent_ref = parseClauseReference();
   expect(nextToken(), {TokenType::kComma});
   ExpressionSpec *expression_spec = parseExpression();
   expect(nextToken(), {TokenType::kRoundCloseBracket});
@@ -218,6 +275,7 @@ ExpressionSpec *QueryParser::parseExpression() {
     }
     return new ExactExpression(expression);
   }
+  if (!is_wild) { throw ParseSyntaxError("Invalid expression type: " + expr->value); }
   return new WildExpression();
 }
 

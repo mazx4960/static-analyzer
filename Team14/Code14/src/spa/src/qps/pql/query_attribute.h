@@ -1,11 +1,16 @@
 #include <string>
 #include <utility>
-
+enum class AttributeType {
+  kProcName,
+  kVarName,
+  kValue,
+  kStmtNo
+};
 class QueryAttribute {
  private:
-  std::string attribute_name_;
+  AttributeType attribute_type_;
  protected:
-  explicit QueryAttribute(std::string attribute_name) : attribute_name_(std::move(attribute_name)){}
+  explicit QueryAttribute(AttributeType attribute_type) : attribute_type_(attribute_type){}
  public:
   bool operator==(const QueryAttribute &other) const;
   [[nodiscard]] std::string toString() const;
@@ -14,20 +19,20 @@ class QueryAttribute {
 
 class ProcAttribute: public QueryAttribute{
  public:
-  explicit ProcAttribute() : QueryAttribute("procName"){}
+  explicit ProcAttribute() : QueryAttribute(AttributeType::kProcName){}
 };
 
 class VarAttribute: public QueryAttribute{
  public:
-  explicit VarAttribute() : QueryAttribute("varName"){}
+  explicit VarAttribute() : QueryAttribute(AttributeType::kVarName){}
 };
 
 class ValueAttribute: public QueryAttribute{
  public:
-  explicit ValueAttribute() : QueryAttribute("value"){}
+  explicit ValueAttribute() : QueryAttribute(AttributeType::kValue){}
 };
 
 class StmtAttribute: public QueryAttribute{
  public:
-  explicit StmtAttribute() : QueryAttribute("stmt#"){}
+  explicit StmtAttribute() : QueryAttribute(AttributeType::kStmtNo){}
 };

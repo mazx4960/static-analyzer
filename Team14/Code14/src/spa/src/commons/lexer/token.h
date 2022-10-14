@@ -12,6 +12,7 @@ enum class TokenType {
   kQuote,
   kComma,
   kSemicolon,
+  kDot,
   kRoundOpenBracket,
   kRoundCloseBracket,
   kCurlyOpenBracket,
@@ -19,6 +20,7 @@ enum class TokenType {
   kAngleOpenBracket,
   kAngleCloseBracket,
   kWildCard,
+  kHashtag,
   kEndOfFile
 };
 
@@ -77,6 +79,12 @@ class SemicolonToken : public Token {
   }
 };
 
+class DotToken : public Token {
+ public:
+  explicit DotToken() : Token(TokenType::kDot, ".") {
+  }
+};
+
 class RoundOpenBracketToken : public Token {
  public:
   explicit RoundOpenBracketToken() : Token(TokenType::kRoundOpenBracket, "(") {
@@ -97,28 +105,31 @@ class CurlyOpenBracketToken : public Token {
 
 class CurlyCloseBracketToken : public Token {
  public:
-  explicit CurlyCloseBracketToken()
-      : Token(TokenType::kCurlyCloseBracket, "}") {
+  explicit CurlyCloseBracketToken() : Token(TokenType::kCurlyCloseBracket, "}") {
   }
 };
 
 class AngleOpenBracketToken : public Token {
  public:
-  explicit AngleOpenBracketToken() : Token(TokenType::kCurlyOpenBracket, "<") {
+  explicit AngleOpenBracketToken() : Token(TokenType::kAngleOpenBracket, "<") {
   }
 };
 
 class AngleCloseBracketToken : public Token {
  public:
-  explicit AngleCloseBracketToken()
-      : Token(TokenType::kCurlyCloseBracket, ">") {
+  explicit AngleCloseBracketToken() : Token(TokenType::kAngleCloseBracket, ">") {
   }
 };
 
 class WildCardToken : public Token {
  public:
-  explicit WildCardToken()
-      : Token(TokenType::kWildCard, "_") {
+  explicit WildCardToken() : Token(TokenType::kWildCard, "_") {
+  }
+};
+
+class HashtagToken : public Token {
+ public:
+  explicit HashtagToken() : Token(TokenType::kHashtag, "#") {
   }
 };
 

@@ -57,6 +57,14 @@ std::string Token::ToString() const {
       type_string = "CurlyCloseBracket";
       break;
     }
+    case TokenType::kAngleOpenBracket: {
+      type_string = "AngleOpenBracket";
+      break;
+    }
+    case TokenType::kAngleCloseBracket: {
+      type_string = "AngleCloseBracket";
+      break;
+    }
     case TokenType::kEndOfFile: {
       type_string = "EndOfFile";
       break;

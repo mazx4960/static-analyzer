@@ -19,10 +19,10 @@ TEST(QueryParserTest, SelectCallParseTest) {
   std::vector<Token *> tokens = {
       new KeywordToken("Select"), new SymbolToken("v")
   };
-  auto *expected = new SelectCall(new SynonymReference(new QuerySynonym("v")));
+  auto *expected = new SelectCall(new ElemReference(new SynonymReference(new QuerySynonym("v"))));
   QueryParser parser = QueryParser(tokens);
   auto *select = parser.parseQueryCall();
-  ASSERT_EQ(*select->getReference(), *expected->getReference());
+  ASSERT_EQ(*select->getReferences().front(), *expected->getReferences().front());
 }
 
 TEST(QueryParserTest, AssignDeclarationParseTest) {
@@ -322,7 +322,7 @@ TEST(QueryParserTest, IntegerStmtReferenceParseTest) {
   };
   auto *expected = new IntegerReference("1");
   QueryParser parser = QueryParser(tokens);
-  auto *reference = parser.parseReference();
+  auto *reference = parser.parseClauseReference();
   ASSERT_EQ(*reference, *expected);
 }
 
@@ -332,7 +332,7 @@ TEST(QueryParserTest, IdentEntReferenceParseTest) {
   };
   auto *expected = new IdentReference("ident");
   QueryParser parser = QueryParser(tokens);
-  auto *reference = parser.parseReference();
+  auto *reference = parser.parseClauseReference();
   ASSERT_EQ(*reference, *expected);
 }
 
@@ -342,7 +342,7 @@ TEST(QueryParserTest, SynonymReferenceParseTest) {
   };
   auto *expected = new SynonymReference(new QuerySynonym("s"));
   QueryParser parser = QueryParser(tokens);
-  auto *reference = parser.parseReference();
+  auto *reference = parser.parseClauseReference();
   ASSERT_EQ(*reference, *expected);
 }
 
@@ -352,6 +352,197 @@ TEST(QueryParserTest, WildcardReferenceParseTest) {
   };
   auto *expected = new WildcardReference();
   QueryParser parser = QueryParser(tokens);
-  auto *reference = parser.parseReference();
+  auto *reference = parser.parseClauseReference();
   ASSERT_EQ(*reference, *expected);
+}
+
+/*
+ *  "x + 6 * y"
+*/
+TEST(QueryParserTest, ExactExpressionParseTest) {
+  std::vector<Token *> tokens = {
+      new QuoteToken(),
+      new SymbolToken("x"), new OperatorToken("+"), new LiteralToken("6"), new OperatorToken("*"), new SymbolToken("y"),
+      new QuoteToken(), new EndOfFileToken()
+  };
+  auto *expected = new ExactExpression("((x)+((6)*(y)))");
+  QueryParser parser = QueryParser(tokens);
+  auto *expr = parser.parseExpression();
+  ASSERT_EQ(*expr, *expected);
+}
+
+/*
+ *  _"x + 6 * y"_
+*/
+TEST(QueryParserTest, WildExpressionParseTest) {
+  std::vector<Token *> tokens = {
+      new WildCardToken(), new QuoteToken(),
+      new SymbolToken("x"), new OperatorToken("+"), new LiteralToken("6"), new OperatorToken("*"), new SymbolToken("y"),
+      new QuoteToken(), new WildCardToken(), new EndOfFileToken()
+  };
+  auto *expected = new WildExpression("((x)+((6)*(y)))");
+  QueryParser parser = QueryParser(tokens);
+  auto *expr = parser.parseExpression();
+  ASSERT_EQ(*expr, *expected);
+}
+
+/*
+ *  such that Modifies(p, "x")
+*/
+TEST(QueryParserTest, SingleSuchThatClauseParseTest) {
+  std::vector<Token *> tokens = {
+      new SymbolToken("such"), new SymbolToken("that"),
+      new KeywordToken("Modifies"), new RoundOpenBracketToken(),
+      new SymbolToken("p"), new CommaToken(), new QuoteToken(),new SymbolToken("x"), new QuoteToken(),
+      new RoundCloseBracketToken(), new EndOfFileToken()
+  };
+  auto *synonym_reference_1 = new SynonymReference(new QuerySynonym("p"));
+  auto *ident_reference_1 = new IdentReference("x");
+  auto *expected = new ModifiesClause(synonym_reference_1, ident_reference_1);
+  QueryParser parser = QueryParser(tokens);
+  auto clauses = parser.parseClauses();
+  ASSERT_EQ(*clauses.front(), *expected);
+}
+
+/*
+ *  pattern a1(_, "x")
+*/
+TEST(QueryParserTest, SingleExactPatternClauseParseTest) {
+  std::vector<Token *> tokens = {
+      new KeywordToken("pattern"), new SymbolToken("a1"), new RoundOpenBracketToken(),
+      new WildCardToken(), new CommaToken(), new QuoteToken(),new SymbolToken("x"), new QuoteToken(),
+      new RoundCloseBracketToken(), new EndOfFileToken()
+  };
+  auto *synonym_reference_1 = new SynonymReference(new QuerySynonym("a1"));
+  auto *wildcard_reference = new WildcardReference();
+  auto *expected = new PatternClause(synonym_reference_1, wildcard_reference, new ExactExpression("(x)"));
+  QueryParser parser = QueryParser(tokens);
+  auto clauses = parser.parseClauses();
+  ASSERT_EQ(*clauses.front(), *expected);
+}
+
+/*
+ *  pattern a1(_, _"x"_)
+*/
+TEST(QueryParserTest, SingleWildPatternClauseParseTest) {
+  std::vector<Token *> tokens = {
+      new KeywordToken("pattern"), new SymbolToken("a1"), new RoundOpenBracketToken(),
+      new WildCardToken(), new CommaToken(), new WildCardToken(), new QuoteToken(), new SymbolToken("x"),
+      new QuoteToken(), new WildCardToken(),
+      new RoundCloseBracketToken(), new EndOfFileToken()
+  };
+  auto *synonym_reference_1 = new SynonymReference(new QuerySynonym("a1"));
+  auto *wildcard_reference = new WildcardReference();
+  auto *expected = new PatternClause(synonym_reference_1, wildcard_reference, new WildExpression("(x)"));
+  QueryParser parser = QueryParser(tokens);
+  auto clauses = parser.parseClauses();
+  ASSERT_EQ(*clauses.front(), *expected);
+}
+
+/*
+ *  such that Modifies(p, "x") such that Parent(7, 2) such that Parent*(2, 7)
+*/
+TEST(QueryParserTest, MultipleSuchThatClauseParseTest) {
+  std::vector<Token *> tokens = {
+      new SymbolToken("such"), new SymbolToken("that"),
+      new KeywordToken("Modifies"), new RoundOpenBracketToken(),
+      new SymbolToken("p"), new CommaToken(), new QuoteToken(),new SymbolToken("x"), new QuoteToken(),
+      new RoundCloseBracketToken(),
+      new SymbolToken("such"), new SymbolToken("that"),
+      new KeywordToken("Parent"), new RoundOpenBracketToken(),
+      new LiteralToken("7"), new CommaToken(), new LiteralToken("2"),
+      new RoundCloseBracketToken(),
+      new SymbolToken("such"), new SymbolToken("that"),
+      new KeywordToken("Parent"), new OperatorToken("*"), new RoundOpenBracketToken(),
+      new LiteralToken("2"), new CommaToken(), new LiteralToken("7"),
+      new RoundCloseBracketToken(), new EndOfFileToken()
+  };
+  auto *synonym_reference_1 = new SynonymReference(new QuerySynonym("p"));
+  auto *ident_reference_1 = new IdentReference("x");
+  auto *int_reference_1 = new IntegerReference("7");
+  auto *int_reference_2 = new IntegerReference("2");
+  Clauses expected = {new ModifiesClause(synonym_reference_1, ident_reference_1),
+                      new ParentClause(int_reference_1, int_reference_2),
+                      new ParentTClause(int_reference_2, int_reference_1)};
+  QueryParser parser = QueryParser(tokens);
+  auto clauses = parser.parseClauses();
+  for (int i = 0; i < expected.size(); ++i) {
+    ASSERT_EQ(*clauses[i], *expected[i]);
+  }
+}
+
+/*
+ *  such that Modifies(p, "x") and Parent(7, 2) and Parent*(2, 7)
+*/
+TEST(QueryParserTest, MultipleSuchThatAndClauseParseTest) {
+  std::vector<Token *> tokens = {
+      new SymbolToken("such"), new SymbolToken("that"),
+      new KeywordToken("Modifies"), new RoundOpenBracketToken(),
+      new SymbolToken("p"), new CommaToken(), new QuoteToken(),new SymbolToken("x"), new QuoteToken(),
+      new RoundCloseBracketToken(),
+      new SymbolToken("and"),
+      new KeywordToken("Parent"), new RoundOpenBracketToken(),
+      new LiteralToken("7"), new CommaToken(), new LiteralToken("2"),
+      new RoundCloseBracketToken(),
+      new SymbolToken("and"),
+      new KeywordToken("Parent"), new OperatorToken("*"), new RoundOpenBracketToken(),
+      new LiteralToken("2"), new CommaToken(), new LiteralToken("7"),
+      new RoundCloseBracketToken(), new EndOfFileToken()
+  };
+  auto *synonym_reference_1 = new SynonymReference(new QuerySynonym("p"));
+  auto *ident_reference_1 = new IdentReference("x");
+  auto *int_reference_1 = new IntegerReference("7");
+  auto *int_reference_2 = new IntegerReference("2");
+  Clauses expected = {new ModifiesClause(synonym_reference_1, ident_reference_1),
+                      new ParentClause(int_reference_1, int_reference_2),
+                      new ParentTClause(int_reference_2, int_reference_1)};
+  QueryParser parser = QueryParser(tokens);
+  auto clauses = parser.parseClauses();
+  for (int i = 0; i < expected.size(); ++i) {
+    ASSERT_EQ(*clauses[i], *expected[i]);
+  }
+}
+
+/*
+ *  such that Modifies(p, "x") and Parent(7, 2) and Parent*(2, 7) pattern a1(_, "x") and a2(_, "y")
+*/
+TEST(QueryParserTest, MultipleMixedAndClauseParseTest) {
+  std::vector<Token *> tokens = {
+      new SymbolToken("such"), new SymbolToken("that"),
+      new KeywordToken("Modifies"), new RoundOpenBracketToken(),
+      new SymbolToken("p"), new CommaToken(), new QuoteToken(),new SymbolToken("x"), new QuoteToken(),
+      new RoundCloseBracketToken(),
+      new SymbolToken("and"),
+      new KeywordToken("Parent"), new RoundOpenBracketToken(),
+      new LiteralToken("7"), new CommaToken(), new LiteralToken("2"),
+      new RoundCloseBracketToken(),
+      new SymbolToken("and"),
+      new KeywordToken("Parent"), new OperatorToken("*"), new RoundOpenBracketToken(),
+      new LiteralToken("2"), new CommaToken(), new LiteralToken("7"),
+      new RoundCloseBracketToken(),
+      new KeywordToken("pattern"), new SymbolToken("a1"), new RoundOpenBracketToken(),
+      new WildCardToken(), new CommaToken(), new QuoteToken(),new SymbolToken("x"), new QuoteToken(),
+      new RoundCloseBracketToken(),
+      new KeywordToken("and"), new SymbolToken("a2"), new RoundOpenBracketToken(),
+      new WildCardToken(), new CommaToken(), new QuoteToken(),new SymbolToken("y"), new QuoteToken(),
+      new RoundCloseBracketToken(),
+      new EndOfFileToken()
+  };
+  auto *synonym_reference_1 = new SynonymReference(new QuerySynonym("p"));
+  auto *synonym_reference_2 = new SynonymReference(new QuerySynonym("a1"));
+  auto *synonym_reference_3 = new SynonymReference(new QuerySynonym("a2"));
+  auto *ident_reference_1 = new IdentReference("x");
+  auto *int_reference_1 = new IntegerReference("7");
+  auto *int_reference_2 = new IntegerReference("2");
+  auto *wildcard_reference = new WildcardReference();
+  Clauses expected = {new ModifiesClause(synonym_reference_1, ident_reference_1),
+                      new ParentClause(int_reference_1, int_reference_2),
+                      new ParentTClause(int_reference_2, int_reference_1),
+                      new PatternClause(synonym_reference_2, wildcard_reference, new ExactExpression("(x)")),
+                      new PatternClause(synonym_reference_3, wildcard_reference, new ExactExpression("(y)"))};
+  QueryParser parser = QueryParser(tokens);
+  auto clauses = parser.parseClauses();
+  for (int i = 0; i < expected.size(); ++i) {
+    ASSERT_EQ(*clauses[i], *expected[i]);
+  }
 }

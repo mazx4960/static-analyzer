@@ -2,15 +2,21 @@
 
 #include "query_call.h"
 
-SynonymReference *QueryCall::getReference() const {
-  return this->synonym_reference_;
+#include <utility>
+
+std::vector<ElemReference *> QueryCall::getReferences() const {
+  return this->elem_references_;
 }
-void QueryCall::setReference(SynonymReference *synonym_reference) {
-  this->synonym_reference_ = synonym_reference;
+void QueryCall::setReferences(std::vector<ElemReference *> synonym_reference) {
+  this->elem_references_ = std::move(synonym_reference);
 }
 CallType QueryCall::getCallType() const {
   return this->type_;
 }
 std::string SelectCall::toString() const {
-  return "Select " + this->getReference()->toString();
+  std::string str = "Select ";
+  for (auto *ref : getReferences()) {
+    str.append(ref->toString());
+  }
+  return str;
 }

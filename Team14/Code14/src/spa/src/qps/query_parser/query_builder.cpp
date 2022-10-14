@@ -37,8 +37,18 @@ QueryCall *QueryBuilder::buildQueryCall(QueryCall *query_call_blueprint) {
   if (query_call_blueprint == nullptr) {
     throw ParseSemanticError("Missing Select call");
   }
-  query_call_blueprint->setReference(this->getDeclaration(query_call_blueprint->getReference()->getSynonym()));
+  buildQueryCallElemReferences(query_call_blueprint->getReferences());
   return query_call_blueprint;
+}
+
+std::vector<ElemReference *> QueryBuilder::buildQueryCallElemReferences(const std::vector<ElemReference *>& query_call_reference_blueprint) {
+  if (query_call_reference_blueprint.empty()) {
+    throw ParseSemanticError("Missing declarations");
+  }
+  for (auto *elem_ref : query_call_reference_blueprint) {
+    elem_ref->setSynonymReference(getDeclaration(elem_ref->getSynonymReference()->getSynonym()));
+  }
+  return query_call_reference_blueprint;
 }
 
 SynonymReference *QueryBuilder::getDeclaration(const QuerySynonym *synonym) {

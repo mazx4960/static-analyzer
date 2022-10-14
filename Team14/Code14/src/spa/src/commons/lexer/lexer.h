@@ -32,8 +32,6 @@ class Lexer {
 
   const char curly_close_bracket_ = '}';
 
-  const char wild_card_ = '_';
-
   const char hashtag_ = '#';
 
   std::unordered_set<std::string> valid_whitespace_ = {" ", "\t", "\r", "\n"};
