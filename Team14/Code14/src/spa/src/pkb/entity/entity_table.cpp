@@ -9,4 +9,3 @@ void EntityTable::populate(Entity &entity) {
 EntityPointerUnorderedSet EntityTable::get() {
   return this->table_;
 }
- 

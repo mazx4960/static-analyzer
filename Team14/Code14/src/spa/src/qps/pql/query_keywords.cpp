@@ -2,12 +2,12 @@
 
 bool QueryKeywords::isValidKeyword(const std::string &keyword) {
   return isValidCallKeyword(keyword) ||
-  isValidDeclarationKeyword(keyword) ||
-  isValidRelationshipKeyword(keyword) ||
-  isValidSuchThatKeyword(keyword) ||
-  isValidPatternKeyword(keyword) ||
-  isValidAndKeyword(keyword) ||
-  isValidAttributeKeyword(keyword);
+      isValidDeclarationKeyword(keyword) ||
+      isValidRelationshipKeyword(keyword) ||
+      isValidSuchThatKeyword(keyword) ||
+      isValidPatternKeyword(keyword) ||
+      isValidAndKeyword(keyword) ||
+      isValidAttributeKeyword(keyword);
 }
 bool QueryKeywords::isValidDeclarationKeyword(const std::string &keyword) {
   return kDeclarationKeywordsMap.find(keyword) != kDeclarationKeywordsMap.end();

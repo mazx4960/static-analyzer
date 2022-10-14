@@ -6,8 +6,9 @@
 #include <unordered_set>
 
 #include "commons/entity.h"
-#include "qps/result.h"
 #include "commons/types.h"
+#include "qps/result.h"
+
 using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
 
 class EntityTable {

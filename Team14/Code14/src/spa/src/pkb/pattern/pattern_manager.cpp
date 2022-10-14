@@ -19,7 +19,7 @@ EntityPointerUnorderedSet PatternManager::Get(Entity *variable, const std::strin
   auto matches = EntityPointerUnorderedSet();
   auto set = this->pattern_table_->Get(variable);
   for (const auto &pair : set) {
-    auto full_expr = pair.second; // RHS of the statement
+    auto full_expr = pair.second;// RHS of the statement
     if (isSubmatch) {
       if (expr.empty() || full_expr.find(expr) != std::string::npos) {
         matches.insert(pair.first);

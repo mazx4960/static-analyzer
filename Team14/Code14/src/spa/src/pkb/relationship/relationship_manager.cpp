@@ -269,7 +269,8 @@ EntityPointerUnorderedSet RelationshipManager::GetAffects(Entity *query_entity, 
   return this->GetAffectsHelper(&stack);
 }
 
-EntityPointerUnorderedSet RelationshipManager::GetAffectsHelper(std::stack<std::pair<Entity *, EntityPointerUnorderedSet>> *stack) {
+EntityPointerUnorderedSet RelationshipManager::GetAffectsHelper(
+    std::stack<std::pair<Entity *, EntityPointerUnorderedSet>> *stack) {
   EntityPointerUnorderedSet result = this->Empty();
   EntityPointerUnorderedSet visited = this->Empty();
   while (!stack->empty()) {
@@ -295,7 +296,8 @@ EntityPointerUnorderedSet RelationshipManager::GetAffectsHelper(std::stack<std::
   return result;
 }
 
-EntityPointerUnorderedSet RelationshipManager::GetAffectsInverseHelper(std::stack<std::pair<Entity *, EntityPointerUnorderedSet>> *stack) {
+EntityPointerUnorderedSet RelationshipManager::GetAffectsInverseHelper(
+    std::stack<std::pair<Entity *, EntityPointerUnorderedSet>> *stack) {
   EntityPointerUnorderedSet result = this->Empty();
   EntityPointerUnorderedSet visited = this->Empty();
   while (!stack->empty()) {
