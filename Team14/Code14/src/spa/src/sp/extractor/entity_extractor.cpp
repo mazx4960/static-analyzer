@@ -25,8 +25,20 @@ std::vector<Entity *> EntityExtractor::ExtractAll(Node *node) {
  */
 std::vector<Entity *> EntityExtractor::ExtractAllVariables(Node *node) {
   std::vector<Entity *> entities;
+  auto const op = [&entities](Node *node) { ExtractVariable(entities, node); };
+  node->VisitAll(op);
+  return entities;
+}
+std::vector<Entity *> EntityExtractor::ExtractProcedureCalls(Node *node) {
+  std::vector<Entity *> entities;
   auto const op = [&entities](Node *node) {
-    ExtractVariable(entities, node);
+    if (node->GetNodeType() != NodeType::kStatement) { return; }
+    auto *stmt = static_cast<StatementNode *>(node);
+    auto stmt_type = stmt->GetStmtType();
+    if (stmt_type != EntityType::kCallStmt) { return; }
+    auto proc_name = static_cast<CallNode *>(node)->GetProcedureName();
+    Entity *entity = new ProcedureEntity(proc_name);
+    entities.push_back(entity);
   };
   node->VisitAll(op);
   return entities;

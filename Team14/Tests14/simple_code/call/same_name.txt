@@ -1,0 +1,7 @@
+procedure a {
+    print x;
+}
+
+procedure a {
+    print x;
+}
