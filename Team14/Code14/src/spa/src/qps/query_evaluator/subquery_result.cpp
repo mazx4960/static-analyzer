@@ -182,3 +182,23 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
   spdlog::debug("Number of rows in result: {}", new_rows.size());
   return SubqueryResult(all_synonyms, new_rows);
 }
+SubqueryResult SubqueryResult::Empty(std::vector<QuerySynonym *> synonyms) {
+  return SubqueryResult(std::move(synonyms), {});
+}
+
+SubqueryResult SubqueryResult::FullNoSynonym() {
+  return SubqueryResult({}, {{}});
+}
+SubqueryResult SubqueryResult::AddColumn(QuerySynonym *synonym, EntityPointerUnorderedSet entities) {
+  std::vector<ResultRow> new_rows{};
+  for (const auto& row : table_rows_) {
+    for (auto *entity : entities) {
+      ResultRow new_row = row;
+      new_row[synonym] = entity;
+      new_rows.push_back(new_row);
+    }
+  }
+  std::vector<QuerySynonym *> new_synonyms = synonyms_;
+  new_synonyms.push_back(synonym);
+  return SubqueryResult(new_synonyms, new_rows);
+}
