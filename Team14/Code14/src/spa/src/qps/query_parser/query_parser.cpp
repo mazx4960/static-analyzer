@@ -12,7 +12,9 @@ Query *QueryParser::parse() {
   SynonymReferences query_declarations = parseDeclarations();
   QueryCall *query_call = parseQueryCall();
   Clauses query_clauses = parseClauses();
-  if (!outOfTokens()) { throw ParseSyntaxError("Unexpected token"); }
+  if (!outOfTokens()) {
+    throw ParseSyntaxError("Unexpected token");
+  }
   QueryBuilder builder = QueryBuilder(new Query(query_declarations, query_call, query_clauses));
   auto *query = builder.build();
   return query;
@@ -49,7 +51,9 @@ void QueryParser::parseDeclarationStatement() {
   EntityType type;
   try {
     type = QueryKeywords::declarationKeywordToType(prefix->value);
-  } catch (std::out_of_range &oor) { throw ParseSyntaxError("Unknown declaration type: " + prefix->value); }
+  } catch (std::out_of_range &oor) {
+    throw ParseSyntaxError("Unknown declaration type: " + prefix->value);
+  }
 
   SynonymReferences declarations;
   // Initial declaration
@@ -218,18 +222,24 @@ SuchThatClause *QueryParser::parseSuchThat() {
   std::string rs_keyword = relationship->value;
 
   // Check for *
-  if (*peekToken() == OperatorToken("*")) { rs_keyword.append(nextToken()->value); }
+  if (*peekToken() == OperatorToken("*")) {
+    rs_keyword.append(nextToken()->value);
+  }
   // Convert string to rs type
   try {
     rs_type = QueryKeywords::relationshipKeywordToType(rs_keyword);
-  } catch (std::out_of_range &oor) { throw ParseSyntaxError("Unknown such-that relationship: " + relationship->value); }
+  } catch (std::out_of_range &oor) {
+    throw ParseSyntaxError("Unknown such-that relationship: " + relationship->value);
+  }
   expect(nextToken(), {TokenType::kRoundOpenBracket});
   QueryReference *first = parseClauseReference();
   expect(nextToken(), {TokenType::kComma});
   QueryReference *second = parseClauseReference();
   expect(nextToken(), {TokenType::kRoundCloseBracket});
   SuchThatClause *clause = parseSuchThat(rs_type, first, second);
-  if (!clause->isSyntacticallyCorrect()) { throw ParseSyntaxError("Incorrect parameter syntax"); }
+  if (!clause->isSyntacticallyCorrect()) {
+    throw ParseSyntaxError("Incorrect parameter syntax");
+  }
   return clause;
 }
 
@@ -295,5 +305,7 @@ std::string QueryParser::parseFlattenedExpression() {
 }
 
 void QueryParser::expect(Token *token, const std::unordered_set<TokenType> &expected_types) {
-  if (expected_types.count(token->type) == 0) { throw ParseSyntaxError("Invalid token type: " + token->value); }
+  if (expected_types.count(token->type) == 0) {
+    throw ParseSyntaxError("Invalid token type: " + token->value);
+  }
 }

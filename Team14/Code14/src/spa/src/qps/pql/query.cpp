@@ -14,7 +14,7 @@ Clauses Query::getClauses() const {
 std::string Query::toString() const {
   std::string str;
   str.append("Declarations: {");
-  for (auto *declaration:synonym_declarations_) {
+  for (auto *declaration : synonym_declarations_) {
     str.append(declaration->toString() + "; ");
   }
   str.append("}, ");
@@ -22,7 +22,7 @@ std::string Query::toString() const {
   str.append(query_call_->toString());
   str.append("}, ");
   str.append("Clauses: {");
-  for (auto *clause:query_clauses_) {
+  for (auto *clause : query_clauses_) {
     str.append(clause->toString() + " ");
   }
   str.append("}");

@@ -45,7 +45,9 @@ void RelationshipExtractor::Match(std::vector<Relationship *> &relationships, Rs
  * @param node
  */
 void RelationshipExtractor::ExtractFollows(std::vector<Relationship *> &relationships, Node *node) {
-  if (node->GetNodeType() != NodeType::kStatementList) { return; }
+  if (node->GetNodeType() != NodeType::kStatementList) {
+    return;
+  }
   Entity *prev_entity = nullptr;
   for (auto *stmt : static_cast<StatementListNode *>(node)->GetStatements()) {
     auto stmt_type = stmt->GetStmtType();
@@ -111,10 +113,14 @@ void RelationshipExtractor::ExtractParent(std::vector<Relationship *> &relations
  */
 void RelationshipExtractor::ExtractParentHelper(std::vector<Relationship *> &relationships, Entity *parent,
                                                 Node *node) {
-  if (node->GetNodeType() != NodeType::kStatementList) { return; }
+  if (node->GetNodeType() != NodeType::kStatementList) {
+    return;
+  }
   // Get all children entities
   std::vector<Entity *> children;
-  auto const op = [&children](Node *node) { EntityExtractor::ExtractStatement(children, node); };
+  auto const op = [&children](Node *node) {
+    EntityExtractor::ExtractStatement(children, node);
+  };
   node->VisitChildren(op);
   // Match the child with the parent entity
   Match(relationships, RsType::kParent, parent, children);
@@ -126,7 +132,9 @@ void RelationshipExtractor::ExtractParentHelper(std::vector<Relationship *> &rel
  * @param node
  */
 void RelationshipExtractor::ExtractUses(std::vector<Relationship *> &relationships, Node *node) {
-  if (node->GetNodeType() != NodeType::kStatement) { return; }
+  if (node->GetNodeType() != NodeType::kStatement) {
+    return;
+  }
   auto *stmt = static_cast<StatementNode *>(node);
   auto stmt_type = stmt->GetStmtType();
   auto *parent = new Entity(stmt_type, std::to_string(stmt->GetStmtNo()));
@@ -165,7 +173,9 @@ void RelationshipExtractor::ExtractUses(std::vector<Relationship *> &relationshi
  * @param node
  */
 void RelationshipExtractor::ExtractModifies(std::vector<Relationship *> &relationships, Node *node) {
-  if (node->GetNodeType() != NodeType::kStatement) { return; }
+  if (node->GetNodeType() != NodeType::kStatement) {
+    return;
+  }
   auto *stmt = static_cast<StatementNode *>(node);
   auto stmt_type = stmt->GetStmtType();
   auto *parent = new Entity(stmt_type, std::to_string(stmt->GetStmtNo()));
@@ -192,9 +202,13 @@ void RelationshipExtractor::ExtractModifies(std::vector<Relationship *> &relatio
  * @param node
  */
 void RelationshipExtractor::ExtractCalls(std::vector<Relationship *> &relationships, Node *node) {
-  if (node->GetNodeType() != NodeType::kStatement) { return; }
+  if (node->GetNodeType() != NodeType::kStatement) {
+    return;
+  }
   auto *stmt = static_cast<StatementNode *>(node);
-  if (stmt->GetStmtType() != EntityType::kCallStmt) { return; }
+  if (stmt->GetStmtType() != EntityType::kCallStmt) {
+    return;
+  }
   auto *call_node = static_cast<CallNode *>(stmt);
   Entity *parent = new CallStmtEntity(std::to_string(stmt->GetStmtNo()));
   Entity *child = new ProcedureEntity(call_node->GetProcedureName());
@@ -207,7 +221,9 @@ void RelationshipExtractor::ExtractCalls(std::vector<Relationship *> &relationsh
  * @param node
  */
 void RelationshipExtractor::ExtractNext(std::vector<Relationship *> &relationships, Node *node) {
-  if (node->GetNodeType() != NodeType::kProcedure) { return; }
+  if (node->GetNodeType() != NodeType::kProcedure) {
+    return;
+  }
   auto *proc = static_cast<ProcedureNode *>(node);
   spdlog::debug("Building control flow graph for procedure {}", proc->GetProcName());
   auto *cfg_builder = new CFGBuilder();
@@ -215,12 +231,16 @@ void RelationshipExtractor::ExtractNext(std::vector<Relationship *> &relationshi
 
   auto const op = [&relationships](Node *node) {
     auto *cfg_node = static_cast<CFGNode *>(node);
-    if (cfg_node->IsTerminal()) { return; }
+    if (cfg_node->IsTerminal()) {
+      return;
+    }
     auto *parent = cfg_node->GetStmt();
     std::vector<Entity *> children;
     for (auto *child : node->GetChildren()) {
       auto *child_node = static_cast<CFGNode *>(child);
-      if (!child_node->IsTerminal()) { children.push_back(child_node->GetStmt()); }
+      if (!child_node->IsTerminal()) {
+        children.push_back(child_node->GetStmt());
+      }
     }
     Match(relationships, RsType::kNext, parent, children);
   };

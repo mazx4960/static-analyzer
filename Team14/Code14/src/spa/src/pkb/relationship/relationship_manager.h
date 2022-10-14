@@ -2,9 +2,9 @@
 
 #pragma once
 
+#include <stack>
 #include <unordered_map>
 #include <unordered_set>
-#include <stack>
 
 #include "commons/entity.h"
 #include "commons/relationship.h"
