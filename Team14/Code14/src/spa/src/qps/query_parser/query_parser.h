@@ -16,7 +16,7 @@
 class QueryParser {
  private:
   std::vector<Token *> tokens_;
-  Declarations declarations_;
+  SynonymReferences declarations_;
   Clauses clauses_;
   int token_index_ = 0;
 
@@ -27,24 +27,30 @@ class QueryParser {
   void parseDeclarationStatement();
   SynonymReference *parseDeclaration(EntityType type);
   static SuchThatClause *parseSuchThat(RsType rs_type, QueryReference *first, QueryReference *second);
-  IdentReference *parseQuotedReference();
+  static QueryAttribute *parseAttribute(AttributeType type);
+  IdentReference * parseQuotedReference();
   SynonymReference *parseSynonymReference();
   WildcardReference *parseWildcardReference();
   IntegerReference *parseIntegerReference();
   IdentReference *parseIdentReference();
   std::string parseFlattenedExpression();
+  QueryClause *getPreviousClause();
+
  public:
   explicit QueryParser(std::vector<Token *> tokens);
   Query *parse();
-  Declarations parseDeclarations();
+  SynonymReferences parseDeclarations();
   QuerySynonym *parseSynonym();
   QueryCall *parseQueryCall();
+  std::vector<ElemReference *> parseElemReferences();
   Clauses parseClauses();
   QueryClause *parseClause();
   SuchThatClause *parseSuchThat();
-  QueryReference *parseReference();
+  QueryReference *parseClauseReference();
   PatternClause *parsePattern();
   ExpressionSpec *parseExpression();
 
   static void expect(Token *token, const std::unordered_set<TokenType> &expected_types);
+  ElemReference *parseElemReference();
+  QueryAttribute *parseAttribute();
 };

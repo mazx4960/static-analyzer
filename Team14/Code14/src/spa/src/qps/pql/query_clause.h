@@ -8,10 +8,12 @@
 #include "query_reference.h"
 #include "expression_spec.h"
 #include "qps/pql/interface/check_semantics.h"
+#include "attr_compare.h"
 
 enum class ClauseType {
   kSuchThat,
   kPattern,
+  kWith
 };
 
 class QueryClause : public ICheckSyntax, public ICheckSemantics {
@@ -23,10 +25,11 @@ class QueryClause : public ICheckSyntax, public ICheckSemantics {
   };
 
  public:
-  ClauseType getClauseType();
+  [[nodiscard]] ClauseType getClauseType() const ;
   [[nodiscard]] bool isSyntacticallyCorrect() const override = 0;
   [[nodiscard]] bool IsSemanticallyCorrect() const override = 0;
   [[nodiscard]] virtual std::string toString() const = 0;
+  virtual bool operator==(const QueryClause &other) const = 0;
 };
 
 class SuchThatClause : public QueryClause {
@@ -51,6 +54,7 @@ class SuchThatClause : public QueryClause {
   [[nodiscard]] bool isSyntacticallyCorrect() const override = 0;
   [[nodiscard]] bool IsSemanticallyCorrect() const override = 0;
   [[nodiscard]] std::string toString() const override;
+  bool operator==(const QueryClause &other) const override;
 };
 
 class ParentClause : public SuchThatClause {
@@ -184,4 +188,21 @@ class PatternClause : public QueryClause {
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
   [[nodiscard]] std::string toString() const override;
+  bool operator==(const QueryClause &other) const override;
+};
+
+
+class WithClause : public QueryClause {
+ private:
+  std::vector<AttrCompare *> compares_;
+ protected:
+  explicit WithClause(std::vector<AttrCompare *> compares)
+      : QueryClause(ClauseType::kWith), compares_(std::move(compares)) {
+  };
+ public:
+  [[nodiscard]] std::vector<AttrCompare *> getAttrConditions() const;
+  [[nodiscard]] bool isSyntacticallyCorrect() const override;
+  [[nodiscard]] bool IsSemanticallyCorrect() const override;
+  [[nodiscard]] std::string toString() const override;
+  bool operator==(const QueryClause &other) const override;
 };

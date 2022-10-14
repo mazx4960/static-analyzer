@@ -29,7 +29,7 @@ class RelationshipManager {
   EntityPointerUnorderedSet GetCalls(Entity *, bool);
   EntityPointerUnorderedSet GetInference(RsType, Entity *, bool);
   EntityPointerUnorderedSet GetInferenceFromChildren(RelationshipTable *, Entity *);
-  EntityPointerUnorderedSet GetInferenceGivenProcedure(RelationshipTable *, Entity *);
+  EntityPointerUnorderedSet GetInferenceGivenCallStatement(RelationshipTable *, Entity *);
   EntityPointerUnorderedSet GetInferenceGivenVariable(RelationshipTable *, Entity *);
   EntityPointerUnorderedSet GetSubMatches(RsType, Entity *, bool);
   void CreateTable(RsType);

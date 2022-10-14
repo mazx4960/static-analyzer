@@ -5,7 +5,9 @@ bool QueryKeywords::isValidKeyword(const std::string &keyword) {
       isValidDeclarationKeyword(keyword) ||
       isValidRelationshipKeyword(keyword) ||
       isValidSuchThatKeyword(keyword) ||
-      isValidPatternKeyword(keyword);
+      isValidPatternKeyword(keyword) ||
+      isValidAndKeyword(keyword) ||
+      isValidAttributeKeyword(keyword);
 }
 bool QueryKeywords::isValidDeclarationKeyword(const std::string &keyword) {
   return kDeclarationKeywordsMap.find(keyword) != kDeclarationKeywordsMap.end();
@@ -25,6 +27,9 @@ bool QueryKeywords::isValidSuchThatKeyword(const std::string &keyword) {
 bool QueryKeywords::isValidAssignOperator(const std::string &keyword) {
   return kAssignOperators.find(keyword) != kAssignOperators.end();
 }
+bool QueryKeywords::isValidAndKeyword(const std::string &keyword) {
+  return kAndKeywords.find(keyword) != kAndKeywords.end();
+}
 EntityType QueryKeywords::declarationKeywordToType(const std::string &keyword) {
   return kDeclarationKeywordsMap.at(keyword);
 }
@@ -33,4 +38,16 @@ RsType QueryKeywords::relationshipKeywordToType(const std::string &keyword) {
 }
 RsType QueryKeywords::patternKeywordToType(const std::string &keyword) {
   return kPatternKeywordsMap.at(keyword);
+}
+AttributeType QueryKeywords::attributeKeywordToType(const std::string &keyword) {
+  return kAttributeKeywordsMap.at(keyword);
+}
+bool QueryKeywords::isValidClauseKeyword(const std::string &keyword) {
+  return isValidAndKeyword(keyword) || isValidPatternKeyword(keyword) || isValidSuchThatKeyword(keyword);
+}
+bool QueryKeywords::isValidAttributeKeyword(const std::string &keyword) {
+  return kAttributeKeywordsMap.find(keyword) != kAttributeKeywordsMap.end();
+}
+bool QueryKeywords::isSpecialSynonymKeyword(const std::string &keyword) {
+  return kSpecialSynonymKeywords.find(keyword) != kSpecialSynonymKeywords.end();
 }

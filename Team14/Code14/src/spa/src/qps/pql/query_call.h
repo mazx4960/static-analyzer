@@ -15,24 +15,28 @@ enum class CallType {
 class QueryCall {
  private:
   CallType type_;
-
-  SynonymReference *synonym_reference_;
+  std::vector<ElemReference *> elem_references_;
  public:
-  QueryCall(CallType call_type, SynonymReference *synonym_reference)
-      : type_(call_type), synonym_reference_(std::move(synonym_reference)) {
+  QueryCall(CallType call_type, ElemReference *synonym_reference)
+      : type_(call_type), elem_references_({std::move(synonym_reference)}) {
+  };
+  QueryCall(CallType call_type, std::vector<ElemReference *> synonym_references)
+      : type_(call_type), elem_references_(std::move(synonym_references)) {
   };
 
-  void setReference(SynonymReference *synonym_reference);
+  void setReferences(std::vector<ElemReference *> synonym_references);
   [[nodiscard]] CallType getCallType() const;
-  [[nodiscard]] SynonymReference *getReference() const;
+  [[nodiscard]] std::vector<ElemReference *> getReferences() const;
   [[nodiscard]] virtual std::string toString() const = 0;
-
 };
 
 class SelectCall : public QueryCall {
  public:
-  explicit SelectCall(SynonymReference *query_declaration)
-      : QueryCall(CallType::kSelect, std::move(query_declaration)) {
+  explicit SelectCall(ElemReference *synonym_reference)
+      : QueryCall(CallType::kSelect, std::move(synonym_reference)) {
+  };
+  explicit SelectCall(std::vector<ElemReference *> synonym_references)
+      : QueryCall(CallType::kSelect, std::move(synonym_references)) {
   };
   [[nodiscard]] std::string toString() const override;
 };
