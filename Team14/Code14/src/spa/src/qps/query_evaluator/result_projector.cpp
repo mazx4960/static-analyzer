@@ -37,8 +37,8 @@ SubqueryResult ResultProjector::project() {
   }
 
   SubqueryResult intermediate_result = SubqueryResult::FullNoSynonym();
-  for (auto result = subquery_results_.begin(); result != subquery_results_.end(); result++) {
-    intermediate_result = intermediate_result.Join(*result);
+  for (auto result: subquery_results_) {
+    intermediate_result = intermediate_result.Join(result);
   }
   for (auto *decl : called_declarations_) {
     auto *synonym = decl->getSynonymReference()->getSynonym();

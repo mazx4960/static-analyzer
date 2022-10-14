@@ -190,7 +190,7 @@ SubqueryResult SubqueryResult::Empty(std::vector<QuerySynonym *> synonyms) {
 SubqueryResult SubqueryResult::FullNoSynonym() {
   return SubqueryResult({}, {{}});
 }
-SubqueryResult SubqueryResult::AddColumn(QuerySynonym *synonym, EntityPointerUnorderedSet entities) {
+SubqueryResult SubqueryResult::AddColumn(QuerySynonym *synonym, const EntityPointerUnorderedSet entities) {
   std::vector<ResultRow> new_rows{};
   for (const auto& row : table_rows_) {
     for (auto *entity : entities) {

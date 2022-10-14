@@ -44,6 +44,7 @@ Result *QueryEvaluator::evaluate() {
   std::vector<ElemReference *> called_declarations = this->query_.getQueryCall()->getReferences();
 
   std::vector<QuerySynonym* > called_synonyms{};
+  called_synonyms.reserve(called_declarations.size());
   for (auto *elem_ref : called_declarations) {
     called_synonyms.push_back(elem_ref->getSynonymReference()->getSynonym());
   }
