@@ -26,6 +26,9 @@ Token *QueryParser::nextToken() {
 }
 
 Token *QueryParser::peekToken() {
+  if (token_index_ >= tokens_.size()) {
+    return new EndOfFileToken();
+  }
   return tokens_[this->token_index_];
 }
 
@@ -157,8 +160,7 @@ QueryCall *QueryParser::parseQueryCall() {
   if (!QueryKeywords::isValidCallKeyword(call->value)) {
     throw ParseSyntaxError("Unknown query call: " + call->value);
   }
-  std::vector<ElemReference *> elem_references = parseElemReferences();
-  return new SelectCall(elem_references);
+  return new SelectCall(parseElemReferences());
 }
 
 std::vector<ElemReference *> QueryParser::parseElemReferences() {
@@ -172,6 +174,7 @@ std::vector<ElemReference *> QueryParser::parseElemReferences() {
     }
     expect(nextToken(), {TokenType::kAngleCloseBracket});
   } else {
+
     references.push_back(parseElemReference());
   }
   return references;
