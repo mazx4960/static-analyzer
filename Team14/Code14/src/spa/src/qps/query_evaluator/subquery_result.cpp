@@ -113,6 +113,7 @@ std::vector<QuerySynonym *> SubqueryResult::GetCommonSynonyms(SubqueryResult oth
   }
   return common_synonyms;
 }
+
 EntityPointerUnorderedSet SubqueryResult::GetColumn(QuerySynonym *synonym) {
   if (std::find(synonyms_.begin(), synonyms_.end(), synonym) == synonyms_.end()) {
     return EntityPointerUnorderedSet{};
@@ -123,6 +124,24 @@ EntityPointerUnorderedSet SubqueryResult::GetColumn(QuerySynonym *synonym) {
     results.insert(row[synonym]);
   }
   return results;
+}
+
+SubqueryResult SubqueryResult::GetColumns(const std::vector<QuerySynonym *>& synonyms) {
+  std::vector<QuerySynonym *> new_synonyms{};
+  for (auto *synonym : synonyms) {
+    if (std::find(synonyms_.begin(), synonyms_.end(), synonym) != synonyms_.end()) {
+      new_synonyms.push_back(synonym);
+    }
+  }
+  std::vector<ResultRow> new_rows{};
+  for (auto row : table_rows_) {
+    ResultRow new_row{};
+    for (auto *synonym: new_synonyms) {
+      new_row[synonym] = row[synonym];
+    }
+    new_rows.push_back(new_row);
+  }
+  return SubqueryResult(new_synonyms, new_rows);
 }
 
 SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
