@@ -62,6 +62,7 @@ class QueryKeywords {
   static bool isValidPatternKeyword(const std::string &keyword);
   static bool isValidAssignOperator(const std::string &keyword);
   static bool isValidAndKeyword(const std::string &keyword);
+  static bool isValidClauseKeyword(const std::string &keyword);
   static EntityType declarationKeywordToType(const std::string &keyword);
   static RsType relationshipKeywordToType(const std::string &keyword);
   static RsType patternKeywordToType(const std::string &keyword);

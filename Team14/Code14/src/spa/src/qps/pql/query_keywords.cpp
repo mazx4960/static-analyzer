@@ -38,3 +38,6 @@ RsType QueryKeywords::relationshipKeywordToType(const std::string &keyword) {
 RsType QueryKeywords::patternKeywordToType(const std::string &keyword) {
   return kPatternKeywordsMap.at(keyword);
 }
+bool QueryKeywords::isValidClauseKeyword(const std::string &keyword) {
+  return isValidAndKeyword(keyword) || isValidPatternKeyword(keyword) || isValidSuchThatKeyword(keyword);
+}

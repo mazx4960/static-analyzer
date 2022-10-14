@@ -14,20 +14,23 @@ class ExpressionSpec {
   explicit ExpressionSpec(std::string expr) : expr_(std::move(expr)) {
   };
  public:
-  std::string toString();
-  virtual bool isWild() = 0;
+  [[nodiscard]] std::string toString() const;
+  [[nodiscard]] virtual bool isWild() const = 0;
+  virtual bool operator==(const ExpressionSpec &other) const = 0;
 };
 
 class ExactExpression : public ExpressionSpec {
  public:
   explicit ExactExpression(std::string expr) : ExpressionSpec(std::move(expr)) {
   };
-  bool isWild() override;
+  [[nodiscard]] bool isWild() const override;
+  bool operator==(const ExpressionSpec &other) const override;
 };
 
 class WildExpression : public ExpressionSpec {
  public:
   explicit WildExpression(std::string expr = "") : ExpressionSpec(std::move(expr)) {
   };
-  bool isWild() override;
+  [[nodiscard]] bool isWild() const override;
+  bool operator==(const ExpressionSpec &other) const override;
 };

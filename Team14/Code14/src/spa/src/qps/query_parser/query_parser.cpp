@@ -4,7 +4,9 @@
 
 #include "commons/parser/parser.h"
 
-QueryParser::QueryParser(std::vector<Token *> tokens) { this->tokens_ = std::move(tokens); }
+QueryParser::QueryParser(std::vector<Token *> tokens) {
+  this->tokens_ = std::move(tokens);
+}
 
 Query *QueryParser::parse() {
   Declarations query_declarations = parseDeclarations();
@@ -23,7 +25,9 @@ Token *QueryParser::nextToken() {
   return tokens_[this->token_index_++];
 }
 
-Token *QueryParser::peekToken() { return tokens_[this->token_index_]; }
+Token *QueryParser::peekToken() {
+  return tokens_[this->token_index_];
+}
 
 bool QueryParser::outOfTokens() {
   return this->token_index_ == this->tokens_.size() || *peekToken() == EndOfFileToken();
@@ -84,7 +88,9 @@ QueryReference *QueryParser::parseReference() {
   }
 }
 
-SynonymReference *QueryParser::parseSynonymReference() { return new SynonymReference(parseSynonym()); }
+SynonymReference *QueryParser::parseSynonymReference() {
+  return new SynonymReference(parseSynonym());
+}
 
 IntegerReference *QueryParser::parseIntegerReference() {
   expect(peekToken(), {TokenType::kLiteral});
@@ -124,7 +130,8 @@ QueryCall *QueryParser::parseQueryCall() {
 
 Clauses QueryParser::parseClauses() {
   clauses_.clear();
-  while (*peekToken() != EndOfFileToken()) { clauses_.push_back(parseClause()); }
+  while (!outOfTokens()
+      && QueryKeywords::isValidClauseKeyword(peekToken()->value)) { clauses_.push_back(parseClause()); }
   return clauses_;
 }
 
@@ -215,6 +222,7 @@ ExpressionSpec *QueryParser::parseExpression() {
     }
     return new ExactExpression(expression);
   }
+  if (!is_wild) { throw ParseSyntaxError("Invalid expression type: " + expr->value); }
   return new WildExpression();
 }
 
