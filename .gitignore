@@ -3,8 +3,9 @@
 
 # Build files
 build/
-test_results/
 coverage/
+
+*.dat
 
 ### C++ ###
 # Prerequisites

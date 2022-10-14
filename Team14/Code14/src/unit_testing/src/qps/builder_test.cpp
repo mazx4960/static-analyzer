@@ -2,21 +2,13 @@
 
 #include <algorithm>
 
-#include "qps/query_builder.h"
+#include "qps/query_parser/query_builder.h"
 
 TEST(BuilderTest, QueryBuilderTest) {
-  auto *query_declaration = new VariableDeclaration(new QuerySynonym("v"));
-  std::vector<QueryDeclaration *> query_declarations = {query_declaration};
+  auto *query_synonym = new QuerySynonym("v");
+  auto *synonym_reference = new SynonymReference(query_synonym, EntityType::kVariable);
+  auto *query = new Query({synonym_reference}, new SelectCall(new ElemReference(new SynonymReference(query_synonym))), {});
 
-  std::vector<QueryClause *> clause_vector;
-  QueryCall *query_call = new SelectCall(query_declaration, clause_vector);
-  std::vector<QueryCall *> query_calls = {query_call};
-
-  QueryBuilder builder = QueryBuilder();
-  builder.withDeclarations(query_declarations);
-  builder.withQueryCalls(query_calls);
-  Query query = builder.build();
-
-  ASSERT_EQ(query.getDeclarations(), query_declarations);
-  ASSERT_EQ(query.getQueryCall().getDeclaration(), query_call->getDeclaration());
+  QueryBuilder builder = QueryBuilder(query);
+  ASSERT_EQ(builder.build(), query);
 }

@@ -6,36 +6,37 @@
 #include <vector>
 
 #include "query_clause.h"
-#include "query_declaration.h"
+#include "query_reference.h"
 
 enum class CallType {
   kSelect,
 };
 
 class QueryCall {
- protected:
+ private:
   CallType type_;
-
-  QueryDeclaration *query_declaration_;
-
-  std::vector<QueryClause *> clause_vector_;
-
+  std::vector<ElemReference *> elem_references_;
  public:
-  QueryCall(CallType call_type, QueryDeclaration *query_declaration, std::vector<QueryClause *> clause_vector)
-      : type_(call_type),
-        query_declaration_(std::move(query_declaration)),
-        clause_vector_(std::move(clause_vector)) {
+  QueryCall(CallType call_type, ElemReference *synonym_reference)
+      : type_(call_type), elem_references_({std::move(synonym_reference)}) {
+  };
+  QueryCall(CallType call_type, std::vector<ElemReference *> synonym_references)
+      : type_(call_type), elem_references_(std::move(synonym_references)) {
   };
 
-  [[nodiscard]] CallType getType() const;
-  [[nodiscard]] QueryDeclaration *getDeclaration() const;
-  [[nodiscard]] bool hasSubClauses() const;
-  [[nodiscard]] std::vector<QueryClause *> getClauseVector() const;
+  void setReferences(std::vector<ElemReference *> synonym_references);
+  [[nodiscard]] CallType getCallType() const;
+  [[nodiscard]] std::vector<ElemReference *> getReferences() const;
+  [[nodiscard]] virtual std::string toString() const = 0;
 };
 
 class SelectCall : public QueryCall {
  public:
-  SelectCall(QueryDeclaration *query_declaration, std::vector<QueryClause *> clause_vector)
-      : QueryCall(CallType::kSelect, std::move(query_declaration), std::move(clause_vector)) {
+  explicit SelectCall(ElemReference *synonym_reference)
+      : QueryCall(CallType::kSelect, std::move(synonym_reference)) {
   };
+  explicit SelectCall(std::vector<ElemReference *> synonym_references)
+      : QueryCall(CallType::kSelect, std::move(synonym_references)) {
+  };
+  [[nodiscard]] std::string toString() const override;
 };

@@ -77,8 +77,8 @@ TEST(StatementTypeHashTest, EqualAssign) {
   ASSERT_EQ((new EntityPointerUnorderedSet({s1, s2}))->size(), 1);
 }
 TEST(StatementTypeHashTest, EqualCall) {
-  auto *s1 = new CallStmtEntity("123");
-  auto *s2 = new CallStmtEntity("123");
+  auto *s1 = new CallStmtEntity("123", std::string());
+  auto *s2 = new CallStmtEntity("123", std::string());
   ASSERT_EQ(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
   ASSERT_EQ((new EntityPointerUnorderedSet({s1, s2}))->size(), 1);
 }
@@ -118,8 +118,8 @@ TEST(StatementTypeHashTest, UnequalAssign) {
   ASSERT_EQ(set.size(), 2);
 }
 TEST(StatementTypeHashTest, UnequalCall) {
-  auto *s1 = new CallStmtEntity("123");
-  auto *s2 = new CallStmtEntity("234");
+  auto *s1 = new CallStmtEntity("123", std::string());
+  auto *s2 = new CallStmtEntity("234", std::string());
   ASSERT_NE(EntityHashFunction().operator()(s1), EntityHashFunction().operator()(s2));
   EntityPointerUnorderedSet set = {s1, s2};
   ASSERT_EQ(set.size(), 2);

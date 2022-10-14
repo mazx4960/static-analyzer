@@ -12,11 +12,15 @@ enum class TokenType {
   kQuote,
   kComma,
   kSemicolon,
+  kDot,
   kRoundOpenBracket,
   kRoundCloseBracket,
   kCurlyOpenBracket,
   kCurlyCloseBracket,
+  kAngleOpenBracket,
+  kAngleCloseBracket,
   kWildCard,
+  kHashtag,
   kEndOfFile
 };
 
@@ -29,6 +33,7 @@ class Token {
   std::string value;
 
   bool operator==(const Token &other) const;
+  bool operator!=(const Token &other) const;
   [[nodiscard]] std::string ToString() const;
 };
 
@@ -36,16 +41,12 @@ class SymbolToken : public Token {
  public:
   explicit SymbolToken(std::string value) : Token(TokenType::kSymbol, std::move(value)) {
   }
-
-  const bool isKeyword = false;
 };
 
 class KeywordToken : public SymbolToken {
  public:
   explicit KeywordToken(std::string value) : SymbolToken(std::move(value)) {
   }
-
-  const bool isKeyword = true;
 };
 
 class LiteralToken : public Token {
@@ -78,6 +79,12 @@ class SemicolonToken : public Token {
   }
 };
 
+class DotToken : public Token {
+ public:
+  explicit DotToken() : Token(TokenType::kDot, ".") {
+  }
+};
+
 class RoundOpenBracketToken : public Token {
  public:
   explicit RoundOpenBracketToken() : Token(TokenType::kRoundOpenBracket, "(") {
@@ -98,15 +105,31 @@ class CurlyOpenBracketToken : public Token {
 
 class CurlyCloseBracketToken : public Token {
  public:
-  explicit CurlyCloseBracketToken()
-      : Token(TokenType::kCurlyCloseBracket, "}") {
+  explicit CurlyCloseBracketToken() : Token(TokenType::kCurlyCloseBracket, "}") {
+  }
+};
+
+class AngleOpenBracketToken : public Token {
+ public:
+  explicit AngleOpenBracketToken() : Token(TokenType::kAngleOpenBracket, "<") {
+  }
+};
+
+class AngleCloseBracketToken : public Token {
+ public:
+  explicit AngleCloseBracketToken() : Token(TokenType::kAngleCloseBracket, ">") {
   }
 };
 
 class WildCardToken : public Token {
  public:
-  explicit WildCardToken()
-      : Token(TokenType::kWildCard, "_") {
+  explicit WildCardToken() : Token(TokenType::kWildCard, "_") {
+  }
+};
+
+class HashtagToken : public Token {
+ public:
+  explicit HashtagToken() : Token(TokenType::kHashtag, "#") {
   }
 };
 

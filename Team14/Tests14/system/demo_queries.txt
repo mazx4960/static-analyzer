@@ -1,0 +1,40 @@
+101 - Modified by procedure
+procedure p;
+Select p such that Modifies(p, "x")
+main, readPoint, computeCentroid
+5000
+201 - Used by procedure
+procedure p;
+Select p such that Uses(p, "x")
+main, computeCentroid
+5000
+301 - Calls readPoint
+procedure p;
+Select p such that Calls(p, "readPoint")
+computeCentroid
+5000
+302 - CallsT readPoint
+procedure p;
+Select p such that Calls*(p, "readPoint")
+main, computeCentroid
+5000
+401 - Next in if then statement
+stmt s;
+Select s such that Next(20, s)
+23
+5000
+402 - Next in if else statement
+stmt s;
+Select s such that Next(22, s)
+23
+5000
+403 - Next in while statement
+stmt s;
+Select s such that Next(18, s)
+14
+5000
+404 - NextT in while statement
+stmt s;
+Select s such that Next*(18, s)
+14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+5000

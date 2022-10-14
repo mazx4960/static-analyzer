@@ -2,12 +2,29 @@
 
 #include "query.h"
 
-std::vector<QueryDeclaration *> Query::getDeclarations() const {
-  return this->query_declarations_;
+std::vector<SynonymReference *> Query::getSynonymDeclarations() const {
+  return this->synonym_declarations_;
 }
-QueryCall Query::getQueryCall() const {
+QueryCall *Query::getQueryCall() const {
   return this->query_call_;
 }
-bool Query::hasSubClauses() const {
-  return this->query_call_.hasSubClauses();
+Clauses Query::getClauses() const {
+  return this->query_clauses_;
+}
+std::string Query::toString() const {
+  std::string str;
+  str.append("Declarations: {");
+  for (auto *declaration : synonym_declarations_) {
+    str.append(declaration->toString() + "; ");
+  }
+  str.append("}, ");
+  str.append("QueryCall: {");
+  str.append(query_call_->toString());
+  str.append("}, ");
+  str.append("Clauses: {");
+  for (auto *clause : query_clauses_) {
+    str.append(clause->toString() + " ");
+  }
+  str.append("}");
+  return str;
 }

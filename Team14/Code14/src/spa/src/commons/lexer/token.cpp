@@ -11,6 +11,9 @@ Token::Token(TokenType type, std::string value) {
 bool Token::operator==(const Token &other) const {
   return this->type == other.type && this->value == other.value;
 }
+bool Token::operator!=(const Token &other) const {
+  return !(*this == other);
+}
 std::string Token::ToString() const {
   std::string type_string;
   switch (this->type) {
@@ -52,6 +55,14 @@ std::string Token::ToString() const {
     }
     case TokenType::kCurlyCloseBracket: {
       type_string = "CurlyCloseBracket";
+      break;
+    }
+    case TokenType::kAngleOpenBracket: {
+      type_string = "AngleOpenBracket";
+      break;
+    }
+    case TokenType::kAngleCloseBracket: {
+      type_string = "AngleCloseBracket";
       break;
     }
     case TokenType::kEndOfFile: {

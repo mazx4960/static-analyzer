@@ -2,15 +2,21 @@
 
 #include "query_call.h"
 
-CallType QueryCall::getType() const {
+#include <utility>
+
+std::vector<ElemReference *> QueryCall::getReferences() const {
+  return this->elem_references_;
+}
+void QueryCall::setReferences(std::vector<ElemReference *> synonym_reference) {
+  this->elem_references_ = std::move(synonym_reference);
+}
+CallType QueryCall::getCallType() const {
   return this->type_;
 }
-QueryDeclaration *QueryCall::getDeclaration() const {
-  return this->query_declaration_;
-}
-std::vector<QueryClause *> QueryCall::getClauseVector() const {
-  return this->clause_vector_;
-}
-bool QueryCall::hasSubClauses() const {
-  return !this->getClauseVector().empty();
+std::string SelectCall::toString() const {
+  std::string str = "Select ";
+  for (auto *ref : getReferences()) {
+    str.append(ref->toString());
+  }
+  return str;
 }

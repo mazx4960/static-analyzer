@@ -36,7 +36,9 @@ void PatternExtractor::ExtractIf(std::vector<Pattern *> &patterns, Node *node) {
   auto *if_stmt = static_cast<IfNode *>(node);
   auto *stmt = new IfStmtEntity(std::to_string(if_stmt->GetStmtNo()));
   std::vector<Entity *> vars = EntityExtractor::ExtractAllVariables(if_stmt->GetConditional());
-  for (auto *var : vars) { patterns.push_back(new Pattern(stmt, var, "")); }
+  for (auto *var : vars) {
+    patterns.push_back(new Pattern(stmt, var, ""));
+  }
 }
 void PatternExtractor::ExtractWhile(std::vector<Pattern *> &patterns, Node *node) {
   if (node->GetNodeType() != NodeType::kStatement
@@ -46,5 +48,7 @@ void PatternExtractor::ExtractWhile(std::vector<Pattern *> &patterns, Node *node
   auto *while_stmt = static_cast<WhileNode *>(node);
   auto *stmt = new WhileStmtEntity(std::to_string(while_stmt->GetStmtNo()));
   std::vector<Entity *> vars = EntityExtractor::ExtractAllVariables(while_stmt->GetConditional());
-  for (auto *var : vars) { patterns.push_back(new Pattern(stmt, var, "")); }
+  for (auto *var : vars) {
+    patterns.push_back(new Pattern(stmt, var, ""));
+  }
 }

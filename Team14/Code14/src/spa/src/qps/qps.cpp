@@ -1,7 +1,5 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 #include "qps.h"
-
-#include "query_builder.h"
 #include "spdlog/spdlog.h"
 
 void QPS::SetPKB(IPKBQuerier *pkb) {
@@ -17,21 +15,14 @@ Result *QPS::EvaluateQuery(std::istream *query_stream) {
   }
   spdlog::debug("Tokens[{}]: ", tokens.size(), token_string);
 
-  QueryParser parser(tokens);
+  Query *query;
   spdlog::info("Parsing tokens...");
-  parser.parse();
-  QueryBuilder builder = QueryBuilder();
-  std::vector<QueryDeclaration *> query_declarations = parser.getDeclarations();
-  std::vector<QueryCall *> query_calls = parser.getQueryCalls();
-  builder.withDeclarations(query_declarations);
-  builder.withQueryCalls(query_calls);
-  std::string declaration_string;
-  for (auto *declaration : parser.getDeclarations()) {
-    declaration_string += EntityTypeToString(declaration->getType()) + ":" + declaration->toString() + " ";
-  }
-  spdlog::debug("Declarations[{}]: {}", query_declarations.size(), declaration_string);
-  Query query = builder.build();
-  spdlog::info("Tokens parsed");
-  Result *result = (new QueryEvaluator(this->pkb_, query))->evaluate();
+  QueryParser parser(tokens);
+  query = parser.parse();
+  spdlog::info("Query built");
+  spdlog::debug("Query: {}", query->toString());
+
+  QueryEvaluator qe(this->pkb_, *query);
+  Result *result = qe.evaluate();
   return result;
 }

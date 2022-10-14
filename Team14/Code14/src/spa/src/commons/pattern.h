@@ -19,12 +19,3 @@ class Pattern {
   [[nodiscard]] std::string GetExpr() const;
   std::string ToString();
 };
-
-struct StmtExprHashFunction {
-  size_t operator()(const std::pair<Entity *, std::string> &p) const {
-    size_t hash = 0;
-    HashCombine<Entity *>::hash_combine(hash, p.first);
-    HashCombine<std::string>::hash_combine(hash, p.second);
-    return hash;
-  }
-};
