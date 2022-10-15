@@ -8,95 +8,63 @@ using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunctio
 
 class TestStorage {
  public:
-  inline static EntityPointerUnorderedSet procedure_entities_ = {
-      new ProcedureEntity("procedure1"), new ProcedureEntity("procedure2"), new ProcedureEntity("procedure3")};
+  inline static EntityPointerUnorderedSet procedure_entities_ =
+      {new ProcedureEntity("procedure1"), new ProcedureEntity("procedure2"), new ProcedureEntity("procedure3")};
 
-  inline static EntityPointerUnorderedSet variable_entities_ = {
-      new VariableEntity("x"),
-      new VariableEntity("y"),
-      new VariableEntity("z"),
-  };
+  inline static EntityPointerUnorderedSet
+      variable_entities_ = {new VariableEntity("x"), new VariableEntity("y"), new VariableEntity("z"),};
 
-  inline static EntityPointerUnorderedSet constant_entities_ = {
-      new ConstantEntity("1"),
-      new ConstantEntity("2"),
-      new ConstantEntity("3"),
-  };
+  inline static EntityPointerUnorderedSet
+      constant_entities_ = {new ConstantEntity("1"), new ConstantEntity("2"), new ConstantEntity("3"),};
 
-  inline static EntityPointerUnorderedSet stmt_assign_entities_ = {
-      new AssignStmtEntity("1"),
-      new AssignStmtEntity("2"),
-      new AssignStmtEntity("3"),
-  };
+  inline static EntityPointerUnorderedSet
+      stmt_assign_entities_ = {new AssignStmtEntity("1"), new AssignStmtEntity("2"), new AssignStmtEntity("3"),};
 
-  inline static EntityPointerUnorderedSet stmt_call_entities_ = {
-      new CallStmtEntity("4", std::string()),
-      new CallStmtEntity("5", std::string()),
-      new CallStmtEntity("6", std::string()),
-  };
+  inline static EntityPointerUnorderedSet stmt_call_entities_ =
+      {new CallStmtEntity("4", std::string()), new CallStmtEntity("5", std::string()),
+       new CallStmtEntity("6", std::string()),};
 
-  inline static EntityPointerUnorderedSet stmt_if_entities_ = {
-      new IfStmtEntity("7"),
-      new IfStmtEntity("8"),
-      new IfStmtEntity("9"),
-  };
+  inline static EntityPointerUnorderedSet
+      stmt_if_entities_ = {new IfStmtEntity("7"), new IfStmtEntity("8"), new IfStmtEntity("9"),};
 
-  inline static EntityPointerUnorderedSet stmt_while_entities_ = {
-      new WhileStmtEntity("10"),
-      new WhileStmtEntity("11"),
-      new WhileStmtEntity("12"),
-  };
+  inline static EntityPointerUnorderedSet
+      stmt_while_entities_ = {new WhileStmtEntity("10"), new WhileStmtEntity("11"), new WhileStmtEntity("12"),};
 
-  inline static EntityPointerUnorderedSet stmt_print_entities_ = {
-      new PrintStmtEntity("13"),
-      new PrintStmtEntity("14"),
-      new PrintStmtEntity("15"),
-  };
+  inline static EntityPointerUnorderedSet
+      stmt_print_entities_ = {new PrintStmtEntity("13"), new PrintStmtEntity("14"), new PrintStmtEntity("15"),};
 
-  inline static EntityPointerUnorderedSet stmt_read_entities_ = {
-      new ReadStmtEntity("16"),
-      new ReadStmtEntity("17"),
-      new ReadStmtEntity("18"),
-  };
+  inline static EntityPointerUnorderedSet
+      stmt_read_entities_ = {new ReadStmtEntity("16"), new ReadStmtEntity("17"), new ReadStmtEntity("18"),};
 
-  inline static EntityPointerUnorderedSet all_stmt_entities_ = {
-      new AssignStmtEntity("1"),
-      new AssignStmtEntity("2"),
-      new AssignStmtEntity("3"),
-      new CallStmtEntity("4", std::string()),
-      new CallStmtEntity("5", std::string()),
-      new CallStmtEntity("6", std::string()),
-      new IfStmtEntity("7"),
-      new IfStmtEntity("8"),
-      new IfStmtEntity("9"),
-      new WhileStmtEntity("10"),
-      new WhileStmtEntity("11"),
-      new WhileStmtEntity("12"),
-      new PrintStmtEntity("13"),
-      new PrintStmtEntity("14"),
-      new PrintStmtEntity("15"),
-      new ReadStmtEntity("16"),
-      new ReadStmtEntity("17"),
-      new ReadStmtEntity("18"),
-  };
+  inline static EntityPointerUnorderedSet all_stmt_entities_ =
+      {new AssignStmtEntity("1"), new AssignStmtEntity("2"), new AssignStmtEntity("3"),
+       new CallStmtEntity("4", std::string()), new CallStmtEntity("5", std::string()),
+       new CallStmtEntity("6", std::string()), new IfStmtEntity("7"), new IfStmtEntity("8"), new IfStmtEntity("9"),
+       new WhileStmtEntity("10"), new WhileStmtEntity("11"), new WhileStmtEntity("12"), new PrintStmtEntity("13"),
+       new PrintStmtEntity("14"), new PrintStmtEntity("15"), new ReadStmtEntity("16"), new ReadStmtEntity("17"),
+       new ReadStmtEntity("18"),};
 };
 
 class QueryEvaluatorMock : public QueryEvaluator {
  public:
-  QueryEvaluatorMock(IPKBQuerier *pkb, Query &query) : QueryEvaluator(pkb, query){};
-  std::unordered_set<SynonymReference *, SynonymReferenceHashFunction, SynonymReferencePointerEquality>
-  mockCopyDeclarations() {
+  QueryEvaluatorMock(IPKBQuerier *pkb, Query &query) : QueryEvaluator(pkb, query) {
+  };
+  std::unordered_set<SynonymReference *,
+                     SynonymReferenceHashFunction,
+                     SynonymReferencePointerEquality> mockCopyDeclarations() {
     return this->copyDeclarations();
   };
-  std::unordered_set<SynonymReference *, SynonymReferenceHashFunction, SynonymReferencePointerEquality>
-  mockFetchContext() {
+  std::unordered_set<SynonymReference *,
+                     SynonymReferenceHashFunction,
+                     SynonymReferencePointerEquality> mockFetchContext() {
     return this->fetchContext();
   };
 };
 
 class MockPKB : public IPKBQuerier {
-  inline std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality> getEntities(
-      EntityType entity_type) override {
+  inline std::unordered_set<Entity *,
+                            EntityHashFunction,
+                            EntityPointerEquality> getEntities(EntityType entity_type) override {
     switch (entity_type) {
       case EntityType::kProcedure: return TestStorage::procedure_entities_;
       case EntityType::kVariable: return TestStorage::variable_entities_;
@@ -136,15 +104,13 @@ TEST(QeCopyDeclarationTest, AllDeclarationsOnceEach) {
   auto *const_dec = new ConstantDeclaration(new QuerySynonym("const_dec"));
   auto *proc_dec = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
 
-  std::vector<SynonymReference *> declarations_vector = {
-      stmt_dec, read_dec, print_dec, call_dec, while_dec, if_dec, assign_dec, var_dec, const_dec, proc_dec,
-  };
+  std::vector<SynonymReference *> declarations_vector =
+      {stmt_dec, read_dec, print_dec, call_dec, while_dec, if_dec, assign_dec, var_dec, const_dec, proc_dec,};
   std::unordered_set<SynonymReference *, SynonymReferenceHashFunction, SynonymReferencePointerEquality>
-      declarations_set = {
-          stmt_dec, read_dec, print_dec, call_dec, while_dec, if_dec, assign_dec, var_dec, const_dec, proc_dec,
-      };
+      declarations_set =
+      {stmt_dec, read_dec, print_dec, call_dec, while_dec, if_dec, assign_dec, var_dec, const_dec, proc_dec,};
 
-  auto *select_call = new SelectCall(new ElemReference(stmt_dec));
+  auto *select_call = new SelectCall(new ElemReference(stmt_dec, AttributeType::kNone));
   Query query = Query(declarations_vector, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
@@ -178,22 +144,21 @@ TEST(QeCopyDeclarationTest, AllDeclarationsTwiceEach) {
   auto *const_dec_2 = new ConstantDeclaration(new QuerySynonym("const_dec_2"));
   auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec_2"));
 
-  std::vector<SynonymReference *> declarations_vector = {
-      stmt_dec_1, read_dec_1,   print_dec_1, call_dec_1,  while_dec_1,
-      if_dec_1,   assign_dec_1, var_dec_1,   const_dec_1, proc_dec_1,
+  std::vector<SynonymReference *> declarations_vector =
+      {stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1, if_dec_1, assign_dec_1, var_dec_1, const_dec_1,
+       proc_dec_1,
 
-      stmt_dec_2, read_dec_2,   print_dec_2, call_dec_2,  while_dec_2,
-      if_dec_2,   assign_dec_2, var_dec_2,   const_dec_2, proc_dec_2};
+       stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2, if_dec_2, assign_dec_2, var_dec_2, const_dec_2,
+       proc_dec_2};
   std::unordered_set<SynonymReference *, SynonymReferenceHashFunction, SynonymReferencePointerEquality>
-      declarations_set = {
-          stmt_dec_1, read_dec_1,   print_dec_1, call_dec_1,  while_dec_1,
-          if_dec_1,   assign_dec_1, var_dec_1,   const_dec_1, proc_dec_1,
+      declarations_set =
+      {stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1, if_dec_1, assign_dec_1, var_dec_1, const_dec_1,
+       proc_dec_1,
 
-          stmt_dec_2, read_dec_2,   print_dec_2, call_dec_2,  while_dec_2,
-          if_dec_2,   assign_dec_2, var_dec_2,   const_dec_2, proc_dec_2,
-      };
+       stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2, if_dec_2, assign_dec_2, var_dec_2, const_dec_2,
+       proc_dec_2,};
 
-  auto *select_call = new SelectCall(new ElemReference(stmt_dec_1));
+  auto *select_call = new SelectCall(new ElemReference(stmt_dec_1, AttributeType::kNone));
   Query query = Query(declarations_vector, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
@@ -228,23 +193,21 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
   auto *const_dec_2 = new ConstantDeclaration(new QuerySynonym("const_dec"));
   auto *proc_dec_2 = new ProcedureDeclaration(new QuerySynonym("proc_dec"));
 
-  std::vector<SynonymReference *> declarations_vector = {
-      stmt_dec_1, read_dec_1,   print_dec_1, call_dec_1,  while_dec_1,
-      if_dec_1,   assign_dec_1, var_dec_1,   const_dec_1, proc_dec_1,
+  std::vector<SynonymReference *> declarations_vector =
+      {stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1, if_dec_1, assign_dec_1, var_dec_1, const_dec_1,
+       proc_dec_1,
 
-      stmt_dec_2, read_dec_2,   print_dec_2, call_dec_2,  while_dec_2,
-      if_dec_2,   assign_dec_2, var_dec_2,   const_dec_2, proc_dec_2,
-  };
+       stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2, if_dec_2, assign_dec_2, var_dec_2, const_dec_2,
+       proc_dec_2,};
   std::unordered_set<SynonymReference *, SynonymReferenceHashFunction, SynonymReferencePointerEquality>
-      declarations_set = {
-          stmt_dec_1, read_dec_1,   print_dec_1, call_dec_1,  while_dec_1,
-          if_dec_1,   assign_dec_1, var_dec_1,   const_dec_1, proc_dec_1,
+      declarations_set =
+      {stmt_dec_1, read_dec_1, print_dec_1, call_dec_1, while_dec_1, if_dec_1, assign_dec_1, var_dec_1, const_dec_1,
+       proc_dec_1,
 
-          stmt_dec_2, read_dec_2,   print_dec_2, call_dec_2,  while_dec_2,
-          if_dec_2,   assign_dec_2, var_dec_2,   const_dec_2, proc_dec_2,
-      };
+       stmt_dec_2, read_dec_2, print_dec_2, call_dec_2, while_dec_2, if_dec_2, assign_dec_2, var_dec_2, const_dec_2,
+       proc_dec_2,};
 
-  auto *select_call = new SelectCall(new ElemReference(stmt_dec_1));
+  auto *select_call = new SelectCall(new ElemReference(stmt_dec_1, AttributeType::kNone));
   Query query = Query(declarations_vector, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
@@ -259,7 +222,7 @@ TEST(QeCopyDeclarationTest, AllDeclarationsDuplicated) {
 TEST(QeFetchContextTest, StatementDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new StatementDeclaration(new QuerySynonym("stmt"));
-  auto *select_call = new SelectCall(new ElemReference(declaration));
+  auto *select_call = new SelectCall(new ElemReference(declaration, AttributeType::kNone));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
@@ -271,7 +234,7 @@ TEST(QeFetchContextTest, StatementDeclaration) {
 TEST(QeFetchContextTest, ProcedureDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new ProcedureDeclaration(new QuerySynonym("proc"));
-  auto *select_call = new SelectCall(new ElemReference(declaration));
+  auto *select_call = new SelectCall(new ElemReference(declaration, AttributeType::kNone));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
@@ -283,7 +246,7 @@ TEST(QeFetchContextTest, ProcedureDeclaration) {
 TEST(QeFetchContextTest, VariableDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new VariableDeclaration(new QuerySynonym("stmt"));
-  auto *select_call = new SelectCall(new ElemReference(declaration));
+  auto *select_call = new SelectCall(new ElemReference(declaration, AttributeType::kNone));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
@@ -295,7 +258,7 @@ TEST(QeFetchContextTest, VariableDeclaration) {
 TEST(QeFetchContextTest, ConstantDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new ConstantDeclaration(new QuerySynonym("stmt"));
-  auto *select_call = new SelectCall(new ElemReference(declaration));
+  auto *select_call = new SelectCall(new ElemReference(declaration, AttributeType::kNone));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
@@ -307,7 +270,7 @@ TEST(QeFetchContextTest, ConstantDeclaration) {
 TEST(QeFetchContextTest, StmtAssignDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new AssignDeclaration(new QuerySynonym("as"));
-  auto *select_call = new SelectCall(new ElemReference(declaration));
+  auto *select_call = new SelectCall(new ElemReference(declaration, AttributeType::kNone));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
@@ -319,7 +282,7 @@ TEST(QeFetchContextTest, StmtAssignDeclaration) {
 TEST(QeFetchContextTest, StmtCallDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new CallDeclaration(new QuerySynonym("cl"));
-  auto *select_call = new SelectCall(new ElemReference(declaration));
+  auto *select_call = new SelectCall(new ElemReference(declaration, AttributeType::kNone));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
@@ -331,7 +294,7 @@ TEST(QeFetchContextTest, StmtCallDeclaration) {
 TEST(QeFetchContextTest, StmtIfDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new IfDeclaration(new QuerySynonym("ifs"));
-  auto *select_call = new SelectCall(new ElemReference(declaration));
+  auto *select_call = new SelectCall(new ElemReference(declaration, AttributeType::kNone));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
@@ -343,7 +306,7 @@ TEST(QeFetchContextTest, StmtIfDeclaration) {
 TEST(QeFetchContextTest, StmtWhileDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new WhileDeclaration(new QuerySynonym("w"));
-  auto *select_call = new SelectCall(new ElemReference(declaration));
+  auto *select_call = new SelectCall(new ElemReference(declaration, AttributeType::kNone));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
@@ -355,7 +318,7 @@ TEST(QeFetchContextTest, StmtWhileDeclaration) {
 TEST(QeFetchContextTest, StmtPrintDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new PrintDeclaration(new QuerySynonym("prt"));
-  auto *select_call = new SelectCall(new ElemReference(declaration));
+  auto *select_call = new SelectCall(new ElemReference(declaration, AttributeType::kNone));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);
@@ -367,7 +330,7 @@ TEST(QeFetchContextTest, StmtPrintDeclaration) {
 TEST(QeFetchContextTest, StmtReadDeclaration) {
   IPKBQuerier *pkb = new MockPKB();
   auto *declaration = new ReadDeclaration(new QuerySynonym("rd"));
-  auto *select_call = new SelectCall(new ElemReference(declaration));
+  auto *select_call = new SelectCall(new ElemReference(declaration, AttributeType::kNone));
   Query query = Query({declaration}, select_call, {});
 
   auto *query_evaluator = new QueryEvaluatorMock(pkb, query);

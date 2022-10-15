@@ -27,8 +27,7 @@ class QueryParser {
   void parseDeclarationStatement();
   SynonymReference *parseDeclaration(EntityType type);
   static SuchThatClause *parseSuchThat(RsType rs_type, QueryReference *first, QueryReference *second);
-  static QueryAttribute *parseAttribute(AttributeType type);
-  IdentReference * parseQuotedReference();
+  IdentReference *parseQuotedReference();
   SynonymReference *parseSynonymReference();
   WildcardReference *parseWildcardReference();
   IntegerReference *parseIntegerReference();
@@ -52,5 +51,5 @@ class QueryParser {
 
   static void expect(Token *token, const std::unordered_set<TokenType> &expected_types);
   ElemReference *parseElemReference();
-  QueryAttribute *parseAttribute();
+  AttributeType parseAttribute();
 };

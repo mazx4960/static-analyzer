@@ -519,3 +519,24 @@ bool PatternClause::operator==(const QueryClause &other) const {
       && (*other_clause.getEntRef()) == (*this->getEntRef())
       && (*other_clause.getExpression()) == (*this->getExpression());
 }
+Comparator WithClause::getComparator() const {
+  return this->comparator_;
+}
+QueryReference *WithClause::getFirst() const {
+  return this->first_;
+}
+QueryReference *WithClause::getSecond() const {
+  return this->second_;
+}
+bool WithClause::isSyntacticallyCorrect() const {
+  return true;
+}
+bool WithClause::IsSemanticallyCorrect() const {
+  return true;
+}
+std::string WithClause::toString() const {
+  return std::string();
+}
+bool WithClause::operator==(const QueryClause &other) const {
+  return false;
+}

@@ -11,8 +11,8 @@ class BuilderError : public std::runtime_error {
   }
 };
 
-class EvaluationStrategyCreationError : public std::runtime_error {
+class EvaluationStrategyError : public std::runtime_error {
  public:
-  explicit EvaluationStrategyCreationError(const std::string &message) : std::runtime_error(message) {
+  explicit EvaluationStrategyError(const std::string &message) : std::runtime_error(message) {
   };
 };
