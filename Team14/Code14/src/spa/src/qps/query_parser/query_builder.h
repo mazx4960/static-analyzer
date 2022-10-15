@@ -26,6 +26,6 @@ class QueryBuilder {
   PatternClause *buildPattern(PatternClause *clause_blueprint);
   SuchThatClause *buildSuchThat(SuchThatClause *clause_blueprint);
   QueryCall *buildQueryCall(QueryCall *query_call_blueprint);
-  std::vector<ElemReference *> buildQueryCallElemReferences(const std::vector<ElemReference *>& query_call_reference_blueprint);
+  std::vector<ElemReference *> buildQueryCallElemReferences(const std::vector<ElemReference *> &query_call_reference_blueprint);
   SynonymReference *getDeclaration(SynonymReference *synonym_reference);
 };

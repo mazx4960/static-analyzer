@@ -127,7 +127,7 @@ std::string SynonymReference::toString() const {
 void SynonymReference::setBooleanRef(bool is_boolean_Ref) {
   this->is_boolean_ref_ = is_boolean_Ref;
 }
-bool SynonymReference::isBooleanRef() const{
+bool SynonymReference::isBooleanRef() const {
   return this->is_boolean_ref_;
 }
 
