@@ -127,9 +127,7 @@ class ElemReference : public QueryReference {
 
  public:
   explicit ElemReference(SynonymReference *synonym_reference, QueryAttribute *query_attribute = nullptr)
-      : QueryReference(ReferenceType::kElem, EntityType::kUnknown),
-        synonym_reference_(synonym_reference),
-        query_attribute_(query_attribute) {
+      : QueryReference(ReferenceType::kElem, EntityType::kUnknown), synonym_reference_(synonym_reference),query_attribute_(query_attribute) {
   };
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;

@@ -12,20 +12,15 @@ EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClaus
       spdlog::debug("Creating PatternEvaluationStrategy");
       return new PatternStrategy(pkb, static_cast<PatternClause *>(query_clause));
     }
-    default:
-      throw EvaluationStrategyCreationError("Invalid query clause type");
+    default: throw EvaluationStrategyCreationError("Invalid query clause type");
   }
 }
 
 EntityPointerUnorderedSet EvaluationStrategy::getCandidates(QueryReference *declaration) {
   EntityPointerUnorderedSet candidates;
   switch (declaration->getRefType()) {
-    case ReferenceType::kSynonym: {
-      return declaration->getContext();
-    }
-    case ReferenceType::kWildcard: {
-      return pkb_->getEntities(declaration->getEntityType());
-    }
+    case ReferenceType::kSynonym: { return declaration->getContext(); }
+    case ReferenceType::kWildcard: { return pkb_->getEntities(declaration->getEntityType()); }
     case ReferenceType::kInteger: // fallthrough
     case ReferenceType::kIdent: {
       std::basic_string<char> value = declaration->getReferenceValue();

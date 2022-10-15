@@ -25,7 +25,7 @@ class QueryClause : public ICheckSyntax, public ICheckSemantics {
   };
 
  public:
-  [[nodiscard]] ClauseType getClauseType() const;
+  [[nodiscard]] ClauseType getClauseType() const ;
   [[nodiscard]] bool isSyntacticallyCorrect() const override = 0;
   [[nodiscard]] bool IsSemanticallyCorrect() const override = 0;
   [[nodiscard]] virtual std::string toString() const = 0;
@@ -190,6 +190,7 @@ class PatternClause : public QueryClause {
   [[nodiscard]] std::string toString() const override;
   bool operator==(const QueryClause &other) const override;
 };
+
 
 class WithClause : public QueryClause {
  private:

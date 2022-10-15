@@ -71,44 +71,28 @@ void QueryParser::parseDeclarationStatement() {
 
 SynonymReference *QueryParser::parseDeclaration(EntityType type) {
   switch (type) {
-    case EntityType::kProcedure:
-      return new ProcedureDeclaration(parseSynonym());
-    case EntityType::kStatement:
-      return new StatementDeclaration(parseSynonym());
-    case EntityType::kVariable:
-      return new VariableDeclaration(parseSynonym());
-    case EntityType::kConstant:
-      return new ConstantDeclaration(parseSynonym());
-    case EntityType::kAssignStmt:
-      return new AssignDeclaration(parseSynonym());
-    case EntityType::kCallStmt:
-      return new CallDeclaration(parseSynonym());
-    case EntityType::kIfStmt:
-      return new IfDeclaration(parseSynonym());
-    case EntityType::kWhileStmt:
-      return new WhileDeclaration(parseSynonym());
-    case EntityType::kPrintStmt:
-      return new PrintDeclaration(parseSynonym());
-    case EntityType::kReadStmt:
-      return new ReadDeclaration(parseSynonym());
-    default:
-      throw ParseSyntaxError("Unknown declaration type:" + EntityTypeToString(type));
+    case EntityType::kProcedure: return new ProcedureDeclaration(parseSynonym());
+    case EntityType::kStatement: return new StatementDeclaration(parseSynonym());
+    case EntityType::kVariable: return new VariableDeclaration(parseSynonym());
+    case EntityType::kConstant: return new ConstantDeclaration(parseSynonym());
+    case EntityType::kAssignStmt: return new AssignDeclaration(parseSynonym());
+    case EntityType::kCallStmt: return new CallDeclaration(parseSynonym());
+    case EntityType::kIfStmt: return new IfDeclaration(parseSynonym());
+    case EntityType::kWhileStmt: return new WhileDeclaration(parseSynonym());
+    case EntityType::kPrintStmt: return new PrintDeclaration(parseSynonym());
+    case EntityType::kReadStmt: return new ReadDeclaration(parseSynonym());
+    default: throw ParseSyntaxError("Unknown declaration type:" + EntityTypeToString(type));
   }
 }
 
 QueryReference *QueryParser::parseClauseReference() {
   Token *reference = peekToken();
   switch (reference->type) {
-    case TokenType::kQuote:
-      return parseQuotedReference();
-    case TokenType::kLiteral:
-      return parseIntegerReference();
-    case TokenType::kSymbol:
-      return parseSynonymReference();
-    case TokenType::kWildCard:
-      return parseWildcardReference();
-    default:
-      throw ParseSyntaxError("Unknown Reference: " + reference->value);
+    case TokenType::kQuote: return parseQuotedReference();
+    case TokenType::kLiteral: return parseIntegerReference();
+    case TokenType::kSymbol: return parseSynonymReference();
+    case TokenType::kWildCard: return parseWildcardReference();
+    default: throw ParseSyntaxError("Unknown Reference: " + reference->value);
   }
 }
 
@@ -134,14 +118,10 @@ QueryAttribute *QueryParser::parseAttribute() {
 
 QueryAttribute *QueryParser::parseAttribute(AttributeType type) {
   switch (type) {
-    case AttributeType::kProcName:
-      return new ProcAttribute();
-    case AttributeType::kVarName:
-      return new VarAttribute();
-    case AttributeType::kValue:
-      return new ValueAttribute();
-    case AttributeType::kStmtNo:
-      return new StmtAttribute();
+    case AttributeType::kProcName: return new ProcAttribute();
+    case AttributeType::kVarName: return new VarAttribute();
+    case AttributeType::kValue: return new ValueAttribute();
+    case AttributeType::kStmtNo: return new StmtAttribute();
     default:
       throw ParseSyntaxError("Unknown attribute type");
   }
@@ -215,10 +195,8 @@ QueryClause *QueryParser::parseClause() {
   Token *clause = nextToken();
   if (*clause == KeywordToken("and")) {
     switch (getPreviousClause()->getClauseType()) {
-      case ClauseType::kSuchThat:
-        return parseSuchThat();
-      case ClauseType::kPattern:
-        return parsePattern();
+      case ClauseType::kSuchThat: return parseSuchThat();
+      case ClauseType::kPattern: return parsePattern();
     }
   }
   if (*clause == KeywordToken("such") && *nextToken() == KeywordToken("that")) {
@@ -267,32 +245,19 @@ SuchThatClause *QueryParser::parseSuchThat() {
 
 SuchThatClause *QueryParser::parseSuchThat(RsType rs_type, QueryReference *first, QueryReference *second) {
   switch (rs_type) {
-    case RsType::kFollows:
-      return new FollowsClause(first, second);
-    case RsType::kFollowsT:
-      return new FollowsTClause(first, second);
-    case RsType::kParent:
-      return new ParentClause(first, second);
-    case RsType::kParentT:
-      return new ParentTClause(first, second);
-    case RsType::kUses:
-      return new UsesClause(first, second);
-    case RsType::kModifies:
-      return new ModifiesClause(first, second);
-    case RsType::kCalls:
-      return new CallsClause(first, second);
-    case RsType::kCallsT:
-      return new CallsTClause(first, second);
-    case RsType::kNext:
-      return new NextClause(first, second);
-    case RsType::kNextT:
-      return new NextTClause(first, second);
-    case RsType::kAffects:
-      return new AffectsClause(first, second);
-    case RsType::kAffectsT:
-      return new AffectsTClause(first, second);
-    default:
-      throw ParseSyntaxError("Unsupported such-that relationship: " + RsTypeToString(rs_type));
+    case RsType::kFollows: return new FollowsClause(first, second);
+    case RsType::kFollowsT: return new FollowsTClause(first, second);
+    case RsType::kParent: return new ParentClause(first, second);
+    case RsType::kParentT: return new ParentTClause(first, second);
+    case RsType::kUses: return new UsesClause(first, second);
+    case RsType::kModifies: return new ModifiesClause(first, second);
+    case RsType::kCalls: return new CallsClause(first, second);
+    case RsType::kCallsT: return new CallsTClause(first, second);
+    case RsType::kNext: return new NextClause(first, second);
+    case RsType::kNextT: return new NextTClause(first, second);
+    case RsType::kAffects: return new AffectsClause(first, second);
+    case RsType::kAffectsT: return new AffectsTClause(first, second);
+    default: throw ParseSyntaxError("Unsupported such-that relationship: " + RsTypeToString(rs_type));
   }
 }
 
