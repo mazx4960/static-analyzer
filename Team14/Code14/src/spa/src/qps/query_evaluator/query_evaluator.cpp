@@ -43,15 +43,9 @@ Result *QueryEvaluator::evaluate() {
   // Query declarations for whose subquery_results are to be returned.
   std::vector<ElemReference *> called_declarations = this->query_.getQueryCall()->getReferences();
 
-  std::vector<QuerySynonym* > called_synonyms{};
-  called_synonyms.reserve(called_declarations.size());
-  for (auto *elem_ref : called_declarations) {
-    called_synonyms.push_back(elem_ref->getSynonymReference()->getSynonym());
-  }
-
   std::vector<SubqueryResult> subquery_results = this->evaluateSubqueries();
   auto *result_projector = new ResultProjector(called_declarations, subquery_results, pkb_);
   SubqueryResult result_context = result_projector->project();
 
-  return new Result(called_synonyms, result_context);
+  return new Result(called_declarations, result_context);
 }
