@@ -14,9 +14,10 @@ CallType QueryCall::getCallType() const {
   return this->type_;
 }
 std::string SelectCall::toString() const {
-  std::string str = "Select ";
+  std::string str = "Select {";
   for (auto *ref : getReferences()) {
-    str.append(ref->toString());
+    str.append(ref->toString() + ", ");
   }
+  str.append("}");
   return str;
 }

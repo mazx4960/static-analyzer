@@ -38,7 +38,7 @@ QueryCall *QueryBuilder::buildQueryCall(QueryCall *query_call_blueprint) {
   if (query_call_blueprint == nullptr) {
     throw ParseSemanticError("Missing Select call");
   }
-  buildQueryCallElemReferences(query_call_blueprint->getReferences());
+  query_call_blueprint->setReferences(buildQueryCallElemReferences(query_call_blueprint->getReferences()));
   return query_call_blueprint;
 }
 
