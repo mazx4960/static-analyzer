@@ -99,6 +99,7 @@ std::vector<QueryClause *> QueryBuilder::buildClauses(const std::vector<QueryCla
         break;
       case ClauseType::kWith:
         buildWith(static_cast<WithClause *>(clause));
+        break;
       default:
         throw ParseSemanticError("Unsupported clause type!");
     }
@@ -144,6 +145,9 @@ SuchThatClause *QueryBuilder::buildSuchThat(SuchThatClause *clause_blueprint) {
 WithClause *QueryBuilder::buildWith(WithClause *clause_blueprint) {
   QueryReference *first = clause_blueprint->getFirst();
   QueryReference *second = clause_blueprint->getSecond();
+  if (first == nullptr || second == nullptr) {
+    throw ParseSemanticError("Missing parameters!");
+  }
   if (first->getRefType() == ReferenceType::kAttr) {
     auto *first_attr_reference = static_cast<AttrReference *>(first);
     first_attr_reference->setSynonymReference(this->getDeclaration(first_attr_reference->getSynonymReference()));

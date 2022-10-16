@@ -1,0 +1,5 @@
+101 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with c.procName = p.procName
+Third
+5000
