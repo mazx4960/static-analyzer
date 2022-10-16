@@ -94,9 +94,8 @@ std::string EvaluationStrategy::unwrapEntity(QueryReference *query_reference, En
   if (query_reference->getRefType() == ReferenceType::kAttr) {
     auto *elem_ref = static_cast<AttrReference *>(query_reference);
     return getAttribute(elem_ref->getAttribute(), entity);
-  } else {
-    return entity->GetValue();
   }
+  return entity->GetValue();
 }
 
 SubqueryResult SuchThatStrategy::evaluate() {
@@ -191,11 +190,16 @@ EntityPointerUnorderedMap WithStrategy::evaluateParameter(QueryReference *first,
   spdlog::debug("Evaluating With parameter {} = {}", first->toString(), second->toString());
   EntitySet first_candidates = this->getCandidates(first);
   EntitySet second_candidates = this->getCandidates(second);
-  std::string candidate_string;
+  std::string candidate_string1;
+  std::string candidate_string2;
   for (auto *candidate : first_candidates) {
-    candidate_string += candidate->ToString() + ", ";
+    candidate_string1 += candidate->ToString() + ", ";
   }
-  spdlog::debug("Candidates[{}]: {}", first_candidates.size(), candidate_string);
+  for (auto *candidate : second_candidates) {
+    candidate_string2 += candidate->ToString() + ", ";
+  }
+  spdlog::debug("Candidates1[{}]: {}", first_candidates.size(), candidate_string1);
+  spdlog::debug("Candidates2[{}]: {}", second_candidates.size(), candidate_string2);
 
   EntityPointerUnorderedMap results;
   for (auto *entity : first_candidates) {

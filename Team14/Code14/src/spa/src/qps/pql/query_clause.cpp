@@ -687,8 +687,7 @@ bool WithClause::operator==(const QueryClause &other) const {
     return false;
   }
   auto other_clause = static_cast<const WithClause &>(other);
-  return (*other_clause.getFirst()) == (*this->getFirst())
-      && (*other_clause.getSecond()) == (*this->getSecond())
+  return (*other_clause.getFirst()) == (*this->getFirst()) && (*other_clause.getSecond()) == (*this->getSecond())
       && other_clause.getComparator() == this->getComparator();
 }
 void WithClause::setFirst(AttrReference *elem_reference) {
