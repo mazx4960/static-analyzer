@@ -42,7 +42,7 @@ QueryCall *QueryBuilder::buildQueryCall(QueryCall *query_call_blueprint) {
   return query_call_blueprint;
 }
 
-std::vector<ElemReference *> QueryBuilder::buildQueryCallElemReferences(const std::vector<ElemReference *>& query_call_reference_blueprint) {
+std::vector<ElemReference *> QueryBuilder::buildQueryCallElemReferences(const std::vector<ElemReference *> &query_call_reference_blueprint) {
   if (query_call_reference_blueprint.empty()) {
     throw ParseSemanticError("Missing declarations");
   }
@@ -67,7 +67,6 @@ SynonymReference *QueryBuilder::getDeclaration(SynonymReference *synonym_referen
   throw ParseSemanticError("Synonym is not declared: " + synonym->toString());
 }
 
-
 SynonymReference *QueryBuilder::getDeclaration(const QuerySynonym *synonym) {
   for (auto *declaration : declarations_) {
     QuerySynonym *declaration_synonym = declaration->getSynonym();
@@ -87,6 +86,8 @@ std::vector<QueryClause *> QueryBuilder::buildClauses(const std::vector<QueryCla
       case ClauseType::kPattern:buildPattern(static_cast<PatternClause *>(clause));
         break;
       case ClauseType::kSuchThat:buildSuchThat(static_cast<SuchThatClause *>(clause));
+        break;
+      case ClauseType::kWith:buildWith(static_cast<WithClause *>(clause));
         break;
       default:throw ParseSemanticError("Unsupported clause type!");
     }
@@ -140,7 +141,7 @@ WithClause *QueryBuilder::buildWith(WithClause *clause_blueprint) {
   if (second->getRefType() == ReferenceType::kElem) {
     auto *elem_second = static_cast<ElemReference *>(second);
     elem_second->setSynonymReference(this->getDeclaration(elem_second->getSynonymReference()));
-    clause_blueprint->setFirst(elem_second);
+    clause_blueprint->setSecond(elem_second);
   }
   if (!clause_blueprint->IsSemanticallyCorrect()) {
     throw ParseSemanticError("Invalid with parameter type");

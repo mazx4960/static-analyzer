@@ -1,6 +1,3 @@
-//R
-// Created by gabri on 19/9/2022.
-//
 #include "subquery_result.h"
 
 #include <utility>
@@ -8,7 +5,12 @@
 #include "spdlog/spdlog.h"
 
 SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryReference *first, QueryReference *second) {
-
+  if (first->getRefType() == ReferenceType::kElem) {
+    first = static_cast<ElemReference *>(first)->getSynonymReference();
+  }
+  if (second->getRefType() == ReferenceType::kElem) {
+    second = static_cast<ElemReference *>(second)->getSynonymReference();
+  }
   if (first->getRefType() == ReferenceType::kSynonym) {
     QuerySynonym *first_synonym = static_cast<SynonymReference *>(first)->getSynonym();
     spdlog::debug("First synonym used");
@@ -126,7 +128,7 @@ EntityPointerUnorderedSet SubqueryResult::GetColumn(QuerySynonym *synonym) {
   return results;
 }
 
-SubqueryResult SubqueryResult::GetColumns(const std::vector<QuerySynonym *>& synonyms) {
+SubqueryResult SubqueryResult::GetColumns(const std::vector<QuerySynonym *> &synonyms) {
   std::vector<QuerySynonym *> new_synonyms{};
   for (auto *synonym : synonyms) {
     if (std::find(synonyms_.begin(), synonyms_.end(), synonym) != synonyms_.end()) {
@@ -136,7 +138,7 @@ SubqueryResult SubqueryResult::GetColumns(const std::vector<QuerySynonym *>& syn
   std::vector<ResultRow> new_rows{};
   for (auto row : table_rows_) {
     ResultRow new_row{};
-    for (auto *synonym: new_synonyms) {
+    for (auto *synonym : new_synonyms) {
       new_row[synonym] = row[synonym];
     }
     new_rows.push_back(new_row);
@@ -190,9 +192,9 @@ SubqueryResult SubqueryResult::Empty(std::vector<QuerySynonym *> synonyms) {
 SubqueryResult SubqueryResult::FullNoSynonym() {
   return SubqueryResult({}, {{}});
 }
-SubqueryResult SubqueryResult::AddColumn(QuerySynonym *synonym, const EntityPointerUnorderedSet& entities) {
+SubqueryResult SubqueryResult::AddColumn(QuerySynonym *synonym, const EntityPointerUnorderedSet &entities) {
   std::vector<ResultRow> new_rows{};
-  for (const auto& row : table_rows_) {
+  for (const auto &row : table_rows_) {
     for (auto *entity : entities) {
       ResultRow new_row = row;
       new_row[synonym] = entity;
