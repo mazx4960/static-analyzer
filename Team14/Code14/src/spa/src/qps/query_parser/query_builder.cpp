@@ -51,8 +51,7 @@ std::vector<ElemReference *> QueryBuilder::buildQueryCallElemReferences(std::vec
     auto *elem_ref = i;
     if (elem_ref->getRefType() == ReferenceType::kSynonym) {
       i = getDeclaration(static_cast<SynonymReference *>(elem_ref));
-    }
-    if (elem_ref->getRefType() == ReferenceType::kAttr) {
+     }else if (elem_ref->getRefType() == ReferenceType::kAttr) {
       auto *attr_ref = static_cast<AttrReference *>(elem_ref);
       attr_ref->setSynonymReference(getDeclaration(attr_ref->getSynonymReference()));
     }
