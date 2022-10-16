@@ -50,6 +50,10 @@ class QueryParser {
   ExpressionSpec *parseExpression();
 
   static void expect(Token *token, const std::unordered_set<TokenType> &expected_types);
-  ElemReference *parseElemReference();
+  ElemReference *parseElemReference(bool forced_attribute = false);
   AttributeType parseAttribute();
+  Comparator parseComparator();
+  WithClause *parseWith();
+  QueryClause *parseAndClause();
+  QueryReference *parseCompareReference();
 };

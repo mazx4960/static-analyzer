@@ -17,6 +17,9 @@ class QueryKeywords {
   inline static const std::unordered_set<std::string> kAssignOperators = {
       "+", "-", "*", "/", "%", "<", ">"};
 
+  inline static const std::unordered_set<std::string> kComparator = {
+      "="};
+
   inline static const std::unordered_set<std::string> kSuchThatKeywords{
       "such", "that"};
 
@@ -78,4 +81,5 @@ class QueryKeywords {
   static RsType relationshipKeywordToType(const std::string &keyword);
   static RsType patternKeywordToType(const std::string &keyword);
   static AttributeType attributeKeywordToType(const std::string &keyword);
+  static bool isValidComparator(const std::string &keyword);
 };

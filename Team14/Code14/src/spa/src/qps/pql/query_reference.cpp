@@ -25,6 +25,9 @@ bool QueryReference::isStmtRef() const {
 bool QueryReference::isEntRef() const {
   return false;
 }
+bool QueryReference::isAttrCompareRef() const {
+  return false;
+}
 
 // WildcardDeclaration
 bool WildcardReference::operator==(const QueryReference &other) const {
@@ -68,6 +71,9 @@ bool IdentReference::isSyntacticallyCorrect() const {
 std::string IdentReference::toString() const {
   return "Ident:" + this->value_;
 }
+bool IdentReference::isAttrCompareRef() const {
+  return true;
+}
 
 // IntegerDeclaration
 bool IntegerReference::operator==(const QueryReference &other) const {
@@ -87,6 +93,9 @@ bool IntegerReference::isSyntacticallyCorrect() const {
 }
 std::string IntegerReference::toString() const {
   return "Integer:" + this->value_;
+}
+bool IntegerReference::isAttrCompareRef() const {
+  return true;
 }
 
 // SynonymDeclaration
@@ -185,5 +194,8 @@ bool ElemReference::isEntRef() const {
 }
 bool ElemReference::isSyntacticallyCorrect() const {
   return this->getSynonymReference()->isSyntacticallyCorrect();
+}
+bool ElemReference::isAttrCompareRef() const {
+  return true;
 }
 

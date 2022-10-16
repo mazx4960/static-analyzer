@@ -14,8 +14,9 @@
 #include "qps/pql/interface/ent_ref.h"
 #include "qps/pql/interface/boolean_ref.h"
 #include "types.h"
+#include "qps/pql/interface/attrcompare_ref.h"
 
-class QueryReference : public ICheckSyntax, public IStmtRef, public IEntRef {
+class QueryReference : public ICheckSyntax, public IStmtRef, public IEntRef, public IAttrCompareRef {
  private:
   ReferenceType reference_type_;
   EntityType entity_type_;
@@ -42,6 +43,7 @@ class QueryReference : public ICheckSyntax, public IStmtRef, public IEntRef {
   bool isSyntacticallyCorrect() const override = 0;
   bool isStmtRef() const override;
   bool isEntRef() const override;
+  bool isAttrCompareRef() const override;
 };
 
 class WildcardReference : public QueryReference {
@@ -70,6 +72,7 @@ class IdentReference : public QueryReference {
   bool operator==(const QueryReference *other) const override;
   std::string getReferenceValue() const override;
   bool isEntRef() const override;
+  bool isAttrCompareRef() const override;
   bool isSyntacticallyCorrect() const override;
   std::string toString() const override;
 };
@@ -86,6 +89,7 @@ class IntegerReference : public QueryReference {
   bool operator==(const QueryReference *other) const override;
   std::string getReferenceValue() const override;
   bool isStmtRef() const override;
+  bool isAttrCompareRef() const override;
   bool isSyntacticallyCorrect() const override;
   std::string toString() const override;
 };
@@ -133,6 +137,7 @@ class ElemReference : public QueryReference {
   std::string getReferenceValue() const override;
   bool isStmtRef() const override;
   bool isEntRef() const override;
+  bool isAttrCompareRef() const override;
   bool isSyntacticallyCorrect() const override;
   std::string toString() const override;
 };

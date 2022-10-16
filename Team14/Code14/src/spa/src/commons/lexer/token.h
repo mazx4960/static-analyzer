@@ -21,6 +21,7 @@ enum class TokenType {
   kAngleCloseBracket,
   kWildCard,
   kHashtag,
+  kComparator,
   kEndOfFile
 };
 
@@ -130,6 +131,12 @@ class WildCardToken : public Token {
 class HashtagToken : public Token {
  public:
   explicit HashtagToken() : Token(TokenType::kHashtag, "#") {
+  }
+};
+
+class ComparatorToken : public Token {
+ public:
+  explicit ComparatorToken(std::string value) : Token(TokenType::kComparator, std::move(value)) {
   }
 };
 

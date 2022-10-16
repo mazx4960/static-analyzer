@@ -54,6 +54,9 @@ Token *QueryLexer::next_token() {
   } else if (c == this->hashtag_) {
     // Hashtag
     return new HashtagToken();
+  } else if (QueryKeywords::isValidComparator(tmp_)) {
+    // Comparator
+    return new ComparatorToken(tmp_);
   } else if (QueryKeywords::isValidAssignOperator(tmp_)) {
     // Assign Operators
     return new OperatorToken(this->tmp_);

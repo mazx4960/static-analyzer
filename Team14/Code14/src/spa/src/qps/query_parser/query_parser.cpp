@@ -71,39 +71,73 @@ void QueryParser::parseDeclarationStatement() {
 
 SynonymReference *QueryParser::parseDeclaration(EntityType type) {
   switch (type) {
-    case EntityType::kProcedure: return new ProcedureDeclaration(parseSynonym());
-    case EntityType::kStatement: return new StatementDeclaration(parseSynonym());
-    case EntityType::kVariable: return new VariableDeclaration(parseSynonym());
-    case EntityType::kConstant: return new ConstantDeclaration(parseSynonym());
-    case EntityType::kAssignStmt: return new AssignDeclaration(parseSynonym());
-    case EntityType::kCallStmt: return new CallDeclaration(parseSynonym());
-    case EntityType::kIfStmt: return new IfDeclaration(parseSynonym());
-    case EntityType::kWhileStmt: return new WhileDeclaration(parseSynonym());
-    case EntityType::kPrintStmt: return new PrintDeclaration(parseSynonym());
-    case EntityType::kReadStmt: return new ReadDeclaration(parseSynonym());
-    default: throw ParseSyntaxError("Unknown declaration type:" + EntityTypeToString(type));
+    case EntityType::kProcedure:
+      return new ProcedureDeclaration(parseSynonym());
+    case EntityType::kStatement:
+      return new StatementDeclaration(parseSynonym());
+    case EntityType::kVariable:
+      return new VariableDeclaration(parseSynonym());
+    case EntityType::kConstant:
+      return new ConstantDeclaration(parseSynonym());
+    case EntityType::kAssignStmt:
+      return new AssignDeclaration(parseSynonym());
+    case EntityType::kCallStmt:
+      return new CallDeclaration(parseSynonym());
+    case EntityType::kIfStmt:
+      return new IfDeclaration(parseSynonym());
+    case EntityType::kWhileStmt:
+      return new WhileDeclaration(parseSynonym());
+    case EntityType::kPrintStmt:
+      return new PrintDeclaration(parseSynonym());
+    case EntityType::kReadStmt:
+      return new ReadDeclaration(parseSynonym());
+    default:
+      throw ParseSyntaxError("Unknown declaration type:" + EntityTypeToString(type));
   }
 }
 
 QueryReference *QueryParser::parseClauseReference() {
   Token *reference = peekToken();
   switch (reference->type) {
-    case TokenType::kQuote: return parseQuotedReference();
-    case TokenType::kLiteral: return parseIntegerReference();
-    case TokenType::kSymbol: return parseSynonymReference();
-    case TokenType::kWildCard: return parseWildcardReference();
-    default: throw ParseSyntaxError("Unknown Reference: " + reference->value);
+    case TokenType::kQuote:
+      return parseQuotedReference();
+    case TokenType::kLiteral:
+      return parseIntegerReference();
+    case TokenType::kSymbol:
+      return parseSynonymReference();
+    case TokenType::kWildCard:
+      return parseWildcardReference();
+    default:
+      throw ParseSyntaxError("Unknown Reference: " + reference->value);
   }
 }
 
-ElemReference *QueryParser::parseElemReference() {
+QueryReference *QueryParser::parseCompareReference() {
+  Token *reference = peekToken();
+  switch (reference->type) {
+    case TokenType::kQuote:
+      return parseQuotedReference();
+    case TokenType::kLiteral:
+      return parseIntegerReference();
+    case TokenType::kSymbol:
+      return parseElemReference(true);
+    default:
+      throw ParseSyntaxError("Unknown Compare Reference: " + reference->value);
+  }
+}
+
+ElemReference *QueryParser::parseElemReference(bool forced_attribute) {
   auto *synonym_reference = parseSynonymReference();
   if (*peekToken() == DotToken()) {
     nextToken();
     return new ElemReference(synonym_reference, parseAttribute());
   }
+  if (forced_attribute) {
+    throw ParseSyntaxError("Missing attribute ");
+  }
   return new ElemReference(synonym_reference, AttributeType::kNone);
 }
+
 
 AttributeType QueryParser::parseAttribute() {
   expect(peekToken(), {TokenType::kSymbol});
@@ -169,7 +203,6 @@ std::vector<ElemReference *> QueryParser::parseElemReferences() {
     }
     expect(nextToken(), {TokenType::kAngleCloseBracket});
   } else {
-
     references.push_back(parseElemReference());
   }
   return references;
@@ -186,10 +219,7 @@ Clauses QueryParser::parseClauses() {
 QueryClause *QueryParser::parseClause() {
   Token *clause = nextToken();
   if (*clause == KeywordToken("and")) {
-    switch (getPreviousClause()->getClauseType()) {
-      case ClauseType::kSuchThat: return parseSuchThat();
-      case ClauseType::kPattern: return parsePattern();
-    }
+    return parseAndClause();
   }
   if (*clause == KeywordToken("such") && *nextToken() == KeywordToken("that")) {
     return parseSuchThat();
@@ -197,7 +227,23 @@ QueryClause *QueryParser::parseClause() {
   if (*clause == KeywordToken("pattern")) {
     return parsePattern();
   }
+  if (*clause == KeywordToken("with")) {
+    return parseWith();
+  }
   throw ParseSyntaxError("Unknown clause: " + clause->value);
+}
+
+QueryClause *QueryParser::parseAndClause() {
+  switch (getPreviousClause()->getClauseType()) {
+    case ClauseType::kSuchThat:
+      return parseSuchThat();
+    case ClauseType::kPattern:
+      return parsePattern();
+    case ClauseType::kWith:
+      return parseWith();
+    default:
+      throw ParseSyntaxError("and not supported");
+  }
 }
 
 QueryClause *QueryParser::getPreviousClause() {
@@ -237,19 +283,32 @@ SuchThatClause *QueryParser::parseSuchThat() {
 
 SuchThatClause *QueryParser::parseSuchThat(RsType rs_type, QueryReference *first, QueryReference *second) {
   switch (rs_type) {
-    case RsType::kFollows: return new FollowsClause(first, second);
-    case RsType::kFollowsT: return new FollowsTClause(first, second);
-    case RsType::kParent: return new ParentClause(first, second);
-    case RsType::kParentT: return new ParentTClause(first, second);
-    case RsType::kUses: return new UsesClause(first, second);
-    case RsType::kModifies: return new ModifiesClause(first, second);
-    case RsType::kCalls: return new CallsClause(first, second);
-    case RsType::kCallsT: return new CallsTClause(first, second);
-    case RsType::kNext: return new NextClause(first, second);
-    case RsType::kNextT: return new NextTClause(first, second);
-    case RsType::kAffects: return new AffectsClause(first, second);
-    case RsType::kAffectsT: return new AffectsTClause(first, second);
-    default: throw ParseSyntaxError("Unsupported such-that relationship: " + RsTypeToString(rs_type));
+    case RsType::kFollows:
+      return new FollowsClause(first, second);
+    case RsType::kFollowsT:
+      return new FollowsTClause(first, second);
+    case RsType::kParent:
+      return new ParentClause(first, second);
+    case RsType::kParentT:
+      return new ParentTClause(first, second);
+    case RsType::kUses:
+      return new UsesClause(first, second);
+    case RsType::kModifies:
+      return new ModifiesClause(first, second);
+    case RsType::kCalls:
+      return new CallsClause(first, second);
+    case RsType::kCallsT:
+      return new CallsTClause(first, second);
+    case RsType::kNext:
+      return new NextClause(first, second);
+    case RsType::kNextT:
+      return new NextTClause(first, second);
+    case RsType::kAffects:
+      return new AffectsClause(first, second);
+    case RsType::kAffectsT:
+      return new AffectsTClause(first, second);
+    default:
+      throw ParseSyntaxError("Unsupported such-that relationship: " + RsTypeToString(rs_type));
   }
 }
 
@@ -262,6 +321,22 @@ PatternClause *QueryParser::parsePattern() {
   ExpressionSpec *expression_spec = parseExpression();
   expect(nextToken(), {TokenType::kRoundCloseBracket});
   return new PatternClause(syn_assign, ent_ref, expression_spec);
+}
+
+WithClause *QueryParser::parseWith() {
+  QueryReference *first_ref = parseCompareReference();
+  Comparator comparator = parseComparator();
+  QueryReference *second_ref = parseCompareReference();
+  auto *clause = new WithClause(comparator, first_ref, second_ref);
+  if (!clause->isSyntacticallyCorrect()) {
+    throw ParseSyntaxError("Incorrect parameter syntax");
+  }
+  return clause;
+}
+
+Comparator QueryParser::parseComparator() {
+  expect(nextToken(), {TokenType::kComparator});
+  return Comparator::kEquals;
 }
 
 ExpressionSpec *QueryParser::parseExpression() {
