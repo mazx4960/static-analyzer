@@ -26,12 +26,12 @@ Result *Result::empty(std::vector<ElemReference *> elem_refs) {
 Result *Result::semanticError() {
   auto *synonym = new QuerySynonym("semantic_error");
   std::unordered_set<std::string> error_set = {"SemanticError"};
-  return new Result(new ElemReference(new SynonymReference(synonym), AttributeType::kNone), error_set);
+  return new Result(new SynonymReference(synonym), error_set);
 }
 Result *Result::syntacticError() {
   auto *synonym = new QuerySynonym("syntactic_error");
   std::unordered_set<std::string> error_set = {"SyntaxError"};
-  return new Result(new ElemReference(new SynonymReference(synonym), AttributeType::kNone), error_set);
+  return new Result(new SynonymReference(synonym), error_set);
 }
 
 bool Result::is_empty() const {
@@ -73,7 +73,8 @@ Result::Result(std::vector<ElemReference *> elem_refs, const SubqueryResult &tab
       if (i > 0) {
         row_string += ", ";
       }
-      row_string += row[elem_ref->getSynonymReference()->getSynonym()]->GetValue();
+
+      row_string += row[elem_ref->getSynonym()]->GetValue();
     }
     if (elem_refs_.size() > 1) {
       row_string += ">";

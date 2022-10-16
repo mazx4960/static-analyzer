@@ -48,9 +48,9 @@ class QueryParser {
   QueryReference *parseClauseReference();
   PatternClause *parsePattern();
   ExpressionSpec *parseExpression();
-
   static void expect(Token *token, TokenType expected);
-  ElemReference *parseElemReference(bool forced_attribute = false);
+  ElemReference *parseElemReference();
+  AttrReference *parseAttrReference();
   AttributeType parseAttribute();
   Comparator parseComparator();
   WithClause *parseWith();

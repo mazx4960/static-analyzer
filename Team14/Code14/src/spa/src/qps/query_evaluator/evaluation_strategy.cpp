@@ -23,7 +23,7 @@ EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClaus
 EntitySet EvaluationStrategy::getCandidates(QueryReference *declaration) {
   EntitySet candidates;
   switch (declaration->getRefType()) {
-    case ReferenceType::kElem:// fallthrough
+    case ReferenceType::kAttr:// fallthrough
     case ReferenceType::kSynonym: {
       return declaration->getContext();
     }
@@ -86,13 +86,13 @@ std::string EvaluationStrategy::getAttribute(AttributeType attribute_type, Entit
           || entity_type == EntityType::kPrintStmt || entity_type == EntityType::kReadStmt) {
         return entity->GetValue();
       }
-    case AttributeType::kNone:break;
+    default:
+      throw EvaluationStrategyError("Invalid attribute type");
   }
-  throw EvaluationStrategyError("Invalid attribute type");
 }
 std::string EvaluationStrategy::unwrapEntity(QueryReference *query_reference, Entity *entity) {
-  if (query_reference->getRefType() == ReferenceType::kElem) {
-    auto *elem_ref = static_cast<ElemReference *>(query_reference);
+  if (query_reference->getRefType() == ReferenceType::kAttr) {
+    auto *elem_ref = static_cast<AttrReference *>(query_reference);
     return getAttribute(elem_ref->getAttribute(), entity);
   }
   return entity->GetValue();

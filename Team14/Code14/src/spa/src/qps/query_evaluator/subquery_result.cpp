@@ -5,11 +5,11 @@
 #include "spdlog/spdlog.h"
 
 SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryReference *first, QueryReference *second) {
-  if (first->getRefType() == ReferenceType::kElem) {
-    first = static_cast<ElemReference *>(first)->getSynonymReference();
+  if (first->getRefType() == ReferenceType::kAttr) {
+    first = static_cast<AttrReference *>(first)->getSynonymReference();
   }
-  if (second->getRefType() == ReferenceType::kElem) {
-    second = static_cast<ElemReference *>(second)->getSynonymReference();
+  if (second->getRefType() == ReferenceType::kAttr) {
+    second = static_cast<AttrReference *>(second)->getSynonymReference();
   }
   if (first->getRefType() == ReferenceType::kSynonym) {
     QuerySynonym *first_synonym = static_cast<SynonymReference *>(first)->getSynonym();

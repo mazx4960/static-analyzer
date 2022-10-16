@@ -202,8 +202,8 @@ class WithClause : public QueryClause {
   explicit WithClause(Comparator comparator, QueryReference *first, QueryReference *second)
       : QueryClause(ClauseType::kWith), comparator_(comparator), first_(first), second_(second) {
   };
-  void setFirst(ElemReference *elem_reference);
-  void setSecond(ElemReference *elem_reference);
+  void setFirst(AttrReference *elem_reference);
+  void setSecond(AttrReference *elem_reference);
   [[nodiscard]] Comparator getComparator() const;
   [[nodiscard]] QueryReference *getFirst() const;
   [[nodiscard]] QueryReference *getSecond() const;
