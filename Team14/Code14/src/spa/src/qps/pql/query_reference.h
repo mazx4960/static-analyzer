@@ -98,6 +98,10 @@ class ElemReference {
  public:
   [[nodiscard]] virtual ReferenceType getRefType() const = 0;
   [[nodiscard]] virtual std::string toString() const = 0;
+  [[nodiscard]] virtual QuerySynonym *getSynonym() const = 0;
+  [[nodiscard]] virtual EntityPointerUnorderedSet getContext() const = 0;
+  virtual bool operator==(const QueryReference &other) const = 0;
+  virtual bool operator==(const QueryReference *other) const = 0;
 };
 
 class SynonymReference : public QueryReference, public IBooleanRef, public ElemReference {
@@ -112,8 +116,9 @@ class SynonymReference : public QueryReference, public IBooleanRef, public ElemR
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;
   ReferenceType getRefType() const override;
-  QuerySynonym *getSynonym() const;
+  QuerySynonym *getSynonym() const override;
   std::string getReferenceValue() const override;
+  EntityPointerUnorderedSet getContext() const override;
   bool isStmtRef() const override;
   bool isEntRef() const override;
   bool isSyntacticallyCorrect() const override;
@@ -135,6 +140,7 @@ class AttrReference : public QueryReference, public ElemReference {
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;
   SynonymReference *getSynonymReference() const;
+  QuerySynonym *getSynonym() const override;
   ReferenceType getRefType() const override;
   AttributeType getAttribute() const;
   EntityType getEntityType() const override;

@@ -41,7 +41,7 @@ Result *QueryEvaluator::evaluate() {
   this->fetchContext();
 
   // Query declarations for whose subquery_results are to be returned.
-  std::vector<AttrReference *> called_declarations = this->query_.getQueryCall()->getReferences();
+  std::vector<ElemReference *> called_declarations = this->query_.getQueryCall()->getReferences();
 
   std::vector<SubqueryResult> subquery_results = this->evaluateSubqueries();
   auto *result_projector = new ResultProjector(called_declarations, subquery_results, pkb_);

@@ -26,7 +26,7 @@ EntityPointerUnorderedSet ResultProjector::intersect(const EntityPointerUnordere
 SubqueryResult ResultProjector::project() {
   std::vector<QuerySynonym* > called_synonyms{};
   for (auto *elem_ref : called_declarations_) {
-    called_synonyms.push_back(elem_ref->getSynonymReference()->getSynonym());
+    called_synonyms.push_back(elem_ref->getSynonym());
   }
   if (std::any_of(subquery_results_.begin(), subquery_results_.end(),
                   [](SubqueryResult subquery_result) {
@@ -41,8 +41,9 @@ SubqueryResult ResultProjector::project() {
     intermediate_result = intermediate_result.Join(result);
   }
   for (auto *decl : called_declarations_) {
-    auto *synonym = decl->getSynonymReference()->getSynonym();
+    auto *synonym = decl->getSynonym();
     if (!intermediate_result.Uses(synonym)) {
+
       intermediate_result = intermediate_result.AddColumn(synonym, decl->getContext());
     }
   }

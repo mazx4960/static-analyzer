@@ -144,6 +144,9 @@ void SynonymReference::setBooleanRef(bool is_boolean_Ref) {
 bool SynonymReference::isBooleanRef() const {
   return this->is_boolean_ref_;
 }
+EntityPointerUnorderedSet SynonymReference::getContext() const {
+  return QueryReference::getContext();
+}
 
 bool AttrReference::operator==(const QueryReference &other) const {
   if (other.getRefType() == this->getRefType()) {
@@ -207,5 +210,8 @@ bool AttrReference::isSyntacticallyCorrect() const {
 }
 bool AttrReference::isAttrCompareRef() const {
   return true;
+}
+QuerySynonym *AttrReference::getSynonym() const {
+  return getSynonymReference()->getSynonym();
 }
 
