@@ -27,6 +27,9 @@ bool QueryKeywords::isValidSuchThatKeyword(const std::string &keyword) {
 bool QueryKeywords::isValidAssignOperator(const std::string &keyword) {
   return kAssignOperators.find(keyword) != kAssignOperators.end();
 }
+bool QueryKeywords::isValidComparator(const std::string &keyword) {
+  return kComparator.find(keyword) != kComparator.end();
+}
 bool QueryKeywords::isValidAndKeyword(const std::string &keyword) {
   return kAndKeywords.find(keyword) != kAndKeywords.end();
 }

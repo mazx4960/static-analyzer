@@ -128,3 +128,22 @@ SuchThatClause *QueryBuilder::buildSuchThat(SuchThatClause *clause_blueprint) {
   }
   return clause_blueprint;
 }
+WithClause *QueryBuilder::buildWith(WithClause *clause_blueprint) {
+  QueryReference *first = clause_blueprint->getFirst();
+  QueryReference *second = clause_blueprint->getSecond();
+  Comparator comparator = clause_blueprint->getComparator();
+  if (first->getRefType() == ReferenceType::kElem) {
+    auto *elem_first = static_cast<ElemReference *>(first);
+    elem_first->setSynonymReference(this->getDeclaration(elem_first->getSynonymReference()));
+    clause_blueprint->setFirst(elem_first);
+  }
+  if (second->getRefType() == ReferenceType::kElem) {
+    auto *elem_second = static_cast<ElemReference *>(second);
+    elem_second->setSynonymReference(this->getDeclaration(elem_second->getSynonymReference()));
+    clause_blueprint->setFirst(elem_second);
+  }
+  if (!clause_blueprint->IsSemanticallyCorrect()) {
+    throw ParseSemanticError("Invalid with parameter type");
+  }
+  return nullptr;
+}
