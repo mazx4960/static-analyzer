@@ -94,7 +94,13 @@ class IntegerReference : public QueryReference {
   std::string toString() const override;
 };
 
-class SynonymReference : public QueryReference, public IBooleanRef {
+class ElemReference {
+ public:
+  [[nodiscard]] virtual ReferenceType getRefType() const = 0;
+  [[nodiscard]] virtual std::string toString() const = 0;
+};
+
+class SynonymReference : public QueryReference, public IBooleanRef, public ElemReference {
  private:
   QuerySynonym *query_synonym_;
   bool is_boolean_ref_;
@@ -105,6 +111,7 @@ class SynonymReference : public QueryReference, public IBooleanRef {
   };
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;
+  ReferenceType getRefType() const override;
   QuerySynonym *getSynonym() const;
   std::string getReferenceValue() const override;
   bool isStmtRef() const override;
@@ -115,19 +122,20 @@ class SynonymReference : public QueryReference, public IBooleanRef {
   std::string toString() const override;
 };
 
-class ElemReference : public QueryReference {
+class AttrReference : public QueryReference, public ElemReference {
  private:
   SynonymReference *synonym_reference_;
   AttributeType attribute_type_;
 
  public:
-  explicit ElemReference(SynonymReference *synonym_reference, AttributeType attribute_type) : QueryReference(
-      ReferenceType::kElem,
+  explicit AttrReference(SynonymReference *synonym_reference, AttributeType attribute_type) : QueryReference(
+      ReferenceType::kAttr,
       EntityType::kUnknown), synonym_reference_(synonym_reference), attribute_type_(attribute_type) {
   };
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;
   SynonymReference *getSynonymReference() const;
+  ReferenceType getRefType() const override;
   AttributeType getAttribute() const;
   EntityType getEntityType() const override;
   EntityPointerUnorderedSet getContext() const override;

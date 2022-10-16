@@ -2,14 +2,14 @@
 
 #include <utility>
 
-Result::Result(ElemReference *elem_ref, const EntityPointerUnorderedSet &results_set) : elem_refs_({std::move(elem_ref)}) {
+Result::Result(AttrReference *elem_ref, const EntityPointerUnorderedSet &results_set) : elem_refs_({std::move(elem_ref)}) {
   this->results_.reserve(results_set.size());
   for (auto *entity : results_set) {
     this->results_.insert(entity->GetValue());
   }
 }
 
-Result::Result(ElemReference *elem_ref, std::unordered_set<std::string> results_set)
+Result::Result(AttrReference *elem_ref, std::unordered_set<std::string> results_set)
     : elem_refs_({std::move(elem_ref)}), results_(std::move(results_set)) {
 };
 
@@ -17,7 +17,7 @@ Result *Result::empty() {
   return Result::empty({});
 }
 
-Result *Result::empty(std::vector<ElemReference *> elem_refs) {
+Result *Result::empty(std::vector<AttrReference *> elem_refs) {
   std::unordered_set<std::string> empty_set;
   return new Result(std::move(elem_refs), SubqueryResult::Empty({}));
 }
@@ -59,7 +59,7 @@ std::vector<std::string> Result::get_sorted_results_string_list() const {
 int Result::size() const {
   return this->results_.size();
 }
-Result::Result(std::vector<ElemReference *> elem_refs, const SubqueryResult& table) : elem_refs_(std::move(elem_refs)) {
+Result::Result(std::vector<AttrReference *> elem_refs, const SubqueryResult& table) : elem_refs_(std::move(elem_refs)) {
   std::vector<ResultRow> rows = table.GetRows();
   this->results_.reserve(rows.size());
   for (auto row : rows) {

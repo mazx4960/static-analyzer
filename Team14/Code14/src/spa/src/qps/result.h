@@ -17,19 +17,19 @@ using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunctio
 
 class Result {
  private:
-  std::vector<ElemReference *> elem_refs_;
+  std::vector<AttrReference *> elem_refs_;
 
   std::unordered_set<std::string> results_;
 
  public:
-  Result(ElemReference *, const EntityPointerUnorderedSet &);
+  Result(AttrReference *, const EntityPointerUnorderedSet &);
 
-  Result(ElemReference *, std::unordered_set<std::string>);
+  Result(AttrReference *, std::unordered_set<std::string>);
 
-  Result(std::vector<ElemReference *>, const SubqueryResult&);
+  Result(std::vector<AttrReference *>, const SubqueryResult&);
 
   static Result *empty();
-  static Result *empty(std::vector<ElemReference *>);
+  static Result *empty(std::vector<AttrReference *>);
 
   static Result *semanticError();
   static Result *syntacticError();

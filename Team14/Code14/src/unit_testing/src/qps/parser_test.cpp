@@ -14,7 +14,7 @@ TEST(QueryParserTest, SynonymParseTest) {
 
 TEST(QueryParserTest, SelectCallParseTest) {
   std::vector<Token *> tokens = {new KeywordToken("Select"), new SymbolToken("v")};
-  auto *expected = new SelectCall(new ElemReference(new SynonymReference(new QuerySynonym("v")), AttributeType::kNone));
+  auto *expected = new SelectCall(new AttrReference(new SynonymReference(new QuerySynonym("v")), AttributeType::kNone));
   QueryParser parser = QueryParser(tokens);
   auto *select = parser.parseQueryCall();
   ASSERT_EQ(*select->getReferences().front(), *expected->getReferences().front());

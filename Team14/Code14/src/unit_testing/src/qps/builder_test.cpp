@@ -8,7 +8,7 @@ TEST(BuilderTest, QueryBuilderTest) {
   auto *query_synonym = new QuerySynonym("v");
   auto *synonym_reference = new SynonymReference(query_synonym, EntityType::kVariable);
   auto *query = new Query({synonym_reference},
-                          new SelectCall(new ElemReference(new SynonymReference(query_synonym), AttributeType::kNone)),
+                          new SelectCall(new AttrReference(new SynonymReference(query_synonym), AttributeType::kNone)),
                           {});
 
   QueryBuilder builder = QueryBuilder(query);

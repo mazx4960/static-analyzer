@@ -7,8 +7,8 @@
 std::vector<ElemReference *> QueryCall::getReferences() const {
   return this->elem_references_;
 }
-void QueryCall::setReferences(std::vector<ElemReference *> synonym_reference) {
-  this->elem_references_ = std::move(synonym_reference);
+void QueryCall::setReferences(std::vector<ElemReference *> elem_references) {
+  this->elem_references_ = std::move(elem_references);
 }
 CallType QueryCall::getCallType() const {
   return this->type_;

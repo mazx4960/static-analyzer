@@ -120,24 +120,28 @@ QueryReference *QueryParser::parseCompareReference() {
     case TokenType::kLiteral:
       return parseIntegerReference();
     case TokenType::kSymbol:
-      return parseElemReference(true);
+      return parseAttrReference();
     default:
       throw ParseSyntaxError("Unknown Compare Reference: " + reference->value);
   }
 }
 
-ElemReference *QueryParser::parseElemReference(bool forced_attribute) {
+ElemReference *QueryParser::parseElemReference() {
   auto *synonym_reference = parseSynonymReference();
   if (*peekToken() == DotToken()) {
     nextToken();
-    return new ElemReference(synonym_reference, parseAttribute());
+    return new AttrReference(synonym_reference, parseAttribute());
   }
-  if (forced_attribute) {
-    throw ParseSyntaxError("Missing attribute ");
-  }
-  return new ElemReference(synonym_reference, AttributeType::kNone);
+  return synonym_reference;
 }
 
+AttrReference *QueryParser::parseAttrReference() {
+  auto *synonym_reference = parseSynonymReference();
+  if (*nextToken() != DotToken()) {
+    throw ParseSyntaxError("Missing attribute ");
+  }
+  return new AttrReference(synonym_reference, parseAttribute());
+}
 
 AttributeType QueryParser::parseAttribute() {
   expect(peekToken(), {TokenType::kSymbol});

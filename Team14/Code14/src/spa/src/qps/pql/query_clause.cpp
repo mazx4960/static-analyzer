@@ -653,10 +653,34 @@ bool WithClause::isSyntacticallyCorrect() const {
   return getFirst()->isAttrCompareRef() && getSecond()->isAttrCompareRef();
 }
 bool WithClause::IsSemanticallyCorrect() const {
-  return getFirst()->getRefType() == getSecond()->getRefType();
+  ReferenceType first_type = getFirst()->getRefType();
+  ReferenceType second_type = getSecond()->getRefType();
+  switch (first_type) {
+    case ReferenceType::kInteger:
+    case ReferenceType::kIdent:
+      break;
+    case ReferenceType::kAttr:
+      first_type = AttrToRefType(static_cast<AttrReference *>(getFirst())->getAttribute());
+      break;
+    default:
+      return false;
+  }
+  switch (second_type) {
+    case ReferenceType::kInteger:
+    case ReferenceType::kIdent:
+      break;
+    case ReferenceType::kAttr:
+      second_type = AttrToRefType(static_cast<AttrReference *>(getSecond())->getAttribute());
+      break;
+    default:
+      return false;
+  }
+  return first_type == second_type;
 }
 std::string WithClause::toString() const {
-  return std::string();
+  std::string str;
+  str.append("with " + this->getFirst()->toString() + " = " + this->getSecond()->toString());
+  return str;
 }
 bool WithClause::operator==(const QueryClause &other) const {
   if (other.getClauseType() != this->getClauseType()) {
@@ -667,9 +691,9 @@ bool WithClause::operator==(const QueryClause &other) const {
       && (*other_clause.getSecond()) == (*this->getSecond())
       && other_clause.getComparator() == this->getComparator();
 }
-void WithClause::setFirst(ElemReference *elem_reference) {
+void WithClause::setFirst(AttrReference *elem_reference) {
   this->first_ = elem_reference;
 }
-void WithClause::setSecond(ElemReference *elem_reference) {
+void WithClause::setSecond(AttrReference *elem_reference) {
   this->second_ = elem_reference;
 }
