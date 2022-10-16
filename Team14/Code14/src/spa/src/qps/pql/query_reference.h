@@ -100,8 +100,6 @@ class ElemReference {
   [[nodiscard]] virtual std::string toString() const = 0;
   [[nodiscard]] virtual QuerySynonym *getSynonym() const = 0;
   [[nodiscard]] virtual EntityPointerUnorderedSet getContext() const = 0;
-  virtual bool operator==(const QueryReference &other) const = 0;
-  virtual bool operator==(const QueryReference *other) const = 0;
 };
 
 class SynonymReference : public QueryReference, public IBooleanRef, public ElemReference {

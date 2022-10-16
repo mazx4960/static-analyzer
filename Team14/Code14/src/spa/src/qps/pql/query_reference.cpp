@@ -104,7 +104,7 @@ QuerySynonym *SynonymReference::getSynonym() const {
 }
 
 ReferenceType SynonymReference::getRefType() const {
-  return this->getRefType();
+  return QueryReference::getRefType();
 }
 
 bool SynonymReference::operator==(const QueryReference &other) const {
@@ -169,7 +169,7 @@ SynonymReference *AttrReference::getSynonymReference() const {
 }
 
 ReferenceType AttrReference::getRefType() const {
-  return this->getRefType();
+  return QueryReference::getRefType();
 }
 
 AttributeType AttrReference::getAttribute() const {

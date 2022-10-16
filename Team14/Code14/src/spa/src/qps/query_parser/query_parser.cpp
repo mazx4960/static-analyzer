@@ -121,9 +121,7 @@ ElemReference *QueryParser::parseElemReference() {
 
 AttrReference *QueryParser::parseAttrReference() {
   auto *synonym_reference = parseSynonymReference();
-  if (*nextToken() != DotToken()) {
-    throw ParseSyntaxError("Missing attribute ");
-  }
+  expect(nextToken(), TokenType::kDot);
   return new AttrReference(synonym_reference, parseAttribute());
 }
 

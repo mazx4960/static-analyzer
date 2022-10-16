@@ -470,3 +470,42 @@ TEST(QueryParserTest, MultipleMixedAndClauseParseTest) {
     ASSERT_EQ(*clauses[i], *expected[i]);
   }
 }
+
+/*
+ *  with s.stmt# = 1
+*/
+TEST(QueryParserTest, SingleWithClauseParseTest) {
+  std::vector<Token *> tokens =
+      {new SymbolToken("with"),
+       new SymbolToken("s"), new DotToken(), new SymbolToken("stmt"), new HashtagToken(), new ComparatorToken("="),
+       new LiteralToken("1"), new EndOfFileToken()};
+  auto *attr_reference_1 = new AttrReference(new SynonymReference(new QuerySynonym("s")), AttributeType::kStmtNo);
+  auto *integer_reference_1 = new IntegerReference("1");
+  auto *expected = new WithClause(Comparator::kEquals, attr_reference_1, integer_reference_1);
+  QueryParser parser = QueryParser(tokens);
+  auto clauses = parser.parseClauses();
+  ASSERT_EQ(*clauses.front(), *expected);
+}
+
+/*
+ *  with s.stmt# = 1 and s.procName = "proc"
+*/
+TEST(QueryParserTest, MultipleWithClauseParseTest) {
+  std::vector<Token *> tokens =
+      {new SymbolToken("with"),
+       new SymbolToken("s"), new DotToken(), new SymbolToken("stmt"), new HashtagToken(), new ComparatorToken("="),
+       new LiteralToken("1"), new SymbolToken("and"), new SymbolToken("s"), new DotToken(), new SymbolToken("procName"),
+       new ComparatorToken("="),
+       new QuoteToken(), new SymbolToken("proc"), new QuoteToken(), new EndOfFileToken()};
+  auto *attr_reference_1 = new AttrReference(new SynonymReference(new QuerySynonym("s")), AttributeType::kStmtNo);
+  auto *attr_reference_2 = new AttrReference(new SynonymReference(new QuerySynonym("s")), AttributeType::kProcName);
+  auto *integer_reference_1 = new IntegerReference("1");
+  auto *ident_reference_1 = new IdentReference("proc");
+  Clauses expected = {new WithClause(Comparator::kEquals, attr_reference_1, integer_reference_1),
+                      new WithClause(Comparator::kEquals, attr_reference_2, ident_reference_1)};
+  QueryParser parser = QueryParser(tokens);
+  auto clauses = parser.parseClauses();
+  for (int i = 0; i < expected.size(); ++i) {
+    ASSERT_EQ(*clauses[i], *expected[i]);
+  }
+}
