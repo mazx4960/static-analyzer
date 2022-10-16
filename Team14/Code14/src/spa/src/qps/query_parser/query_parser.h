@@ -49,7 +49,7 @@ class QueryParser {
   PatternClause *parsePattern();
   ExpressionSpec *parseExpression();
 
-  static void expect(Token *token, const std::unordered_set<TokenType> &expected_types);
+  static void expect(Token *token, TokenType expected);
   ElemReference *parseElemReference(bool forced_attribute = false);
   AttributeType parseAttribute();
   Comparator parseComparator();

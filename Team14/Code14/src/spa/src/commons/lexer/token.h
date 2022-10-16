@@ -25,6 +25,29 @@ enum class TokenType {
   kEndOfFile
 };
 
+inline std::string TokenTypeToString(TokenType type) {
+  switch (type) {
+    case TokenType::kSymbol: return "Symbol";
+    case TokenType::kLiteral: return "Literal";
+    case TokenType::kOperator: return "Operator";
+    case TokenType::kQuote: return "Quote";
+    case TokenType::kComma: return "Comma";
+    case TokenType::kSemicolon: return "Semicolon";
+    case TokenType::kDot: return "Dot";
+    case TokenType::kRoundOpenBracket: return "RoundOpenBracket";
+    case TokenType::kRoundCloseBracket: return "RoundCloseBracket";
+    case TokenType::kCurlyOpenBracket: return "CurlyOpenBracket";
+    case TokenType::kCurlyCloseBracket: return "CurlyCloseBracket";
+    case TokenType::kAngleOpenBracket: return "AngleOpenBracket";
+    case TokenType::kAngleCloseBracket: return "AngleCloseBracket";
+    case TokenType::kWildCard: return "WildCard";
+    case TokenType::kHashtag: return "Hashtag";
+    case TokenType::kComparator: return "Comparator";
+    case TokenType::kEndOfFile: return "EndOfFile";
+    default: return "Unknown";
+  }
+}
+
 class Token {
  public:
   Token(TokenType type, std::string value);

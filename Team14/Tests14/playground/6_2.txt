@@ -1,0 +1,2 @@
+while w; variable v;
+Select w pattern w(v, _, _)

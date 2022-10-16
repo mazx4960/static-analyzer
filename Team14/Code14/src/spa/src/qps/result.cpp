@@ -2,7 +2,8 @@
 
 #include <utility>
 
-Result::Result(ElemReference *elem_ref, const EntityPointerUnorderedSet &results_set) : elem_refs_({std::move(elem_ref)}) {
+Result::Result(ElemReference *elem_ref, const EntityPointerUnorderedSet &results_set)
+    : elem_refs_({std::move(elem_ref)}) {
   this->results_.reserve(results_set.size());
   for (auto *entity : results_set) {
     this->results_.insert(entity->GetValue());
@@ -25,12 +26,12 @@ Result *Result::empty(std::vector<ElemReference *> elem_refs) {
 Result *Result::semanticError() {
   auto *synonym = new QuerySynonym("semantic_error");
   std::unordered_set<std::string> error_set = {"SemanticError"};
-  return new Result(new ElemReference(new SynonymReference(synonym)), error_set);
+  return new Result(new ElemReference(new SynonymReference(synonym), AttributeType::kNone), error_set);
 }
 Result *Result::syntacticError() {
   auto *synonym = new QuerySynonym("syntactic_error");
   std::unordered_set<std::string> error_set = {"SyntaxError"};
-  return new Result(new ElemReference(new SynonymReference(synonym)), error_set);
+  return new Result(new ElemReference(new SynonymReference(synonym), AttributeType::kNone), error_set);
 }
 
 bool Result::is_empty() const {
@@ -59,7 +60,7 @@ std::vector<std::string> Result::get_sorted_results_string_list() const {
 int Result::size() const {
   return this->results_.size();
 }
-Result::Result(std::vector<ElemReference *> elem_refs, const SubqueryResult& table) : elem_refs_(std::move(elem_refs)) {
+Result::Result(std::vector<ElemReference *> elem_refs, const SubqueryResult &table) : elem_refs_(std::move(elem_refs)) {
   std::vector<ResultRow> rows = table.GetRows();
   this->results_.reserve(rows.size());
   for (auto row : rows) {
