@@ -1,43 +1,48 @@
 #include "result.h"
 
-Result::Result(QuerySynonym *synonym, const EntityPointerUnorderedSet &results_set) : synonym_(std::move(synonym)) {
+#include <utility>
+
+Result::Result(ElemReference *elem_ref, const EntityPointerUnorderedSet &results_set) : elem_refs_({std::move(elem_ref)}) {
   this->results_.reserve(results_set.size());
   for (auto *entity : results_set) {
     this->results_.insert(entity->GetValue());
   }
 }
 
-Result::Result(QuerySynonym *synonym, std::unordered_set<std::string> results_set)
-    : synonym_(std::move(synonym)), results_(std::move(results_set)) {
+Result::Result(ElemReference *elem_ref, std::unordered_set<std::string> results_set)
+    : elem_refs_({std::move(elem_ref)}), results_(std::move(results_set)) {
 };
 
 Result *Result::empty() {
-  auto *empty_synonym = new QuerySynonym("empty");
-  return Result::empty(empty_synonym);
+  return Result::empty({});
 }
 
-Result *Result::empty(QuerySynonym *synonym) {
+Result *Result::empty(std::vector<ElemReference *> elem_refs) {
   std::unordered_set<std::string> empty_set;
-  return new Result(std::move(synonym), empty_set);
+  return new Result(std::move(elem_refs), SubqueryResult::Empty({}));
 }
 
 Result *Result::semanticError() {
   auto *synonym = new QuerySynonym("semantic_error");
   std::unordered_set<std::string> error_set = {"SemanticError"};
-  return new Result(synonym, error_set);
+  return new Result(new ElemReference(new SynonymReference(synonym)), error_set);
 }
 Result *Result::syntacticError() {
   auto *synonym = new QuerySynonym("syntactic_error");
   std::unordered_set<std::string> error_set = {"SyntaxError"};
-  return new Result(synonym, error_set);
+  return new Result(new ElemReference(new SynonymReference(synonym)), error_set);
 }
 
 bool Result::is_empty() const {
   return this->results_.empty();
 }
 
-QuerySynonym *Result::get_synonym() const {
-  return this->synonym_;
+std::string Result::get_synonyms() const {
+  std::string synonyms_string;
+  for (auto *elem_ref : elem_refs_) {
+    synonyms_string += elem_ref->toString() + ", ";
+  }
+  return synonyms_string;
 }
 
 std::unordered_set<std::string> Result::get_results_set() const {
@@ -53,4 +58,25 @@ std::vector<std::string> Result::get_sorted_results_string_list() const {
 }
 int Result::size() const {
   return this->results_.size();
+}
+Result::Result(std::vector<ElemReference *> elem_refs, const SubqueryResult& table) : elem_refs_(std::move(elem_refs)) {
+  std::vector<ResultRow> rows = table.GetRows();
+  this->results_.reserve(rows.size());
+  for (auto row : rows) {
+    std::string row_string;
+    if (elem_refs_.size() > 1) {
+      row_string += "<";
+    }
+    for (int i = 0; i < elem_refs_.size(); i++) {
+      auto *elem_ref = elem_refs_[i];
+      if (i > 0) {
+        row_string += ", ";
+      }
+      row_string += row[elem_ref->getSynonymReference()->getSynonym()]->GetValue();
+    }
+    if (elem_refs_.size() > 1) {
+      row_string += ">";
+    }
+    this->results_.insert(row_string);
+  }
 }

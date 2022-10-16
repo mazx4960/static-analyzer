@@ -113,6 +113,7 @@ std::vector<QuerySynonym *> SubqueryResult::GetCommonSynonyms(SubqueryResult oth
   }
   return common_synonyms;
 }
+
 EntityPointerUnorderedSet SubqueryResult::GetColumn(QuerySynonym *synonym) {
   if (std::find(synonyms_.begin(), synonyms_.end(), synonym) == synonyms_.end()) {
     return EntityPointerUnorderedSet{};
@@ -123,6 +124,24 @@ EntityPointerUnorderedSet SubqueryResult::GetColumn(QuerySynonym *synonym) {
     results.insert(row[synonym]);
   }
   return results;
+}
+
+SubqueryResult SubqueryResult::GetColumns(const std::vector<QuerySynonym *>& synonyms) {
+  std::vector<QuerySynonym *> new_synonyms{};
+  for (auto *synonym : synonyms) {
+    if (std::find(synonyms_.begin(), synonyms_.end(), synonym) != synonyms_.end()) {
+      new_synonyms.push_back(synonym);
+    }
+  }
+  std::vector<ResultRow> new_rows{};
+  for (auto row : table_rows_) {
+    ResultRow new_row{};
+    for (auto *synonym: new_synonyms) {
+      new_row[synonym] = row[synonym];
+    }
+    new_rows.push_back(new_row);
+  }
+  return SubqueryResult(new_synonyms, new_rows);
 }
 
 SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
@@ -163,4 +182,27 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
   }
   spdlog::debug("Number of rows in result: {}", new_rows.size());
   return SubqueryResult(all_synonyms, new_rows);
+}
+SubqueryResult SubqueryResult::Empty(std::vector<QuerySynonym *> synonyms) {
+  return SubqueryResult(std::move(synonyms), {});
+}
+
+SubqueryResult SubqueryResult::FullNoSynonym() {
+  return SubqueryResult({}, {{}});
+}
+SubqueryResult SubqueryResult::AddColumn(QuerySynonym *synonym, const EntityPointerUnorderedSet& entities) {
+  std::vector<ResultRow> new_rows{};
+  for (const auto& row : table_rows_) {
+    for (auto *entity : entities) {
+      ResultRow new_row = row;
+      new_row[synonym] = entity;
+      new_rows.push_back(new_row);
+    }
+  }
+  std::vector<QuerySynonym *> new_synonyms = synonyms_;
+  new_synonyms.push_back(synonym);
+  return SubqueryResult(new_synonyms, new_rows);
+}
+const std::vector<ResultRow> &SubqueryResult::GetRows() const {
+  return table_rows_;
 }

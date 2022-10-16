@@ -92,7 +92,7 @@ void UI::DisplayResults(const Result *result) {
     result_string += curr + ", ";
   }
   spdlog::info("Results for '{}'[{}]: {}",
-               result->get_synonym()->toString(),
+               result->get_synonyms(),
                results_string_list.size(),
                result_string);
   spdlog::info("=====================END QUERY RESULTS=====================");

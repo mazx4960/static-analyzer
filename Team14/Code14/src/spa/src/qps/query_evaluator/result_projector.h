@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "evaluation_strategy.h"
 #include "commons/entity.h"
 #include "qps/result.h"
@@ -10,7 +12,7 @@ using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunctio
 
 class ResultProjector {
  private:
-  SynonymReference *called_declaration_;
+  std::vector<ElemReference *> called_declarations_;
 
   IPKBQuerier *pkb_;
 
@@ -20,9 +22,9 @@ class ResultProjector {
                                              const EntityPointerUnorderedSet &second);
 
  public:
-  ResultProjector(SynonymReference *declaration, std::vector<SubqueryResult> subquery_results, IPKBQuerier *pkb)
-      : called_declaration_(declaration), subquery_results_(std::move(subquery_results)), pkb_(pkb) {
+  ResultProjector(std::vector<ElemReference *> declarations, std::vector<SubqueryResult> subquery_results, IPKBQuerier *pkb)
+      : called_declarations_(std::move(declarations)), subquery_results_(std::move(subquery_results)), pkb_(pkb) {
   };
 
-  EntityPointerUnorderedSet project();
+  SubqueryResult project();
 };

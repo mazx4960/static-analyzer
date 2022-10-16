@@ -24,4 +24,9 @@ class SubqueryResult {
   std::vector<QuerySynonym *> GetCommonSynonyms(SubqueryResult other);
   EntityPointerUnorderedSet GetColumn(QuerySynonym *);
   SubqueryResult Join(SubqueryResult &other);
+  SubqueryResult GetColumns(const std::vector<QuerySynonym *>& synonyms);
+  SubqueryResult AddColumn(QuerySynonym *, const EntityPointerUnorderedSet&);
+  static SubqueryResult Empty(std::vector<QuerySynonym *> synonyms);
+  static SubqueryResult FullNoSynonym();
+  [[nodiscard]] const std::vector<ResultRow> &GetRows() const;
 };
