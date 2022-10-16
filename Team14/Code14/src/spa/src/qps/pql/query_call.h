@@ -24,7 +24,7 @@ class QueryCall {
       : type_(call_type), elem_references_(std::move(elem_reference)) {
   };
 
-  void setReferences(std::vector<ElemReference *> synonym_references);
+  void setReferences(std::vector<ElemReference *> elem_references);
   [[nodiscard]] CallType getCallType() const;
   [[nodiscard]] std::vector<ElemReference *> getReferences() const;
   [[nodiscard]] virtual std::string toString() const = 0;
