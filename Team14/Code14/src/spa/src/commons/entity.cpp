@@ -27,3 +27,7 @@ std::string Entity::ToString() {
   std::string name_string = this->value_;
   return EntityTypeToString(this->type_) + ": " + name_string;
 }
+
+std::string CallStmtEntity::GetProcName() const {
+  return this->value_;
+}

@@ -11,9 +11,7 @@
 #include "attr_compare.h"
 
 enum class ClauseType {
-  kSuchThat,
-  kPattern,
-  kWith
+  kSuchThat, kPattern, kWith
 };
 
 class QueryClause : public ICheckSyntax, public ICheckSemantics {
@@ -25,7 +23,7 @@ class QueryClause : public ICheckSyntax, public ICheckSemantics {
   };
 
  public:
-  [[nodiscard]] ClauseType getClauseType() const ;
+  [[nodiscard]] ClauseType getClauseType() const;
   [[nodiscard]] bool isSyntacticallyCorrect() const override = 0;
   [[nodiscard]] bool IsSemanticallyCorrect() const override = 0;
   [[nodiscard]] virtual std::string toString() const = 0;
@@ -59,8 +57,9 @@ class SuchThatClause : public QueryClause {
 
 class ParentClause : public SuchThatClause {
  public:
-  explicit ParentClause(QueryReference *first, QueryReference *second)
-      : SuchThatClause(RsType::kParent, first, second) {
+  explicit ParentClause(QueryReference *first, QueryReference *second) : SuchThatClause(RsType::kParent,
+                                                                                        first,
+                                                                                        second) {
   }
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
@@ -68,8 +67,9 @@ class ParentClause : public SuchThatClause {
 
 class ParentTClause : public SuchThatClause {
  public:
-  explicit ParentTClause(QueryReference *first, QueryReference *second)
-      : SuchThatClause(RsType::kParentT, first, second) {
+  explicit ParentTClause(QueryReference *first, QueryReference *second) : SuchThatClause(RsType::kParentT,
+                                                                                         first,
+                                                                                         second) {
   }
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
@@ -77,8 +77,9 @@ class ParentTClause : public SuchThatClause {
 
 class FollowsClause : public SuchThatClause {
  public:
-  explicit FollowsClause(QueryReference *first, QueryReference *second)
-      : SuchThatClause(RsType::kFollows, first, second) {
+  explicit FollowsClause(QueryReference *first, QueryReference *second) : SuchThatClause(RsType::kFollows,
+                                                                                         first,
+                                                                                         second) {
   }
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
@@ -86,8 +87,9 @@ class FollowsClause : public SuchThatClause {
 
 class FollowsTClause : public SuchThatClause {
  public:
-  explicit FollowsTClause(QueryReference *first, QueryReference *second)
-      : SuchThatClause(RsType::kFollowsT, first, second) {
+  explicit FollowsTClause(QueryReference *first, QueryReference *second) : SuchThatClause(RsType::kFollowsT,
+                                                                                          first,
+                                                                                          second) {
   }
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
@@ -95,8 +97,7 @@ class FollowsTClause : public SuchThatClause {
 
 class UsesClause : public SuchThatClause {
  public:
-  explicit UsesClause(QueryReference *first, QueryReference *second)
-      : SuchThatClause(RsType::kUses, first, second) {
+  explicit UsesClause(QueryReference *first, QueryReference *second) : SuchThatClause(RsType::kUses, first, second) {
   }
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
@@ -104,8 +105,9 @@ class UsesClause : public SuchThatClause {
 
 class ModifiesClause : public SuchThatClause {
  public:
-  explicit ModifiesClause(QueryReference *first, QueryReference *second)
-      : SuchThatClause(RsType::kModifies, first, second) {
+  explicit ModifiesClause(QueryReference *first, QueryReference *second) : SuchThatClause(RsType::kModifies,
+                                                                                          first,
+                                                                                          second) {
   }
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
@@ -113,8 +115,7 @@ class ModifiesClause : public SuchThatClause {
 
 class CallsClause : public SuchThatClause {
  public:
-  explicit CallsClause(QueryReference *first, QueryReference *second)
-      : SuchThatClause(RsType::kCalls, first, second) {
+  explicit CallsClause(QueryReference *first, QueryReference *second) : SuchThatClause(RsType::kCalls, first, second) {
   }
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
@@ -122,8 +123,9 @@ class CallsClause : public SuchThatClause {
 
 class CallsTClause : public SuchThatClause {
  public:
-  explicit CallsTClause(QueryReference *first, QueryReference *second)
-      : SuchThatClause(RsType::kCallsT, first, second) {
+  explicit CallsTClause(QueryReference *first, QueryReference *second) : SuchThatClause(RsType::kCallsT,
+                                                                                        first,
+                                                                                        second) {
   }
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
@@ -131,8 +133,7 @@ class CallsTClause : public SuchThatClause {
 
 class NextClause : public SuchThatClause {
  public:
-  explicit NextClause(QueryReference *first, QueryReference *second)
-      : SuchThatClause(RsType::kNext, first, second) {
+  explicit NextClause(QueryReference *first, QueryReference *second) : SuchThatClause(RsType::kNext, first, second) {
   }
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
@@ -140,8 +141,7 @@ class NextClause : public SuchThatClause {
 
 class NextTClause : public SuchThatClause {
  public:
-  explicit NextTClause(QueryReference *first, QueryReference *second)
-      : SuchThatClause(RsType::kNextT, first, second) {
+  explicit NextTClause(QueryReference *first, QueryReference *second) : SuchThatClause(RsType::kNextT, first, second) {
   }
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
@@ -149,8 +149,9 @@ class NextTClause : public SuchThatClause {
 
 class AffectsClause : public SuchThatClause {
  public:
-  explicit AffectsClause(QueryReference *first, QueryReference *second)
-      : SuchThatClause(RsType::kAffects, first, second) {
+  explicit AffectsClause(QueryReference *first, QueryReference *second) : SuchThatClause(RsType::kAffects,
+                                                                                         first,
+                                                                                         second) {
   }
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
@@ -158,8 +159,9 @@ class AffectsClause : public SuchThatClause {
 
 class AffectsTClause : public SuchThatClause {
  public:
-  explicit AffectsTClause(QueryReference *first, QueryReference *second)
-      : SuchThatClause(RsType::kAffectsT, first, second) {
+  explicit AffectsTClause(QueryReference *first, QueryReference *second) : SuchThatClause(RsType::kAffectsT,
+                                                                                          first,
+                                                                                          second) {
   }
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
@@ -191,16 +193,19 @@ class PatternClause : public QueryClause {
   bool operator==(const QueryClause &other) const override;
 };
 
-
 class WithClause : public QueryClause {
  private:
-  std::vector<AttrCompare *> compares_;
- protected:
-  explicit WithClause(std::vector<AttrCompare *> compares)
-      : QueryClause(ClauseType::kWith), compares_(std::move(compares)) {
-  };
+  Comparator comparator_;
+  QueryReference *first_;
+  QueryReference *second_;
+
  public:
-  [[nodiscard]] std::vector<AttrCompare *> getAttrConditions() const;
+  explicit WithClause(Comparator comparator, QueryReference *first, QueryReference *second)
+      : QueryClause(ClauseType::kWith), comparator_(comparator), first_(first), second_(second) {
+  };
+  [[nodiscard]] Comparator getComparator() const;
+  [[nodiscard]] QueryReference *getFirst() const;
+  [[nodiscard]] QueryReference *getSecond() const;
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool IsSemanticallyCorrect() const override;
   [[nodiscard]] std::string toString() const override;

@@ -127,38 +127,36 @@ std::string SynonymReference::toString() const {
 void SynonymReference::setBooleanRef(bool is_boolean_Ref) {
   this->is_boolean_ref_ = is_boolean_Ref;
 }
-bool SynonymReference::isBooleanRef() const{
+bool SynonymReference::isBooleanRef() const {
   return this->is_boolean_ref_;
 }
 
 bool ElemReference::operator==(const QueryReference &other) const {
   if (other.getRefType() == this->getRefType()) {
     const auto &elem_other = static_cast<const ElemReference &>(other);
-    return (*elem_other.getSynonymReference()) == (*this->getSynonymReference()) &&
-        (*elem_other.getAttribute()) == (*this->getAttribute());
+    return (*elem_other.getSynonymReference()) == (*this->getSynonymReference())
+        && (elem_other.getAttribute()) == (this->getAttribute());
   }
   return false;
 }
 bool ElemReference::operator==(const QueryReference *other) const {
   if (other->getRefType() == this->getRefType()) {
     const auto &elem_other = static_cast<const ElemReference *>(other);
-    return (*elem_other->getSynonymReference()) == (*this->getSynonymReference()) &&
-        (*elem_other->getAttribute()) == (*this->getAttribute());
+    return (*elem_other->getSynonymReference()) == (*this->getSynonymReference())
+        && (elem_other->getAttribute()) == (this->getAttribute());
   }
   return false;
 }
 SynonymReference *ElemReference::getSynonymReference() const {
   return this->synonym_reference_;
 }
-QueryAttribute *ElemReference::getAttribute() const {
-  return this->query_attribute_;
+AttributeType ElemReference::getAttribute() const {
+  return this->attribute_type_;
 }
 std::string ElemReference::toString() const {
   std::string str = this->getSynonymReference()->toString();
-  if (this->getAttribute() != nullptr) {
-    str.append(".");
-    str.append(this->getAttribute()->toString());
-  }
+  str += ".";
+  str += AttrToString(this->getAttribute());
   return str;
 }
 EntityType ElemReference::getEntityType() const {

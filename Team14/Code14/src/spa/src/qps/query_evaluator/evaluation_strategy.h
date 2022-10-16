@@ -3,13 +3,13 @@
 #include <iterator>
 #include <unordered_set>
 
-#include "qps/result.h"
 #include "pkb/pkb.h"
 #include "qps/exceptions.h"
 #include "qps/pql/query_clause.h"
 #include "qps/query_evaluator/subquery_result.h"
+#include "qps/result.h"
 
-using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
+using EntitySet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
 
 class EvaluationStrategy {
  protected:
@@ -34,7 +34,9 @@ class EvaluationStrategy {
    * @param query_declaration query declaration.
    * @return set of Entity candidates.
    */
-  EntityPointerUnorderedSet getCandidates(QueryReference *);
+  EntitySet getCandidates(QueryReference *);
+  static std::string getAttribute(AttributeType, Entity *);
+  static std::string unwrapEntity(QueryReference *, Entity *);
 
   /**
    * Checks if the context of two QueryDeclarations should be intersected.
@@ -50,8 +52,15 @@ class EvaluationStrategy {
    * @param second second set of Entity pointers.
    * @return intersection of sets of Entity pointers.
    */
-  static EntityPointerUnorderedSet intersect(const EntityPointerUnorderedSet &first,
-                                             const EntityPointerUnorderedSet &second);
+  static EntitySet intersect(const EntitySet &first, const EntitySet &second);
+
+  /**
+   * Copy the elements of a set of Entity pointers that satisfy a predicate.
+   * @param candidates
+   * @param pred
+   * @return
+   */
+  static EntitySet copy_if(const EntitySet &candidates, const std::function<bool(Entity *)> &pred);
 };
 
 /*
@@ -77,7 +86,7 @@ class SuchThatStrategy : public EvaluationStrategy {
    * @param expr_param Right-hand side expression.
    * @return set of Entity pointers matching the parameter and expression.
    */
-  EntityPointerUnorderedMap evaluateParameter(QueryReference *, RsType, bool, const EntityPointerUnorderedSet &);
+  EntityPointerUnorderedMap evaluateParameter(QueryReference *, RsType, bool, const EntitySet &);
 };
 
 /*
@@ -103,6 +112,31 @@ class PatternStrategy : public EvaluationStrategy {
    * @param invert_search true if searching by second parameter (e.g. searching by s2 in Follows(s1, s2)).
    * @return set of Entity pointers matching the parameter and relationship type.
    */
-  EntityPointerUnorderedMap evaluateParameter(QueryReference *var_param, ExpressionSpec *expr_param,
-                                              const EntityPointerUnorderedSet &potential_matches);
+  EntityPointerUnorderedMap evaluateParameter(QueryReference *var_param,
+                                              ExpressionSpec *expr_param,
+                                              const EntitySet &potential_matches);
+};
+
+/*
+ * Selection for pattern clauses
+ */
+class WithStrategy : public EvaluationStrategy {
+  WithClause *clause_;
+
+ public:
+  WithStrategy(IPKBQuerier *pkb, WithClause *query_clause) : EvaluationStrategy(pkb), clause_(query_clause) {
+  };
+
+  /**
+  * Evaluate the With clause.
+  * @return true if query clause has results, false otherwise.
+  */
+  SubqueryResult evaluate() override;
+
+  /**
+   * Evaluate query parameter.
+   * @param param parameter to evaluated.
+   * @return set of Entity pointers matching the parameter and relationship type.
+   */
+  EntityPointerUnorderedMap evaluateParameter(QueryReference *, QueryReference *, Comparator);
 };

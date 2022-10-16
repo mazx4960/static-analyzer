@@ -102,28 +102,19 @@ ElemReference *QueryParser::parseElemReference() {
     nextToken();
     return new ElemReference(synonym_reference, parseAttribute());
   }
-  return new ElemReference(synonym_reference);
+  return new ElemReference(synonym_reference, AttributeType::kNone);
 }
 
-QueryAttribute *QueryParser::parseAttribute() {
+AttributeType QueryParser::parseAttribute() {
   expect(peekToken(), {TokenType::kSymbol});
   std::string attr_name = nextToken()->value;
   if (*peekToken() == HashtagToken()) {
     attr_name.append(nextToken()->value);
   }
   try {
-    return parseAttribute(QueryKeywords::attributeKeywordToType(attr_name));
-  } catch (std::out_of_range &oor) { throw ParseSyntaxError("Unknown attribute: " + attr_name); }
-}
-
-QueryAttribute *QueryParser::parseAttribute(AttributeType type) {
-  switch (type) {
-    case AttributeType::kProcName: return new ProcAttribute();
-    case AttributeType::kVarName: return new VarAttribute();
-    case AttributeType::kValue: return new ValueAttribute();
-    case AttributeType::kStmtNo: return new StmtAttribute();
-    default:
-      throw ParseSyntaxError("Unknown attribute type");
+    return QueryKeywords::attributeKeywordToType(attr_name);
+  } catch (std::out_of_range &oor) {
+    throw ParseSyntaxError("Unknown attribute: " + attr_name);
   }
 }
 
@@ -186,8 +177,9 @@ std::vector<ElemReference *> QueryParser::parseElemReferences() {
 
 Clauses QueryParser::parseClauses() {
   clauses_.clear();
-  while (!outOfTokens()
-      && QueryKeywords::isValidClauseKeyword(peekToken()->value)) { clauses_.push_back(parseClause()); }
+  while (!outOfTokens() && QueryKeywords::isValidClauseKeyword(peekToken()->value)) {
+    clauses_.push_back(parseClause());
+  }
   return clauses_;
 }
 
@@ -288,7 +280,9 @@ ExpressionSpec *QueryParser::parseExpression() {
     }
     return new ExactExpression(expression);
   }
-  if (!is_wild) { throw ParseSyntaxError("Invalid expression type: " + expr->value); }
+  if (!is_wild) {
+    throw ParseSyntaxError("Invalid expression type: " + expr->value);
+  }
   return new WildExpression();
 }
 
