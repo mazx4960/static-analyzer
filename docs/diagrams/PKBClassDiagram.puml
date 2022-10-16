@@ -6,50 +6,79 @@ class QPS
 class PKB
 
 abstract class IPKBPopulator {
-	+void populate(Abstraction)
+	+void populate(Vector<Entity *>)
+    +void populate(Vector<Relationship *>)
+    +void populate(Vector<Pattern *>)
 }
 
 abstract class IPKBQuerier {
-	+EntityPointerUnorderedSet get(Query)
+	+EntityPointerUnorderedSet getEntities(EntityType)
+	+EntityPointerUnorderedSet getByRelationship(RsType, Entity *, bool)
+	+EntityPointerUnorderedSet getByPattern(Entity *, String, bool)
+	+EntityPointerUnorderedSet getEntities(String)
 }
 
 class PKB {
     -EntityManager entity_manager_
     -PatternManager pattern_manager_
     -RelationshipManager relationship_manager_
-    +void populate(Abstraction)
-    +EntityPointerUnorderedSet get(Query)
+	+void populate(Vector<Entity *>)
+    +void populate(Vector<Relationship *>)
+    +void populate(Vector<Pattern *>)
+	+EntityPointerUnorderedSet getEntities(EntityType)
+	+EntityPointerUnorderedSet getByRelationship(RsType, Entity *, bool)
+	+EntityPointerUnorderedSet getByPattern(Entity *, String, bool)
+	+EntityPointerUnorderedSet getEntities(String)
 }
 
 class EntityManager {
-    -unordered_map entity_map_ 
+    -unordered_map entity_table_map_ 
     -void CreateTable(EntityType)
     +EntityTable* GetTable(EntityType) 
-    +void populate(Entity)
-    +EntityPointerUnorderedSet get(EntityType)
+    +void Populate(Vector<Entity *>)
+    +EntityPointerUnorderedSet Get(EntityType)
+    +EntityPointerUnorderedSet Get(String)
 }
 
 class RelationshipManager {
-    -unordered_map relationship_map_
+    -Cache *cache_
+    -unordered_map relationship_table_map_
     -void CreateTable(RsType)
-    +RelationshipTable* GetTable(RsType) 
-    +void populate(Relationship)
-    +EntityPointerUnorderedSet get(RsType)
+    -bool IsVariableModified(EntityPointerUnorderedSet *, Entity *)
+    -bool IsVariableUsed(EntityPointerUnorderedSet *, Entity*)
+    -Entity* GetProcedureEntity(Entity *, bool)
+    -EntityPointerUnorderedSet GetAffects(Entity *, bool)
+    -EntityPointerUnorderedSet GetAffectsHelper(Stack<Pair<Entity *, EntityPointerUnorderedSet>> *)
+    -EntityPointerUnorderedSet GetAffectsInverseHelper(Stack<Pair<Entity *, EntityPointerUnorderedSet>> *)
+    -EntityPointerUnorderedSet GetCalls(Entity *, bool)
+    -EntityPointerUnorderedSet GetInference(RsType, Entity *, bool)
+    -EntityPointerUnorderedSet GetInferenceFromChildren(RelationshipTable *, Entity *)
+    -EntityPointerUnorderedSet GetInferenceGivenCallStatement(RelationshipTable *, Entity *)
+    -EntityPointerUnorderedSet GetInferenceGivenVariable(RelationshipTable *, Entity *)
+    -EntityPointerUnorderedSet GetSubMatches(RsType, Entity *, bool) 
+    -EntityPointerUnorderedSet Empty()
+    -EntityRsInv GetCacheQuery(Entity *, RsType, bool)
+    +void ClearCache()
+    +RelationshipTable* GetTable(RsType)
+    +void Populate(Vector<Relationship *>) 
+    +EntityPointerUnorderedSet Get(RsType, Entity *, bool)
+    +EntityPointerUnorderedSet GetAll(RsType, Entity *, bool)
 }
 
 class PatternManager {
+    -PatternTable *pattern_table_
     +PatternTable* GetTable()
-    +void populate(Pattern)
-    +EntityPointerUnorderedSet get(string)
+    +void Populate(Vector<Pattern *>)
+    +EntityPointerUnorderedSet Get(Entity *, String, bool)
 }
 
 class RelationshipTable {
     #EntityPointerUnorderedMap table_
     #EntityPointerUnorderedMap inverse_table_
+    -EntityPointerUnorderedSet Empty()
     +void Populate(Relationship)
     +EntityPointerUnorderedMap GetTable(bool)
-    +EntityPointerUnorderedSet get()
-    +EntityPointerUnorderedSet getTraversal()
+    +EntityPointerUnorderedSet get(Entity *, bool) 
 }
 
 class EntityTable {
@@ -59,10 +88,31 @@ class EntityTable {
 }
 
 class PatternTable {
-    #PatternEntityUnorderedMap pattern_table_
+    -PatternEntityUnorderedMap pattern_table_
     +void Populate(Pattern)
     +PatternEntityUnorderedMap GetTable()
-    +EntityPointerUnorderedSet get()
+    +EntityPointerUnorderedSet Get(Entity *)
+}
+
+class Cache {
+    -int hits_
+    -int misses_
+    -int capacity_
+    -List<Pair<K, V>> access_list_
+    -unordered_map<K, List<Pair<K,V>>, KHash> map_
+    -void UpdateAccess(K)
+    -void Evict()
+    +void Add(K, V)
+    +Result Get(K)
+    +void Clear()
+    +int Size()
+    +int Hits()
+    +int Misses()
+}
+
+struct Result {
+    +V value
+    +bool found
 }
 
 abstract class "QueryPattern"
@@ -106,6 +156,12 @@ class UsesTable {
 class ParentTable {
 } 
 
+class CallsTable {
+} 
+
+class NextTable {
+} 
+
 IPKBPopulator *-down- PKB
 IPKBQuerier *-down- PKB
 SP -down- IPKBPopulator
@@ -133,8 +189,12 @@ ModifiesTable -up-|> RelationshipTable
 FollowsTable -up-|> RelationshipTable 
 UsesTable -up-|> RelationshipTable
 ParentTable -up-|> RelationshipTable 
+CallsTable -up-|> RelationshipTable 
+NextTable -up-|> RelationshipTable 
 
 PatternTable -up-* PatternManager
 PatternTable -down-|> QueryPattern
+
+Result -up-* Cache
 
 @enduml
