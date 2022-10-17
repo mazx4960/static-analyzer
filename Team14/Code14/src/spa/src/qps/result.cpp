@@ -65,19 +65,13 @@ Result::Result(std::vector<ElemReference *> elem_refs, const SubqueryResult &tab
   this->results_.reserve(rows.size());
   for (auto row : rows) {
     std::string row_string;
-    if (elem_refs_.size() > 1) {
-      row_string += "<";
-    }
     for (int i = 0; i < elem_refs_.size(); i++) {
       auto *elem_ref = elem_refs_[i];
       if (i > 0) {
-        row_string += ", ";
+        row_string += " ";
       }
 
       row_string += row[elem_ref->getSynonym()]->GetValue();
-    }
-    if (elem_refs_.size() > 1) {
-      row_string += ">";
     }
     this->results_.insert(row_string);
   }
