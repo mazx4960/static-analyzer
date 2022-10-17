@@ -4,15 +4,16 @@
 
 #include <string>
 #include <stdexcept>
+#include "commons/exceptions.h"
 
-class BuilderError : public std::runtime_error {
+class BuilderError : public SemanticError {
  public:
-  explicit BuilderError(const std::string &message) : std::runtime_error("Query build Error: " + message) {
+  explicit BuilderError(const std::string &message) : SemanticError("Query build Error: " + message) {
   }
 };
 
-class EvaluationStrategyError : public std::runtime_error {
+class EvaluationStrategyError : public SemanticError {
  public:
-  explicit EvaluationStrategyError(const std::string &message) : std::runtime_error(message) {
+  explicit EvaluationStrategyError(const std::string &message) : SemanticError(message) {
   };
 };
