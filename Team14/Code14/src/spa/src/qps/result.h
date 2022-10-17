@@ -16,27 +16,50 @@
 using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
 
 class Result {
+ protected:
+  std::unordered_set<std::string> results_{};
+
+  Result() = default;
+
+ public:
+
+  static Result *empty();
+
+  [[nodiscard]] virtual std::string get_synonyms() const = 0;
+  [[nodiscard]] std::unordered_set<std::string> get_results_set() const;
+  [[nodiscard]] std::vector<std::string> get_sorted_results_string_list() const;
+  [[nodiscard]] bool is_empty() const;
+  [[nodiscard]] int size() const;
+
+};
+
+class EmptyResult : public Result {
+ public:
+  EmptyResult() = default;
+
+  [[nodiscard]] std::string get_synonyms() const override;
+};
+
+class ElemResult : public Result {
  private:
   std::vector<ElemReference *> elem_refs_;
 
-  std::unordered_set<std::string> results_;
+ public:
+  ElemResult(std::vector<ElemReference *>, SubqueryResult &);
+
+  [[nodiscard]] std::string get_synonyms() const override;
+};
+
+class BooleanResult : public Result {
+ private:
+  const std::string synonym_string_ = "BOOLEAN:BOOLEAN";
+
+  const std::unordered_set<std::string> true_set_ = {"true"};
+
+  const std::unordered_set<std::string> false_set_ = {"false"};
 
  public:
-  Result(ElemReference *, const EntityPointerUnorderedSet &);
+  explicit BooleanResult(bool has_results);
 
-  Result(ElemReference *, std::unordered_set<std::string>);
-
-  Result(std::vector<ElemReference *>, const SubqueryResult&);
-
-  static Result *empty();
-  static Result *empty(std::vector<ElemReference *>);
-
-  static Result *semanticError();
-  static Result *syntacticError();
-
-  [[nodiscard]] bool is_empty() const;
-  [[nodiscard]] std::string get_synonyms() const;
-  [[nodiscard]] std::unordered_set<std::string> get_results_set() const;
-  [[nodiscard]] std::vector<std::string> get_sorted_results_string_list() const;
-  [[nodiscard]] int size() const;
+  [[nodiscard]] std::string get_synonyms() const override;
 };
