@@ -1,5 +1,5 @@
 class ICheckSemantics {
  public:
-  [[nodiscard]] virtual bool IsSemanticallyCorrect() const = 0;
+  [[nodiscard]] virtual bool isSemanticallyCorrect() const = 0;
 };
 

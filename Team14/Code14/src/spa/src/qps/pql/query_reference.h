@@ -15,6 +15,7 @@
 #include "qps/pql/interface/boolean_ref.h"
 #include "types.h"
 #include "qps/pql/interface/attrcompare_ref.h"
+#include "qps/pql/interface/check_semantics.h"
 
 class QueryReference : public ICheckSyntax, public IStmtRef, public IEntRef, public IAttrCompareRef {
  private:
@@ -125,7 +126,7 @@ class SynonymReference : public QueryReference, public IBooleanRef, public ElemR
   std::string toString() const override;
 };
 
-class AttrReference : public QueryReference, public ElemReference {
+class AttrReference : public QueryReference, public ElemReference, public ICheckSemantics {
  private:
   SynonymReference *synonym_reference_;
   AttributeType attribute_type_;
@@ -151,6 +152,7 @@ class AttrReference : public QueryReference, public ElemReference {
   bool isEntRef() const override;
   bool isAttrCompareRef() const override;
   bool isSyntacticallyCorrect() const override;
+  bool isSemanticallyCorrect() const override;
   std::string toString() const override;
 };
 

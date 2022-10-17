@@ -104,7 +104,7 @@ QuerySynonym *SynonymReference::getSynonym() const {
 }
 
 ReferenceType SynonymReference::getRefType() const {
-  return QueryReference::getRefType();
+  return ReferenceType::kSynonym;
 }
 
 bool SynonymReference::operator==(const QueryReference &other) const {
@@ -169,7 +169,7 @@ SynonymReference *AttrReference::getSynonymReference() const {
 }
 
 ReferenceType AttrReference::getRefType() const {
-  return QueryReference::getRefType();
+  return ReferenceType::kAttr;
 }
 
 AttributeType AttrReference::getAttribute() const {
@@ -207,6 +207,52 @@ bool AttrReference::isEntRef() const {
 }
 bool AttrReference::isSyntacticallyCorrect() const {
   return this->getSynonymReference()->isSyntacticallyCorrect();
+}
+bool AttrReference::isSemanticallyCorrect() const {
+  switch (getAttribute()) {
+    case AttributeType::kProcName:
+      switch (getEntityType()) {
+        case EntityType::kProcedure:
+        case EntityType::kCallStmt:
+          break;
+        default:
+          return false;
+      }
+      break;
+    case AttributeType::kVarName:
+      switch (getEntityType()) {
+        case EntityType::kVariable:
+        case EntityType::kPrintStmt:
+        case EntityType::kReadStmt:
+          break;
+        default:
+          return false;
+      }
+      break;
+    case AttributeType::kValue:
+      switch (getEntityType()) {
+        case EntityType::kConstant:
+          break;
+        default:
+          return false;
+      }
+      break;
+    case AttributeType::kStmtNo:
+      switch (getEntityType()) {
+        case EntityType::kStatement:
+        case EntityType::kAssignStmt:
+        case EntityType::kCallStmt:
+        case EntityType::kIfStmt:
+        case EntityType::kWhileStmt:
+        case EntityType::kPrintStmt:
+        case EntityType::kReadStmt:
+          break;
+        default:
+          return false;
+      }
+      break;
+  }
+  return true;
 }
 bool AttrReference::isAttrCompareRef() const {
   return true;
