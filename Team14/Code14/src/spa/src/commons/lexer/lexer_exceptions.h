@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <string>
+#include "commons/exceptions.h"
 
 class LexSyntaxError : public SyntaxError {
  public:
