@@ -41,23 +41,28 @@ std::vector<SubqueryResult> QueryEvaluator::evaluateSubqueries() {
 Result *QueryEvaluator::evaluate() {
   this->fetchContext();
 
+  // Evaluate sub-queries, get individual result tables.
+  std::vector<SubqueryResult> subquery_results = this->evaluateSubqueries();
+
   // Query declarations for whose subquery_results are to be returned.
   auto *select_call = this->query_.getQueryCall();
-  std::vector<ElemReference *> called_declarations;
+
   switch (select_call->getSelectType()) {
     case SelectType::kElem: {
-      called_declarations = static_cast<ElemSelect *>(select_call)->getReferences();
-      break;
+      std::vector<ElemReference *> called_declarations = static_cast<ElemSelect *>(select_call)->getReferences();
+      auto *result_projector = new SelectProjector(called_declarations, subquery_results);
+      result_projector->project();
+      SubqueryResult result_context = result_projector->select_results();
+      return new ElemResult(called_declarations, result_context);
     }
-    case SelectType::kBoolean:
+    case SelectType::kBoolean: {
+      auto *result_projector = new BooleanProjector(subquery_results);
+      result_projector->project();
+      bool has_results = result_projector->has_results();
+      return new BooleanResult(has_results);
+    }
     default: {
       return Result::empty();
     }
   }
-
-  std::vector<SubqueryResult> subquery_results = this->evaluateSubqueries();
-  auto *result_projector = new ResultProjector(called_declarations, subquery_results, pkb_);
-  SubqueryResult result_context = result_projector->project();
-
-  return new Result(called_declarations, result_context);
 }

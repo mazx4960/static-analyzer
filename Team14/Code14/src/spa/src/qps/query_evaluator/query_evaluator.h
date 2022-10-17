@@ -20,9 +20,6 @@ class QueryEvaluator {
 
   IPKBQuerier *pkb_;
 
-  // Used to check if subquery clauses have any results, initially assumed to be true
-  bool has_result_ = true;
-
   SynonymReferencePointerUnorderedSet declarations_;
 
   /**
@@ -56,7 +53,7 @@ class QueryEvaluator {
 
   /**
    * Evaluate query.
-   * @return Result of query with set of Entity instances.
+   * @return ElemResult of query with set of Entity instances.
    */
   Result *evaluate();
 };
