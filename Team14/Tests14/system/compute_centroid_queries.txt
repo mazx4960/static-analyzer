@@ -532,6 +532,7 @@ Select <a>
 variable v;
 Select <v>
 flag, x, y, cenX, cenY, normSq, count
+5000
 910 - singleton tuple, select all assign stmts that Affects* itself
 assign a;
 Select <a> such that Affects*(a, a)
