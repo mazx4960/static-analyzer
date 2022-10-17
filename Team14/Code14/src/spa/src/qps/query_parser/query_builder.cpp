@@ -54,7 +54,9 @@ std::vector<ElemReference *> QueryBuilder::buildQueryCallElemReferences(std::vec
      }else if (elem_ref->getRefType() == ReferenceType::kAttr) {
       auto *attr_ref = static_cast<AttrReference *>(elem_ref);
       attr_ref->setSynonymReference(getDeclaration(attr_ref->getSynonymReference()));
-      attr_ref->isSemanticallyCorrect();
+      if (!attr_ref->isSemanticallyCorrect()) {
+        throw ParseSemanticError("Invalid AttrRef");
+      }
     }
   }
   return query_call_reference_blueprint;
