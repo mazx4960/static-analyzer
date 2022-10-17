@@ -8,10 +8,6 @@
 #include "query_reference.h"
 #include "expression_spec.h"
 
-enum class ClauseType {
-  kSuchThat, kPattern, kWith
-};
-
 class QueryClause : public ICheckSyntax, public ICheckSemantics {
  private:
   ClauseType clause_type_;
@@ -42,6 +38,7 @@ class SuchThatClause : public QueryClause {
   };
 
  public:
+  static SuchThatClause *Create(RsType type, QueryReference *first, QueryReference *second);
   [[nodiscard]] RsType getSuchThatType() const;
   [[nodiscard]] QueryReference *getFirst() const;
   [[nodiscard]] QueryReference *getSecond() const;

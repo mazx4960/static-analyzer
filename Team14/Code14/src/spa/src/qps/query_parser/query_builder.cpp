@@ -3,165 +3,180 @@
 #include "query_builder.h"
 #include "qps/pql/query_keywords.h"
 
-QueryBuilder::QueryBuilder(Query *query_blueprint) {
-  if (query_blueprint == nullptr) {
-    throw ParseSemanticError("No query given");
+SynonymReference *QueryBuilder::GetSynonymReference(const std::string &name) {
+  if (synonym_table_.find(name) == synonym_table_.end()) {
+    throw ParseSemanticError("Synonym " + name + " not declared");
   }
-  this->query_ = query_blueprint;
+  return synonym_table_[name];
 }
 
-Query *QueryBuilder::build() {
-  this->declarations_ = buildDeclarations(query_->getSynonymDeclarations());
-  buildQueryCall(query_->getQueryCall());
-  buildClauses(query_->getClauses());
-  return query_;
+Query *QueryBuilder::Build() {
+  auto built_declarations = BuildDeclarations();
+  auto *built_select = BuildSelect();
+  auto built_clauses = BuildClauses();
+  return new Query(built_declarations, built_select, built_clauses);
 }
 
-std::vector<SynonymReference *> QueryBuilder::buildDeclarations(const std::vector<SynonymReference *> &declaration_blueprints) {
-  for (auto *declaration_blueprint : declaration_blueprints) {
-    buildDeclaration(declaration_blueprint);
+void QueryBuilder::AddDeclaration(DeclarationBlueprint *declaration) {
+  if (declaration == nullptr) {
+    throw BuilderError("No declaration given");
   }
-  return declaration_blueprints;
+  declaration_bps_.push_back(declaration);
 }
 
-SynonymReference *QueryBuilder::buildDeclaration(SynonymReference *declaration_blueprint) {
-  if (declaration_blueprint == nullptr) {
-    throw ParseSemanticError("Missing declaration");
+void QueryBuilder::AddSelect(SelectBlueprint *select) {
+  if (select == nullptr) {
+    throw BuilderError("No select given");
   }
-  if (!synonyms_.insert(declaration_blueprint->getReferenceValue()).second) {
-    throw ParseSemanticError("Synonym already declared: " + declaration_blueprint->getReferenceValue());
-  }
-  return declaration_blueprint;
+  select_bp_ = select;
 }
 
-QueryCall *QueryBuilder::buildQueryCall(QueryCall *query_call_blueprint) {
-  if (query_call_blueprint == nullptr) {
+void QueryBuilder::AddClauses(std::vector<ClauseBlueprint *> &clauses) {
+  clauses_bp_.insert(clauses_bp_.end(), clauses.begin(), clauses.end());
+}
+
+std::vector<SynonymReference *> QueryBuilder::BuildDeclarations() {
+  auto declarations = std::vector<SynonymReference *>();
+  for (auto *declaration : declaration_bps_) {
+    std::string name = declaration->getName();
+    if (synonym_table_.find(name) != synonym_table_.end()) {
+      throw ParseSemanticError("Duplicate synonym declaration: " + name);
+    }
+    auto *synonym = new QuerySynonym(name);
+    auto *synonym_ref = new SynonymReference(synonym, declaration->getEntityType());
+    synonym_table_[name] = synonym_ref;
+    declarations.push_back(synonym_ref);
+  }
+  return declarations;
+}
+SelectCall *QueryBuilder::BuildSelect() {
+  if (select_bp_ == nullptr) {
     throw ParseSemanticError("Missing Select call");
   }
-  query_call_blueprint->setReferences(buildQueryCallElemReferences(query_call_blueprint->getReferences()));
-  return query_call_blueprint;
+  SelectType type;
+  switch (type) {
+    case SelectType::kBoolean:return new BooleanSelect();
+    case SelectType::kElem:return new ElemSelect(BuildElems(select_bp_->getBlueprintReferences()));
+    default:throw ParseSemanticError("Invalid Select type");
+  }
 }
-
-std::vector<ElemReference *> QueryBuilder::buildQueryCallElemReferences(std::vector<ElemReference *> query_call_reference_blueprint) {
-  if (query_call_reference_blueprint.empty()) {
-    throw ParseSemanticError("Missing declarations");
-  }
-  // Update reference by select from declarations
-  for (auto &i : query_call_reference_blueprint) {
-    auto *elem_ref = i;
-    if (elem_ref->getRefType() == ReferenceType::kSynonym) {
-      i = getDeclaration(static_cast<SynonymReference *>(elem_ref));
-     }else if (elem_ref->getRefType() == ReferenceType::kAttr) {
-      auto *attr_ref = static_cast<AttrReference *>(elem_ref);
-      attr_ref->setSynonymReference(getDeclaration(attr_ref->getSynonymReference()));
-      if (!attr_ref->isSemanticallyCorrect()) {
-        throw ParseSemanticError("Invalid AttrRef");
-      }
-    }
-  }
-  return query_call_reference_blueprint;
-}
-
-SynonymReference *QueryBuilder::getDeclaration(SynonymReference *synonym_reference) {
-  auto *synonym = synonym_reference->getSynonym();
-  for (auto *declaration : declarations_) {
-    QuerySynonym *declaration_synonym = declaration->getSynonym();
-    if (*declaration_synonym == *synonym) {
-      return declaration;
-    }
-  }
-  if (QueryKeywords::isSpecialSynonymKeyword(synonym->toString())) {
-    synonym_reference->setBooleanRef(true);
-    return synonym_reference;
-  }
-  throw ParseSemanticError("Synonym is not declared: " + synonym->toString());
-}
-
-SynonymReference *QueryBuilder::getDeclaration(const QuerySynonym *synonym) {
-  for (auto *declaration : declarations_) {
-    QuerySynonym *declaration_synonym = declaration->getSynonym();
-    if (*declaration_synonym == *synonym) {
-      return declaration;
-    }
-  }
-  if (QueryKeywords::isSpecialSynonymKeyword(synonym->toString())) {
-
-  }
-  throw ParseSemanticError("Synonym is not declared: " + synonym->toString());
-}
-
-std::vector<QueryClause *> QueryBuilder::buildClauses(const std::vector<QueryClause *> &clauses_blueprint) {
-  for (auto *clause : clauses_blueprint) {
+std::vector<QueryClause *> QueryBuilder::BuildClauses() {
+  auto clauses = std::vector<QueryClause *>();
+  for (auto *clause : clauses_bp_) {
+    QueryClause *built_clause;
     switch (clause->getClauseType()) {
-      case ClauseType::kPattern:
-        buildPattern(static_cast<PatternClause *>(clause));
+      case ClauseType::kPattern: {
+        built_clause = BuildPattern(static_cast<PatternBlueprint *>(clause));
         break;
-      case ClauseType::kSuchThat:
-        buildSuchThat(static_cast<SuchThatClause *>(clause));
+      }
+      case ClauseType::kSuchThat: {
+        built_clause = BuildSuchThat(static_cast<SuchThatBlueprint *>(clause));
         break;
-      case ClauseType::kWith:
-        buildWith(static_cast<WithClause *>(clause));
+      }
+      case ClauseType::kWith: {
+        built_clause = BuildWith(static_cast<WithBlueprint *>(clause));
         break;
-      default:
-        throw ParseSemanticError("Unsupported clause type!");
+      }
+      default:throw ParseSemanticError("Unsupported clause type!");
     }
+    clauses.push_back(built_clause);
   }
-  return clauses_blueprint;
+  return clauses;
 }
 
-PatternClause *QueryBuilder::buildPattern(PatternClause *clause_blueprint) {
-  SynonymReference *syn_assign = clause_blueprint->getSynonymDeclaration();
-  QueryReference *ent_ref = clause_blueprint->getEntRef();
-  ExpressionSpec *expression_spec = clause_blueprint->getExpression();
-  if (syn_assign == nullptr || ent_ref == nullptr || expression_spec == nullptr) {
-    throw ParseSemanticError("Missing parameters");
+std::vector<ElemReference *> QueryBuilder::BuildElems(const std::vector<ElemBlueprint *> &elem_blueprints) {
+  auto elems = std::vector<ElemReference *>();
+  for (auto *elem_blueprint : elem_blueprints) {
+    std::string name = elem_blueprint->getValue();
+    auto *synonym = GetSynonymReference(name);
+    auto *attr_ref = new AttrReference(synonym, elem_blueprint->getAttributeType());
+    if (!attr_ref->isSemanticallyCorrect()) {
+      throw ParseSemanticError("Invalid AttrRef");
+    }
+    elems.push_back(attr_ref);
   }
-  clause_blueprint->setSynonymReference(getDeclaration(syn_assign->getSynonym()));
-  if (ent_ref->getRefType() == ReferenceType::kSynonym) {
-    clause_blueprint->setEntReference(getDeclaration(static_cast<SynonymReference *>(ent_ref)->getSynonym()));
+  return elems;
+}
+
+QueryReference *QueryBuilder::BuildReference(BaseBlueprint *blueprint) {
+  QueryReference *ref;
+  switch (blueprint->getReferenceType()) {
+    case ReferenceType::kSynonym:ref = GetSynonymReference(blueprint->getValue());
+      break;
+    case ReferenceType::kIdent:ref = new IdentReference(blueprint->getValue());
+      break;
+    case ReferenceType::kInteger:ref = new IntegerReference(blueprint->getValue());
+      break;
+    case ReferenceType::kWildcard:ref = new WildcardReference();
+      break;
+    case ReferenceType::kAttr:
+      ref = new AttrReference(GetSynonymReference(blueprint->getValue()),
+                              static_cast<ElemBlueprint *>(blueprint)->getAttributeType());
+      break;
+    default:throw ParseSemanticError("Invalid reference type for bp: " + blueprint->toString());
   }
-  if (!clause_blueprint->isSemanticallyCorrect()) {
+  return ref;
+}
+
+PatternClause *QueryBuilder::BuildPattern(PatternBlueprint *clause_blueprint) {
+  auto *stmt = GetSynonymReference(clause_blueprint->getStmt()->getValue());
+  auto *var_bp = clause_blueprint->getVar();
+  if (var_bp == nullptr) {
+    throw ParseSemanticError("Invalid variable in Pattern clause");
+  }
+  QueryReference *var = BuildReference(var_bp);
+  ExpressionSpec *expr_spec;
+  auto *expr_bp = clause_blueprint->getExpr();
+  if (expr_bp == nullptr) {
+    throw ParseSemanticError("Invalid expression in Pattern clause");
+  }
+  if (expr_bp->isExact()) {
+    expr_spec = new ExactExpression(expr_bp->getValue());
+  } else {
+    expr_spec = new WildExpression(expr_bp->getValue());
+  }
+  auto *clause = new PatternClause(stmt, var, expr_spec);
+  if (!clause->isSemanticallyCorrect()) {
     throw ParseSemanticError("Invalid pattern parameter type");
   }
-  return clause_blueprint;
+  return clause;
 }
 
-SuchThatClause *QueryBuilder::buildSuchThat(SuchThatClause *clause_blueprint) {
-  QueryReference *first = clause_blueprint->getFirst();
-  QueryReference *second = clause_blueprint->getSecond();
-  if (first == nullptr || second == nullptr) {
-    throw ParseSemanticError("Missing parameters!");
+SuchThatClause *QueryBuilder::BuildSuchThat(SuchThatBlueprint *clause_blueprint) {
+  auto *first_bp = clause_blueprint->getFirst();
+  if (first_bp == nullptr) {
+    throw ParseSemanticError("Invalid first parameter in SuchThat clause");
   }
-  if (first->getRefType() == ReferenceType::kSynonym) {
-    clause_blueprint->setFirst(getDeclaration(static_cast<SynonymReference *>(first)->getSynonym()));
+  QueryReference *first = BuildReference(first_bp);
+  auto *second_bp = clause_blueprint->getSecond();
+  if (second_bp == nullptr) {
+    throw ParseSemanticError("Invalid second parameter in SuchThat clause");
   }
-  if (second->getRefType() == ReferenceType::kSynonym) {
-    clause_blueprint->setSecond(getDeclaration(static_cast<SynonymReference *>(second)->getSynonym()));
-  }
-  if (!clause_blueprint->isSemanticallyCorrect()) {
+  QueryReference *second = BuildReference(second_bp);
+  auto *clause = SuchThatClause::Create(clause_blueprint->getRsType(), first, second);
+
+  if (!clause->isSemanticallyCorrect()) {
     throw ParseSemanticError("Invalid such that parameter type");
   }
-  return clause_blueprint;
+  return clause;
 }
 
-WithClause *QueryBuilder::buildWith(WithClause *clause_blueprint) {
-  QueryReference *first = clause_blueprint->getFirst();
-  QueryReference *second = clause_blueprint->getSecond();
-  if (first == nullptr || second == nullptr) {
-    throw ParseSemanticError("Missing parameters!");
+WithClause *QueryBuilder::BuildWith(WithBlueprint *clause_blueprint) {
+  auto *first_bp = clause_blueprint->getFirst();
+  if (first_bp == nullptr) {
+    throw ParseSemanticError("Invalid first parameter in SuchThat clause");
   }
-  if (first->getRefType() == ReferenceType::kAttr) {
-    auto *first_attr_reference = static_cast<AttrReference *>(first);
-    first_attr_reference->setSynonymReference(this->getDeclaration(first_attr_reference->getSynonymReference()));
-    clause_blueprint->setFirst(first_attr_reference);
+  QueryReference *first = BuildReference(first_bp);
+  auto *second_bp = clause_blueprint->getSecond();
+  if (second_bp == nullptr) {
+    throw ParseSemanticError("Invalid second parameter in SuchThat clause");
   }
-  if (second->getRefType() == ReferenceType::kAttr) {
-    auto *second_attr_reference = static_cast<AttrReference *>(second);
-    second_attr_reference->setSynonymReference(this->getDeclaration(second_attr_reference->getSynonymReference()));
-    clause_blueprint->setSecond(second_attr_reference);
+  QueryReference *second = BuildReference(second_bp);
+  auto *clause = new WithClause(clause_blueprint->getComparator(), first, second);
+
+  if (!clause->isSemanticallyCorrect()) {
+    throw ParseSemanticError("Invalid such that parameter type");
   }
-  if (!clause_blueprint->isSemanticallyCorrect()) {
-    throw ParseSemanticError("Invalid with parameter type");
-  }
-  return clause_blueprint;
+  return clause;
 }
+

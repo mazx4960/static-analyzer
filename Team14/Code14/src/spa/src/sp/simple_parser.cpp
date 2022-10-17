@@ -4,7 +4,7 @@
 
 Node *SimpleParser::ParseProgram(const std::vector<Token *> &tokens) {
   auto *ast = Parser::Parse(new ProgramGrammarRule(), std::move(tokens));
-  if (ast == nullptr) { throw ParseSyntaxError("Failed to parse program"); }
+  if (ast == nullptr) { throw ParseSyntaxError("Failed to Parse program"); }
   ValidateProgram(ast);
   return ast;
 }

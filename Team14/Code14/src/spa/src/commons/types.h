@@ -6,18 +6,8 @@
 #include <unordered_set>
 
 enum class EntityType {
-  kProcedure,
-  kStatement,
-  kVariable,
-  kConstant,
-  // Statement types
-  kAssignStmt,
-  kCallStmt,
-  kIfStmt,
-  kWhileStmt,
-  kPrintStmt,
-  kReadStmt,
-  // Used by PQL
+  kProcedure, kStatement, kVariable, kConstant, // Statement types
+  kAssignStmt, kCallStmt, kIfStmt, kWhileStmt, kPrintStmt, kReadStmt, // Used by PQL
   kUnknown,
 };
 
@@ -73,9 +63,9 @@ inline std::string RsTypeToString(RsType type) {
   }
 }
 
-inline std::unordered_set<EntityType> all_stmt_types = {EntityType::kAssignStmt, EntityType::kCallStmt,
-                                                        EntityType::kIfStmt, EntityType::kPrintStmt,
-                                                        EntityType::kReadStmt, EntityType::kWhileStmt};
+inline std::unordered_set<EntityType> all_stmt_types =
+    {EntityType::kAssignStmt, EntityType::kCallStmt, EntityType::kIfStmt, EntityType::kPrintStmt, EntityType::kReadStmt,
+     EntityType::kWhileStmt};
 
 inline std::unordered_set<EntityType> GetAllStmtTypes() {
   return all_stmt_types;

@@ -1,249 +1,124 @@
 #include "query_parser.h"
 
 #include <utility>
+#include <spdlog/spdlog.h>
 
 #include "commons/parser/parser.h"
 
 QueryParser::QueryParser(std::vector<Token *> tokens) {
   this->tokens_ = std::move(tokens);
+  this->token_stream_ = tokens_.begin();
 }
 
-Query *QueryParser::parse() {
-  SynonymReferences query_declarations = parseDeclarations();
-  QueryCall *query_call = parseQueryCall();
-  Clauses query_clauses = parseClauses();
-  if (!outOfTokens()) {
-    throw ParseSyntaxError("Unexpected token");
+bool QueryParser::ShouldStop() {
+  return **token_stream_ == EndOfFileToken();
+}
+Token *QueryParser::Expect(const Token &token) {
+  if (**token_stream_ != token) {
+    throw ParseSyntaxError("Expected " + token.ToString() + " but got " + (*token_stream_)->ToString());
   }
-  QueryBuilder builder = QueryBuilder(new Query(query_declarations, query_call, query_clauses));
-  auto *query = builder.build();
+  return *token_stream_++;
+}
+Token *QueryParser::Expect(TokenType type) {
+  if ((*token_stream_)->type != type) {
+    throw ParseSyntaxError("Expected " + TokenTypeToString(type) + " but got " + (*token_stream_)->ToString());
+  }
+  return *token_stream_++;
+}
+
+Query *QueryParser::Parse() {
+  this->query_builder_ = new QueryBuilder();
+  ParseQuery();
+  Expect(EndOfFileToken());
+  auto *query = this->query_builder_->Build();
   return query;
 }
-
-Token *QueryParser::nextToken() {
-  if (token_index_ >= tokens_.size() || *peekToken() == EndOfFileToken()) {
-    throw ParseSyntaxError("Too few arguments");
+void QueryParser::ParseQuery() {
+  spdlog::debug("Parsing declarations");
+  while (!ShouldStop() && QueryKeywords::isValidDeclarationKeyword((*token_stream_)->value)) {
+    ParseDeclaration();
   }
-  return tokens_[this->token_index_++];
+  spdlog::debug("Parsing select");
+  ParseSelect();
+  spdlog::debug("Parsing clauses");
+  auto clauses = std::vector<ClauseBlueprint *>();
+  while (!ShouldStop() && QueryKeywords::isValidClauseKeyword((*token_stream_)->value)) {
+    ParseClause(clauses);
+  }
+  query_builder_->AddClauses(clauses);
 }
 
-Token *QueryParser::peekToken() {
-  if (token_index_ >= tokens_.size()) {
-    return new EndOfFileToken();
-  }
-  return tokens_[this->token_index_];
-}
-
-bool QueryParser::outOfTokens() {
-  return this->token_index_ == this->tokens_.size() || *peekToken() == EndOfFileToken();
-}
-
-SynonymReferences QueryParser::parseDeclarations() {
-  declarations_.clear();
-  while (!outOfTokens() && QueryKeywords::isValidDeclarationKeyword(peekToken()->value)) {
-    parseDeclarationStatement();
-  }
-  return this->declarations_;
-}
-
-void QueryParser::parseDeclarationStatement() {
-  Token *prefix = nextToken();
-  EntityType type;
-  try {
-    type = QueryKeywords::declarationKeywordToType(prefix->value);
-  } catch (std::out_of_range &oor) {
-    throw ParseSyntaxError("Unknown declaration type: " + prefix->value);
-  }
-
-  SynonymReferences declarations;
+void QueryParser::ParseDeclaration() {
+  EntityType type = QueryKeywords::declarationKeywordToType((*token_stream_++)->value);
   // Initial declaration
-  declarations_.push_back(parseDeclaration(type));
-
+  query_builder_->AddDeclaration(new DeclarationBlueprint(ParseSynonym(), type));
   // While there are multiple declarations seperated by commas
-  while (*peekToken() != SemicolonToken()) {
-    expect(nextToken(), TokenType::kComma);
-    declarations_.push_back(parseDeclaration(type));
+  while ((*token_stream_)->type == TokenType::kComma) {
+    Expect(TokenType::kComma);
+    query_builder_->AddDeclaration(new DeclarationBlueprint(ParseSynonym(), type));
+  }
+  Expect(SemicolonToken());
+}
+void QueryParser::ParseSelect() {
+  Expect(SymbolToken("Select"));
+
+  if ((*token_stream_)->type == TokenType::kSymbol && (*token_stream_)->value == "BOOLEAN") {
+    query_builder_->AddSelect(new SelectBlueprint(SelectType::kBoolean, {}));
+    Expect(SymbolToken("BOOLEAN"));
+    return;
   }
 
-  // End declaration statement with a semicolon
-  expect(nextToken(), TokenType::kSemicolon);
-}
-
-SynonymReference *QueryParser::parseDeclaration(EntityType type) {
-  switch (type) {
-    case EntityType::kProcedure:return new ProcedureDeclaration(parseSynonym());
-    case EntityType::kStatement:return new StatementDeclaration(parseSynonym());
-    case EntityType::kVariable:return new VariableDeclaration(parseSynonym());
-    case EntityType::kConstant:return new ConstantDeclaration(parseSynonym());
-    case EntityType::kAssignStmt:return new AssignDeclaration(parseSynonym());
-    case EntityType::kCallStmt:return new CallDeclaration(parseSynonym());
-    case EntityType::kIfStmt:return new IfDeclaration(parseSynonym());
-    case EntityType::kWhileStmt:return new WhileDeclaration(parseSynonym());
-    case EntityType::kPrintStmt:return new PrintDeclaration(parseSynonym());
-    case EntityType::kReadStmt:return new ReadDeclaration(parseSynonym());
-    default:throw ParseSyntaxError("Unknown declaration type:" + EntityTypeToString(type));
-  }
-}
-
-QueryReference *QueryParser::parseClauseReference() {
-  Token *reference = peekToken();
-  switch (reference->type) {
-    case TokenType::kQuote:return parseQuotedReference();
-    case TokenType::kLiteral:return parseIntegerReference();
-    case TokenType::kSymbol:return parseSynonymReference();
-    case TokenType::kWildCard:return parseWildcardReference();
-    default:throw ParseSyntaxError("Unknown Reference: " + reference->value);
-  }
-}
-
-QueryReference *QueryParser::parseCompareReference() {
-  Token *reference = peekToken();
-  switch (reference->type) {
-    case TokenType::kQuote:
-      return parseQuotedReference();
-    case TokenType::kLiteral:
-      return parseIntegerReference();
-    case TokenType::kSymbol:
-      return parseAttrReference();
-    default:
-      throw ParseSyntaxError("Unknown Compare Reference: " + reference->value);
-  }
-}
-
-ElemReference *QueryParser::parseElemReference() {
-  auto *synonym_reference = parseSynonymReference();
-  if (*peekToken() == DotToken()) {
-    nextToken();
-    return new AttrReference(synonym_reference, parseAttribute());
-  }
-  return synonym_reference;
-}
-
-AttrReference *QueryParser::parseAttrReference() {
-  auto *synonym_reference = parseSynonymReference();
-  expect(nextToken(), TokenType::kDot);
-  return new AttrReference(synonym_reference, parseAttribute());
-}
-
-AttributeType QueryParser::parseAttribute() {
-  expect(peekToken(), TokenType::kSymbol);
-  std::string attr_name = nextToken()->value;
-  if (*peekToken() == HashtagToken()) {
-    attr_name.append(nextToken()->value);
-  }
-  try {
-    return QueryKeywords::attributeKeywordToType(attr_name);
-  } catch (std::out_of_range &oor) {
-    throw ParseSyntaxError("Unknown attribute: " + attr_name);
-  }
-}
-
-SynonymReference *QueryParser::parseSynonymReference() {
-  return new SynonymReference(parseSynonym());
-}
-
-IntegerReference *QueryParser::parseIntegerReference() {
-  expect(peekToken(), TokenType::kLiteral);
-  std::string literal_string = nextToken()->value;
-
-  return new IntegerReference(literal_string);
-}
-
-IdentReference *QueryParser::parseQuotedReference() {
-  expect(nextToken(), TokenType::kQuote);
-  IdentReference *declaration = parseIdentReference();
-  expect(nextToken(), TokenType::kQuote);
-  return declaration;
-}
-
-IdentReference *QueryParser::parseIdentReference() {
-  expect(peekToken(), TokenType::kSymbol);
-  return new IdentReference(nextToken()->value);
-}
-WildcardReference *QueryParser::parseWildcardReference() {
-  expect(nextToken(), TokenType::kWildCard);
-  return new WildcardReference();
-}
-
-QuerySynonym *QueryParser::parseSynonym() {
-  expect(peekToken(), TokenType::kSymbol);
-  return new QuerySynonym(nextToken()->value);
-}
-
-QueryCall *QueryParser::parseQueryCall() {
-  Token *call = nextToken();
-  if (!QueryKeywords::isValidCallKeyword(call->value)) {
-    throw ParseSyntaxError("Unknown query call: " + call->value);
-  }
-  return new SelectCall(parseElemReferences());
-}
-
-std::vector<ElemReference *> QueryParser::parseElemReferences() {
-  std::vector<ElemReference *> references;
-  if (*peekToken() == AngleOpenBracketToken()) {
-    expect(nextToken(), TokenType::kAngleOpenBracket);
-    references.push_back(parseElemReference());
-    while (*peekToken() != AngleCloseBracketToken()) {
-      expect(nextToken(), TokenType::kComma);
-      references.push_back(parseElemReference());
+  auto elems = std::vector<ElemBlueprint *>();
+  if (**token_stream_ == AngleOpenBracketToken()) {
+    Expect(AngleOpenBracketToken());
+    while (**token_stream_ != AngleCloseBracketToken()) {
+      elems.push_back(ParseElem());
+      if (**token_stream_ == CommaToken()) {
+        Expect(CommaToken());
+      }
     }
-    expect(nextToken(), TokenType::kAngleCloseBracket);
+    Expect(AngleCloseBracketToken());
   } else {
-    references.push_back(parseElemReference());
+    elems.push_back(ParseElem());
   }
-  return references;
+  query_builder_->AddSelect(new SelectBlueprint(SelectType::kElem, elems));
 }
-
-Clauses QueryParser::parseClauses() {
-  clauses_.clear();
-  while (!outOfTokens()) {
-    clauses_.push_back(parseClause());
-  }
-  return clauses_;
-}
-
-QueryClause *QueryParser::parseClause() {
-  Token *clause = nextToken();
-  if (*clause == KeywordToken("and")) {
-    return parseAndClause();
-  }
-  if (*clause == KeywordToken("such") && *nextToken() == KeywordToken("that")) {
-    return parseSuchThat();
-  }
-  if (*clause == KeywordToken("pattern")) {
-    return parsePattern();
-  }
-  if (*clause == KeywordToken("with")) {
-    return parseWith();
-  }
-  throw ParseSyntaxError("Unknown clause: " + clause->value);
-}
-
-QueryClause *QueryParser::parseAndClause() {
-  switch (getPreviousClause()->getClauseType()) {
-    case ClauseType::kSuchThat:return parseSuchThat();
-    case ClauseType::kPattern:return parsePattern();
-    case ClauseType::kWith:return parseWith();
-    default:throw ParseSyntaxError("and not supported");
+void QueryParser::ParseClause(std::vector<ClauseBlueprint *> &clauses) {
+  spdlog::debug("Checking clause for " + (*token_stream_)->ToString());
+  if (**token_stream_ == KeywordToken("and")) {
+    Expect(KeywordToken("and"));
+    switch (clauses.back()->getClauseType()) {
+      case ClauseType::kSuchThat: ParseSuchThat(clauses);
+        break;
+      case ClauseType::kPattern: ParsePattern(clauses);
+        break;
+      case ClauseType::kWith: ParseWith(clauses);
+        break;
+      default:throw ParseSyntaxError("and not supported");
+    }
+  } else if (**token_stream_ == KeywordToken("such") && **(token_stream_ + 1) == KeywordToken("that")) {
+    Expect(KeywordToken("such"));
+    Expect(KeywordToken("that"));
+    ParseSuchThat(clauses);
+  } else if (**token_stream_ == KeywordToken("pattern")) {
+    Expect(KeywordToken("pattern"));
+    ParsePattern(clauses);
+  } else if (**token_stream_ == KeywordToken("with")) {
+    Expect(KeywordToken("with"));
+    ParseWith(clauses);
+  } else {
+    throw ParseSyntaxError("Unknown clause: " + (*token_stream_)->value);
   }
 }
 
-QueryClause *QueryParser::getPreviousClause() {
-  if (clauses_.empty()) {
-    throw ParseSyntaxError("No previous clause");
-  }
-  return clauses_.back();
-}
+void QueryParser::ParseSuchThat(std::vector<ClauseBlueprint *> &clauses) {
+  spdlog::debug("Parsing such that");
+  Token *relationship = Expect(TokenType::kSymbol);
 
-SuchThatClause *QueryParser::parseSuchThat() {
-  Token *relationship = nextToken();
-  expect(relationship, TokenType::kSymbol);
   RsType rs_type;
   std::string rs_keyword = relationship->value;
-
-  // Check for *
-  if (*peekToken() == OperatorToken("*")) {
-    rs_keyword.append(nextToken()->value);
+  if (**token_stream_ == OperatorToken("*")) {
+    rs_keyword.append((*token_stream_++)->value);
   }
   // Convert string to rs type
   try {
@@ -251,99 +126,118 @@ SuchThatClause *QueryParser::parseSuchThat() {
   } catch (std::out_of_range &oor) {
     throw ParseSyntaxError("Unknown such-that relationship: " + relationship->value);
   }
-  expect(nextToken(), TokenType::kRoundOpenBracket);
-  QueryReference *first = parseClauseReference();
-  expect(nextToken(), TokenType::kComma);
-  QueryReference *second = parseClauseReference();
-  expect(nextToken(), TokenType::kRoundCloseBracket);
-  SuchThatClause *clause = parseSuchThat(rs_type, first, second);
-  if (!clause->isSyntacticallyCorrect()) {
-    throw ParseSyntaxError("Incorrect parameter syntax");
+  Expect(RoundOpenBracketToken());
+  auto *first = ParseBase();
+  Expect(CommaToken());
+  auto *second = ParseBase();
+  Expect(RoundCloseBracketToken());
+  auto *clause = new SuchThatBlueprint(rs_type, first, second);
+  if (!clause->checkSyntax()) {
+    throw ParseSyntaxError("Incorrect parameter syntax for: " + clause->toString());
   }
-  return clause;
+  spdlog::debug("Parsed clause: {}", clause->toString());
+  clauses.push_back(clause);
 }
 
-SuchThatClause *QueryParser::parseSuchThat(RsType rs_type, QueryReference *first, QueryReference *second) {
-  switch (rs_type) {
-    case RsType::kFollows:return new FollowsClause(first, second);
-    case RsType::kFollowsT:return new FollowsTClause(first, second);
-    case RsType::kParent:return new ParentClause(first, second);
-    case RsType::kParentT:return new ParentTClause(first, second);
-    case RsType::kUses:return new UsesClause(first, second);
-    case RsType::kModifies:return new ModifiesClause(first, second);
-    case RsType::kCalls:return new CallsClause(first, second);
-    case RsType::kCallsT:return new CallsTClause(first, second);
-    case RsType::kNext:return new NextClause(first, second);
-    case RsType::kNextT:return new NextTClause(first, second);
-    case RsType::kAffects:return new AffectsClause(first, second);
-    case RsType::kAffectsT:return new AffectsTClause(first, second);
-    default:throw ParseSyntaxError("Unsupported such-that relationship: " + RsTypeToString(rs_type));
+void QueryParser::ParsePattern(std::vector<ClauseBlueprint *> &clauses) {
+  spdlog::debug("Parsing pattern");
+  auto *synonym = ParseSynonym();
+  Expect(RoundOpenBracketToken());
+  auto *ent_ref = ParseBase();
+  Expect(CommaToken());
+  auto *expr = ParseExpr();
+  PatternBlueprint *clause;
+  if ((*token_stream_)->type == TokenType::kComma) {
+    Expect(CommaToken());
+    auto *expr2 = ParseExpr();
+    clause = new PatternBlueprint(synonym, ent_ref, expr, expr2);
+  } else {
+    clause = new PatternBlueprint(synonym, ent_ref, expr);
   }
+  Expect(RoundCloseBracketToken());
+  spdlog::debug("Parsed clause: {}", clause->toString());
+  clauses.push_back(clause);
 }
 
-PatternClause *QueryParser::parsePattern() {
-  expect(peekToken(), TokenType::kSymbol);
-  SynonymReference *syn_assign = parseSynonymReference();
-  expect(nextToken(), TokenType::kRoundOpenBracket);
-  QueryReference *ent_ref = parseClauseReference();
-  expect(nextToken(), TokenType::kComma);
-  ExpressionSpec *expression_spec = parseExpression();
-  expect(nextToken(), TokenType::kRoundCloseBracket);
-  return new PatternClause(syn_assign, ent_ref, expression_spec);
+void QueryParser::ParseWith(std::vector<ClauseBlueprint *> &clauses) {
+  spdlog::debug("Parsing with");
+  auto *first = ParseBase();
+  Expect(TokenType::kComparator);
+  auto *second = ParseBase();
+  auto *clause = new WithBlueprint(Comparator::kEquals, first, second);
+  spdlog::debug("Parsed clause: {}", clause->toString());
+  clauses.push_back(clause);
 }
 
-WithClause *QueryParser::parseWith() {
-  QueryReference *first_ref = parseCompareReference();
-  Comparator comparator = parseComparator();
-  QueryReference *second_ref = parseCompareReference();
-  auto *clause = new WithClause(comparator, first_ref, second_ref);
-  if (!clause->isSyntacticallyCorrect()) {
-    throw ParseSyntaxError("Incorrect parameter syntax");
+BaseBlueprint *QueryParser::ParseBase() {
+  if ((*token_stream_)->type == TokenType::kQuote) {
+    Expect(QuoteToken());
+    auto *token = Expect(TokenType::kSymbol);
+    Expect(QuoteToken());
+    return new BaseBlueprint(ReferenceType::kIdent, token->value);
   }
-  return clause;
-}
-
-Comparator QueryParser::parseComparator() {
-  expect(nextToken(), TokenType::kComparator);
-  return Comparator::kEquals;
-}
-
-ExpressionSpec *QueryParser::parseExpression() {
-  bool is_wild = false;
-  Token *expr = peekToken();
-  if (expr->type == TokenType::kWildCard) {
-    nextToken();
-    is_wild = true;
-    expr = peekToken();
+  if ((*token_stream_)->type == TokenType::kLiteral) {
+    auto *token = Expect(TokenType::kLiteral);
+    return new BaseBlueprint(ReferenceType::kInteger, token->value);
   }
-  if (expr->type == TokenType::kQuote) {
-    std::string expression = parseFlattenedExpression();
-    if (is_wild) {
-      expect(nextToken(), TokenType::kWildCard);
-      return new WildExpression(expression);
+  if ((*token_stream_)->type == TokenType::kSymbol && (*(token_stream_ + 1))->type == TokenType::kDot) {
+    return ParseElem();
+  }
+  if ((*token_stream_)->type == TokenType::kSymbol) {
+    return ParseSynonym();
+  }
+  if ((*token_stream_)->type == TokenType::kWildCard) {
+    Expect(WildCardToken());
+    return new BaseBlueprint(ReferenceType::kWildcard, "");
+  }
+  throw ParseSyntaxError("Unknown base type: " + (*token_stream_)->ToString());
+}
+
+SynonymBlueprint *QueryParser::ParseSynonym() {
+  auto *synonym_token = Expect(TokenType::kSymbol);
+  return new SynonymBlueprint(synonym_token->value);
+}
+
+ElemBlueprint *QueryParser::ParseElem() {
+  auto *synonym_bp = ParseSynonym();
+  if ((*token_stream_)->type == TokenType::kDot) {
+    Expect(TokenType::kDot);
+    auto *attr_token = Expect(TokenType::kSymbol);
+    std::string attr_name = attr_token->value;
+    if (**token_stream_ == HashtagToken()) {
+      auto *ht = Expect(HashtagToken());
+      attr_name.append(ht->value);
     }
-    return new ExactExpression(expression);
+    AttributeType attribute_type;
+    try {
+      attribute_type = QueryKeywords::attributeKeywordToType(attr_name);
+    } catch (std::out_of_range &oor) {
+      throw ParseSyntaxError("Unknown attribute: " + attr_name);
+    }
+    return new ElemBlueprint(synonym_bp, attribute_type);
   }
-  if (!is_wild) {
-    throw ParseSyntaxError("Invalid expression type: " + expr->value);
-  }
-  return new WildExpression();
+  return new ElemBlueprint(synonym_bp, AttributeType::kNone);
 }
 
-std::string QueryParser::parseFlattenedExpression() {
-  expect(nextToken(), TokenType::kQuote);
-  std::vector<Token *> expr_tokens;
-  while (peekToken()->type != TokenType::kQuote) {
-    Token *tmp = nextToken();
-    expr_tokens.push_back(tmp);
+ExprBlueprint *QueryParser::ParseExpr() {
+  bool is_exact = true;
+  std::string expr_string;
+  if ((*token_stream_)->type == TokenType::kWildCard) {
+    Expect(WildCardToken());
+    is_exact = false;
   }
-  expect(nextToken(), TokenType::kQuote);
-  expr_tokens.push_back(new EndOfFileToken());
-  return Parser::ParseExpression(expr_tokens)->ToString();
-}
-
-void QueryParser::expect(Token *token, TokenType expected) {
-  if (token->type != expected) {
-    throw ParseSyntaxError("Expected " + TokenTypeToString(expected) + " but got " + token->value);
+  if ((*token_stream_)->type == TokenType::kQuote) {
+    Expect(QuoteToken());
+    std::vector<Token *> expr_tokens;
+    while ((*token_stream_)->type != TokenType::kQuote) {
+      Token *tmp = *token_stream_++;
+      expr_tokens.push_back(tmp);
+    }
+    Expect(QuoteToken());
+    expr_string = Parser::ParseExpression(expr_tokens)->ToString();
+    if (!is_exact) {
+      Expect(WildCardToken());
+    }
   }
+  return new ExprBlueprint(expr_string, is_exact);
 }

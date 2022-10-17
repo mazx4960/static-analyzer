@@ -13,47 +13,30 @@
 #include "qps/pql/query_reference.h"
 #include "query_builder.h"
 
+using TokenIterator = std::vector<Token *>::iterator;
+
 class QueryParser {
  private:
   std::vector<Token *> tokens_;
-  SynonymReferences declarations_;
-  Clauses clauses_;
-  int token_index_ = 0;
+  TokenIterator token_stream_;
+  QueryBuilder *query_builder_;
 
-  Token *nextToken();
-  Token *peekToken();
-  bool outOfTokens();
-
-  void parseDeclarationStatement();
-  SynonymReference *parseDeclaration(EntityType type);
-  static SuchThatClause *parseSuchThat(RsType rs_type, QueryReference *first, QueryReference *second);
-  IdentReference *parseQuotedReference();
-  SynonymReference *parseSynonymReference();
-  WildcardReference *parseWildcardReference();
-  IntegerReference *parseIntegerReference();
-  IdentReference *parseIdentReference();
-  std::string parseFlattenedExpression();
-  QueryClause *getPreviousClause();
+  bool ShouldStop();
+  Token *Expect(const Token &);
+  Token *Expect(TokenType);
 
  public:
   explicit QueryParser(std::vector<Token *> tokens);
-  Query *parse();
-  SynonymReferences parseDeclarations();
-  QuerySynonym *parseSynonym();
-  QueryCall *parseQueryCall();
-  std::vector<ElemReference *> parseElemReferences();
-  Clauses parseClauses();
-  QueryClause *parseClause();
-  SuchThatClause *parseSuchThat();
-  QueryReference *parseClauseReference();
-  PatternClause *parsePattern();
-  ExpressionSpec *parseExpression();
-  static void expect(Token *token, TokenType expected);
-  ElemReference *parseElemReference();
-  AttrReference *parseAttrReference();
-  AttributeType parseAttribute();
-  Comparator parseComparator();
-  WithClause *parseWith();
-  QueryClause *parseAndClause();
-  QueryReference *parseCompareReference();
+  Query *Parse();
+  void ParseQuery();
+  void ParseDeclaration();
+  void ParseSelect();
+  void ParseClause(std::vector<ClauseBlueprint *> &clauses);
+  void ParseSuchThat(std::vector<ClauseBlueprint *> &clauses);
+  void ParsePattern(std::vector<ClauseBlueprint *> &clauses);
+  void ParseWith(std::vector<ClauseBlueprint *> &clauses);
+  BaseBlueprint *ParseBase();
+  SynonymBlueprint *ParseSynonym();
+  ElemBlueprint *ParseElem();
+  ExprBlueprint *ParseExpr();
 };

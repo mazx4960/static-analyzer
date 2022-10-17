@@ -8,25 +8,30 @@
 #include "commons/lexer/token.h"
 #include "commons/parser/parser_exceptions.h"
 #include "qps/pql/query.h"
+#include "blueprint.h"
 
 class QueryBuilder {
  private:
-  std::vector<SynonymReference *> declarations_;
-  std::unordered_set<std::string> synonyms_;
-  Query *query_;
+  std::unordered_map<std::string, SynonymReference *> synonym_table_;
+  std::vector<DeclarationBlueprint *> declaration_bps_;
+  SelectBlueprint *select_bp_;
+  std::vector<ClauseBlueprint *> clauses_bp_;
+
+  SynonymReference *GetSynonymReference(const std::string &name);
 
  public:
-  explicit QueryBuilder(Query *query_blueprint = nullptr);
-  Query *build();
-  std::vector<SynonymReference *> buildDeclarations(const std::vector<SynonymReference *> &declaration_blueprint);
-  SynonymReference *buildDeclaration(SynonymReference *declaration_blueprint);
-  SynonymReference *getDeclaration(const QuerySynonym *synonym);
+  explicit QueryBuilder() = default;
+  Query *Build();
 
-  std::vector<QueryClause *> buildClauses(const std::vector<QueryClause *> &clauses_blueprint);
-  PatternClause *buildPattern(PatternClause *clause_blueprint);
-  SuchThatClause *buildSuchThat(SuchThatClause *clause_blueprint);
-  WithClause *buildWith(WithClause *clause_blueprint);
-  QueryCall *buildQueryCall(QueryCall *query_call_blueprint);
-  SynonymReference *getDeclaration(SynonymReference *synonym_reference);
-  std::vector<ElemReference *> buildQueryCallElemReferences(std::vector<ElemReference *> query_call_reference_blueprint);
+  void AddDeclaration(DeclarationBlueprint *declaration);
+  void AddSelect(SelectBlueprint *select);
+  void AddClauses(std::vector<ClauseBlueprint *> &clauses);
+  std::vector<SynonymReference *> BuildDeclarations();
+  SelectCall *BuildSelect();
+  std::vector<QueryClause *> BuildClauses();
+  PatternClause *BuildPattern(PatternBlueprint *clause_blueprint);
+  SuchThatClause *BuildSuchThat(SuchThatBlueprint *clause_blueprint);
+  WithClause *BuildWith(WithBlueprint *clause_blueprint);
+  std::vector<ElemReference *> BuildElems(const std::vector<ElemBlueprint *> &elem_blueprints);
+  QueryReference *BuildReference(BaseBlueprint *blueprint);
 };

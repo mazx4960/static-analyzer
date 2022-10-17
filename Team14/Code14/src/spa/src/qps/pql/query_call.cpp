@@ -4,20 +4,23 @@
 
 #include <utility>
 
-std::vector<ElemReference *> QueryCall::getReferences() const {
-  return this->elem_references_;
-}
-void QueryCall::setReferences(std::vector<ElemReference *> elem_references) {
-  this->elem_references_ = std::move(elem_references);
-}
-CallType QueryCall::getCallType() const {
+SelectType SelectCall::getSelectType() const {
   return this->type_;
 }
 std::string SelectCall::toString() const {
-  std::string str = "Select {";
+  return "Select " + SelectTypeToString(this->type_);
+}
+
+std::vector<ElemReference *> ElemSelect::getReferences() const {
+  return this->elem_references_;
+}
+void ElemSelect::setReferences(std::vector<ElemReference *> elem_references) {
+  this->elem_references_ = std::move(elem_references);
+}
+std::string ElemSelect::toString() const {
+  std::string str = SelectCall::toString() + ": ";
   for (auto *ref : getReferences()) {
     str.append(ref->toString() + ", ");
   }
-  str.append("}");
   return str;
 }

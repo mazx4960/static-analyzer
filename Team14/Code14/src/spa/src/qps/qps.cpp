@@ -9,16 +9,16 @@ Result *QPS::EvaluateQuery(std::istream *query_stream) {
   QueryLexer lexer(query_stream);
   auto tokens = lexer.lex();
   spdlog::info("Generated query tokens");
-  std::string token_string;
+  std::string token_string = "Tokens: ";
   for (auto *token : tokens) {
     token_string += token->ToString() + " ";
   }
-  spdlog::debug("Tokens[{}]: ", tokens.size(), token_string);
+  spdlog::debug(token_string);
 
   Query *query;
   spdlog::info("Parsing tokens...");
   QueryParser parser(tokens);
-  query = parser.parse();
+  query = parser.Parse();
   spdlog::info("Query built");
   spdlog::debug("Query: {}", query->toString());
 
