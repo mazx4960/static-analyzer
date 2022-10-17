@@ -1,51 +1,48 @@
 #include "result_projector.h"
-
 #include "spdlog/spdlog.h"
 
-/**
- * Intersect the context of two QueryDeclarations.
- * @param first first set of Entity pointers.
- * @param second second set of Entity pointers.
- * @return intersection of sets of Entity pointers.
- */
-EntityPointerUnorderedSet ResultProjector::intersect(const EntityPointerUnorderedSet &first,
-                                                     const EntityPointerUnorderedSet &second) {
-  EntityPointerUnorderedSet result;
-  for (auto *entity : first) {
-    if (second.find(entity) != second.end()) {
-      result.insert(entity);
-    }
+void ResultProjector::join() {
+  SubqueryResult intermediate_result = SubqueryResult::FullNoSynonym();
+  for (auto result : subquery_results_) {
+    intermediate_result = intermediate_result.Join(result);
   }
-  return result;
+  this->joined_results_ = intermediate_result;
 }
 
-/**
- * Project results from list of subquery results.
- * @return set of Entity pointers of final result.
- */
-SubqueryResult ResultProjector::project() {
-  std::vector<QuerySynonym* > called_synonyms{};
+SelectProjector::SelectProjector(std::vector<ElemReference *> &declarations, std::vector<SubqueryResult> &subquery_results)
+    : ResultProjector(subquery_results), called_declarations_(std::move(declarations)) {
+  this->called_synonyms_.reserve(called_declarations_.size());
   for (auto *elem_ref : called_declarations_) {
-    called_synonyms.push_back(elem_ref->getSynonym());
+    this->called_synonyms_.push_back(elem_ref->getSynonym());
   }
+};
+
+void SelectProjector::project() {
   if (std::any_of(subquery_results_.begin(), subquery_results_.end(),
                   [](SubqueryResult subquery_result) {
                     return subquery_result.IsEmpty();
                   })) {
     spdlog::debug("Some table is empty");
-    return SubqueryResult::Empty(called_synonyms);
+    this->joined_results_ = SubqueryResult::Empty(this->called_synonyms_);
+  } else {
+    this->join();
   }
+}
 
-  SubqueryResult intermediate_result = SubqueryResult::FullNoSynonym();
-  for (auto result: subquery_results_) {
-    intermediate_result = intermediate_result.Join(result);
-  }
+SubqueryResult SelectProjector::select_results() {
   for (auto *decl : called_declarations_) {
     auto *synonym = decl->getSynonym();
-    if (!intermediate_result.Uses(synonym)) {
-
-      intermediate_result = intermediate_result.AddColumn(synonym, decl->getContext());
+    if (!this->joined_results_.Uses(synonym)) {
+      this->joined_results_ = this->joined_results_.AddColumn(synonym, decl->getContext());
     }
   }
-  return intermediate_result.GetColumns(called_synonyms);
+  return this->joined_results_.GetColumns(this->called_synonyms_);
+}
+
+void BooleanProjector::project() {
+  this->join();
+}
+
+bool BooleanProjector::has_results() {
+  return !this->joined_results_.IsEmpty();
 }
