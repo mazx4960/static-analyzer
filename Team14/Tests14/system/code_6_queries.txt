@@ -3,3 +3,91 @@ procedure p; call c; while w;
 Select p such that Calls ("Second", p) and Parent (w, c) with c.procName = p.procName
 Third
 5000
+102 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with "Third" = p.procName
+Third
+5000
+103 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p.procName such that Calls ("Second", p) and Parent (w, c) with "Third" = p.procName
+Third
+5000
+104 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p.procName such that Calls ("Second", p) and Parent (w, c) with c.procName = "Third"
+Third
+5000
+106 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with "Third" = "Third"
+Third
+5000
+107 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with c.stmt# = 8
+Third
+5000
+108 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with c.stmt# = 8 and "Third" = "Third" and c.procName = "Third"
+Third
+5000
+109 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with 1 = 2
+none
+5000
+201 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with p = "Third"
+SyntaxError
+5000
+202 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with p.procName = c
+SyntaxError
+5000
+203 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with p.procName = _
+SyntaxError
+5000
+204 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with p.procName == "Third"
+SyntaxError
+5000
+205 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with p.procName != "Third"
+SyntaxError
+5000
+206 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with p.procNames = "Third"
+SyntaxError
+5000
+207 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with g.procNames = "Third"
+SyntaxError
+5000
+301 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with p.value = c.value
+SemanticError
+5000
+302 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with p.procName = c.stmt#
+SemanticError
+5000
+303 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with p.procName = 2
+SemanticError
+5000
+
+
+

@@ -40,10 +40,10 @@ void TestWrapper::evaluate(std::string query, std::list<std::string> &results) {
     // each result must be a string.
     std::unordered_set<std::string> results_set = result->get_results_set();
     std::copy(results_set.begin(), results_set.end(), std::back_inserter(results));
-  } catch (ParseSemanticError &e) {
+  } catch (SemanticError &e) {
     results.emplace_back("SemanticError");
     return;
-  } catch (ParseSyntaxError &e) {
+  } catch (SyntaxError &e) {
     results.emplace_back("SyntaxError");
     return;
   }
