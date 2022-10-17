@@ -54,6 +54,7 @@ std::vector<ElemReference *> QueryBuilder::buildQueryCallElemReferences(std::vec
      }else if (elem_ref->getRefType() == ReferenceType::kAttr) {
       auto *attr_ref = static_cast<AttrReference *>(elem_ref);
       attr_ref->setSynonymReference(getDeclaration(attr_ref->getSynonymReference()));
+      attr_ref->isSemanticallyCorrect();
     }
   }
   return query_call_reference_blueprint;
@@ -117,7 +118,7 @@ PatternClause *QueryBuilder::buildPattern(PatternClause *clause_blueprint) {
   if (ent_ref->getRefType() == ReferenceType::kSynonym) {
     clause_blueprint->setEntReference(getDeclaration(static_cast<SynonymReference *>(ent_ref)->getSynonym()));
   }
-  if (!clause_blueprint->IsSemanticallyCorrect()) {
+  if (!clause_blueprint->isSemanticallyCorrect()) {
     throw ParseSemanticError("Invalid pattern parameter type");
   }
   return clause_blueprint;
@@ -135,7 +136,7 @@ SuchThatClause *QueryBuilder::buildSuchThat(SuchThatClause *clause_blueprint) {
   if (second->getRefType() == ReferenceType::kSynonym) {
     clause_blueprint->setSecond(getDeclaration(static_cast<SynonymReference *>(second)->getSynonym()));
   }
-  if (!clause_blueprint->IsSemanticallyCorrect()) {
+  if (!clause_blueprint->isSemanticallyCorrect()) {
     throw ParseSemanticError("Invalid such that parameter type");
   }
   return clause_blueprint;
@@ -157,7 +158,7 @@ WithClause *QueryBuilder::buildWith(WithClause *clause_blueprint) {
     second_attr_reference->setSynonymReference(this->getDeclaration(second_attr_reference->getSynonymReference()));
     clause_blueprint->setSecond(second_attr_reference);
   }
-  if (!clause_blueprint->IsSemanticallyCorrect()) {
+  if (!clause_blueprint->isSemanticallyCorrect()) {
     throw ParseSemanticError("Invalid with parameter type");
   }
   return clause_blueprint;

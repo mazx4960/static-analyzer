@@ -38,7 +38,7 @@ bool SuchThatClause::operator==(const QueryClause &other) const {
 bool ParentClause::isSyntacticallyCorrect() const {
   return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
-bool ParentClause::IsSemanticallyCorrect() const {
+bool ParentClause::isSemanticallyCorrect() const {
   switch (getFirst()->getRefType()) {
     case ReferenceType::kInteger:
       break;
@@ -90,7 +90,7 @@ bool ParentClause::IsSemanticallyCorrect() const {
 bool ParentTClause::isSyntacticallyCorrect() const {
   return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
-bool ParentTClause::IsSemanticallyCorrect() const {
+bool ParentTClause::isSemanticallyCorrect() const {
   switch (getFirst()->getRefType()) {
     case ReferenceType::kInteger:
       break;
@@ -142,7 +142,7 @@ bool ParentTClause::IsSemanticallyCorrect() const {
 bool FollowsClause::isSyntacticallyCorrect() const {
   return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
-bool FollowsClause::IsSemanticallyCorrect() const {
+bool FollowsClause::isSemanticallyCorrect() const {
   switch (getFirst()->getRefType()) {
     case ReferenceType::kInteger:
       break;
@@ -194,7 +194,7 @@ bool FollowsClause::IsSemanticallyCorrect() const {
 bool FollowsTClause::isSyntacticallyCorrect() const {
   return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
-bool FollowsTClause::IsSemanticallyCorrect() const {
+bool FollowsTClause::isSemanticallyCorrect() const {
   switch (getFirst()->getRefType()) {
     case ReferenceType::kInteger:
       break;
@@ -246,7 +246,7 @@ bool FollowsTClause::IsSemanticallyCorrect() const {
 bool UsesClause::isSyntacticallyCorrect() const {
   return (this->getFirst()->isStmtRef() || this->getFirst()->isEntRef()) && this->getSecond()->isEntRef();
 }
-bool UsesClause::IsSemanticallyCorrect() const {
+bool UsesClause::isSemanticallyCorrect() const {
   switch (getFirst()->getRefType()) {
     case ReferenceType::kInteger:
     case ReferenceType::kIdent:
@@ -284,7 +284,7 @@ bool UsesClause::IsSemanticallyCorrect() const {
 bool ModifiesClause::isSyntacticallyCorrect() const {
   return (this->getFirst()->isStmtRef() || this->getFirst()->isEntRef()) && this->getSecond()->isEntRef();
 }
-bool ModifiesClause::IsSemanticallyCorrect() const {
+bool ModifiesClause::isSemanticallyCorrect() const {
   switch (getFirst()->getRefType()) {
     case ReferenceType::kInteger:
     case ReferenceType::kIdent:
@@ -322,7 +322,7 @@ bool ModifiesClause::IsSemanticallyCorrect() const {
 bool CallsClause::isSyntacticallyCorrect() const {
   return this->getFirst()->isEntRef() && this->getSecond()->isEntRef();
 }
-bool CallsClause::IsSemanticallyCorrect() const {
+bool CallsClause::isSemanticallyCorrect() const {
   switch (getFirst()->getRefType()) {
     case ReferenceType::kIdent:
       break;
@@ -362,7 +362,7 @@ bool CallsClause::IsSemanticallyCorrect() const {
 bool CallsTClause::isSyntacticallyCorrect() const {
   return this->getFirst()->isEntRef() && this->getSecond()->isEntRef();
 }
-bool CallsTClause::IsSemanticallyCorrect() const {
+bool CallsTClause::isSemanticallyCorrect() const {
   switch (getFirst()->getRefType()) {
     case ReferenceType::kIdent:
       break;
@@ -402,7 +402,7 @@ bool CallsTClause::IsSemanticallyCorrect() const {
 bool NextClause::isSyntacticallyCorrect() const {
   return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
-bool NextClause::IsSemanticallyCorrect() const {
+bool NextClause::isSemanticallyCorrect() const {
   switch (getFirst()->getRefType()) {
     case ReferenceType::kInteger:
       break;
@@ -454,7 +454,7 @@ bool NextClause::IsSemanticallyCorrect() const {
 bool NextTClause::isSyntacticallyCorrect() const {
   return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
-bool NextTClause::IsSemanticallyCorrect() const {
+bool NextTClause::isSemanticallyCorrect() const {
   switch (getFirst()->getRefType()) {
     case ReferenceType::kInteger:
       break;
@@ -506,7 +506,7 @@ bool NextTClause::IsSemanticallyCorrect() const {
 bool AffectsClause::isSyntacticallyCorrect() const {
   return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
-bool AffectsClause::IsSemanticallyCorrect() const {
+bool AffectsClause::isSemanticallyCorrect() const {
   switch (getFirst()->getRefType()) {
     case ReferenceType::kInteger:
       break;
@@ -548,7 +548,7 @@ bool AffectsClause::IsSemanticallyCorrect() const {
 bool AffectsTClause::isSyntacticallyCorrect() const {
   return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
-bool AffectsTClause::IsSemanticallyCorrect() const {
+bool AffectsTClause::isSemanticallyCorrect() const {
   switch (getFirst()->getRefType()) {
     case ReferenceType::kInteger:
       break;
@@ -605,7 +605,7 @@ void PatternClause::setEntReference(QueryReference *ent_ref) {
 bool PatternClause::isSyntacticallyCorrect() const {
   return true;
 }
-bool PatternClause::IsSemanticallyCorrect() const {
+bool PatternClause::isSemanticallyCorrect() const {
   switch (getEntRef()->getRefType()) {
     case ReferenceType::kIdent:
       break;
@@ -652,15 +652,18 @@ QueryReference *WithClause::getSecond() const {
 bool WithClause::isSyntacticallyCorrect() const {
   return getFirst()->isAttrCompareRef() && getSecond()->isAttrCompareRef();
 }
-bool WithClause::IsSemanticallyCorrect() const {
-  ReferenceType first_type = getFirst()->getRefType();
-  ReferenceType second_type = getSecond()->getRefType();
+bool WithClause::isSemanticallyCorrect() const {
+  auto first_type = getFirst()->getRefType();
+  auto second_type = getSecond()->getRefType();
   switch (first_type) {
     case ReferenceType::kInteger:
     case ReferenceType::kIdent:
       break;
     case ReferenceType::kAttr:
       first_type = AttrToRefType(static_cast<AttrReference *>(getFirst())->getAttribute());
+      if (!static_cast<AttrReference *>(getFirst())->isSemanticallyCorrect()) {
+        return false;
+      }
       break;
     default:
       return false;
@@ -671,11 +674,15 @@ bool WithClause::IsSemanticallyCorrect() const {
       break;
     case ReferenceType::kAttr:
       second_type = AttrToRefType(static_cast<AttrReference *>(getSecond())->getAttribute());
+      if (!static_cast<AttrReference *>(getSecond())->isSemanticallyCorrect()) {
+        return false;
+      }
       break;
     default:
       return false;
   }
-  return first_type == second_type;
+
+  return first_type == second_type && first_type != ReferenceType::kWildcard;
 }
 std::string WithClause::toString() const {
   std::string str;
