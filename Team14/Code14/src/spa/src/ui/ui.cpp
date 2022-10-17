@@ -43,7 +43,7 @@ void UI::Run() {
     return;
   }
   LoadSource();
-  Result *result = ExecuteQuery();
+  auto *result = ExecuteQuery();
   DisplayResults(result);
 }
 void UI::LoadSource() {
