@@ -196,6 +196,10 @@ class WithBlueprint : public ClauseBlueprint {
   [[nodiscard]] BaseBlueprint *getSecond() const {
     return this->second_;
   };
+  bool checkSyntax() {
+    auto *rules = new Rules();
+    return rules->CheckWith(this->first_->getReferenceType(), this->second_->getReferenceType());
+  }
   [[nodiscard]] std::string toString() const override {
     return "WithBlueprint: " + first_->toString() + " " + second_->toString();
   };

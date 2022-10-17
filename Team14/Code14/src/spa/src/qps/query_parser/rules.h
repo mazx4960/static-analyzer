@@ -25,12 +25,16 @@ class Rules {
        {RsType::kCalls, {{T::kEntRef, T::kEntRef}}}, {RsType::kCallsT, {{T::kEntRef, T::kEntRef}}},
        {RsType::kNext, {{T::kStmtRef, T::kStmtRef}}}, {RsType::kNextT, {{T::kStmtRef, T::kStmtRef}}},
        {RsType::kAffects, {{T::kStmtRef, T::kStmtRef}}}, {RsType::kAffectsT, {{T::kStmtRef, T::kStmtRef}}},};
+  RefTypes attr_ref_ = {ReferenceType::kAttr, ReferenceType::kIdent, ReferenceType::kInteger};
 
   bool IsStmtRef(ReferenceType ref_type) const {
     return std::find(stmt_ref_.begin(), stmt_ref_.end(), ref_type) != stmt_ref_.end();
   };
   bool IsEntRef(ReferenceType ref_type) const {
     return std::find(ent_ref_.begin(), ent_ref_.end(), ref_type) != ent_ref_.end();
+  };
+  bool IsAttrRef(ReferenceType ref_type) const {
+    return std::find(attr_ref_.begin(), attr_ref_.end(), ref_type) != attr_ref_.end();
   };
   bool IsValid(T target, ReferenceType ref_type) const {
     if (target == T::kStmtRef) {
@@ -51,5 +55,8 @@ class Rules {
     return std::any_of(rule.begin(), rule.end(), [first, second, this](auto pair) {
       return IsValid(pair.first, first) && IsValid(pair.second, second);
     });
+  };
+  bool CheckWith(ReferenceType first, ReferenceType second) {
+    return IsAttrRef(first) && IsAttrRef(second);
   };
 };

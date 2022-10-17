@@ -165,6 +165,9 @@ void QueryParser::ParseWith(std::vector<ClauseBlueprint *> &clauses) {
   Expect(TokenType::kComparator);
   auto *second = ParseBase();
   auto *clause = new WithBlueprint(Comparator::kEquals, first, second);
+  if (!clause->checkSyntax()) {
+    throw ParseSyntaxError("Incorrect parameter syntax for: " + clause->toString());
+  }
   spdlog::debug("Parsed clause: {}", clause->toString());
   clauses.push_back(clause);
 }
