@@ -18,11 +18,6 @@ procedure p; call c; while w;
 Select p.procName such that Calls ("Second", p) and Parent (w, c) with c.procName = "Third"
 Third
 5000
-105 - Select producer called from "Second" in a while loop
-procedure p; call c; while w;
-Select c.procName such that Calls ("Second", p) and Parent (w, c) with c.procName = "Third"
-Third
-5000
 106 - Select producer called from "Second" in a while loop
 procedure p; call c; while w;
 Select p such that Calls ("Second", p) and Parent (w, c) with "Third" = "Third"
