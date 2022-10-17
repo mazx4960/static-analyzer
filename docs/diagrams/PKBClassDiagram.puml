@@ -44,12 +44,13 @@ class RelationshipManager {
     -Cache *cache_
     -unordered_map relationship_table_map_
     -void CreateTable(RsType)
+    -void GetAffectsHelper(PriorityQueue<Pair<Entity *, EntityPointerUnorderedSet>> *, EntityPointerUnorderedSet *, EntityPointerUnorderedSet *)
+    -void GetAffectsInverseHelper(PriorityQueue<Pair<Entity *, EntityPointerUnorderedSet>> *, EntityPointerUnorderedSet *, EntityPointerUnorderedSet *)
     -bool IsVariableModified(EntityPointerUnorderedSet *, Entity *)
     -bool IsVariableUsed(EntityPointerUnorderedSet *, Entity*)
+    -bool IsEntityInWhileLoop(Entity *)
     -Entity* GetProcedureEntity(Entity *, bool)
     -EntityPointerUnorderedSet GetAffects(Entity *, bool)
-    -EntityPointerUnorderedSet GetAffectsHelper(Stack<Pair<Entity *, EntityPointerUnorderedSet>> *)
-    -EntityPointerUnorderedSet GetAffectsInverseHelper(Stack<Pair<Entity *, EntityPointerUnorderedSet>> *)
     -EntityPointerUnorderedSet GetCalls(Entity *, bool)
     -EntityPointerUnorderedSet GetInference(RsType, Entity *, bool)
     -EntityPointerUnorderedSet GetInferenceFromChildren(RelationshipTable *, Entity *)
