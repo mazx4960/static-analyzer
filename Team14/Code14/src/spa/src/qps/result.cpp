@@ -57,9 +57,11 @@ std::vector<std::string> Result::get_sorted_results_string_list() const {
   std::sort(result_string_vector.begin(), result_string_vector.end());
   return result_string_vector;
 }
+
 int Result::size() const {
   return this->results_.size();
 }
+
 Result::Result(std::vector<ElemReference *> elem_refs, const SubqueryResult &table) : elem_refs_(std::move(elem_refs)) {
   std::vector<ResultRow> rows = table.GetRows();
   this->results_.reserve(rows.size());
