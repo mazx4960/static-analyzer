@@ -48,6 +48,31 @@ procedure p; call c; while w;
 Select p such that Calls ("Second", p) and Parent (w, c) with p.procName = c
 SyntaxError
 5000
+203 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with p.procName = _
+SyntaxError
+5000
+204 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with p.procName == "Third"
+SyntaxError
+5000
+205 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with p.procName != "Third"
+SyntaxError
+5000
+206 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with p.procNames = "Third"
+SyntaxError
+5000
+207 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with g.procNames = "Third"
+SyntaxError
+5000
 301 - Select producer called from "Second" in a while loop
 procedure p; call c; while w;
 Select p such that Calls ("Second", p) and Parent (w, c) with p.value = c.value
