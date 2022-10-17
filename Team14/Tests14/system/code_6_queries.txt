@@ -58,5 +58,10 @@ procedure p; call c; while w;
 Select p such that Calls ("Second", p) and Parent (w, c) with p.procName = c.stmt#
 SemanticError
 5000
+303 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with p.procName = 2
+SemanticError
+5000
 
 
