@@ -38,6 +38,11 @@ procedure p; call c; while w;
 Select p such that Calls ("Second", p) and Parent (w, c) with c.stmt# = 8 and "Third" = "Third" and c.procName = "Third"
 Third
 5000
+109 - Select producer called from "Second" in a while loop
+procedure p; call c; while w;
+Select p such that Calls ("Second", p) and Parent (w, c) with 1 = 2
+none
+5000
 201 - Select producer called from "Second" in a while loop
 procedure p; call c; while w;
 Select p such that Calls ("Second", p) and Parent (w, c) with p = "Third"
@@ -88,5 +93,6 @@ procedure p; call c; while w;
 Select p such that Calls ("Second", p) and Parent (w, c) with p.procName = 2
 SemanticError
 5000
+
 
 
