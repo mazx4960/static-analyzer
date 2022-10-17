@@ -44,8 +44,8 @@ class RelationshipManager {
     -Cache *cache_
     -unordered_map relationship_table_map_
     -void CreateTable(RsType)
-    -void GetAffectsHelper(PriorityQueue<Pair<Entity *, EntityPointerUnorderedSet>> *, EntityPointerUnorderedSet *, EntityPointerUnorderedSet *)
-    -void GetAffectsInverseHelper(PriorityQueue<Pair<Entity *, EntityPointerUnorderedSet>> *, EntityPointerUnorderedSet *, EntityPointerUnorderedSet *)
+    -void GetAffectsHelper(Stack<Pair<Entity *, EntityPointerUnorderedSet>> *, EntityPointerUnorderedSet *, EntityPointerUnorderedSet *)
+    -void GetAffectsInverseHelper(Stack<Pair<Entity *, EntityPointerUnorderedSet>> *, EntityPointerUnorderedSet *, EntityPointerUnorderedSet *)
     -bool IsVariableModified(EntityPointerUnorderedSet *, Entity *)
     -bool IsVariableUsed(EntityPointerUnorderedSet *, Entity*)
     -bool IsEntityInWhileLoop(Entity *)
