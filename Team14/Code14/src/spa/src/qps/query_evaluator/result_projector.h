@@ -13,7 +13,7 @@
  */
 class ResultProjector {
  protected:
-  std::vector<SubqueryResult> &subquery_results_;
+  std::vector<SubqueryResult> subquery_results_;
 
   SubqueryResult joined_results_ = SubqueryResult::FullNoSynonym();
 

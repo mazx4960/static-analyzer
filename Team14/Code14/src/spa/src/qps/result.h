@@ -80,7 +80,7 @@ class ElemResult : public Result {
   std::vector<ElemReference *> elem_refs_;
 
  public:
-  ElemResult(std::vector<ElemReference *>, SubqueryResult &);
+  ElemResult(std::vector<ElemReference *> &, SubqueryResult &);
 
   [[nodiscard]] std::string get_synonyms() const override;
 };

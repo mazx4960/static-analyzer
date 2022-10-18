@@ -28,7 +28,7 @@ std::string EmptyResult::get_synonyms() const {
   return "";
 }
 
-ElemResult::ElemResult(std::vector<ElemReference *> elem_refs, SubqueryResult &table) : elem_refs_(std::move(elem_refs)) {
+ElemResult::ElemResult(std::vector<ElemReference *> &elem_refs, SubqueryResult &table) : elem_refs_(elem_refs) {
   std::vector<ResultRow> rows = table.GetRows();
   this->results_.reserve(rows.size());
   for (auto row : rows) {
