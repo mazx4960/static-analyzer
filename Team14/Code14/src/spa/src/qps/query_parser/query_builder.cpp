@@ -125,7 +125,9 @@ PatternClause *QueryBuilder::BuildPattern(PatternBlueprint *clause_blueprint) {
   }
   QueryReference *var = BuildReference(var_bp);
   ExpressionSpec *expr_spec;
+  ExpressionSpec *expr_spec2 = nullptr;
   auto *expr_bp = clause_blueprint->getExpr();
+  auto *expr_bp2 = clause_blueprint->getExpr2();
   if (expr_bp == nullptr) {
     throw ParseSemanticError("Invalid expression in Pattern clause");
   }
@@ -134,7 +136,10 @@ PatternClause *QueryBuilder::BuildPattern(PatternBlueprint *clause_blueprint) {
   } else {
     expr_spec = new WildExpression(expr_bp->getValue());
   }
-  auto *clause = new PatternClause(stmt, var, expr_spec);
+  if (expr_bp2 != nullptr) {
+    expr_spec2 = new WildExpression();
+  }
+  auto *clause = new PatternClause(stmt, var, expr_spec, expr_spec2);
   if (!clause->isSemanticallyCorrect()) {
     throw ParseSemanticError("Invalid pattern parameter type");
   }

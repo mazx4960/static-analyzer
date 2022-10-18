@@ -148,7 +148,7 @@ SubqueryResult PatternStrategy::evaluate() {
 
   SynonymReference *stmt_param = this->clause_->getSynonymDeclaration();
   QueryReference *var_param = this->clause_->getEntRef();
-  ExpressionSpec *expr_param = this->clause_->getExpression();
+  ExpressionSpec *expr_param = this->clause_->getFirstExpression();
   EntitySet stmt_param_context = stmt_param->getContext();
 
   auto stmt_matches = this->evaluateParameter(var_param, expr_param, stmt_param_context);

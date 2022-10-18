@@ -622,8 +622,11 @@ SynonymReference *PatternClause::getSynonymDeclaration() const {
 QueryReference *PatternClause::getEntRef() const {
   return this->ent_ref_;
 }
-ExpressionSpec *PatternClause::getExpression() const {
-  return this->expression_;
+ExpressionSpec *PatternClause::getFirstExpression() const {
+  return this->first_expression_;
+}
+ExpressionSpec *PatternClause::getSecondExpression() const {
+  return this->second_expression_;
 }
 void PatternClause::setSynonymReference(SynonymReference *synonym_declaration) {
   this->synonym_declaration_ = synonym_declaration;
@@ -652,12 +655,23 @@ bool PatternClause::isSemanticallyCorrect() const {
     default:
       return false;
   }
-  return getSynonymDeclaration()->getEntityType() == EntityType::kAssignStmt;
+  switch (getSynonymDeclaration()->getEntityType()) {
+    case EntityType::kAssignStmt:
+      return getFirstExpression() != nullptr && getSecondExpression() == nullptr;
+    case EntityType::kIfStmt:
+      return getFirstExpression() != nullptr && getSecondExpression() != nullptr
+          && *getFirstExpression() == WildExpression() && *getSecondExpression() == WildExpression();
+    case EntityType::kWhileStmt:
+      return getFirstExpression() != nullptr && getSecondExpression() == nullptr
+          && *getFirstExpression() == WildExpression();
+    default:
+      return false;
+  }
 }
 std::string PatternClause::toString() const {
   std::string str;
   str.append("pattern " + this->synonym_declaration_->toString() + "(" + this->getEntRef()->toString() + ", "
-                 + this->expression_->toString() + ")");
+                 + this->first_expression_->toString() + ")");
   return str;
 }
 bool PatternClause::operator==(const QueryClause &other) const {
@@ -667,7 +681,7 @@ bool PatternClause::operator==(const QueryClause &other) const {
   auto other_clause = static_cast<const PatternClause &>(other);
   return (*other_clause.getSynonymDeclaration()) == (*this->getSynonymDeclaration())
       && (*other_clause.getEntRef()) == (*this->getEntRef())
-      && (*other_clause.getExpression()) == (*this->getExpression());
+      && (*other_clause.getFirstExpression()) == (*this->getFirstExpression());
 }
 Comparator WithClause::getComparator() const {
   return this->comparator_;
