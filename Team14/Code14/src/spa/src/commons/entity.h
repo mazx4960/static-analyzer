@@ -61,7 +61,7 @@ class StmtEntity : public Entity {
 
 class ReadStmtEntity : public StmtEntity {
  public:
-  explicit ReadStmtEntity(std::string stmt_no, std::string var_name) : StmtEntity(EntityType::kReadStmt, std::move(stmt_no), var_name) {
+  explicit ReadStmtEntity(std::string stmt_no, std::string var_name) : StmtEntity(EntityType::kReadStmt, std::move(stmt_no), std::move(var_name)) {
   }
 };
 
