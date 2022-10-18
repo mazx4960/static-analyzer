@@ -8,6 +8,9 @@
 #include "qps/pql/query_reference.h"
 #include "subquery_result.h"
 
+/**
+ * Base projector class.
+ */
 class ResultProjector {
  protected:
   std::vector<SubqueryResult> &subquery_results_;
@@ -27,7 +30,6 @@ class ResultProjector {
    * Project results from list of subquery results.
    */
   virtual void project() = 0;
-
 };
 
 class SelectProjector : public ResultProjector {
@@ -60,5 +62,4 @@ class BooleanProjector : public ResultProjector {
    * @return true if table is non empty.
    */
   bool has_results();
-
 };
