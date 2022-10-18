@@ -35,7 +35,6 @@ class EvaluationStrategy {
    * @return set of Entity candidates.
    */
   EntitySet getCandidates(QueryReference *);
-  static std::string getAttribute(AttributeType, Entity *);
   static std::string unwrapEntity(QueryReference *, Entity *);
 
   /**
