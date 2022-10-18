@@ -88,13 +88,17 @@ void QueryParser::ParseClause(std::vector<ClauseBlueprint *> &clauses) {
   if (**token_stream_ == KeywordToken("and")) {
     Expect(KeywordToken("and"));
     switch (clauses.back()->getClauseType()) {
-      case ClauseType::kSuchThat: ParseSuchThat(clauses);
+      case ClauseType::kSuchThat:
+        ParseSuchThat(clauses);
         break;
-      case ClauseType::kPattern: ParsePattern(clauses);
+      case ClauseType::kPattern:
+        ParsePattern(clauses);
         break;
-      case ClauseType::kWith: ParseWith(clauses);
+      case ClauseType::kWith:
+        ParseWith(clauses);
         break;
-      default:throw ParseSyntaxError("and not supported");
+      default:
+        throw ParseSyntaxError("and not supported");
     }
   } else if (**token_stream_ == KeywordToken("such") && **(token_stream_ + 1) == KeywordToken("that")) {
     Expect(KeywordToken("such"));

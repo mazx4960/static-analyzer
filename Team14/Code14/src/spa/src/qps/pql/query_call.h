@@ -17,7 +17,7 @@ class SelectCall {
   explicit SelectCall(SelectType type_) : type_(type_) {
   };
   [[nodiscard]] SelectType getSelectType() const;
-  [[nodiscard]] virtual std::string toString() const ;
+  [[nodiscard]] virtual std::string toString() const;
 };
 
 /**
@@ -44,8 +44,8 @@ class ElemSelect : public SelectCall {
  * Represents a selecting of a boolean in a PQL query.
  * Example: Select BOOLEAN such that Follows(s1, s2)
  */
-class BooleanSelect: public SelectCall {
-    public:
-    BooleanSelect() : SelectCall(SelectType::kBoolean) {
-    };
+class BooleanSelect : public SelectCall {
+ public:
+  BooleanSelect() : SelectCall(SelectType::kBoolean) {
+  };
 };

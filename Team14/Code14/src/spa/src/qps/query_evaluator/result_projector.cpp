@@ -24,7 +24,7 @@ EntityPointerUnorderedSet ResultProjector::intersect(const EntityPointerUnordere
  * @return set of Entity pointers of final result.
  */
 SubqueryResult ResultProjector::project() {
-  std::vector<QuerySynonym* > called_synonyms{};
+  std::vector<QuerySynonym *> called_synonyms{};
   for (auto *elem_ref : called_declarations_) {
     called_synonyms.push_back(elem_ref->getSynonym());
   }
@@ -37,7 +37,7 @@ SubqueryResult ResultProjector::project() {
   }
 
   SubqueryResult intermediate_result = SubqueryResult::FullNoSynonym();
-  for (auto result: subquery_results_) {
+  for (auto result : subquery_results_) {
     intermediate_result = intermediate_result.Join(result);
   }
   for (auto *decl : called_declarations_) {
