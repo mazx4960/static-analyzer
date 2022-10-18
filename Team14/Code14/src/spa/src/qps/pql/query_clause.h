@@ -168,20 +168,30 @@ class PatternClause : public QueryClause {
 
   QueryReference *ent_ref_;
 
-  ExpressionSpec *expression_;
+  ExpressionSpec *first_expression_;
+
+  ExpressionSpec *second_expression_;
  protected:
  public:
-  explicit PatternClause(SynonymReference *synonym_declaration, QueryReference *ent_ref, ExpressionSpec *expression)
+  explicit PatternClause(SynonymReference *synonym_declaration, QueryReference *ent_ref, ExpressionSpec *first_expression)
       : QueryClause(ClauseType::kPattern),
         synonym_declaration_(synonym_declaration),
         ent_ref_(ent_ref),
-        expression_(expression) {
+        first_expression_(first_expression) {
+  };
+  explicit PatternClause(SynonymReference *synonym_declaration, QueryReference *ent_ref, ExpressionSpec *first_expression, ExpressionSpec *second_expression)
+      : QueryClause(ClauseType::kPattern),
+        synonym_declaration_(synonym_declaration),
+        ent_ref_(ent_ref),
+        first_expression_(first_expression),
+        second_expression_(second_expression){
   };
   void setSynonymReference(SynonymReference *synonym_declaration);
   void setEntReference(QueryReference *ent_ref);
   [[nodiscard]] SynonymReference *getSynonymDeclaration() const;
   [[nodiscard]] QueryReference *getEntRef() const;
-  [[nodiscard]] ExpressionSpec *getExpression() const;
+  [[nodiscard]] ExpressionSpec *getFirstExpression() const;
+  [[nodiscard]] ExpressionSpec *getSecondExpression() const;
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] bool isSemanticallyCorrect() const override;
   [[nodiscard]] std::string toString() const override;

@@ -153,7 +153,8 @@ void QueryParser::ParsePattern(std::vector<ClauseBlueprint *> &clauses) {
   PatternBlueprint *clause;
   if ((*token_stream_)->type == TokenType::kComma) {
     Expect(CommaToken());
-    auto *expr2 = ParseExpr();
+    Expect(WildCardToken());
+    auto *expr2 = new ExprBlueprint("", true);
     clause = new PatternBlueprint(synonym, ent, expr, expr2);
   } else {
     clause = new PatternBlueprint(synonym, ent, expr);
