@@ -22,16 +22,6 @@ abstract class "EvaluationStrategy" {
     Entity[] intersect()
 }
 
-class "SuchThatStrategy" {
-    Entity[] evaluateParameter()
-}
-class "PatternStrategy" {
-    Entity[] evaluateParameter()
-}
-class "WithStrategy" {
-    Entity[] evaluateParameter()
-}
-
 interface UIInterface {
     void SetQueryString(String)
     Result ExecuteQuery()
@@ -114,17 +104,7 @@ QueryEvaluator *-down- SubqueryEvaluator
 QueryEvaluator *-down- SubqueryResult
 QueryEvaluator *-down- ResultProjector
 
-EvaluationStrategy <|.down. SuchThatStrategy
-EvaluationStrategy <|.down.PatternStrategy
-EvaluationStrategy <|.down. WithStrategy
-
-SuchThatEvaluator *-down- SuchThatStrategy
-PatternEvaluator *-down- PatternStrategy
-WithEvaluator *-down- WithStrategy
-
-SubqueryEvaluator <|-down- SuchThatEvaluator
-SubqueryEvaluator <|-down- PatternEvaluator
-SubqueryEvaluator <|-down- WithEvaluator
+SubqueryEvaluator <|-down- EvaluationStrategy
 SubqueryEvaluator -right- SubqueryResult
 SubqueryResult -right- ResultProjector
 @enduml
