@@ -543,3 +543,23 @@ stmt s;
 Select <s> such that Affects*(s, s)
 15, 16, 17
 5000
+1001 - select boolean
+assign a;
+Select BOOLEAN such that Uses(a, "x")
+true
+5000
+1002 - select boolean
+
+Select BOOLEAN such that Affects*(10, 23)
+true
+5000
+1003 - select boolean
+stmt s;
+Select BOOLEAN such that Next(s, s)
+false
+5000
+1004 - select boolean
+stmt s;
+Select BOOLEAN such that Affects(s, s)
+true
+5000

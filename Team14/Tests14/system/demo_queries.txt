@@ -128,6 +128,11 @@ read r;
 Select r.varName such that Next(7, r)
 cenY
 5000
+606 - select attribute
+print p;
+Select p.varName
+flag, cenX, cenY, normSq
+5000
 701 - select boolean
 assign a;
 Select BOOLEAN such that Uses(a, "x")
