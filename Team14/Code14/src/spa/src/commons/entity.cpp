@@ -34,4 +34,7 @@ std::string StmtEntity::GetStmtNo() const {
 std::string StmtEntity::GetAttr() const {
   return this->value_;
 }
+std::string StmtEntity::ToString() {
+  return EntityTypeToString(this->type_) + ": " + this->stmt_no_ + " (" + this->value_ + ")";
+}
 

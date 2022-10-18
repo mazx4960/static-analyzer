@@ -21,7 +21,7 @@ class Entity {
   [[nodiscard]] std::string GetValue() const;
   [[nodiscard]] virtual size_t GetHash() const;
   bool operator==(const Entity &other) const;
-  std::string ToString();
+  virtual std::string ToString();
 };
 
 class ProcedureEntity : public Entity {
@@ -50,50 +50,55 @@ class StmtEntity : public Entity {
 
  protected:
  public:
-  explicit StmtEntity(EntityType entity_type, std::string stmt_no, std::string value) : Entity(entity_type,
-                                                                                               std::move(stmt_no)),
-                                                                                        stmt_no_(stmt_no),
-                                                                                        value_(std::move(value)) {
+  explicit StmtEntity(EntityType entity_type, const std::string &stmt_no, std::string value) : Entity(entity_type,
+                                                                                                      stmt_no),
+                                                                                               stmt_no_(stmt_no),
+                                                                                               value_(std::move(value)) {
   }
   [[nodiscard]] std::string GetStmtNo() const;
   [[nodiscard]] std::string GetAttr() const;
+  std::string ToString() override;
 };
 
 class ReadStmtEntity : public StmtEntity {
  public:
-  explicit ReadStmtEntity(std::string stmt_no, std::string var_name) : StmtEntity(EntityType::kReadStmt, std::move(stmt_no), std::move(var_name)) {
+  explicit ReadStmtEntity(const std::string &stmt_no, std::string var_name) : StmtEntity(EntityType::kReadStmt,
+                                                                                         std::move(stmt_no),
+                                                                                         std::move(var_name)) {
   }
 };
 
 class PrintStmtEntity : public StmtEntity {
  public:
-  explicit PrintStmtEntity(std::string stmt_no, std::string var_name) : StmtEntity(EntityType::kPrintStmt, std::move(stmt_no), std::move(var_name)) {
+  explicit PrintStmtEntity(const std::string &stmt_no, std::string var_name) : StmtEntity(EntityType::kPrintStmt,
+                                                                                          std::move(stmt_no),
+                                                                                          std::move(var_name)) {
   }
 };
 
 class AssignStmtEntity : public StmtEntity {
  public:
-  explicit AssignStmtEntity(std::string stmt_no) : StmtEntity(EntityType::kAssignStmt, std::move(stmt_no), "") {
+  explicit AssignStmtEntity(const std::string &stmt_no) : StmtEntity(EntityType::kAssignStmt, std::move(stmt_no), "") {
   }
 };
 
 class CallStmtEntity : public StmtEntity {
  public:
-  explicit CallStmtEntity(std::string stmt_no, std::string proc_name) : StmtEntity(EntityType::kCallStmt,
-                                                                                   std::move(stmt_no),
-                                                                                   std::move(proc_name)) {
+  explicit CallStmtEntity(const std::string &stmt_no, std::string proc_name) : StmtEntity(EntityType::kCallStmt,
+                                                                                          std::move(stmt_no),
+                                                                                          std::move(proc_name)) {
   }
 };
 
 class WhileStmtEntity : public StmtEntity {
  public:
-  explicit WhileStmtEntity(std::string stmt_no) : StmtEntity(EntityType::kWhileStmt, std::move(stmt_no), "") {
+  explicit WhileStmtEntity(const std::string &stmt_no) : StmtEntity(EntityType::kWhileStmt, std::move(stmt_no), "") {
   }
 };
 
 class IfStmtEntity : public StmtEntity {
  public:
-  explicit IfStmtEntity(std::string stmt_no) : StmtEntity(EntityType::kIfStmt, std::move(stmt_no), "") {
+  explicit IfStmtEntity(const std::string &stmt_no) : StmtEntity(EntityType::kIfStmt, std::move(stmt_no), "") {
   }
 };
 
