@@ -79,6 +79,8 @@ inline std::string AttrToString(AttributeType type) {
       return "VALUE";
     case AttributeType::kStmtNo:
       return "STMT#";
+    case AttributeType::kNone:
+      return "none";
     default:
       return "Unknown";
   }
