@@ -133,6 +133,11 @@ print p;
 Select p.varName
 flag, cenX, cenY, normSq
 5000
+607 - select attribute
+read r; stmt s;
+Select r.varName with r.stmt# = s.stmt#
+v, v1, v2, v3, v4, v5
+5000
 701 - select boolean
 assign a;
 Select BOOLEAN such that Uses(a, "x")

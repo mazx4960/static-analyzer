@@ -1,2 +1,2 @@
-stmt s1;
-Select s1 with s1.stmt# = 1
+read r; stmt s;
+Select r.varName with r.stmt# = s.stmt#

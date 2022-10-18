@@ -13,6 +13,7 @@ test_names=(
   "intertwined_procedures"
   "affects_edge"
   "code_6"
+  "demo"
 )
 num_failed=0
 
