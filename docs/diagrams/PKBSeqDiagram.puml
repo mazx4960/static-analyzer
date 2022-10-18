@@ -43,15 +43,23 @@ EntityManager --> PKB: Entity[]
 deactivate EntityManager
 PKB --> QPS: Entity[]
 
-QPS -> PKB: getByRelationship(RsType, Entity)
-PKB -> RelationshipManager: get(RsType, Entity)
+QPS -> PKB: getEntitiesByString(String)
+activate QPS
+PKB -> EntityManager: get(String)
+activate EntityManager
+EntityManager --> PKB: Entity[]
+deactivate EntityManager
+PKB --> QPS: Entity[]
+
+QPS -> PKB: getByRelationship(RsType, Entity, bool)
+PKB -> RelationshipManager: get(RsType, Entity, bool)
 activate RelationshipManager
 RelationshipManager --> PKB: Entity[]
 deactivate RelationshipManager
 PKB --> QPS: Entity[]
 
-QPS -> PKB: getByPattern(Pattern)
-PKB -> PatternManager: get(Pattern)
+QPS -> PKB: getByPattern(Entity, String, bool)
+PKB -> PatternManager: get(Entity, String, bool)
 activate PatternManager
 PatternManager --> PKB: Entity[]
 deactivate PatternManager
