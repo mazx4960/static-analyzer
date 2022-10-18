@@ -16,7 +16,8 @@ EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClaus
       spdlog::debug("Creating WithEvaluationStrategy");
       return new WithStrategy(pkb, dynamic_cast<WithClause *>(query_clause));
     }
-    default: throw EvaluationStrategyError("Invalid query clause type");
+    default:
+      throw EvaluationStrategyError("Invalid query clause type");
   }
 }
 

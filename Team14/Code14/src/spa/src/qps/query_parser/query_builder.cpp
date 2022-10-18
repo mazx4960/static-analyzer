@@ -53,11 +53,13 @@ SelectCall *QueryBuilder::BuildSelect() {
   if (select_bp_ == nullptr) {
     throw ParseSemanticError("Missing Select call");
   }
-  SelectType type;
-  switch (type) {
-    case SelectType::kBoolean:return new BooleanSelect();
-    case SelectType::kElem:return new ElemSelect(BuildElems(select_bp_->getBlueprintReferences()));
-    default:throw ParseSemanticError("Invalid Select type");
+  switch (select_bp_->getSelectType()) {
+    case SelectType::kBoolean:
+      return new BooleanSelect();
+    case SelectType::kElem:
+      return new ElemSelect(BuildElems(select_bp_->getBlueprintReferences()));
+    default:
+      throw ParseSemanticError("Invalid Select type");
   }
 }
 std::vector<QueryClause *> QueryBuilder::BuildClauses() {
@@ -77,7 +79,8 @@ std::vector<QueryClause *> QueryBuilder::BuildClauses() {
         built_clause = BuildWith(static_cast<WithBlueprint *>(clause));
         break;
       }
-      default:throw ParseSemanticError("Unsupported clause type!");
+      default:
+        throw ParseSemanticError("Unsupported clause type!");
     }
     clauses.push_back(built_clause);
   }
@@ -89,11 +92,11 @@ std::vector<ElemReference *> QueryBuilder::BuildElems(const std::vector<ElemBlue
   for (auto *elem_blueprint : elem_blueprints) {
     std::string name = elem_blueprint->getValue();
     auto *synonym = GetSynonymReference(name);
-    auto *attr_ref = new AttrReference(synonym, elem_blueprint->getAttributeType());
-    if (!attr_ref->isSemanticallyCorrect()) {
+    auto *attr = new AttrReference(synonym, elem_blueprint->getAttributeType());
+    if (!attr->isSemanticallyCorrect()) {
       throw ParseSemanticError("Invalid AttrRef");
     }
-    elems.push_back(attr_ref);
+    elems.push_back(attr);
   }
   return elems;
 }
@@ -101,19 +104,24 @@ std::vector<ElemReference *> QueryBuilder::BuildElems(const std::vector<ElemBlue
 QueryReference *QueryBuilder::BuildReference(BaseBlueprint *blueprint) {
   QueryReference *ref;
   switch (blueprint->getReferenceType()) {
-    case ReferenceType::kSynonym:ref = GetSynonymReference(blueprint->getValue());
+    case ReferenceType::kSynonym:
+      ref = GetSynonymReference(blueprint->getValue());
       break;
-    case ReferenceType::kIdent:ref = new IdentReference(blueprint->getValue());
+    case ReferenceType::kIdent:
+      ref = new IdentReference(blueprint->getValue());
       break;
-    case ReferenceType::kInteger:ref = new IntegerReference(blueprint->getValue());
+    case ReferenceType::kInteger:
+      ref = new IntegerReference(blueprint->getValue());
       break;
-    case ReferenceType::kWildcard:ref = new WildcardReference();
+    case ReferenceType::kWildcard:
+      ref = new WildcardReference();
       break;
     case ReferenceType::kAttr:
       ref = new AttrReference(GetSynonymReference(blueprint->getValue()),
                               static_cast<ElemBlueprint *>(blueprint)->getAttributeType());
       break;
-    default:throw ParseSemanticError("Invalid reference type for bp: " + blueprint->toString());
+    default:
+      throw ParseSemanticError("Invalid reference type for bp: " + blueprint->toString());
   }
   return ref;
 }
@@ -164,18 +172,18 @@ SuchThatClause *QueryBuilder::BuildSuchThat(SuchThatBlueprint *clause_blueprint)
 WithClause *QueryBuilder::BuildWith(WithBlueprint *clause_blueprint) {
   auto *first_bp = clause_blueprint->getFirst();
   if (first_bp == nullptr) {
-    throw ParseSemanticError("Invalid first parameter in SuchThat clause");
+    throw ParseSemanticError("Invalid first parameter in with clause");
   }
   QueryReference *first = BuildReference(first_bp);
   auto *second_bp = clause_blueprint->getSecond();
   if (second_bp == nullptr) {
-    throw ParseSemanticError("Invalid second parameter in SuchThat clause");
+    throw ParseSemanticError("Invalid second parameter in with clause");
   }
   QueryReference *second = BuildReference(second_bp);
   auto *clause = new WithClause(clause_blueprint->getComparator(), first, second);
 
   if (!clause->isSemanticallyCorrect()) {
-    throw ParseSemanticError("Invalid such that parameter type");
+    throw ParseSemanticError("Invalid with parameter type");
   }
   return clause;
 }

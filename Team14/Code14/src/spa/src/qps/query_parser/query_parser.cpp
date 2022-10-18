@@ -8,6 +8,7 @@
 QueryParser::QueryParser(std::vector<Token *> tokens) {
   this->tokens_ = std::move(tokens);
   this->token_stream_ = tokens_.begin();
+  this->query_builder_ = new QueryBuilder();
 }
 
 bool QueryParser::ShouldStop() {
@@ -27,7 +28,6 @@ Token *QueryParser::Expect(TokenType type) {
 }
 
 Query *QueryParser::Parse() {
-  this->query_builder_ = new QueryBuilder();
   ParseQuery();
   Expect(EndOfFileToken());
   auto *query = this->query_builder_->Build();
@@ -88,13 +88,17 @@ void QueryParser::ParseClause(std::vector<ClauseBlueprint *> &clauses) {
   if (**token_stream_ == KeywordToken("and")) {
     Expect(KeywordToken("and"));
     switch (clauses.back()->getClauseType()) {
-      case ClauseType::kSuchThat: ParseSuchThat(clauses);
+      case ClauseType::kSuchThat:
+        ParseSuchThat(clauses);
         break;
-      case ClauseType::kPattern: ParsePattern(clauses);
+      case ClauseType::kPattern:
+        ParsePattern(clauses);
         break;
-      case ClauseType::kWith: ParseWith(clauses);
+      case ClauseType::kWith:
+        ParseWith(clauses);
         break;
-      default:throw ParseSyntaxError("and not supported");
+      default:
+        throw ParseSyntaxError("and not supported");
     }
   } else if (**token_stream_ == KeywordToken("such") && **(token_stream_ + 1) == KeywordToken("that")) {
     Expect(KeywordToken("such"));
@@ -143,18 +147,21 @@ void QueryParser::ParsePattern(std::vector<ClauseBlueprint *> &clauses) {
   spdlog::debug("Parsing pattern");
   auto *synonym = ParseSynonym();
   Expect(RoundOpenBracketToken());
-  auto *ent_ref = ParseBase();
+  auto *ent = ParseBase();
   Expect(CommaToken());
   auto *expr = ParseExpr();
   PatternBlueprint *clause;
   if ((*token_stream_)->type == TokenType::kComma) {
     Expect(CommaToken());
     auto *expr2 = ParseExpr();
-    clause = new PatternBlueprint(synonym, ent_ref, expr, expr2);
+    clause = new PatternBlueprint(synonym, ent, expr, expr2);
   } else {
-    clause = new PatternBlueprint(synonym, ent_ref, expr);
+    clause = new PatternBlueprint(synonym, ent, expr);
   }
   Expect(RoundCloseBracketToken());
+  if (!clause->checkSyntax()) {
+    throw ParseSyntaxError("Incorrect parameter syntax for: " + clause->toString());
+  }
   spdlog::debug("Parsed clause: {}", clause->toString());
   clauses.push_back(clause);
 }
@@ -183,10 +190,10 @@ BaseBlueprint *QueryParser::ParseBase() {
     auto *token = Expect(TokenType::kLiteral);
     return new BaseBlueprint(ReferenceType::kInteger, token->value);
   }
-  if ((*token_stream_)->type == TokenType::kSymbol && (*(token_stream_ + 1))->type == TokenType::kDot) {
-    return ParseElem();
-  }
   if ((*token_stream_)->type == TokenType::kSymbol) {
+    if ((*(token_stream_ + 1))->type == TokenType::kDot) {
+      return ParseElem();
+    }
     return ParseSynonym();
   }
   if ((*token_stream_)->type == TokenType::kWildCard) {
