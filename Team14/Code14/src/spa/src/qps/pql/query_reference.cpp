@@ -210,34 +210,31 @@ bool AttrReference::isSyntacticallyCorrect() const {
 }
 bool AttrReference::isSemanticallyCorrect() const {
   switch (getAttribute()) {
-    case AttributeType::kProcName:
+    case AttributeType::kProcName: {
       switch (getEntityType()) {
         case EntityType::kProcedure:
-        case EntityType::kCallStmt:
-          break;
-        default:
-          return false;
+        case EntityType::kCallStmt:break;
+        default:return false;
       }
       break;
-    case AttributeType::kVarName:
+    }
+    case AttributeType::kVarName: {
       switch (getEntityType()) {
         case EntityType::kVariable:
         case EntityType::kPrintStmt:
-        case EntityType::kReadStmt:
-          break;
-        default:
-          return false;
+        case EntityType::kReadStmt:break;
+        default:return false;
       }
       break;
-    case AttributeType::kValue:
+    }
+    case AttributeType::kValue: {
       switch (getEntityType()) {
-        case EntityType::kConstant:
-          break;
-        default:
-          return false;
+        case EntityType::kConstant:break;
+        default:return false;
       }
       break;
-    case AttributeType::kStmtNo:
+    }
+    case AttributeType::kStmtNo: {
       switch (getEntityType()) {
         case EntityType::kStatement:
         case EntityType::kAssignStmt:
@@ -245,12 +242,12 @@ bool AttrReference::isSemanticallyCorrect() const {
         case EntityType::kIfStmt:
         case EntityType::kWhileStmt:
         case EntityType::kPrintStmt:
-        case EntityType::kReadStmt:
-          break;
-        default:
-          return false;
+        case EntityType::kReadStmt:break;
+        default:return false;
       }
       break;
+    }
+    default: break;
   }
   return true;
 }

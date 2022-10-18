@@ -3,7 +3,8 @@
 SynonymReferencePointerUnorderedSet QueryEvaluator::getDeclarationAsSet() {
   SynonymReferencePointerUnorderedSet declaration_set;
 
-  std::copy(this->declarations_.begin(), this->declarations_.end(),
+  std::copy(this->declarations_.begin(),
+            this->declarations_.end(),
             std::inserter(declaration_set, declaration_set.begin()));
   return declaration_set;
 }
@@ -41,7 +42,18 @@ Result *QueryEvaluator::evaluate() {
   this->fetchContext();
 
   // Query declarations for whose subquery_results are to be returned.
-  std::vector<ElemReference *> called_declarations = this->query_.getQueryCall()->getReferences();
+  auto *select_call = this->query_.getQueryCall();
+  std::vector<ElemReference *> called_declarations;
+  switch (select_call->getSelectType()) {
+    case SelectType::kElem: {
+      called_declarations = static_cast<ElemSelect *>(select_call)->getReferences();
+      break;
+    }
+    case SelectType::kBoolean:
+    default: {
+      return Result::empty();
+    }
+  }
 
   std::vector<SubqueryResult> subquery_results = this->evaluateSubqueries();
   auto *result_projector = new ResultProjector(called_declarations, subquery_results, pkb_);

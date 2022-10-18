@@ -1,2 +1,2 @@
-while w; variable v;
-Select w pattern w(v, _, _)
+while w; variable v; assign a;
+Select <w, v> pattern a(v, _)

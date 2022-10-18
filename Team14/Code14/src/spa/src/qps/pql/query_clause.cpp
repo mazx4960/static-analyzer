@@ -1,10 +1,39 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "query_clause.h"
-#include "spdlog/spdlog.h"
 
 ClauseType QueryClause::getClauseType() const {
   return this->clause_type_;
+}
+SuchThatClause *SuchThatClause::Create(RsType type, QueryReference *first, QueryReference *second) {
+  switch (type) {
+    case RsType::kParent:
+      return new ParentClause(first, second);
+    case RsType::kFollows:
+      return new FollowsClause(first, second);
+    case RsType::kModifies:
+      return new ModifiesClause(first, second);
+    case RsType::kUses:
+      return new UsesClause(first, second);
+    case RsType::kCalls:
+      return new CallsClause(first, second);
+    case RsType::kCallsT:
+      return new CallsTClause(first, second);
+    case RsType::kNext:
+      return new NextClause(first, second);
+    case RsType::kNextT:
+      return new NextTClause(first, second);
+    case RsType::kAffects:
+      return new AffectsClause(first, second);
+    case RsType::kAffectsT:
+      return new AffectsTClause(first, second);
+    case RsType::kParentT:
+      return new ParentTClause(first, second);
+    case RsType::kFollowsT:
+      return new FollowsTClause(first, second);
+    default:
+      return nullptr;
+  }
 }
 RsType SuchThatClause::getSuchThatType() const {
   return this->type_;

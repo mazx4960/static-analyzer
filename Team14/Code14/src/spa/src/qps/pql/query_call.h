@@ -5,38 +5,47 @@
 #include <utility>
 #include <vector>
 
-#include "query_clause.h"
 #include "query_reference.h"
 
-enum class CallType {
-  kSelect,
+/**
+ * Represents a Select clause in a PQL query.
+ */
+class SelectCall {
+ private:
+  SelectType type_;
+ public:
+  explicit SelectCall(SelectType type_) : type_(type_) {
+  };
+  [[nodiscard]] SelectType getSelectType() const;
+  [[nodiscard]] virtual std::string toString() const;
 };
 
-class QueryCall {
+/**
+ * Represents a selecting of elements in a PQL query.
+ * Example: Select s1 such that Follows(s1, s2)
+ *          Select <s1, s2, s3> pattern s1(s2, _)
+ */
+class ElemSelect : public SelectCall {
  private:
-  CallType type_;
   std::vector<ElemReference *> elem_references_;
  public:
-  QueryCall(CallType call_type, ElemReference *elem_reference)
-      : type_(call_type), elem_references_({std::move(elem_reference)}) {
+  explicit ElemSelect(ElemReference *elem_reference)
+      : SelectCall(SelectType::kElem), elem_references_({elem_reference}) {
   };
-  QueryCall(CallType call_type, std::vector<ElemReference *> elem_reference)
-      : type_(call_type), elem_references_(std::move(elem_reference)) {
+  explicit ElemSelect(std::vector<ElemReference *> elem_reference)
+      : SelectCall(SelectType::kElem), elem_references_(std::move(elem_reference)) {
   };
-
   void setReferences(std::vector<ElemReference *> elem_references);
-  [[nodiscard]] CallType getCallType() const;
   [[nodiscard]] std::vector<ElemReference *> getReferences() const;
-  [[nodiscard]] virtual std::string toString() const = 0;
+  [[nodiscard]] std::string toString() const override;
 };
 
-class SelectCall : public QueryCall {
+/**
+ * Represents a selecting of a boolean in a PQL query.
+ * Example: Select BOOLEAN such that Follows(s1, s2)
+ */
+class BooleanSelect : public SelectCall {
  public:
-  explicit SelectCall(ElemReference *elem_reference)
-      : QueryCall(CallType::kSelect, std::move(elem_reference)) {
+  BooleanSelect() : SelectCall(SelectType::kBoolean) {
   };
-  explicit SelectCall(std::vector<ElemReference *> elem_reference)
-      : QueryCall(CallType::kSelect, std::move(elem_reference)) {
-  };
-  [[nodiscard]] std::string toString() const override;
 };

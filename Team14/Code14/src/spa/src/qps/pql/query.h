@@ -16,19 +16,19 @@ class Query {
  private:
   SynonymReferences synonym_declarations_;
 
-  QueryCall *query_call_;
+  SelectCall *query_call_;
 
   Clauses query_clauses_;
 
  public:
-  Query(SynonymReferences synonym_declarations, QueryCall *query_call, Clauses query_clauses)
+  Query(SynonymReferences synonym_declarations, SelectCall *query_call, Clauses query_clauses)
       : synonym_declarations_(std::move(synonym_declarations)),
         query_call_(query_call),
         query_clauses_(std::move(query_clauses)) {
   }
 
   [[nodiscard]] SynonymReferences getSynonymDeclarations() const;
-  [[nodiscard]] QueryCall *getQueryCall() const;
+  [[nodiscard]] SelectCall *getQueryCall() const;
   [[nodiscard]] Clauses getClauses() const;
   [[nodiscard]] std::string toString() const;
 };
