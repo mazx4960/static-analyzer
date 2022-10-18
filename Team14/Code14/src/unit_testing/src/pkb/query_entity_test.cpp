@@ -12,7 +12,9 @@ TEST(QueryEntityTest, VariableTest) {
                                     new VariableEntity("d")};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
+  for (int i = 0; i < 4; i++) {
+    expected.insert(entities[i]);
+  }
 
   PKB *pkb = new PKB();
   pkb->populate(entities);
@@ -27,7 +29,9 @@ TEST(QueryEntityTest, ConstantTest) {
                                     new ConstantEntity("4")};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
+  for (int i = 0; i < 4; i++) {
+    expected.insert(entities[i]);
+  }
 
   PKB *pkb = new PKB();
   pkb->populate(entities);
@@ -42,7 +46,9 @@ TEST(QueryEntityTest, ProcedureTest) {
                                     new ProcedureEntity("Three"), new ProcedureEntity("Four")};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
+  for (int i = 0; i < 4; i++) {
+    expected.insert(entities[i]);
+  }
 
   PKB *pkb = new PKB();
   pkb->populate(entities);
@@ -57,7 +63,9 @@ TEST(QueryEntityTest, CallStatementTest) {
                                     new CallStmtEntity("3", std::string()), new CallStmtEntity("4", std::string())};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
+  for (int i = 0; i < 4; i++) {
+    expected.insert(entities[i]);
+  }
 
   PKB *pkb = new PKB();
   pkb->populate(entities);
@@ -72,7 +80,9 @@ TEST(QueryEntityTest, IfStatementTest) {
                                     new IfStmtEntity("4")};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
+  for (int i = 0; i < 4; i++) {
+    expected.insert(entities[i]);
+  }
 
   PKB *pkb = new PKB();
   pkb->populate(entities);
@@ -87,7 +97,9 @@ TEST(QueryEntityTest, WhileStatementTest) {
                                     new WhileStmtEntity("4")};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
+  for (int i = 0; i < 4; i++) {
+    expected.insert(entities[i]);
+  }
 
   PKB *pkb = new PKB();
   pkb->populate(entities);
@@ -98,11 +110,13 @@ TEST(QueryEntityTest, WhileStatementTest) {
 }
 
 TEST(QueryEntityTest, PrintStatementTest) {
-  std::vector<Entity *> entities = {new PrintStmtEntity("1"), new PrintStmtEntity("2"), new PrintStmtEntity("3"),
-                                    new PrintStmtEntity("4")};
+  std::vector<Entity *> entities = {new PrintStmtEntity("1", std::string()), new PrintStmtEntity("2", std::string()), new PrintStmtEntity("3", std::string()),
+                                    new PrintStmtEntity("4", std::string())};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
+  for (int i = 0; i < 4; i++) {
+    expected.insert(entities[i]);
+  }
 
   PKB *pkb = new PKB();
   pkb->populate(entities);
@@ -113,11 +127,13 @@ TEST(QueryEntityTest, PrintStatementTest) {
 }
 
 TEST(QueryEntityTest, ReadStatementTest) {
-  std::vector<Entity *> entities = {new ReadStmtEntity("1"), new ReadStmtEntity("2"), new ReadStmtEntity("3"),
-                                    new ReadStmtEntity("4")};
+  std::vector<Entity *> entities = {new ReadStmtEntity("1", std::string()), new ReadStmtEntity("2", std::string()), new ReadStmtEntity("3", std::string()),
+                                    new ReadStmtEntity("4", std::string())};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
+  for (int i = 0; i < 4; i++) {
+    expected.insert(entities[i]);
+  }
 
   PKB *pkb = new PKB();
   pkb->populate(entities);
@@ -132,7 +148,9 @@ TEST(QueryEntityTest, AssignStatementTest) {
                                     new AssignStmtEntity("4")};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 4; i++) { expected.insert(entities[i]); }
+  for (int i = 0; i < 4; i++) {
+    expected.insert(entities[i]);
+  }
 
   PKB *pkb = new PKB();
   pkb->populate(entities);
@@ -161,15 +179,17 @@ TEST(QueryEntityTest, SingleEntityStressTest) {
 }
 
 TEST(QueryEntityTest, MultipleEntitiesTest) {
-  std::vector<Entity *> entities = {new ConstantEntity("1"),   new ConstantEntity("2"),    new ConstantEntity("3"),
-                                    new VariableEntity("w"),   new VariableEntity("x"),    new VariableEntity("y"),
-                                    new VariableEntity("z"),   new ProcedureEntity("One"), new ProcedureEntity("Two"),
-                                    new ReadStmtEntity("1"),   new ReadStmtEntity("2"),    new ReadStmtEntity("3"),
-                                    new ReadStmtEntity("4"),   new ReadStmtEntity("5"),    new AssignStmtEntity("6"),
-                                    new AssignStmtEntity("7"), new AssignStmtEntity("8"),  new AssignStmtEntity("9")};
+  std::vector<Entity *> entities = {new ConstantEntity("1"), new ConstantEntity("2"), new ConstantEntity("3"),
+                                    new VariableEntity("w"), new VariableEntity("x"), new VariableEntity("y"),
+                                    new VariableEntity("z"), new ProcedureEntity("One"), new ProcedureEntity("Two"),
+                                    new ReadStmtEntity("1", std::string()), new ReadStmtEntity("2", std::string()), new ReadStmtEntity("3", std::string()),
+                                    new ReadStmtEntity("4", std::string()), new ReadStmtEntity("5", std::string()), new AssignStmtEntity("6"),
+                                    new AssignStmtEntity("7"), new AssignStmtEntity("8"), new AssignStmtEntity("9")};
 
   EntityPointerUnorderedSet expected;
-  for (int i = 0; i < 18; i++) { expected.insert(entities[i]); }
+  for (int i = 0; i < 18; i++) {
+    expected.insert(entities[i]);
+  }
 
   PKB *pkb = new PKB();
   pkb->populate(entities);
@@ -198,9 +218,9 @@ TEST(QueryEntityTest, MultipleEntitiesStressTest) {
     std::string one = std::to_string(i);
     std::string two = std::to_string(i + 1);
     entities.push_back(new AssignStmtEntity(one));
-    entities.push_back(new PrintStmtEntity(two));
+    entities.push_back(new PrintStmtEntity(two, std::string()));
     expected.insert(new AssignStmtEntity(one));
-    expected.insert(new PrintStmtEntity(two));
+    expected.insert(new PrintStmtEntity(two, std::string()));
   }
 
   PKB *pkb = new PKB();

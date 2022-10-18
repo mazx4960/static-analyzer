@@ -25,17 +25,23 @@ std::vector<Entity *> EntityExtractor::ExtractAll(Node *node) {
  */
 std::vector<Entity *> EntityExtractor::ExtractAllVariables(Node *node) {
   std::vector<Entity *> entities;
-  auto const op = [&entities](Node *node) { ExtractVariable(entities, node); };
+  auto const op = [&entities](Node *node) {
+    ExtractVariable(entities, node);
+  };
   node->VisitAll(op);
   return entities;
 }
 std::vector<Entity *> EntityExtractor::ExtractProcedureCalls(Node *node) {
   std::vector<Entity *> entities;
   auto const op = [&entities](Node *node) {
-    if (node->GetNodeType() != NodeType::kStatement) { return; }
+    if (node->GetNodeType() != NodeType::kStatement) {
+      return;
+    }
     auto *stmt = static_cast<StatementNode *>(node);
     auto stmt_type = stmt->GetStmtType();
-    if (stmt_type != EntityType::kCallStmt) { return; }
+    if (stmt_type != EntityType::kCallStmt) {
+      return;
+    }
     auto proc_name = static_cast<CallNode *>(node)->GetProcedureName();
     Entity *entity = new ProcedureEntity(proc_name);
     entities.push_back(entity);
@@ -59,15 +65,21 @@ void EntityExtractor::ExtractStatement(std::vector<Entity *> &entities, Node *no
   auto stmt_type = stmt->GetStmtType();
   auto stmt_no = stmt->GetStmtNo();
   Entity *entity;
+  VariableNode *var_node;
   switch (stmt_type) {
     case EntityType::kCallStmt: {
-        auto proc_name = static_cast<CallNode *>(stmt)->GetProcedureName();
-        entity = new CallStmtEntity(std::to_string(stmt_no), proc_name);
-        break;
+      auto proc_name = static_cast<CallNode *>(stmt)->GetProcedureName();
+      entity = new CallStmtEntity(std::to_string(stmt_no), proc_name);
+      break;
     }
-    default:
-        entity = new Entity(stmt_type, std::to_string(stmt_no));
-        break;
+    case EntityType::kReadStmt:var_node = static_cast<ReadNode *>(stmt)->GetVariable();
+      entity = new ReadStmtEntity(std::to_string(stmt_no), var_node->GetVariableName());
+      break;
+    case EntityType::kPrintStmt:var_node = static_cast<PrintNode *>(stmt)->GetVariable();
+      entity = new PrintStmtEntity(std::to_string(stmt_no), var_node->GetVariableName());
+      break;
+    default:entity = new Entity(stmt_type, std::to_string(stmt_no));
+      break;
   }
   entities.push_back(entity);
 }
