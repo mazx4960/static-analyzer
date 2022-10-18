@@ -18,18 +18,19 @@ TEST(ExtractorTest, TestFollows) {
   auto *program = new ProgramNode(procs);
 
   std::vector<Relationship *> relationships;
-  auto const op = [&relationships](Node *node) { RelationshipExtractor::ExtractFollows(relationships, node); };
+  auto const op = [&relationships](Node *node) {
+    RelationshipExtractor::ExtractFollows(relationships, node);
+  };
   program->VisitAll(op);
 
   // DFS traversal should yield the following result
-  std::vector<Relationship *> expected = {
-      new FollowsRelationship(new AssignStmtEntity("1"), new AssignStmtEntity("2")),
-  };
+  std::vector<Relationship *>
+      expected = {new FollowsRelationship(new AssignStmtEntity("1"), new AssignStmtEntity("2")),};
 
   ASSERT_EQ(relationships.size(), expected.size());
   for (int i = 0; i < relationships.size(); ++i) {
     ASSERT_EQ(relationships[i]->GetType(), expected[i]->GetType());
-    ASSERT_EQ(relationships[i]->GetFirst()->ToString(), expected[i]->GetFirst()->ToString());
-    ASSERT_EQ(relationships[i]->GetSecond()->ToString(), expected[i]->GetSecond()->ToString());
+    ASSERT_EQ(relationships[i]->GetFirst()->GetValue(), expected[i]->GetFirst()->GetValue());
+    ASSERT_EQ(relationships[i]->GetSecond()->GetValue(), expected[i]->GetSecond()->GetValue());
   }
 }
