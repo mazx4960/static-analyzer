@@ -114,19 +114,19 @@ Select a.stmt# such that Uses(a, "x")
 16
 5000
 603 - select attribute
-proc p;
+procedure p;
 Select p.procName such that Modifies(p, "cenX")
 computeCentroid, main
 5000
 604 - select attribute
 constant c;
 Select c.value
-0
+0, 1
 5000
 605 - select attribute
 read r;
-Select r.varName such that Next(7, r)
-cenY
+Select r.varName such that Next(4, r)
+y
 5000
 606 - select attribute
 print p;
