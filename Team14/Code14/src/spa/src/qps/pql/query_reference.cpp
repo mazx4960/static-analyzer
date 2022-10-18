@@ -200,7 +200,7 @@ std::string AttrReference::getAttribute(Entity *entity) const {
           || entity_type == EntityType::kPrintStmt || entity_type == EntityType::kReadStmt) {
         return entity->GetValue();
       }
-    default:return "";
+    default:return entity->GetValue();
   }
 }
 std::string AttrReference::toString() const {
