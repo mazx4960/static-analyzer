@@ -155,6 +155,9 @@ void QueryParser::ParsePattern(std::vector<ClauseBlueprint *> &clauses) {
     clause = new PatternBlueprint(synonym, ent_ref, expr);
   }
   Expect(RoundCloseBracketToken());
+  if (!clause->checkSyntax()) {
+    throw ParseSyntaxError("Incorrect parameter syntax for: " + clause->toString());
+  }
   spdlog::debug("Parsed clause: {}", clause->toString());
   clauses.push_back(clause);
 }
@@ -183,10 +186,10 @@ BaseBlueprint *QueryParser::ParseBase() {
     auto *token = Expect(TokenType::kLiteral);
     return new BaseBlueprint(ReferenceType::kInteger, token->value);
   }
-  if ((*token_stream_)->type == TokenType::kSymbol && (*(token_stream_ + 1))->type == TokenType::kDot) {
-    return ParseElem();
-  }
   if ((*token_stream_)->type == TokenType::kSymbol) {
+    if ((*(token_stream_ + 1))->type == TokenType::kDot) {
+      return ParseElem();
+    }
     return ParseSynonym();
   }
   if ((*token_stream_)->type == TokenType::kWildCard) {

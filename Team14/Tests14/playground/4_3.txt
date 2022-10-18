@@ -1,2 +1,2 @@
-variable v; assign a1, a2;
-Select a1 such that Modifies(a1, v) pattern a1 ("cenX", _) such that Uses(a2, v) such that Next*(a1, a2)
+variable v; assign a;
+Select v pattern a (v, _) pattern a (_, v)

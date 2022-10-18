@@ -170,6 +170,10 @@ class PatternBlueprint : public ClauseBlueprint {
   [[nodiscard]] ExprBlueprint *getExpr2() const {
     return this->expr_2_;
   };
+  bool checkSyntax() {
+    auto *rules = new Rules();
+    return rules->CheckPattern(this->var_->getReferenceType());
+  }
   [[nodiscard]] std::string toString() const override {
     return "PatternBlueprint: " + stmt_->toString() + " " + var_->toString() + " " + expr_->toString();
   };

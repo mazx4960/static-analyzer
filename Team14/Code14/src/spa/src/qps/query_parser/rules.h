@@ -56,6 +56,9 @@ class Rules {
       return IsValid(pair.first, first) && IsValid(pair.second, second);
     });
   };
+  bool CheckPattern(ReferenceType var) {
+    return IsEntRef(var);
+  };
   bool CheckWith(ReferenceType first, ReferenceType second) {
     return IsAttrRef(first) && IsAttrRef(second);
   };
