@@ -141,7 +141,8 @@ class AttrReference : public QueryReference, public ElemReference, public ICheck
   SynonymReference *getSynonymReference() const;
   QuerySynonym *getSynonym() const override;
   ReferenceType getRefType() const override;
-  AttributeType getAttribute() const;
+  AttributeType getAttributeType() const;
+  std::string getAttribute(Entity *entity) const;
   EntityType getEntityType() const override;
   EntityPointerUnorderedSet getContext() const override;
   void setContext(EntityPointerUnorderedSet context) override;

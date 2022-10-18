@@ -42,29 +42,32 @@ class ConstantEntity : public Entity {
   }
 };
 
-class ReadStmtEntity : public Entity {
- public:
-  explicit ReadStmtEntity(std::string stmt_no) : Entity(EntityType::kReadStmt, std::move(stmt_no)) {
-  }
-};
-
 class StmtEntity : public Entity {
  private:
   std::string stmt_no_;
 
- protected:
   std::string value_;
+
+ protected:
  public:
   explicit StmtEntity(EntityType entity_type, std::string stmt_no, std::string value) : Entity(entity_type,
                                                                                                std::move(stmt_no)),
                                                                                         stmt_no_(stmt_no),
                                                                                         value_(std::move(value)) {
   }
+  [[nodiscard]] std::string GetStmtNo() const;
+  [[nodiscard]] std::string GetAttr() const;
+};
+
+class ReadStmtEntity : public StmtEntity {
+ public:
+  explicit ReadStmtEntity(std::string stmt_no, std::string var_name) : StmtEntity(EntityType::kReadStmt, std::move(stmt_no), std::move(var_name)) {
+  }
 };
 
 class PrintStmtEntity : public StmtEntity {
  public:
-  explicit PrintStmtEntity(std::string stmt_no) : StmtEntity(EntityType::kPrintStmt, std::move(stmt_no), "") {
+  explicit PrintStmtEntity(std::string stmt_no, std::string var_name) : StmtEntity(EntityType::kPrintStmt, std::move(stmt_no), std::move(var_name)) {
   }
 };
 
@@ -80,7 +83,6 @@ class CallStmtEntity : public StmtEntity {
                                                                                    std::move(stmt_no),
                                                                                    std::move(proc_name)) {
   }
-  [[nodiscard]] std::string GetProcName() const;
 };
 
 class WhileStmtEntity : public StmtEntity {

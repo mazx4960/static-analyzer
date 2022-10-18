@@ -39,7 +39,12 @@ ElemResult::ElemResult(std::vector<ElemReference *> &elem_refs, SubqueryResult &
         row_string += " ";
       }
 
-      row_string += row[elem_ref->getSynonym()]->GetValue();
+      auto *entity = row[elem_ref->getSynonym()];
+      if (elem_ref->getRefType() == ReferenceType::kAttr) {
+        row_string += static_cast<AttrReference *>(elem_ref)->getAttribute(entity);
+      } else {
+        row_string += entity->GetValue();
+      }
     }
     this->results_.insert(row_string);
   }
