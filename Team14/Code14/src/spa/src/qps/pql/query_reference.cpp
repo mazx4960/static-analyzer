@@ -183,12 +183,14 @@ std::string AttrReference::getAttribute(Entity *entity) const {
         return entity->GetValue();
       } else if (entity_type == EntityType::kCallStmt) {
         auto *call_stmt = static_cast<CallStmtEntity *>(entity);
-        return call_stmt->GetProcName();
+        return call_stmt->GetAttr();
       }
     case AttributeType::kVarName:
-      if (entity_type == EntityType::kVariable || entity_type == EntityType::kReadStmt
-          || entity_type == EntityType::kPrintStmt) {
+      if (entity_type == EntityType::kVariable) {
         return entity->GetValue();
+      } else if (entity_type == EntityType::kReadStmt || entity_type == EntityType::kPrintStmt) {
+        auto *stmt = static_cast<StmtEntity *>(entity);
+        return stmt->GetAttr();
       }
     case AttributeType::kValue:
       if (entity_type == EntityType::kConstant) {
