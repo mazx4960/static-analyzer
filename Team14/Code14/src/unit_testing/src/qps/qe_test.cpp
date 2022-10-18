@@ -31,18 +31,18 @@ class TestStorage {
       stmt_while_entities_ = {new WhileStmtEntity("10"), new WhileStmtEntity("11"), new WhileStmtEntity("12"),};
 
   inline static EntityPointerUnorderedSet
-      stmt_print_entities_ = {new PrintStmtEntity("13"), new PrintStmtEntity("14"), new PrintStmtEntity("15"),};
+      stmt_print_entities_ = {new PrintStmtEntity("13", std::string()), new PrintStmtEntity("14", std::string()), new PrintStmtEntity("15", std::string()),};
 
   inline static EntityPointerUnorderedSet
-      stmt_read_entities_ = {new ReadStmtEntity("16"), new ReadStmtEntity("17"), new ReadStmtEntity("18"),};
+      stmt_read_entities_ = {new ReadStmtEntity("16", std::string()), new ReadStmtEntity("17", std::string()), new ReadStmtEntity("18", std::string()),};
 
   inline static EntityPointerUnorderedSet all_stmt_entities_ =
       {new AssignStmtEntity("1"), new AssignStmtEntity("2"), new AssignStmtEntity("3"),
        new CallStmtEntity("4", std::string()), new CallStmtEntity("5", std::string()),
        new CallStmtEntity("6", std::string()), new IfStmtEntity("7"), new IfStmtEntity("8"), new IfStmtEntity("9"),
-       new WhileStmtEntity("10"), new WhileStmtEntity("11"), new WhileStmtEntity("12"), new PrintStmtEntity("13"),
-       new PrintStmtEntity("14"), new PrintStmtEntity("15"), new ReadStmtEntity("16"), new ReadStmtEntity("17"),
-       new ReadStmtEntity("18"),};
+       new WhileStmtEntity("10"), new WhileStmtEntity("11"), new WhileStmtEntity("12"), new PrintStmtEntity("13", std::string()),
+       new PrintStmtEntity("14", std::string()), new PrintStmtEntity("15", std::string()), new ReadStmtEntity("16", std::string()), new ReadStmtEntity("17", std::string()),
+       new ReadStmtEntity("18", std::string()),};
 };
 
 class QueryEvaluatorMock : public QueryEvaluator {

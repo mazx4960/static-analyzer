@@ -28,6 +28,10 @@ std::string Entity::ToString() {
   return EntityTypeToString(this->type_) + ": " + name_string;
 }
 
-std::string CallStmtEntity::GetProcName() const {
+std::string StmtEntity::GetStmtNo() const {
+  return this->stmt_no_;
+}
+std::string StmtEntity::GetAttr() const {
   return this->value_;
 }
+

@@ -15,9 +15,9 @@ using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunctio
 * Same statement modify different variables 
 */
 TEST(PopulateRelationshipTest, ModifiesSingleStatementTest) {
-  std::vector<std::pair<std::string, std::string>> modifies = {{"1", "w"}, 
-                                                               {"1", "x"}, 
-                                                               {"1", "y"}, 
+  std::vector<std::pair<std::string, std::string>> modifies = {{"1", "w"},
+                                                               {"1", "x"},
+                                                               {"1", "y"},
                                                                {"1", "z"}};
   std::vector<Relationship *> relationships;
   int length = modifies.size();
@@ -27,7 +27,7 @@ TEST(PopulateRelationshipTest, ModifiesSingleStatementTest) {
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
-        new ModifiesRelationship(new AssignStmtEntity(modifies[i].first), 
+        new ModifiesRelationship(new AssignStmtEntity(modifies[i].first),
                                  new VariableEntity(modifies[i].second)));
     expected.insert(new VariableEntity(modifies[i].second));
     expected_inverse.insert(new AssignStmtEntity(modifies[i].first));
@@ -36,9 +36,9 @@ TEST(PopulateRelationshipTest, ModifiesSingleStatementTest) {
   auto *relationship_manager = new RelationshipManager();
   relationship_manager->Populate(relationships);
   auto *relationship_table = relationship_manager->GetTable(RsType::kModifies);
-  bool compare = 
+  bool compare =
       PKBTestHelper::set_compare(expected, relationship_table->get(new AssignStmtEntity("1"), false));
-  bool compare_inverse_w = 
+  bool compare_inverse_w =
       PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("w"), true));
   bool compare_inverse_x =
       PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("x"), true));
@@ -46,7 +46,6 @@ TEST(PopulateRelationshipTest, ModifiesSingleStatementTest) {
       PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("y"), true));
   bool compare_inverse_z =
       PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("z"), true));
-
 
   int count = 0;
   int inverse_count = 0;
@@ -80,9 +79,9 @@ TEST(PopulateRelationshipTest, ModifiesSingleStatementTest) {
 * Same procedure modify different variables 
 */
 TEST(PopulateRelationshipTest, ModifiesSingleProcedureTest) {
-  std::vector<std::pair<std::string, std::string>> modifies = {{"One", "w"}, 
-                                                               {"One", "x"}, 
-                                                               {"One", "y"}, 
+  std::vector<std::pair<std::string, std::string>> modifies = {{"One", "w"},
+                                                               {"One", "x"},
+                                                               {"One", "y"},
                                                                {"One", "z"}};
   std::vector<Relationship *> relationships;
   int length = modifies.size();
@@ -92,7 +91,7 @@ TEST(PopulateRelationshipTest, ModifiesSingleProcedureTest) {
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
-        new ModifiesRelationship(new ProcedureEntity(modifies[i].first), 
+        new ModifiesRelationship(new ProcedureEntity(modifies[i].first),
                                  new VariableEntity(modifies[i].second)));
     expected.insert(new VariableEntity(modifies[i].second));
     expected_inverse.insert(new ProcedureEntity(modifies[i].first));
@@ -142,7 +141,7 @@ TEST(PopulateRelationshipTest, ModifiesSingleProcedureTest) {
 /*
 * Different procedures modify same set of variables 
 */
-TEST(PopulateRelationshipTest, ModifiesMultipleProceduresTest) { 
+TEST(PopulateRelationshipTest, ModifiesMultipleProceduresTest) {
   std::vector<std::pair<std::string, std::string>> modifies_one = {{"One", "w"},
                                                                    {"One", "x"},
                                                                    {"One", "y"},
@@ -154,7 +153,7 @@ TEST(PopulateRelationshipTest, ModifiesMultipleProceduresTest) {
   std::vector<std::pair<std::string, std::string>> modifies_three = {{"Three", "w"},
                                                                      {"Three", "x"},
                                                                      {"Three", "y"},
-                                                                     {"Three", "z"}}; 
+                                                                     {"Three", "z"}};
   std::vector<Relationship *> relationships;
   int recurse = 4;
   int length = modifies_one.size() + modifies_two.size() + modifies_three.size();
@@ -175,7 +174,7 @@ TEST(PopulateRelationshipTest, ModifiesMultipleProceduresTest) {
     relationships.push_back(new ModifiesRelationship(new ProcedureEntity(modifies_two[i].first),
                                                      new VariableEntity(modifies_two[i].second)));
     relationships.push_back(new ModifiesRelationship(new ProcedureEntity(modifies_three[i].first),
-                                                     new VariableEntity(modifies_three[i].second))); 
+                                                     new VariableEntity(modifies_three[i].second)));
   }
 
   auto *relationship_manager = new RelationshipManager();
@@ -183,7 +182,7 @@ TEST(PopulateRelationshipTest, ModifiesMultipleProceduresTest) {
   auto *relationship_table = relationship_manager->GetTable(RsType::kModifies);
   bool compare_one = PKBTestHelper::set_compare(expected, relationship_table->get(new ProcedureEntity("One"), false));
   bool compare_two = PKBTestHelper::set_compare(expected, relationship_table->get(new ProcedureEntity("Two"), false));
-  bool compare_three = PKBTestHelper::set_compare(expected, relationship_table->get(new ProcedureEntity("Three"), false)); 
+  bool compare_three = PKBTestHelper::set_compare(expected, relationship_table->get(new ProcedureEntity("Three"), false));
   bool compare_inverse_w =
       PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("w"), true));
   bool compare_inverse_x =
@@ -216,7 +215,7 @@ TEST(PopulateRelationshipTest, ModifiesMultipleProceduresTest) {
   ASSERT_EQ(inverse_key_count, 4);
   ASSERT_EQ(compare_one, true);
   ASSERT_EQ(compare_two, true);
-  ASSERT_EQ(compare_three, true); 
+  ASSERT_EQ(compare_three, true);
   ASSERT_EQ(compare_inverse_w, true);
   ASSERT_EQ(compare_inverse_x, true);
   ASSERT_EQ(compare_inverse_y, true);
@@ -237,15 +236,15 @@ TEST(PopulateRelationshipTest, ModifiesDifferentVariableTest) {
   EntityPointerUnorderedSet expected_1 = {new VariableEntity("w")};
   EntityPointerUnorderedSet expected_2 = {new VariableEntity("z")};
   EntityPointerUnorderedSet expected_3 = {new VariableEntity("y")};
-  EntityPointerUnorderedSet expected_4 = {new VariableEntity("x")}; 
+  EntityPointerUnorderedSet expected_4 = {new VariableEntity("x")};
   EntityPointerUnorderedSet expected_inverse_w = {new AssignStmtEntity("1")};
   EntityPointerUnorderedSet expected_inverse_z = {new AssignStmtEntity("2")};
   EntityPointerUnorderedSet expected_inverse_y = {new AssignStmtEntity("3")};
-  EntityPointerUnorderedSet expected_inverse_x = {new AssignStmtEntity("4")}; 
+  EntityPointerUnorderedSet expected_inverse_x = {new AssignStmtEntity("4")};
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
-        new ModifiesRelationship(new AssignStmtEntity(modifies[i].first), 
+        new ModifiesRelationship(new AssignStmtEntity(modifies[i].first),
                                  new VariableEntity(modifies[i].second)));
   }
 
@@ -259,13 +258,13 @@ TEST(PopulateRelationshipTest, ModifiesDifferentVariableTest) {
   int inverse_key_count = 0;
   EntityPointerUnorderedMap table = relationship_table->GetTable();
   EntityPointerUnorderedMap inverse_table = relationship_table->GetTable(true);
-  bool compare_1 = 
+  bool compare_1 =
       PKBTestHelper::set_compare(expected_1, relationship_table->get(new AssignStmtEntity("1"), false));
-  bool compare_2 = 
+  bool compare_2 =
       PKBTestHelper::set_compare(expected_2, relationship_table->get(new AssignStmtEntity("2"), false));
-  bool compare_3 = 
+  bool compare_3 =
       PKBTestHelper::set_compare(expected_3, relationship_table->get(new AssignStmtEntity("3"), false));
-  bool compare_4 = 
+  bool compare_4 =
       PKBTestHelper::set_compare(expected_4, relationship_table->get(new AssignStmtEntity("4"), false));
   bool compare_inverse_w =
       PKBTestHelper::set_compare(expected_inverse_w, relationship_table->get(new VariableEntity("w"), true));
@@ -276,15 +275,15 @@ TEST(PopulateRelationshipTest, ModifiesDifferentVariableTest) {
   bool compare_inverse_z =
       PKBTestHelper::set_compare(expected_inverse_x, relationship_table->get(new VariableEntity("x"), true));
 
-  for (auto &key : table) { 
+  for (auto &key : table) {
     count += key.second.size();
-    key_count++;  
+    key_count++;
   }
 
-  for (auto &inverse_key : inverse_table) { 
+  for (auto &inverse_key : inverse_table) {
     inverse_count += inverse_key.second.size();
-    inverse_key_count++; 
-  } 
+    inverse_key_count++;
+  }
 
   ASSERT_EQ(count, 4);
   ASSERT_EQ(inverse_count, 4);
@@ -297,13 +296,13 @@ TEST(PopulateRelationshipTest, ModifiesDifferentVariableTest) {
   ASSERT_EQ(compare_inverse_w, true);
   ASSERT_EQ(compare_inverse_x, true);
   ASSERT_EQ(compare_inverse_y, true);
-  ASSERT_EQ(compare_inverse_z, true); 
+  ASSERT_EQ(compare_inverse_z, true);
 }
 
 /*
 * Different statement numbers of the same type, each modifying the same variable 
 */
-TEST(PopulateRelationshipTest, ModifiesSingleVariableTest) { 
+TEST(PopulateRelationshipTest, ModifiesSingleVariableTest) {
   std::vector<std::pair<std::string, std::string>> modifies = {{"1", "w"},
                                                                {"2", "w"},
                                                                {"3", "w"},
@@ -311,13 +310,13 @@ TEST(PopulateRelationshipTest, ModifiesSingleVariableTest) {
   std::vector<Relationship *> relationships;
   int length = modifies.size();
   relationships.reserve(length);
-  EntityPointerUnorderedSet expected = {new VariableEntity("w")}; 
+  EntityPointerUnorderedSet expected = {new VariableEntity("w")};
   EntityPointerUnorderedSet expected_inverse = {new AssignStmtEntity("1"), new AssignStmtEntity("2"),
-                                                  new AssignStmtEntity("3"), new AssignStmtEntity("4")}; 
+                                                new AssignStmtEntity("3"), new AssignStmtEntity("4")};
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
-        new ModifiesRelationship(new AssignStmtEntity(modifies[i].first), 
+        new ModifiesRelationship(new AssignStmtEntity(modifies[i].first),
                                  new VariableEntity(modifies[i].second)));
   }
 
@@ -331,14 +330,14 @@ TEST(PopulateRelationshipTest, ModifiesSingleVariableTest) {
   int inverse_key_count = 0;
   EntityPointerUnorderedMap table = relationship_table->GetTable();
   EntityPointerUnorderedMap inverse_table = relationship_table->GetTable(true);
-  bool compare_1 = 
+  bool compare_1 =
       PKBTestHelper::set_compare(expected, relationship_table->get(new AssignStmtEntity("1"), false));
-  bool compare_2 = 
+  bool compare_2 =
       PKBTestHelper::set_compare(expected, relationship_table->get(new AssignStmtEntity("2"), false));
-  bool compare_3 = 
+  bool compare_3 =
       PKBTestHelper::set_compare(expected, relationship_table->get(new AssignStmtEntity("3"), false));
-  bool compare_4 = 
-      PKBTestHelper::set_compare(expected, relationship_table->get(new AssignStmtEntity("4"), false)); 
+  bool compare_4 =
+      PKBTestHelper::set_compare(expected, relationship_table->get(new AssignStmtEntity("4"), false));
   bool compare_inverse =
       PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("w"), true));
 
@@ -368,10 +367,10 @@ TEST(PopulateRelationshipTest, ModifiesSingleVariableTest) {
 */
 TEST(PopulateRelationshipTest, ModifiesMultipleTypeStatementsTest) {
   std::vector<std::pair<std::string, std::string>> modifies_assign = {{"1", "w"},
-                                                                      {"2", "x"}, 
-                                                                      {"3", "y"}, 
+                                                                      {"2", "x"},
+                                                                      {"3", "y"},
                                                                       {"4", "z"}};
-  std::vector<std::pair<std::string, std::string>> modifies_read = {{"5", "a"}, 
+  std::vector<std::pair<std::string, std::string>> modifies_read = {{"5", "a"},
                                                                     {"6", "b"},
                                                                     {"7", "c"},
                                                                     {"8", "d"}};
@@ -385,22 +384,22 @@ TEST(PopulateRelationshipTest, ModifiesMultipleTypeStatementsTest) {
   relationships.reserve(length);
   EntityPointerUnorderedSet actual;
   EntityPointerUnorderedSet actual_inverse;
-  EntityPointerUnorderedSet expected; 
-  EntityPointerUnorderedSet expected_inverse; 
+  EntityPointerUnorderedSet expected;
+  EntityPointerUnorderedSet expected_inverse;
 
   for (int i = 0; i < recurse; i++) {
     relationships.push_back(new ModifiesRelationship(new AssignStmtEntity(modifies_assign[i].first),
                                                      new VariableEntity(modifies_assign[i].second)));
-    relationships.push_back(new ModifiesRelationship(new ReadStmtEntity(modifies_read[i].first),
+    relationships.push_back(new ModifiesRelationship(new ReadStmtEntity(modifies_read[i].first, std::string()),
                                                      new VariableEntity(modifies_read[i].second)));
     relationships.push_back(new ModifiesRelationship(new IfStmtEntity(modifies_if[i].first),
                                                      new VariableEntity(modifies_if[i].second)));
     expected.insert(new VariableEntity(modifies_assign[i].second));
     expected.insert(new VariableEntity(modifies_read[i].second));
     expected.insert(new VariableEntity(modifies_if[i].second));
-    expected_inverse.insert(new AssignStmtEntity(modifies_assign[i].first)); 
-    expected_inverse.insert(new ReadStmtEntity(modifies_read[i].first));
-    expected_inverse.insert(new IfStmtEntity(modifies_if[i].first)); 
+    expected_inverse.insert(new AssignStmtEntity(modifies_assign[i].first));
+    expected_inverse.insert(new ReadStmtEntity(modifies_read[i].first, std::string()));
+    expected_inverse.insert(new IfStmtEntity(modifies_if[i].first));
   }
 
   auto *relationship_manager = new RelationshipManager();
@@ -410,7 +409,7 @@ TEST(PopulateRelationshipTest, ModifiesMultipleTypeStatementsTest) {
   int count = 0;
   int key_count = 0;
   int inverse_count = 0;
-  int inverse_key_count = 0; 
+  int inverse_key_count = 0;
   EntityPointerUnorderedMap table = relationship_table->GetTable();
   EntityPointerUnorderedMap inverse_table = relationship_table->GetTable(true);
 
@@ -423,7 +422,7 @@ TEST(PopulateRelationshipTest, ModifiesMultipleTypeStatementsTest) {
   for (auto &inverse_key : inverse_table) {
     inverse_count += inverse_key.second.size();
     actual_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());
-    inverse_key_count++; 
+    inverse_key_count++;
   }
 
   bool compare = PKBTestHelper::set_compare(expected, actual);
@@ -482,13 +481,13 @@ TEST(PopulateRelationshipTest, ModifiesMixedTest) {
 
   for (auto &key : table) {
     count += key.second.size();
-    actual.insert(key.second.begin(), key.second.end()); 
+    actual.insert(key.second.begin(), key.second.end());
     key_count++;
   }
 
   for (auto &inverse_key : inverse_table) {
     inverse_count += inverse_key.second.size();
-    actual_inverse.insert(inverse_key.second.begin(), inverse_key.second.end()); 
+    actual_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());
     inverse_key_count++;
   }
 
@@ -496,7 +495,7 @@ TEST(PopulateRelationshipTest, ModifiesMixedTest) {
   bool compare_inverse = PKBTestHelper::set_compare(expected_inverse, actual_inverse);
 
   ASSERT_EQ(count, 8);
-  ASSERT_EQ(inverse_count, 8); 
+  ASSERT_EQ(inverse_count, 8);
   ASSERT_EQ(key_count, 8);
   ASSERT_EQ(inverse_key_count, 4);
   ASSERT_EQ(compare, true);
@@ -507,9 +506,9 @@ TEST(PopulateRelationshipTest, ModifiesMixedTest) {
 * Relationship between statements of the same type
 */
 TEST(PopulateRelationshipTest, FollowsSingleStatementTypeTest) {
-  std::vector<std::pair<std::string, std::string>> follows = {{"1", "2"}, 
-                                                              {"2", "3"}, 
-                                                              {"3", "4"}, 
+  std::vector<std::pair<std::string, std::string>> follows = {{"1", "2"},
+                                                              {"2", "3"},
+                                                              {"3", "4"},
                                                               {"4", "5"}};
   std::vector<Relationship *> relationships;
   int length = follows.size();
@@ -521,10 +520,10 @@ TEST(PopulateRelationshipTest, FollowsSingleStatementTypeTest) {
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
-        new FollowsRelationship(new AssignStmtEntity(follows[i].first), 
+        new FollowsRelationship(new AssignStmtEntity(follows[i].first),
                                 new AssignStmtEntity(follows[i].second)));
-    expected.insert(new AssignStmtEntity(follows[i].second)); 
-    expected_inverse.insert(new AssignStmtEntity(follows[i].first)); 
+    expected.insert(new AssignStmtEntity(follows[i].second));
+    expected_inverse.insert(new AssignStmtEntity(follows[i].first));
   }
 
   auto *relationship_manager = new RelationshipManager();
@@ -540,13 +539,13 @@ TEST(PopulateRelationshipTest, FollowsSingleStatementTypeTest) {
 
   for (auto &key : table) {
     count += key.second.size();
-    actual.insert(key.second.begin(), key.second.end()); 
+    actual.insert(key.second.begin(), key.second.end());
     key_count++;
   }
 
   for (auto &inverse_key : inverse_table) {
     inverse_count += inverse_key.second.size();
-    actual_inverse.insert(inverse_key.second.begin(), inverse_key.second.end()); 
+    actual_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());
     inverse_key_count++;
   }
 
@@ -565,14 +564,14 @@ TEST(PopulateRelationshipTest, FollowsSingleStatementTypeTest) {
 * Relationship between statements of different types
 */
 TEST(PopulateRelationshipTest, FollowsMultipleStatementTypeTest) {
-  std::vector<std::pair<std::string, std::string>> follows_a = {{"1", "2"}, 
-                                                                {"2", "3"}, 
-                                                                {"3", "4"}, 
-                                                                {"4", "5"}};  
-  std::vector<std::pair<std::string, std::string>> follows_b = {{"10", "11"}, 
-                                                                {"15", "16"}, 
-                                                                {"20", "21"}, 
-                                                                {"25", "26"}}; 
+  std::vector<std::pair<std::string, std::string>> follows_a = {{"1", "2"},
+                                                                {"2", "3"},
+                                                                {"3", "4"},
+                                                                {"4", "5"}};
+  std::vector<std::pair<std::string, std::string>> follows_b = {{"10", "11"},
+                                                                {"15", "16"},
+                                                                {"20", "21"},
+                                                                {"25", "26"}};
   std::vector<Relationship *> relationships;
   int recurse = 4;
   int length = follows_a.size() + follows_b.size();
@@ -584,15 +583,15 @@ TEST(PopulateRelationshipTest, FollowsMultipleStatementTypeTest) {
 
   for (int i = 0; i < recurse; i++) {
     relationships.push_back(
-        new FollowsRelationship(new AssignStmtEntity(follows_a[i].first), 
-                                new ReadStmtEntity(follows_a[i].second)));
+        new FollowsRelationship(new AssignStmtEntity(follows_a[i].first),
+                                new ReadStmtEntity(follows_a[i].second, std::string())));
     relationships.push_back(
-        new FollowsRelationship(new IfStmtEntity(follows_b[i].first), 
+        new FollowsRelationship(new IfStmtEntity(follows_b[i].first),
                                 new AssignStmtEntity(follows_b[i].second)));
-    expected.insert(new ReadStmtEntity(follows_a[i].second));
+    expected.insert(new ReadStmtEntity(follows_a[i].second, std::string()));
     expected.insert(new AssignStmtEntity(follows_b[i].second));
     expected_inverse.insert(new AssignStmtEntity(follows_a[i].first));
-    expected_inverse.insert(new IfStmtEntity(follows_b[i].first)); 
+    expected_inverse.insert(new IfStmtEntity(follows_b[i].first));
   }
 
   auto *relationship_manager = new RelationshipManager();
@@ -608,19 +607,19 @@ TEST(PopulateRelationshipTest, FollowsMultipleStatementTypeTest) {
 
   for (auto &key : table) {
     count += key.second.size();
-    actual.insert(key.second.begin(), key.second.end()); 
+    actual.insert(key.second.begin(), key.second.end());
     key_count++;
   }
 
   for (auto &inverse_key : inverse_table) {
     inverse_count += inverse_key.second.size();
-    actual_inverse.insert(inverse_key.second.begin(), inverse_key.second.end()); 
+    actual_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());
     inverse_key_count++;
   }
 
   bool compare = PKBTestHelper::set_compare(expected, actual);
   bool compare_inverse = PKBTestHelper::set_compare(expected_inverse, actual_inverse);
-   
+
   ASSERT_EQ(count, 8);
   ASSERT_EQ(inverse_count, 8);
   ASSERT_EQ(key_count, 8);
@@ -628,7 +627,7 @@ TEST(PopulateRelationshipTest, FollowsMultipleStatementTypeTest) {
   ASSERT_EQ(compare, true);
   ASSERT_EQ(compare_inverse, true);
 }
-  
+
 /*
 * Same procedure calling multiple procedures
 */
@@ -647,7 +646,7 @@ TEST(PopulateRelationshipTest, CallsMultipleProcedureTest) {
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
-        new CallsRelationship(new ProcedureEntity(calls[i].first), 
+        new CallsRelationship(new ProcedureEntity(calls[i].first),
                               new ProcedureEntity(calls[i].second)));
     expected.insert(new ProcedureEntity(calls[i].second));
     expected_inverse.insert(new ProcedureEntity(calls[i].first));
@@ -666,13 +665,13 @@ TEST(PopulateRelationshipTest, CallsMultipleProcedureTest) {
 
   for (auto &key : table) {
     count += key.second.size();
-    actual.insert(key.second.begin(), key.second.end());  
+    actual.insert(key.second.begin(), key.second.end());
     key_count++;
   }
 
   for (auto &inverse_key : inverse_table) {
     inverse_count += inverse_key.second.size();
-    actual_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());  
+    actual_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());
     inverse_key_count++;
   }
 
@@ -705,7 +704,7 @@ TEST(PopulateRelationshipTest, CallsSameProcedureTest) {
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
-        new CallsRelationship(new ProcedureEntity(calls[i].first), 
+        new CallsRelationship(new ProcedureEntity(calls[i].first),
                               new ProcedureEntity(calls[i].second)));
     expected.insert(new ProcedureEntity(calls[i].second));
     expected_inverse.insert(new ProcedureEntity(calls[i].first));
@@ -756,7 +755,7 @@ TEST(PopulateRelationshipTest, CallsMultipleUniqueProcedureTest) {
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
-        new CallsRelationship(new ProcedureEntity(calls[i].first), 
+        new CallsRelationship(new ProcedureEntity(calls[i].first),
                               new ProcedureEntity(calls[i].second)));
     expected.insert(new ProcedureEntity(calls[i].second));
     expected_inverse.insert(new ProcedureEntity(calls[i].first));
@@ -775,16 +774,16 @@ TEST(PopulateRelationshipTest, CallsMultipleUniqueProcedureTest) {
 
   for (auto &key : table) {
     count += key.second.size();
-    actual.insert(key.second.begin(), key.second.end());  
+    actual.insert(key.second.begin(), key.second.end());
     key_count++;
   }
 
   for (auto &inverse_key : inverse_table) {
     inverse_count += inverse_key.second.size();
-    actual_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());  
+    actual_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());
     inverse_key_count++;
   }
-  
+
   bool compare = PKBTestHelper::set_compare(expected, actual);
   bool compare_inverse = PKBTestHelper::set_compare(expected_inverse, actual_inverse);
 
@@ -803,13 +802,13 @@ TEST(PopulateRelationshipTest, DuplicateSingleRelationshipTest) {
   std::vector<std::pair<std::string, std::string>> modifies = {{"1", "x"}, {"1", "x"}, {"1", "x"}};
   std::vector<Relationship *> relationships;
   int length = modifies.size();
-  relationships.reserve(length); 
+  relationships.reserve(length);
   EntityPointerUnorderedSet expected = {new VariableEntity("x")};
   EntityPointerUnorderedSet expected_inverse = {new AssignStmtEntity("1")};
 
   for (int i = 0; i < length; i++) {
     relationships.push_back(
-        new ModifiesRelationship(new AssignStmtEntity(modifies[i].first), 
+        new ModifiesRelationship(new AssignStmtEntity(modifies[i].first),
                                  new VariableEntity(modifies[i].second)));
   }
 
@@ -823,9 +822,9 @@ TEST(PopulateRelationshipTest, DuplicateSingleRelationshipTest) {
   int inverse_key_count = 0;
   EntityPointerUnorderedMap table = relationship_table->GetTable();
   EntityPointerUnorderedMap inverse_table = relationship_table->GetTable(true);
-  bool compare = 
+  bool compare =
       PKBTestHelper::set_compare(expected, relationship_table->get(new AssignStmtEntity("1"), false));
-  bool compare_inverse = 
+  bool compare_inverse =
       PKBTestHelper::set_compare(expected_inverse, relationship_table->get(new VariableEntity("x"), true));
 
   for (auto &key : table) {
@@ -861,7 +860,7 @@ TEST(PopulateRelationshipTest, SingleRelationshipStressTest) {
   for (int i = 0; i < length; i = i + 2) {
     std::string stmt_a = std::to_string(i);
     std::string stmt_b = std::to_string(i + 1);
-    relationships.push_back(new FollowsRelationship(new AssignStmtEntity(stmt_a), 
+    relationships.push_back(new FollowsRelationship(new AssignStmtEntity(stmt_a),
                                                     new AssignStmtEntity(stmt_b)));
     expected.insert(new AssignStmtEntity(stmt_b));
     expected_inverse.insert(new AssignStmtEntity(stmt_a));
@@ -880,16 +879,16 @@ TEST(PopulateRelationshipTest, SingleRelationshipStressTest) {
 
   for (auto &key : table) {
     count += key.second.size();
-    actual.insert(key.second.begin(), key.second.end());   
+    actual.insert(key.second.begin(), key.second.end());
     key_count++;
   }
 
   for (auto &inverse_key : inverse_table) {
     inverse_count += inverse_key.second.size();
-    actual_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());   
+    actual_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());
     inverse_key_count++;
   }
-  
+
   bool compare = PKBTestHelper::set_compare(expected, actual);
   bool compare_inverse = PKBTestHelper::set_compare(expected_inverse, actual_inverse);
 
@@ -909,9 +908,9 @@ TEST(PopulateRelationshipTest, MultipleRelationshipsTest) {
                                                                {"2", "z"},
                                                                {"3", "y"},
                                                                {"4", "x"}};
-  std::vector<std::pair<std::string, std::string>> follows = {{"1", "2"}, 
-                                                              {"2", "3"}, 
-                                                              {"3", "4"}, 
+  std::vector<std::pair<std::string, std::string>> follows = {{"1", "2"},
+                                                              {"2", "3"},
+                                                              {"3", "4"},
                                                               {"4", "5"}};
   std::vector<std::pair<std::string, std::string>> calls = {{"One", "Five"},
                                                             {"Two", "Six"},
@@ -936,17 +935,17 @@ TEST(PopulateRelationshipTest, MultipleRelationshipsTest) {
 
   for (int i = 0; i < recurse; i++) {
     relationships.push_back(
-        new ModifiesRelationship(new AssignStmtEntity(modifies[i].first), 
+        new ModifiesRelationship(new AssignStmtEntity(modifies[i].first),
                                  new VariableEntity(modifies[i].second)));
     relationships.push_back(
-        new FollowsRelationship(new AssignStmtEntity(follows[i].first), 
-                                new ReadStmtEntity(follows[i].second)));
+        new FollowsRelationship(new AssignStmtEntity(follows[i].first),
+                                new ReadStmtEntity(follows[i].second, std::string())));
     relationships.push_back(
-        new CallsRelationship(new ProcedureEntity(calls[i].first), 
+        new CallsRelationship(new ProcedureEntity(calls[i].first),
                               new ProcedureEntity(calls[i].second)));
     expected_modifies.insert(new VariableEntity(modifies[i].second));
-    expected_follows.insert(new ReadStmtEntity(follows[i].second));
-    expected_calls.insert(new ProcedureEntity(calls[i].second)); 
+    expected_follows.insert(new ReadStmtEntity(follows[i].second, std::string()));
+    expected_calls.insert(new ProcedureEntity(calls[i].second));
     expected_modifies_inverse.insert(new AssignStmtEntity(modifies[i].first));
     expected_follows_inverse.insert(new AssignStmtEntity(follows[i].first));
     expected_calls_inverse.insert(new ProcedureEntity(calls[i].first));
@@ -979,32 +978,32 @@ TEST(PopulateRelationshipTest, MultipleRelationshipsTest) {
 
   for (auto &key : modifies_map) {
     modifies_count += key.second.size();
-    actual_modifies.insert(key.second.begin(), key.second.end());    
+    actual_modifies.insert(key.second.begin(), key.second.end());
     modifies_key_count++;
   }
   for (auto &inverse_key : inverse_modifies_map) {
     inverse_modifies_count += inverse_key.second.size();
-    actual_modifies_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());   
+    actual_modifies_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());
     inverse_modifies_key_count++;
   }
   for (auto &key : follows_map) {
     follows_count += key.second.size();
-    actual_follows.insert(key.second.begin(), key.second.end());  
+    actual_follows.insert(key.second.begin(), key.second.end());
     follows_key_count++;
   }
   for (auto &inverse_key : inverse_follows_map) {
     inverse_follows_count += inverse_key.second.size();
-    actual_follows_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());   
+    actual_follows_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());
     inverse_follows_key_count++;
   }
   for (auto &key : calls_map) {
     calls_count += key.second.size();
-    actual_calls.insert(key.second.begin(), key.second.end());    
+    actual_calls.insert(key.second.begin(), key.second.end());
     calls_key_count++;
   }
   for (auto &inverse_key : inverse_calls_map) {
     inverse_calls_count += inverse_key.second.size();
-    actual_calls_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());    
+    actual_calls_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());
     inverse_calls_key_count++;
   }
 
@@ -1020,14 +1019,14 @@ TEST(PopulateRelationshipTest, MultipleRelationshipsTest) {
   ASSERT_EQ(inverse_modifies_count, 4);
   ASSERT_EQ(inverse_modifies_key_count, 4);
   ASSERT_EQ(compare_modifies, true);
-  ASSERT_EQ(compare_modifies_inverse, true); 
+  ASSERT_EQ(compare_modifies_inverse, true);
 
   ASSERT_EQ(follows_count, 4);
   ASSERT_EQ(follows_key_count, 4);
   ASSERT_EQ(inverse_follows_count, 4);
   ASSERT_EQ(inverse_follows_key_count, 4);
   ASSERT_EQ(compare_follows, true);
-  ASSERT_EQ(compare_follows_inverse, true); 
+  ASSERT_EQ(compare_follows_inverse, true);
 
   ASSERT_EQ(calls_count, 4);
   ASSERT_EQ(calls_key_count, 4);
@@ -1042,34 +1041,34 @@ TEST(PopulateRelationshipTest, MultipleRelationshipsTest) {
 */
 TEST(PopulatieRelationshipTest, DuplicateMultipleRelationshipTest) {
   std::vector<std::pair<std::string, std::string>> modifies = {{"1", "w"},
-                                                               {"1", "w"}, 
+                                                               {"1", "w"},
                                                                {"1", "w"}};
-  std::vector<std::pair<std::string, std::string>> follows = {{"2", "3"}, 
-                                                              {"2", "3"},  
+  std::vector<std::pair<std::string, std::string>> follows = {{"2", "3"},
+                                                              {"2", "3"},
                                                               {"2", "3"}};
   std::vector<std::pair<std::string, std::string>> calls = {{"One", "Two"},
-                                                            {"One", "Two"}, 
+                                                            {"One", "Two"},
                                                             {"One", "Two"}};
   std::vector<Relationship *> relationships;
   int recurse = 3;
   int length = modifies.size() + follows.size() + calls.size();
-  relationships.reserve(length); 
+  relationships.reserve(length);
   EntityPointerUnorderedSet expected_modifies = {new VariableEntity("w")};
-  EntityPointerUnorderedSet expected_modifies_inverse = {new AssignStmtEntity("1")}; 
-  EntityPointerUnorderedSet expected_follows = {new ReadStmtEntity("3")};
-  EntityPointerUnorderedSet expected_follows_inverse = {new AssignStmtEntity("2")}; 
+  EntityPointerUnorderedSet expected_modifies_inverse = {new AssignStmtEntity("1")};
+  EntityPointerUnorderedSet expected_follows = {new ReadStmtEntity("3", std::string())};
+  EntityPointerUnorderedSet expected_follows_inverse = {new AssignStmtEntity("2")};
   EntityPointerUnorderedSet expected_calls = {new ProcedureEntity("Two")};
   EntityPointerUnorderedSet expected_calls_inverse = {new ProcedureEntity("One")};
 
   for (int i = 0; i < recurse; i++) {
     relationships.push_back(
-        new ModifiesRelationship(new AssignStmtEntity(modifies[i].first), 
+        new ModifiesRelationship(new AssignStmtEntity(modifies[i].first),
                                  new VariableEntity(modifies[i].second)));
     relationships.push_back(
-        new FollowsRelationship(new AssignStmtEntity(follows[i].first), 
-                                new ReadStmtEntity(follows[i].second)));
+        new FollowsRelationship(new AssignStmtEntity(follows[i].first),
+                                new ReadStmtEntity(follows[i].second, std::string())));
     relationships.push_back(
-        new CallsRelationship(new ProcedureEntity(calls[i].first), 
+        new CallsRelationship(new ProcedureEntity(calls[i].first),
                               new ProcedureEntity(calls[i].second)));
   }
 
@@ -1104,7 +1103,7 @@ TEST(PopulatieRelationshipTest, DuplicateMultipleRelationshipTest) {
   bool compare_follows =
       PKBTestHelper::set_compare(expected_follows, follows_table->get(new AssignStmtEntity("2"), false));
   bool compare_follows_inverse =
-      PKBTestHelper::set_compare(expected_follows_inverse, follows_table->get(new ReadStmtEntity("3"), true));
+      PKBTestHelper::set_compare(expected_follows_inverse, follows_table->get(new ReadStmtEntity("3", std::string()), true));
   bool compare_calls =
       PKBTestHelper::set_compare(expected_calls, calls_table->get(new ProcedureEntity("One"), false));
   bool compare_calls_inverse =
@@ -1140,14 +1139,14 @@ TEST(PopulatieRelationshipTest, DuplicateMultipleRelationshipTest) {
   ASSERT_EQ(inverse_modifies_count, 1);
   ASSERT_EQ(inverse_modifies_key_count, 1);
   ASSERT_EQ(compare_modifies, true);
-  ASSERT_EQ(compare_modifies_inverse, true); 
+  ASSERT_EQ(compare_modifies_inverse, true);
 
   ASSERT_EQ(follows_count, 1);
   ASSERT_EQ(follows_key_count, 1);
   ASSERT_EQ(inverse_follows_count, 1);
   ASSERT_EQ(inverse_follows_key_count, 1);
   ASSERT_EQ(compare_follows, true);
-  ASSERT_EQ(compare_follows_inverse, true); 
+  ASSERT_EQ(compare_follows_inverse, true);
 
   ASSERT_EQ(calls_count, 1);
   ASSERT_EQ(calls_key_count, 1);
@@ -1172,19 +1171,19 @@ TEST(PopulateRelationshipTest, MultipleRelationshipStressTest) {
   EntityPointerUnorderedSet actual_follows;
   EntityPointerUnorderedSet actual_follows_inverse;
   EntityPointerUnorderedSet expected_follows;
-  EntityPointerUnorderedSet expected_follows_inverse; 
+  EntityPointerUnorderedSet expected_follows_inverse;
 
   for (int i = 0; i < recurse; i = i + 2) {
-    std::string stmt_a = std::to_string(i); 
-    std::string stmt_b = std::to_string(i + 1); 
+    std::string stmt_a = std::to_string(i);
+    std::string stmt_b = std::to_string(i + 1);
     relationships.push_back(
-        new ModifiesRelationship(new AssignStmtEntity(stmt_a), 
+        new ModifiesRelationship(new AssignStmtEntity(stmt_a),
                                  new VariableEntity("x")));
     relationships.push_back(
-        new FollowsRelationship(new AssignStmtEntity(stmt_a), 
-                                new ReadStmtEntity(stmt_b)));
+        new FollowsRelationship(new AssignStmtEntity(stmt_a),
+                                new ReadStmtEntity(stmt_b, std::string())));
     expected_modifies.insert(new VariableEntity("x"));
-    expected_follows.insert(new ReadStmtEntity(stmt_b)); 
+    expected_follows.insert(new ReadStmtEntity(stmt_b, std::string()));
     expected_modifies_inverse.insert(new AssignStmtEntity(stmt_a));
     expected_follows_inverse.insert(new AssignStmtEntity(stmt_a));
   }
@@ -1209,22 +1208,22 @@ TEST(PopulateRelationshipTest, MultipleRelationshipStressTest) {
 
   for (auto &key : modifies_map) {
     modifies_count += key.second.size();
-    actual_modifies.insert(key.second.begin(), key.second.end());   
+    actual_modifies.insert(key.second.begin(), key.second.end());
     modifies_key_count++;
   }
   for (auto &inverse_key : inverse_modifies_map) {
     inverse_modifies_count += inverse_key.second.size();
-    actual_modifies_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());    
+    actual_modifies_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());
     inverse_modifies_key_count++;
   }
   for (auto &key : follows_map) {
     follows_count += key.second.size();
-    actual_follows.insert(key.second.begin(), key.second.end());    
+    actual_follows.insert(key.second.begin(), key.second.end());
     follows_key_count++;
   }
   for (auto &inverse_key : inverse_follows_map) {
     inverse_follows_count += inverse_key.second.size();
-    actual_follows_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());  
+    actual_follows_inverse.insert(inverse_key.second.begin(), inverse_key.second.end());
     inverse_follows_key_count++;
   }
 

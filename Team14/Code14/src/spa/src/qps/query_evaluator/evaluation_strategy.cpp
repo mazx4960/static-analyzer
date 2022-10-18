@@ -16,8 +16,7 @@ EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClaus
       spdlog::debug("Creating WithEvaluationStrategy");
       return new WithStrategy(pkb, dynamic_cast<WithClause *>(query_clause));
     }
-    default:
-      throw EvaluationStrategyError("Invalid query clause type");
+    default:throw EvaluationStrategyError("Invalid query clause type");
   }
 }
 
@@ -70,12 +69,15 @@ std::string EvaluationStrategy::getAttribute(AttributeType attribute_type, Entit
         return entity->GetValue();
       } else if (entity_type == EntityType::kCallStmt) {
         auto *call_stmt = static_cast<CallStmtEntity *>(entity);
-        return call_stmt->GetProcName();
+        return call_stmt->GetAttr();
       }
     case AttributeType::kVarName:
-      if (entity_type == EntityType::kVariable || entity_type == EntityType::kReadStmt
-          || entity_type == EntityType::kPrintStmt) {
+      if (entity_type == EntityType::kVariable) {
         return entity->GetValue();
+      } else if (entity_type == EntityType::kReadStmt
+          || entity_type == EntityType::kPrintStmt) {
+        auto *stmt = static_cast<StmtEntity *>(entity);
+        return stmt->GetAttr();
       }
     case AttributeType::kValue:
       if (entity_type == EntityType::kConstant) {
@@ -87,8 +89,7 @@ std::string EvaluationStrategy::getAttribute(AttributeType attribute_type, Entit
           || entity_type == EntityType::kPrintStmt || entity_type == EntityType::kReadStmt) {
         return entity->GetValue();
       }
-    default:
-      throw EvaluationStrategyError("Invalid attribute type");
+    default:throw EvaluationStrategyError("Invalid attribute type");
   }
 }
 std::string EvaluationStrategy::unwrapEntity(QueryReference *query_reference, Entity *entity) {
