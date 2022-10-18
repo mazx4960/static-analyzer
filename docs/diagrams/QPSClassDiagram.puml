@@ -28,6 +28,9 @@ class "SuchThatStrategy" {
 class "PatternStrategy" {
     Entity[] evaluateParameter()
 }
+class "WithStrategy" {
+    Entity[] evaluateParameter()
+}
 
 interface UIInterface {
     void SetQueryString(String)
@@ -75,13 +78,12 @@ class SubqueryEvaluator {
 	SubqueryResult evaluate()
 }
 
-class SubqueryEvaluator {
-	SubqueryResult evaluate()
-}
-
 class SubqueryResult {
 	SubqueryResult Join()
-	SubqueryResult Intersect()
+}
+
+class ResultProjector {
+    SubqueryResult Project()
 }
 
 Token <|.down. Symbol
@@ -110,14 +112,19 @@ QueryBuilder *-down- PQL
 
 QueryEvaluator *-down- SubqueryEvaluator
 QueryEvaluator *-down- SubqueryResult
+QueryEvaluator *-down- ResultProjector
 
 EvaluationStrategy <|.down. SuchThatStrategy
 EvaluationStrategy <|.down.PatternStrategy
+EvaluationStrategy <|.down. WithStrategy
 
 SuchThatEvaluator *-down- SuchThatStrategy
 PatternEvaluator *-down- PatternStrategy
+WithEvaluator *-down- WithStrategy
 
 SubqueryEvaluator <|-down- SuchThatEvaluator
 SubqueryEvaluator <|-down- PatternEvaluator
+SubqueryEvaluator <|-down- WithEvaluator
 SubqueryEvaluator -right- SubqueryResult
+SubqueryResult -right- ResultProjector
 @enduml
