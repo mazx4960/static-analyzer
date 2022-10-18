@@ -8,6 +8,7 @@
 QueryParser::QueryParser(std::vector<Token *> tokens) {
   this->tokens_ = std::move(tokens);
   this->token_stream_ = tokens_.begin();
+  this->query_builder_ = new QueryBuilder();
 }
 
 bool QueryParser::ShouldStop() {
@@ -27,7 +28,6 @@ Token *QueryParser::Expect(TokenType type) {
 }
 
 Query *QueryParser::Parse() {
-  this->query_builder_ = new QueryBuilder();
   ParseQuery();
   Expect(EndOfFileToken());
   auto *query = this->query_builder_->Build();
@@ -147,16 +147,16 @@ void QueryParser::ParsePattern(std::vector<ClauseBlueprint *> &clauses) {
   spdlog::debug("Parsing pattern");
   auto *synonym = ParseSynonym();
   Expect(RoundOpenBracketToken());
-  auto *ent_ref = ParseBase();
+  auto *ent = ParseBase();
   Expect(CommaToken());
   auto *expr = ParseExpr();
   PatternBlueprint *clause;
   if ((*token_stream_)->type == TokenType::kComma) {
     Expect(CommaToken());
     auto *expr2 = ParseExpr();
-    clause = new PatternBlueprint(synonym, ent_ref, expr, expr2);
+    clause = new PatternBlueprint(synonym, ent, expr, expr2);
   } else {
-    clause = new PatternBlueprint(synonym, ent_ref, expr);
+    clause = new PatternBlueprint(synonym, ent, expr);
   }
   Expect(RoundCloseBracketToken());
   if (!clause->checkSyntax()) {

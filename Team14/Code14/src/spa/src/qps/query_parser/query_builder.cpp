@@ -92,11 +92,11 @@ std::vector<ElemReference *> QueryBuilder::BuildElems(const std::vector<ElemBlue
   for (auto *elem_blueprint : elem_blueprints) {
     std::string name = elem_blueprint->getValue();
     auto *synonym = GetSynonymReference(name);
-    auto *attr_ref = new AttrReference(synonym, elem_blueprint->getAttributeType());
-    if (!attr_ref->isSemanticallyCorrect()) {
+    auto *attr = new AttrReference(synonym, elem_blueprint->getAttributeType());
+    if (!attr->isSemanticallyCorrect()) {
       throw ParseSemanticError("Invalid AttrRef");
     }
-    elems.push_back(attr_ref);
+    elems.push_back(attr);
   }
   return elems;
 }

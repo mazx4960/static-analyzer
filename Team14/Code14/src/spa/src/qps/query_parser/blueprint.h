@@ -134,8 +134,7 @@ class SuchThatBlueprint : public ClauseBlueprint {
     return this->second_;
   };
   bool checkSyntax() {
-    auto *rules = new Rules();
-    return rules->CheckSuchThat(this->rs_type_, this->first_->getReferenceType(), this->second_->getReferenceType());
+    return CheckSuchThat(this->rs_type_, this->first_->getReferenceType(), this->second_->getReferenceType());
   }
   [[nodiscard]] std::string toString() const override {
     return "SuchThatBlueprint: " + RsTypeToString(rs_type_) + " " + first_->toString() + " " + second_->toString();
@@ -171,8 +170,7 @@ class PatternBlueprint : public ClauseBlueprint {
     return this->expr_2_;
   };
   bool checkSyntax() {
-    auto *rules = new Rules();
-    return rules->CheckPattern(this->var_->getReferenceType());
+    return CheckPattern(this->var_->getReferenceType());
   }
   [[nodiscard]] std::string toString() const override {
     return "PatternBlueprint: " + stmt_->toString() + " " + var_->toString() + " " + expr_->toString();
@@ -201,8 +199,7 @@ class WithBlueprint : public ClauseBlueprint {
     return this->second_;
   };
   bool checkSyntax() {
-    auto *rules = new Rules();
-    return rules->CheckWith(this->first_->getReferenceType(), this->second_->getReferenceType());
+    return CheckWith(this->first_->getReferenceType(), this->second_->getReferenceType());
   }
   [[nodiscard]] std::string toString() const override {
     return "WithBlueprint: " + first_->toString() + " " + second_->toString();
