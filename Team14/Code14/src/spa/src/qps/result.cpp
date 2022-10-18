@@ -28,7 +28,7 @@ std::string EmptyResult::get_synonyms() const {
   return "";
 }
 
-ElemResult::ElemResult(std::vector<ElemReference *> elem_refs, SubqueryResult &table) : elem_refs_(std::move(elem_refs)) {
+ElemResult::ElemResult(std::vector<ElemReference *> elem_refs, SubqueryResult &table) : Result(), elem_refs_(std::move(elem_refs)) {
   std::vector<ResultRow> rows = table.GetRows();
   this->results_.reserve(rows.size());
   for (auto row : rows) {
@@ -53,7 +53,7 @@ std::string ElemResult::get_synonyms() const {
   return synonyms_string;
 }
 
-BooleanResult::BooleanResult(bool has_results) {
+BooleanResult::BooleanResult(bool has_results) : Result() {
   if (has_results) {
     this->results_ = true_set_;
   } else {

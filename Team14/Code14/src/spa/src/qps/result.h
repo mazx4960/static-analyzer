@@ -18,11 +18,10 @@
  */
 class Result {
  protected:
-  std::unordered_set<std::string> results_{};
-
-  Result() = default;
+  std::unordered_set<std::string> results_;
 
  public:
+  Result() = default;
 
   /**
    * Creates empty result object.
