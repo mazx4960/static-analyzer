@@ -1,3 +1,4 @@
+#include <spdlog/spdlog.h>
 #include "query_evaluator.h"
 
 SynonymReferencePointerUnorderedSet QueryEvaluator::getDeclarationAsSet() {
@@ -49,19 +50,25 @@ Result *QueryEvaluator::evaluate() {
 
   switch (select_call->getSelectType()) {
     case SelectType::kElem: {
-      std::vector<ElemReference *> called_declarations = static_cast<ElemSelect *>(select_call)->getReferences();
+      spdlog::debug("Creating Result for Element select type");
+      auto *elem_select_call = static_cast<ElemSelect *>(this->query_.getQueryCall());
+      std::vector<ElemReference *> called_declarations = elem_select_call->getReferences();
       auto *result_projector = new SelectProjector(called_declarations, subquery_results);
       result_projector->project();
       SubqueryResult result_context = result_projector->select_results();
+      spdlog::debug("Element Result context size: {}", result_context.GetRows().size());
       return new ElemResult(called_declarations, result_context);
     }
     case SelectType::kBoolean: {
+      spdlog::debug("Creating Result for Boolean select type");
       auto *result_projector = new BooleanProjector(subquery_results);
       result_projector->project();
       bool has_results = result_projector->has_results();
+      spdlog::debug("Boolean Result non-empty? {}", has_results);
       return new BooleanResult(has_results);
     }
     default: {
+      spdlog::debug("Invalid select type");
       return Result::empty();
     }
   }

@@ -208,3 +208,6 @@ SubqueryResult SubqueryResult::AddColumn(QuerySynonym *synonym, const EntityPoin
 const std::vector<ResultRow> &SubqueryResult::GetRows() const {
   return table_rows_;
 }
+int SubqueryResult::Size() const {
+  return this->table_rows_.size();
+}

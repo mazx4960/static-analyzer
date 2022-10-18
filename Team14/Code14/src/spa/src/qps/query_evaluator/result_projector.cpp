@@ -10,7 +10,7 @@ void ResultProjector::join() {
 }
 
 SelectProjector::SelectProjector(std::vector<ElemReference *> &declarations, std::vector<SubqueryResult> &subquery_results)
-    : ResultProjector(subquery_results), called_declarations_(std::move(declarations)) {
+    : ResultProjector(subquery_results), called_declarations_(declarations) {
   this->called_synonyms_.reserve(called_declarations_.size());
   for (auto *elem_ref : called_declarations_) {
     this->called_synonyms_.push_back(elem_ref->getSynonym());
