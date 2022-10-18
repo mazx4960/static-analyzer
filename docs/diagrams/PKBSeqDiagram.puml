@@ -44,7 +44,6 @@ deactivate EntityManager
 PKB --> QPS: Entity[]
 
 QPS -> PKB: getEntitiesByString(String)
-activate QPS
 PKB -> EntityManager: get(String)
 activate EntityManager
 EntityManager --> PKB: Entity[]
