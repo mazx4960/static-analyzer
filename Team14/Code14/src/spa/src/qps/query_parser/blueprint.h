@@ -152,7 +152,7 @@ class PatternBlueprint : public ClauseBlueprint {
   ExprBlueprint *expr_2_;
  public:
   PatternBlueprint(SynonymBlueprint *stmt, BaseBlueprint *var, ExprBlueprint *expr)
-      : ClauseBlueprint(ClauseType::kPattern), stmt_(stmt), var_(var), expr_(expr) {
+      : ClauseBlueprint(ClauseType::kPattern), stmt_(stmt), var_(var), expr_(expr), expr_2_(nullptr) {
   };
   PatternBlueprint(SynonymBlueprint *stmt, BaseBlueprint *var, ExprBlueprint *expr, ExprBlueprint *expr_2)
       : ClauseBlueprint(ClauseType::kPattern), stmt_(stmt), var_(var), expr_(expr), expr_2_(expr_2) {
