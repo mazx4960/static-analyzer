@@ -20,9 +20,9 @@ class Result {
  protected:
   std::unordered_set<std::string> results_;
 
- public:
   Result() = default;
 
+ public:
   /**
    * Creates empty result object.
    * @return empty result object.
