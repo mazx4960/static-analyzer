@@ -14,6 +14,7 @@ class SubqueryResult {
  private:
 
   std::vector<QuerySynonym *> synonyms_;
+
   std::vector<ResultRow> table_rows_;
 
   SubqueryResult(std::vector<QuerySynonym *>, std::vector<ResultRow>);
@@ -29,4 +30,5 @@ class SubqueryResult {
   static SubqueryResult Empty(std::vector<QuerySynonym *> synonyms);
   static SubqueryResult FullNoSynonym();
   [[nodiscard]] const std::vector<ResultRow> &GetRows() const;
+  [[nodiscard]] int Size() const;
 };

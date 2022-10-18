@@ -8,25 +8,58 @@
 #include "qps/pql/query_reference.h"
 #include "subquery_result.h"
 
-using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
-
+/**
+ * Base projector class.
+ */
 class ResultProjector {
+ protected:
+  std::vector<SubqueryResult> subquery_results_;
+
+  SubqueryResult joined_results_ = SubqueryResult::FullNoSynonym();
+
+  explicit ResultProjector(std::vector<SubqueryResult> &subquery_results) : subquery_results_(subquery_results) {
+  };
+
+  /**
+   * Join results from list of subquery results.
+   */
+  void join();
+
+ public:
+  /**
+   * Project results from list of subquery results.
+   */
+  virtual void project() = 0;
+};
+
+class SelectProjector : public ResultProjector {
  private:
   std::vector<ElemReference *> called_declarations_;
 
-  IPKBQuerier *pkb_;
-
-  std::vector<SubqueryResult> subquery_results_;
-
-  static EntityPointerUnorderedSet intersect(const EntityPointerUnorderedSet &first,
-                                             const EntityPointerUnorderedSet &second);
+  std::vector<QuerySynonym *> called_synonyms_;
 
  public:
-  ResultProjector(std::vector<ElemReference *> declarations,
-                  std::vector<SubqueryResult> subquery_results,
-                  IPKBQuerier *pkb)
-      : called_declarations_(std::move(declarations)), subquery_results_(std::move(subquery_results)), pkb_(pkb) {
+  SelectProjector(std::vector<ElemReference *> &declarations, std::vector<SubqueryResult> &subquery_results);
+
+  void project() override;
+
+  /**
+   * Select results (columns) based on called synonyms.
+   * @return subset of intermediate result table with only columns for selected synonyms.
+   */
+  SubqueryResult select_results();
+};
+
+class BooleanProjector : public ResultProjector {
+ public:
+  explicit BooleanProjector(std::vector<SubqueryResult> &subquery_results) : ResultProjector(subquery_results) {
   };
 
-  SubqueryResult project();
+  void project() override;
+
+  /**
+   * Checks if final table has any rows.
+   * @return true if table is non empty.
+   */
+  bool has_results();
 };
