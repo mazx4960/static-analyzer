@@ -20,7 +20,9 @@ TEST(ExtractorTest, TestNextSingleBlock) {
   auto *program = new ProgramNode(procs);
 
   std::vector<Relationship *> relationships;
-  auto const op = [&relationships](Node *node) { RelationshipExtractor::ExtractNext(relationships, node); };
+  auto const op = [&relationships](Node *node) {
+    RelationshipExtractor::ExtractNext(relationships, node);
+  };
   program->VisitAll(op);
 
   // DFS traversal should yield the following result
@@ -51,7 +53,9 @@ TEST(ExtractorTest, TestNextIfBlock) {
   auto *program = new ProgramNode(procs);
 
   std::vector<Relationship *> relationships;
-  auto const op = [&relationships](Node *node) { RelationshipExtractor::ExtractNext(relationships, node); };
+  auto const op = [&relationships](Node *node) {
+    RelationshipExtractor::ExtractNext(relationships, node);
+  };
   program->VisitAll(op);
 
   // DFS traversal should yield the following result
@@ -85,7 +89,9 @@ TEST(ExtractorTest, TestNextWhileBlock) {
   auto *program = new ProgramNode(procs);
 
   std::vector<Relationship *> relationships;
-  auto const op = [&relationships](Node *node) { RelationshipExtractor::ExtractNext(relationships, node); };
+  auto const op = [&relationships](Node *node) {
+    RelationshipExtractor::ExtractNext(relationships, node);
+  };
   program->VisitAll(op);
 
   // DFS traversal should yield the following result
@@ -112,17 +118,19 @@ TEST(ExtractorTest, TestNextIfNested) {
   Node *program_node = SimpleParser::ParseProgram(tokens);
 
   std::vector<Relationship *> relationships;
-  auto const op = [&relationships](Node *node) { RelationshipExtractor::ExtractNext(relationships, node); };
+  auto const op = [&relationships](Node *node) {
+    RelationshipExtractor::ExtractNext(relationships, node);
+  };
   program_node->VisitAll(op);
 
   // DFS traversal should yield the following result
   std::vector<Relationship *> expected = {
       new NextRelationship(new AssignStmtEntity("1"), new IfStmtEntity("2")),
       new NextRelationship(new IfStmtEntity("2"), new AssignStmtEntity("3")),
-      new NextRelationship(new IfStmtEntity("2"), new ReadStmtEntity("7")),
+      new NextRelationship(new IfStmtEntity("2"), new ReadStmtEntity("7", std::string())),
       new NextRelationship(new AssignStmtEntity("3"), new IfStmtEntity("4")),
       new NextRelationship(new IfStmtEntity("4"), new AssignStmtEntity("5")),
-      new NextRelationship(new IfStmtEntity("4"), new ReadStmtEntity("6")),
+      new NextRelationship(new IfStmtEntity("4"), new ReadStmtEntity("6", std::string())),
   };
 
   ASSERT_EQ(relationships.size(), expected.size());
@@ -140,7 +148,9 @@ TEST(ExtractorTest, TestNextWhileNested) {
   Node *program_node = SimpleParser::ParseProgram(tokens);
 
   std::vector<Relationship *> relationships;
-  auto const op = [&relationships](Node *node) { RelationshipExtractor::ExtractNext(relationships, node); };
+  auto const op = [&relationships](Node *node) {
+    RelationshipExtractor::ExtractNext(relationships, node);
+  };
   program_node->VisitAll(op);
 
   // DFS traversal should yield the following result
@@ -151,9 +161,9 @@ TEST(ExtractorTest, TestNextWhileNested) {
       new NextRelationship(new WhileStmtEntity("2"), new WhileStmtEntity("1")),
       new NextRelationship(new WhileStmtEntity("3"), new WhileStmtEntity("4")),
       new NextRelationship(new WhileStmtEntity("3"), new WhileStmtEntity("2")),
-      new NextRelationship(new WhileStmtEntity("4"), new PrintStmtEntity("5")),
+      new NextRelationship(new WhileStmtEntity("4"), new PrintStmtEntity("5", std::string())),
       new NextRelationship(new WhileStmtEntity("4"), new WhileStmtEntity("3")),
-      new NextRelationship(new PrintStmtEntity("5"), new WhileStmtEntity("4")),
+      new NextRelationship(new PrintStmtEntity("5", std::string()), new WhileStmtEntity("4")),
   };
 
   ASSERT_EQ(relationships.size(), expected.size());
@@ -171,19 +181,21 @@ TEST(ExtractorTest, TestNextIfWhileNested) {
   Node *program_node = SimpleParser::ParseProgram(tokens);
 
   std::vector<Relationship *> relationships;
-  auto const op = [&relationships](Node *node) { RelationshipExtractor::ExtractNext(relationships, node); };
+  auto const op = [&relationships](Node *node) {
+    RelationshipExtractor::ExtractNext(relationships, node);
+  };
   program_node->VisitAll(op);
 
   // DFS traversal should yield the following result
   std::vector<Relationship *> expected = {
       new NextRelationship(new AssignStmtEntity("1"), new WhileStmtEntity("2")),
       new NextRelationship(new WhileStmtEntity("2"), new AssignStmtEntity("3")),
-      new NextRelationship(new WhileStmtEntity("2"), new PrintStmtEntity("7")),
+      new NextRelationship(new WhileStmtEntity("2"), new PrintStmtEntity("7", std::string())),
       new NextRelationship(new AssignStmtEntity("3"), new IfStmtEntity("4")),
-      new NextRelationship(new IfStmtEntity("4"), new PrintStmtEntity("5")),
-      new NextRelationship(new IfStmtEntity("4"), new PrintStmtEntity("6")),
-      new NextRelationship(new PrintStmtEntity("6"), new WhileStmtEntity("2")),
-      new NextRelationship(new PrintStmtEntity("5"), new WhileStmtEntity("2")),
+      new NextRelationship(new IfStmtEntity("4"), new PrintStmtEntity("5", std::string())),
+      new NextRelationship(new IfStmtEntity("4"), new PrintStmtEntity("6", std::string())),
+      new NextRelationship(new PrintStmtEntity("6", std::string()), new WhileStmtEntity("2")),
+      new NextRelationship(new PrintStmtEntity("5", std::string()), new WhileStmtEntity("2")),
   };
 
   ASSERT_EQ(relationships.size(), expected.size());
