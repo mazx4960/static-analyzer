@@ -152,7 +152,7 @@ bool AttrReference::operator==(const QueryReference &other) const {
   if (other.getRefType() == this->getRefType()) {
     const auto &elem_other = static_cast<const AttrReference &>(other);
     return (*elem_other.getSynonymReference()) == (*this->getSynonymReference())
-        && (elem_other.getAttribute()) == (this->getAttribute());
+        && (elem_other.getAttributeType()) == (this->getAttributeType());
   }
   return false;
 }
@@ -160,7 +160,7 @@ bool AttrReference::operator==(const QueryReference *other) const {
   if (other->getRefType() == this->getRefType()) {
     const auto &elem_other = static_cast<const AttrReference *>(other);
     return (*elem_other->getSynonymReference()) == (*this->getSynonymReference())
-        && (elem_other->getAttribute()) == (this->getAttribute());
+        && (elem_other->getAttributeType()) == (this->getAttributeType());
   }
   return false;
 }
@@ -172,13 +172,43 @@ ReferenceType AttrReference::getRefType() const {
   return ReferenceType::kAttr;
 }
 
-AttributeType AttrReference::getAttribute() const {
+AttributeType AttrReference::getAttributeType() const {
   return this->attribute_type_;
+}
+std::string AttrReference::getAttribute(Entity *entity) const {
+  auto entity_type = entity->GetType();
+  switch (attribute_type_) {
+    case AttributeType::kProcName:
+      if (entity_type == EntityType::kProcedure) {
+        return entity->GetValue();
+      } else if (entity_type == EntityType::kCallStmt) {
+        auto *call_stmt = static_cast<CallStmtEntity *>(entity);
+        return call_stmt->GetAttr();
+      }
+    case AttributeType::kVarName:
+      if (entity_type == EntityType::kVariable) {
+        return entity->GetValue();
+      } else if (entity_type == EntityType::kReadStmt || entity_type == EntityType::kPrintStmt) {
+        auto *stmt = static_cast<StmtEntity *>(entity);
+        return stmt->GetAttr();
+      }
+    case AttributeType::kValue:
+      if (entity_type == EntityType::kConstant) {
+        return entity->GetValue();
+      }
+    case AttributeType::kStmtNo:
+      if (entity_type == EntityType::kAssignStmt || entity_type == EntityType::kCallStmt
+          || entity_type == EntityType::kWhileStmt || entity_type == EntityType::kIfStmt
+          || entity_type == EntityType::kPrintStmt || entity_type == EntityType::kReadStmt) {
+        return entity->GetValue();
+      }
+    default:return entity->GetValue();
+  }
 }
 std::string AttrReference::toString() const {
   std::string str = this->getSynonymReference()->toString();
   str += ".";
-  str += AttrToString(this->getAttribute());
+  str += AttrToString(this->getAttributeType());
   return str;
 }
 EntityType AttrReference::getEntityType() const {
@@ -209,7 +239,7 @@ bool AttrReference::isSyntacticallyCorrect() const {
   return this->getSynonymReference()->isSyntacticallyCorrect();
 }
 bool AttrReference::isSemanticallyCorrect() const {
-  switch (getAttribute()) {
+  switch (getAttributeType()) {
     case AttributeType::kProcName: {
       switch (getEntityType()) {
         case EntityType::kProcedure:

@@ -61,41 +61,10 @@ EntitySet EvaluationStrategy::copy_if(const EntitySet &candidates, const std::fu
   }
   return result;
 }
-std::string EvaluationStrategy::getAttribute(AttributeType attribute_type, Entity *entity) {
-  auto entity_type = entity->GetType();
-  switch (attribute_type) {
-    case AttributeType::kProcName:
-      if (entity_type == EntityType::kProcedure) {
-        return entity->GetValue();
-      } else if (entity_type == EntityType::kCallStmt) {
-        auto *call_stmt = static_cast<CallStmtEntity *>(entity);
-        return call_stmt->GetAttr();
-      }
-    case AttributeType::kVarName:
-      if (entity_type == EntityType::kVariable) {
-        return entity->GetValue();
-      } else if (entity_type == EntityType::kReadStmt
-          || entity_type == EntityType::kPrintStmt) {
-        auto *stmt = static_cast<StmtEntity *>(entity);
-        return stmt->GetAttr();
-      }
-    case AttributeType::kValue:
-      if (entity_type == EntityType::kConstant) {
-        return entity->GetValue();
-      }
-    case AttributeType::kStmtNo:
-      if (entity_type == EntityType::kAssignStmt || entity_type == EntityType::kCallStmt
-          || entity_type == EntityType::kWhileStmt || entity_type == EntityType::kIfStmt
-          || entity_type == EntityType::kPrintStmt || entity_type == EntityType::kReadStmt) {
-        return entity->GetValue();
-      }
-    default:throw EvaluationStrategyError("Invalid attribute type");
-  }
-}
 std::string EvaluationStrategy::unwrapEntity(QueryReference *query_reference, Entity *entity) {
   if (query_reference->getRefType() == ReferenceType::kAttr) {
-    auto *elem_ref = static_cast<AttrReference *>(query_reference);
-    return getAttribute(elem_ref->getAttribute(), entity);
+    auto *attr_ref = static_cast<AttrReference *>(query_reference);
+    return attr_ref->getAttribute(entity);
   }
   return entity->GetValue();
 }
