@@ -87,6 +87,9 @@ void QueryParser::ParseClause(std::vector<ClauseBlueprint *> &clauses) {
   spdlog::debug("Checking clause for " + (*token_stream_)->ToString());
   if (**token_stream_ == KeywordToken("and")) {
     Expect(KeywordToken("and"));
+    if (clauses.empty()) {
+      throw ParseSyntaxError("and: no previous clause");
+    }
     switch (clauses.back()->getClauseType()) {
       case ClauseType::kSuchThat:
         ParseSuchThat(clauses);
