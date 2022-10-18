@@ -22,7 +22,9 @@ class ResultProjector {
                                              const EntityPointerUnorderedSet &second);
 
  public:
-  ResultProjector(std::vector<ElemReference *> declarations, std::vector<SubqueryResult> subquery_results, IPKBQuerier *pkb)
+  ResultProjector(std::vector<ElemReference *> declarations,
+                  std::vector<SubqueryResult> subquery_results,
+                  IPKBQuerier *pkb)
       : called_declarations_(std::move(declarations)), subquery_results_(std::move(subquery_results)), pkb_(pkb) {
   };
 

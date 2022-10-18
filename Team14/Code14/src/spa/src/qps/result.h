@@ -26,7 +26,7 @@ class Result {
 
   Result(ElemReference *, std::unordered_set<std::string>);
 
-  Result(std::vector<ElemReference *>, const SubqueryResult&);
+  Result(std::vector<ElemReference *>, const SubqueryResult &);
 
   static Result *empty();
   static Result *empty(std::vector<ElemReference *>);
