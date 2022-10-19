@@ -5,12 +5,6 @@ abstract class  "Token" {
     String value
 }
 
-class Symbol
-class Literal
-class Keyword
-class Operator
-class Separator
-class Wildcard
 
 class Query {
     SynonymReference[] getSynonymDeclarations()
@@ -74,14 +68,6 @@ class SubqueryResult {
 class ResultProjector {
     SubqueryResult Project()
 }
-
-Token <|.down. Symbol
-Token <|.down. Literal
-Token <|.down. Keyword
-Token <|.down. Operator
-Token <|.down. Separator
-Token <|.down. Wildcard
-
 
 UI -down- UIInterface
 PKB -down- PKBInterface
