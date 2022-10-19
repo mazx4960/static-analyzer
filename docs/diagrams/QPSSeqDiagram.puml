@@ -8,6 +8,9 @@ participant ":QueryLexer" as QueryLexer<<QPS>>
 participant ":QueryParser" as QueryParser<<QPS>>
 participant ":QueryBuilder" as QueryBuilder<<QPS>>
 participant ":QueryEvaluator" as QueryEvaluator<<QPS>>
+participant ":SubqueryEvaluator" as SubqueryEvaluator<<QPS>>
+participant ":ResultProjector" as ResultProjector<<QPS>>
+participant ":SubqueryResult" as SubqueryResult<<QPS>>
 
 end box
 
@@ -26,48 +29,47 @@ deactivate QueryLexer
 
 QPS -> QueryParser : parse(Token[])
 activate QueryParser
-QueryParser --> QPS
+QueryParser -> QueryBuilder : build()
+activate QueryBuilder
+QueryBuilder --> QueryParser : Query
+deactivate QueryBuilder
+QueryParser --> QPS : Query
 deactivate QueryParser
 
-QPS -> QueryParser : getDeclarations()
-activate QueryParser
-QueryParser --> QPS : QueryDeclrations[]
-deactivate QueryParser
 
-QPS -> QueryParser : getQueryCall()
-activate QueryParser
-QueryParser --> QPS : QueryCall
-deactivate QueryParser
 
-QPS -> QueryBuilder : withDeclarations()
-activate QueryBuilder
-QueryBuilder --> QPS
-deactivate QueryBuilder
 
-QPS -> QueryBuilder : withQueryCall()
-activate QueryBuilder
-QueryBuilder --> QPS
-deactivate QueryBuilder
-
-QPS -> QueryBuilder : build()
-activate QueryBuilder
-QueryBuilder --> QPS : Query
-deactivate QueryBuilder
 
 QPS -> QueryEvaluator : evaluate(Query)
 activate QueryEvaluator
-QueryEvaluator --> PKB : getEntities(EntityType)
-activate PKB
-PKB --> QueryEvaluator : Entity[]
-deactivate PKB
-QueryEvaluator --> PKB : getByRelationship(RsType, Entity)
-activate PKB
-PKB --> QueryEvaluator : Entity[]
-deactivate PKB
-QueryEvaluator --> PKB : getByPattern(Pattern)
-activate PKB
-PKB --> QueryEvaluator : Entity[]
-deactivate PKB
+loop clause : subquery_clauses
+    QueryEvaluator --> SubqueryEvaluator : evaluate(QueryClause)
+    activate SubqueryEvaluator
+    SubqueryEvaluator --> PKB : getEntities(EntityType)
+    activate PKB
+    PKB --> SubqueryEvaluator : Entity[]
+    deactivate PKB
+    SubqueryEvaluator --> PKB : getByRelationship(RsType, Entity)
+    activate PKB
+    PKB --> SubqueryEvaluator : Entity[]
+    deactivate PKB
+    SubqueryEvaluator --> PKB : getByPattern(Pattern)
+    activate PKB
+    PKB --> SubqueryEvaluator : Entity[]
+    deactivate PKB
+    SubqueryEvaluator --> QueryEvaluator : SubqueryResult
+    deactivate SubqueryEvaluator
+end
+QueryEvaluator --> ResultProjector : project()
+activate ResultProjector
+loop each subquery_result
+    ResultProjector --> SubqueryResult : join(SubqueryResult)
+    activate SubqueryResult
+    SubqueryResult --> ResultProjector : SubqueryResult
+    deactivate SubqueryResult
+end
+ResultProjector --> QueryEvaluator : SubqueryResult
+deactivate ResultProjector
 QueryEvaluator --> QPS : Result
 deactivate QueryEvaluator
 

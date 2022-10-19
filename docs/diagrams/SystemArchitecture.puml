@@ -16,7 +16,6 @@ package "Query Processing System"<<QPS>> {
     [Query Processing System] as QPS
     [QueryLexer]
     [QueryParser]
-    [QueryBuilder]
     [QueryEvaluator]
 }
 
@@ -47,7 +46,6 @@ database "Program Knowledge Base"<<PKB>> {
 [IQps] -down-> [QPS]
 [QPS] -down-> [QueryLexer]
 [QPS] -down-> [QueryParser]
-[QPS] -down-> [QueryBuilder]
 [QPS] -down-> [QueryEvaluator]
 [QueryEvaluator] -down-> IPkbQuerier
 
