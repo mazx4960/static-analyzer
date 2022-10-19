@@ -43,16 +43,11 @@ class QPS {
 }
 
 class QueryParser {
-
-	void parse(String)
-	QueryDeclaration[] getDeclarations(QueryDeclarations[])
-	QueryCall[] getQueryCalls(QueryCall[])
+	Query parse(Token[])
 }
 
 class QueryBuilder {
 	Query build()
-	void withDeclarations(QueryDeclarations[])
-	void withQueryCalls(QueryCall[])
 }
 
 class Lexer {
