@@ -136,7 +136,7 @@ flag, cenX, cenY, normSq
 607 - select attribute
 read r; stmt s;
 Select r.varName with r.stmt# = s.stmt#
-v, v1, v2, v3, v4, v5
+x, y
 5000
 701 - select boolean
 assign a;
