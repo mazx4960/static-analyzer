@@ -1,2 +1,2 @@
-variable v; assign a;
-Select v pattern a (v, _) pattern a (_, v)
+read r;
+Select r.varName such that Next(4, r)

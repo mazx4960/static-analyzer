@@ -38,3 +38,123 @@ stmt s;
 Select s such that Next*(18, s)
 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
 5000
+101 - multi clause - and
+variable v; assign a1, a2;
+Select a1 such that Modifies(a1, v) and Uses(a2, v) and Next(a1, a2)
+22
+5000
+102 - multi clause
+variable v; assign a1, a2;
+Select a1 such that Modifies(a1, v) such that Uses(a2, v) such that Next(a1, a2)
+22
+5000
+103 - multi clause
+variable v; assign a;
+Select v pattern a(v, _) pattern a(_, _"x"_)
+cenX
+5000
+201 - with
+variable v; assign a1, a2;
+Select v such that Modifies(a1, v) and Uses(a2, v) with a1.stmt# = a2.stmt#
+count, cenX, cenY
+5000
+202 - with
+procedure p; variable v;
+Select p such that Modifies(p, v) with v.varName = "cenX"
+computeCentroid, main
+5000
+203 - with
+procedure p; variable v;
+Select p such that Uses(p, v) with p.procName = "readPoint"
+none
+5000
+301 - tuple
+variable v; assign a1, a2;
+Select <a1, a2> such that Modifies(a1, v) and Uses(a2, v) and Next(a1, a2)
+22 23
+5000
+302 - tuple
+variable v; assign a;
+Select <a, v> such that Modifies(a, v) and Uses(a, v)
+15 count, 16 cenX, 17 cenY, 21 cenX, 22 cenY
+5000
+401 - if pattern
+if ifs;
+Select ifs pattern ifs ("x", _, _)
+none
+5000
+402 - if pattern
+if ifs;
+Select ifs pattern ifs ("count", _, _)
+19
+5000
+403 - if pattern
+if ifs; variable v;
+Select v pattern ifs(v, _, _)
+count
+5000
+501 - while pattern
+while w;
+Select w pattern w ("count", _)
+none
+5000
+502 - while pattern
+while w;
+Select w pattern w ("y", _)
+14
+5000
+601 - select attribute
+while w;
+Select w.stmt# such that Modifies(w, "count")
+14
+5000
+602 - select attribute
+assign a;
+Select a.stmt# such that Uses(a, "x")
+16
+5000
+603 - select attribute
+procedure p;
+Select p.procName such that Modifies(p, "cenX")
+computeCentroid, main
+5000
+604 - select attribute
+constant c;
+Select c.value
+0, 1
+5000
+605 - select attribute
+read r;
+Select r.varName such that Next(4, r)
+y
+5000
+606 - select attribute
+print p;
+Select p.varName
+flag, cenX, cenY, normSq
+5000
+607 - select attribute
+read r; stmt s;
+Select r.varName with r.stmt# = s.stmt#
+x, y
+5000
+701 - select boolean
+assign a;
+Select BOOLEAN such that Uses(a, "x")
+true
+5000
+702 - select boolean
+
+Select BOOLEAN such that Affects*(10, 23)
+true
+5000
+703 - select boolean
+stmt s;
+Select BOOLEAN such that Next(s, s)
+false
+5000
+704 - select boolean
+stmt s;
+Select BOOLEAN such that Affects(s, s)
+true
+5000

@@ -13,6 +13,7 @@ class EntityExtractor {
   static std::vector<Entity *> ExtractProcedureCalls(Node *node);
   static void ExtractProcedure(std::vector<Entity *> &entities, Node *node);
   static void ExtractStatement(std::vector<Entity *> &entities, Node *node);
+  static Entity *GetStmtEntity(Node *node);
   static void ExtractVariable(std::vector<Entity *> &entities, Node *node);
   static void ExtractConstant(std::vector<Entity *> &entities, Node *node);
 };

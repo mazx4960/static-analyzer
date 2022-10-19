@@ -3,6 +3,7 @@
 #include "entity_extractor.h"
 
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 #include "sp/simple_definition/simple_ast.h"
 
@@ -61,6 +62,14 @@ void EntityExtractor::ExtractStatement(std::vector<Entity *> &entities, Node *no
   if (node->GetNodeType() != NodeType::kStatement) {
     return;
   }
+  Entity *entity = GetStmtEntity(node);
+  entities.push_back(entity);
+}
+Entity *EntityExtractor::GetStmtEntity(Node *node) {
+  if (node->GetNodeType() != NodeType::kStatement) {
+    spdlog::error("Node " + node->ToString() + " is not a statement");
+    return nullptr;
+  }
   auto *stmt = static_cast<StatementNode *>(node);
   auto stmt_type = stmt->GetStmtType();
   auto stmt_no = stmt->GetStmtNo();
@@ -72,16 +81,19 @@ void EntityExtractor::ExtractStatement(std::vector<Entity *> &entities, Node *no
       entity = new CallStmtEntity(std::to_string(stmt_no), proc_name);
       break;
     }
-    case EntityType::kReadStmt:var_node = static_cast<ReadNode *>(stmt)->GetVariable();
+    case EntityType::kReadStmt:
+      var_node = static_cast<ReadNode *>(stmt)->GetVariable();
       entity = new ReadStmtEntity(std::to_string(stmt_no), var_node->GetVariableName());
       break;
-    case EntityType::kPrintStmt:var_node = static_cast<PrintNode *>(stmt)->GetVariable();
+    case EntityType::kPrintStmt:
+      var_node = static_cast<PrintNode *>(stmt)->GetVariable();
       entity = new PrintStmtEntity(std::to_string(stmt_no), var_node->GetVariableName());
       break;
-    default:entity = new Entity(stmt_type, std::to_string(stmt_no));
+    default:
+      entity = new Entity(stmt_type, std::to_string(stmt_no));
       break;
   }
-  entities.push_back(entity);
+  return entity;
 }
 void EntityExtractor::ExtractVariable(std::vector<Entity *> &entities, Node *node) {
   if (node->GetNodeType() != NodeType::kVariable) {
