@@ -29,33 +29,16 @@ deactivate QueryLexer
 
 QPS -> QueryParser : parse(Token[])
 activate QueryParser
-QueryParser --> QPS
+QueryParser -> QueryBuilder : build()
+activate QueryBuilder
+QueryBuilder --> QueryParser : Query
+deactivate QueryBuilder
+QueryParser --> QPS : Query
 deactivate QueryParser
 
-QPS -> QueryParser : getDeclarations()
-activate QueryParser
-QueryParser --> QPS : QueryDeclrations[]
-deactivate QueryParser
 
-QPS -> QueryParser : getQueryCall()
-activate QueryParser
-QueryParser --> QPS : QueryCall
-deactivate QueryParser
 
-QPS -> QueryBuilder : withDeclarations()
-activate QueryBuilder
-QueryBuilder --> QPS
-deactivate QueryBuilder
 
-QPS -> QueryBuilder : withQueryCall()
-activate QueryBuilder
-QueryBuilder --> QPS
-deactivate QueryBuilder
-
-QPS -> QueryBuilder : build()
-activate QueryBuilder
-QueryBuilder --> QPS : Query
-deactivate QueryBuilder
 
 QPS -> QueryEvaluator : evaluate(Query)
 activate QueryEvaluator

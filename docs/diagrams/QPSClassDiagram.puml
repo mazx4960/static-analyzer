@@ -12,7 +12,11 @@ class Operator
 class Separator
 class Wildcard
 
-abstract class  "PQL" {
+class Query {
+    SynonymReference[] getSynonymDeclarations()
+    QueryCall getQueryCall()
+    QueryClause[] getClauses()
+    String toString()
 }
 
 abstract class "EvaluationStrategy" {
@@ -92,13 +96,15 @@ QPS *-up- PKBInterface
 QPS *-down- QueryLexer
 QPS *-down- QueryParser
 QPS *-down- QueryEvaluator
-QPS *-down- QueryBuilder
+
+QueryParser *-down- QueryBuilder
+QueryParser *-down- Query
 
 Lexer <|-down- QueryLexer
 
 QueryLexer *-down- Token
 
-QueryBuilder *-down- PQL
+QueryBuilder o-right- Query
 
 QueryEvaluator *-down- SubqueryEvaluator
 QueryEvaluator *-down- SubqueryResult
