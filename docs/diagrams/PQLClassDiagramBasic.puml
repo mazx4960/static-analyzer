@@ -40,36 +40,6 @@ abstract SynonymReference {
     QuerySynonym query_synonym_
 }
 
-class StatementDeclaration  {
-}
-
-class IfDeclaration   {
-}
-
-class ReadDeclaration   {
-}
-
-class CallDeclaration   {
-}
-
-class PrintDeclaration   {
-}
-
-class WhileDeclaration   {
-}
-
-class AssignDeclaration   {
-}
-
-class VariableDeclaration    {
-}
-
-class ConstantDeclaration    {
-}
-
-class ProcedureDeclaration    {
-}
-
 class QuerySynonym{
     String synonym_
     String toString()
@@ -97,31 +67,6 @@ abstract class SuchThatClause {
     RsType getSuchThatType()
     QueryReference getFirst()
     QueryReference getSecond()
-}
-
-class ParentClause {
-}
-class ParentTClause {
-}
-class FollowsClause {
-}
-class FollowsTClause {
-}
-class UsesClause {
-}
-class ModifiesClause {
-}
-class CallsClause {
-}
-class CallsTClause {
-}
-class NextClause {
-}
-class NextTClause {
-}
-class AffectsClause {
-}
-class AffectsTClause {
 }
 
 class WithClause {
@@ -180,7 +125,7 @@ Query *-down- QueryClause
 QueryCall o-down- ElemReference
 QueryCall <|-down- SelectCall
 
-ICheckSyntax <|.down. QueryReference
+ICheckSyntax <|.down QueryReference
 
 QueryReference <|-down- IdentReference
 QueryReference <|-down- IntegerReference
@@ -194,40 +139,18 @@ ElemReference <|-down- AttrReference
 ExpressionSpec <|-down- ExactExpression
 ExpressionSpec <|-down- WildExpression
 
-SynonymReference <|-down- StatementDeclaration
-SynonymReference <|-down- IfDeclaration
-SynonymReference <|-down- ReadDeclaration
-SynonymReference <|-down- CallDeclaration
-SynonymReference <|-down- PrintDeclaration
-SynonymReference <|-down- WhileDeclaration
-SynonymReference <|-down- AssignDeclaration
-SynonymReference <|-down- VariableDeclaration
-SynonymReference <|-down- ConstantDeclaration
-SynonymReference <|-down- ProcedureDeclaration
 SynonymReference o-right- QuerySynonym
 
 AttrReference o-right- SynonymReference
 AttrReference *-down- AttributeType
 
-ICheckSemantics <|.down. QueryClause
+ICheckSemantics <|.down QueryClause
 
 QueryClause <|-down- SuchThatClause
 QueryClause <|-down- PatternClause
 QueryClause <|-down- WithClause
 
 SuchThatClause o-down- QueryReference
-SuchThatClause <|-down- ParentClause
-SuchThatClause <|-down- ParentTClause
-SuchThatClause <|-down- FollowsClause
-SuchThatClause <|-down- FollowsTClause
-SuchThatClause <|-down- UsesClause
-SuchThatClause <|-down- ModifiesClause
-SuchThatClause <|-down- CallsClause
-SuchThatClause <|-down- CallsTClause
-SuchThatClause <|-down- NextClause
-SuchThatClause <|-down- NextTClause
-SuchThatClause <|-down- AffectsClause
-SuchThatClause <|-down- AffectsTClause
 
 PatternClause o-down- QueryReference
 PatternClause o-down- SynonymReference
