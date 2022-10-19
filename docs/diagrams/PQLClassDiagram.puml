@@ -1,67 +1,238 @@
 @startuml
 
 class Query {
-    QueryDeclaration[] getDeclarations()
-    QueryCall getCall
+    SynonymReference[] getSynonymDeclarations()
+    QueryCall getQueryCall()
+    QueryClause[] getClauses()
+    String toString()
 }
 
-class QueryDeclaration{
+abstract QueryReference{
+    ReferenceType getRefType()
+    EntityPointerUnorderedSet getContext()
+    void setContext(EntityPointerUnorderedSet)
+    String getReferenceValue()
+    String toString()
+}
+
+class WildcardReference {
+}
+
+class IdentReference {
+}
+
+class IntegerReference {
+}
+
+abstract ElemReference {
+    virtual ReferenceType getRefType()
+    virtual QuerySynonym getSynonym()
+}
+
+class AttrReference  {
+    SynonymReference synonym_reference_;
+    AttributeType attribute_type_;
+    SynonymReference getSynonymReference()
+    AttributeType getAttribute()
+}
+
+abstract SynonymReference {
+    QuerySynonym query_synonym_
+}
+
+class StatementDeclaration  {
+}
+
+class IfDeclaration   {
+}
+
+class ReadDeclaration   {
+}
+
+class CallDeclaration   {
+}
+
+class PrintDeclaration   {
+}
+
+class WhileDeclaration   {
+}
+
+class AssignDeclaration   {
+}
+
+class VariableDeclaration    {
+}
+
+class ConstantDeclaration    {
+}
+
+class ProcedureDeclaration    {
 }
 
 class QuerySynonym{
+    String synonym_
+    String toString()
 }
-class QueryCall {
-    CallType getType()
-    QueryDeclaration getDeclaration()
-    QueryClause[] getClauseVector()
+abstract QueryCall {
+    CallType type_
+    ElemReference[] elem_references_
+    ElemReference[] getReferences()
+    CallType getCallType()
+    String toString()
+}
+
+class SelectCall {
 }
 
 abstract class QueryClause {
+    ClauseType clause_type_
     ClauseType getClauseType()
 }
 
 abstract class SuchThatClause {
-    QueryDeclaration getFirst()
-    QueryDeclaration getSecond()
+    RsType type_;
+    QueryReference first_;
+    QueryReference second_;
+    RsType getSuchThatType()
+    QueryReference getFirst()
+    QueryReference getSecond()
 }
+
 class ParentClause {
 }
-class ParentAllClause {
+class ParentTClause {
 }
 class FollowsClause {
 }
-class FollowsAllClause {
+class FollowsTClause {
 }
 class UsesClause {
 }
 class ModifiesClause {
 }
+class CallsClause {
+}
+class CallsTClause {
+}
+class NextClause {
+}
+class NextTClause {
+}
+class AffectsClause {
+}
+class AffectsTClause {
+}
+
+class WithClause {
+    Comparator comparator_
+    QueryReference first_
+    QueryReference second_
+    Comparator getComparator()
+    QueryReference getFirst()
+    QueryReference getSecond()
+}
+
+class Comparator {
+    String toString()
+}
+
+class PatternClause  {
+    SynonymReference synonym_declaration_
+    QueryReference ent_ref_
+    ExpressionSpec expression_
+    SynonymReference getSynonymDeclaration()
+    QueryReference getEntRef()
+    ExpressionSpec getExpression()
+}
+
 
 abstract class PatternClause {
     QueryDeclaration getFirst()
     QueryDeclaration getSecond()
     QueryDeclaration getThird()
 }
-class AssignPatternClause {
+
+abstract ExpressionSpec {
+    String expr_
+    bool isWild()
+    String toString()
 }
 
-Query *-down- QueryDeclaration
+class ExactExpression {
+}
+
+class WildExpression {
+}
+
+interface ICheckSyntax {
+    bool isSyntacticallyCorrect()
+}
+
+interface ICheckSemantics {
+    bool isSemanticallyCorrect()
+}
+
+Query *-down- SynonymReference
 Query *-down- QueryCall
+Query *-down- QueryClause
 
-QueryDeclaration *-down- QuerySynonym
+QueryCall o-down- ElemReference
+QueryCall <|-down- SelectCall
 
-QueryCall *-down- QueryClause
+ICheckSyntax <|-down- QueryReference
 
-QueryClause -right- QueryDeclaration
+QueryReference <|-down- IdentReference
+QueryReference <|-down- IntegerReference
+QueryReference <|-down- SynonymReference
+QueryReference <|-down- AttrReference
+QueryReference <|-down- WildcardReference
+
+ElemReference <|-down- SynonymReference
+ElemReference <|-down- AttrReference
+
+ExpressionSpec <|-down- ExactExpression
+ExpressionSpec <|-down- WildExpression
+
+SynonymReference <|-down- StatementDeclaration
+SynonymReference <|-down- IfDeclaration
+SynonymReference <|-down- ReadDeclaration
+SynonymReference <|-down- CallDeclaration
+SynonymReference <|-down- PrintDeclaration
+SynonymReference <|-down- WhileDeclaration
+SynonymReference <|-down- AssignDeclaration
+SynonymReference <|-down- VariableDeclaration
+SynonymReference <|-down- ConstantDeclaration
+SynonymReference <|-down- ProcedureDeclaration
+SynonymReference o-right- QuerySynonym
+
+AttrReference o-right- SynonymReference
+AttrReference *-down- AttributeType
+
+ICheckSemantics <|-down- QueryClause
+
 QueryClause <|-down- SuchThatClause
 QueryClause <|-down- PatternClause
+QueryClause <|-down- WithClause
 
+SuchThatClause o-down- QueryReference
 SuchThatClause <|-down- ParentClause
-SuchThatClause <|-down- ParentAllClause
+SuchThatClause <|-down- ParentTClause
 SuchThatClause <|-down- FollowsClause
-SuchThatClause <|-down- FollowsAllClause
+SuchThatClause <|-down- FollowsTClause
 SuchThatClause <|-down- UsesClause
 SuchThatClause <|-down- ModifiesClause
+SuchThatClause <|-down- CallsClause
+SuchThatClause <|-down- CallsTClause
+SuchThatClause <|-down- NextClause
+SuchThatClause <|-down- NextTClause
+SuchThatClause <|-down- AffectsClause
+SuchThatClause <|-down- AffectsTClause
 
-PatternClause <|-down- AssignPatternClause
+PatternClause o-down- QueryReference
+PatternClause o-down- SynonymReference
+PatternClause *-down- ExpressionSpec
+
+WithClause o-down- QueryReference
+WithClause *-down- Comparator
 @enduml
