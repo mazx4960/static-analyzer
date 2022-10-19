@@ -141,20 +141,20 @@ v, v1, v2, v3, v4, v5
 701 - select boolean
 assign a;
 Select BOOLEAN such that Uses(a, "x")
-true
+TRUE
 5000
 702 - select boolean
 
 Select BOOLEAN such that Affects*(10, 23)
-true
+TRUE
 5000
 703 - select boolean
 stmt s;
 Select BOOLEAN such that Next(s, s)
-false
+FALSE
 5000
 704 - select boolean
 stmt s;
 Select BOOLEAN such that Affects(s, s)
-true
+TRUE
 5000
