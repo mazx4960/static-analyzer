@@ -7,6 +7,7 @@ participant ":SP" as SP<<SP>>
 participant ":SimpleLexer" as SimpleLexer<<SP>>
 participant ":SimpleParser" as SimpleParser<<SP>>
 participant ":Extractor" as Extractor<<SP>>
+participant "CFGBuilder" as CFGBuilder<<SP>>
 end box
 
 box PKB PKB_COLOR_LIGHT
@@ -29,6 +30,13 @@ deactivate SimpleParser
 
 SP -> Extractor : ExtractAll(AST)
 activate Extractor
+
+Extractor --> CFGBuilder : Build(ProcedureNode)
+activate CFGBuilder
+CFGBuilder -->CFGBuilder : Clean()
+CFGBuilder --> Extractor : CFG
+deactivate CFGBuilder
+
 Extractor --> SP : abstractions
 deactivate Extractor
 
