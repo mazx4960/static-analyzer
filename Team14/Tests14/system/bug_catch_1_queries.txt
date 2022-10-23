@@ -16,12 +16,12 @@ Select a such that Modifies(a, "sum") and Uses(a, "sum") and Uses(a, "f") and Us
 103
 assign a; while w; procedure p;
 Select a such that Parent(w, a) and Calls(p, "check")
-18, 19, 20, 21, 25
+18, 19, 20, 21, 25, 37, 38
 5000
 104
 print pn; procedure p; 
 Select pn such that Uses(pn, "sum") and Calls("generation", p) and Calls("computation", p)
-7
+7, 26
 5000 
 201 - multi clause
 stmt s1, s2; while w; variable v;
@@ -96,7 +96,7 @@ Select <a, u, v> such that Modifies(a, u) such that Uses(a, v)
 402 - get all assigns which affect another assign 2 statements apart
 assign a1, a2; stmt s;
 Select <a1, a2> such that Next(a1, s) and Next(s, a2) and Affects(a1, a2)
-19 21, 38 39
+19 21, 38 39, 30 32
 5000
 403 - Statement before those which affect themselves
 stmt s; assign a;
@@ -111,7 +111,7 @@ Select s1 such that Next(s1, s2) and Next(s2, s3) and Next(s3, s1)
 405 -
 procedure proc1, proc2; variable v;
 Select <proc1, v> such that Calls(proc1, proc2) and Modifies(proc2, v)
-main x, main z, main sum, main f, main y, main count, main m, main a, generation x, computation y, computation x, computation sum, computation z, computation f, computation y, computation sum, computation m, computation count, computation a
+main x, main z, main sum, main f, main y, main count, main m, main a, generation x, computation y, computation x, computation sum, computation z, computation f, computation m, computation count, computation a
 5000
 501 -
 stmt s1, s2; procedure p1; assign a; variable v1;
@@ -162,4 +162,9 @@ Select <s1, s2> such that Affects*(s1, s2) and Modifies(s2, "sum")
 stmt s1, s2, s;
 Select <s1, s2> such that Affects(s1, s2) and Next(s1, s) and Next(s, s2)
 19 21, 30 32, 38 39
+5000
+616 - cyclic
+while w; stmt s1, s2;
+Select <w, s1, s2> such that Follows*(s1, s2) and Next(s2, w) and Next(w, s1)
+17 18 25, 36 37 38
 5000
