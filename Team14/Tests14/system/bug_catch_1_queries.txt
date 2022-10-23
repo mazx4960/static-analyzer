@@ -23,3 +23,28 @@ stmt s1, s2;
 Select <s1, s2> such that Affects(s1, s2) and Follows* (8, s1) and Parent* (17, s2)
 11 19, 11 20, 13 18, 13 19, 14 25, 15 18
 5000
+401 - get all assigns with variables they use and modify
+assign a; variable u, v;
+Select <a, u, v> such that Modifies(a, u) such that Uses(a, v)
+5 x x, 9 x y, 10 sum sum, 10 sum f, 10 sum x, 14 count count, 18 sum sum, 18 sum y, 19 m y, 19 m z, 20 y z, 21 z m, 25 count count, 27 a f, 27 a x, 27 a y, 27 a z, 27 a sum, 30 y z, 32 z p, 32 z y, 34 z x, 37 y x, 37 y q, 38 z z, 39 y x, 39 y y, 39 y z, 39 y p, 39 y q, 41 i x, 41 i j, 41 i z
+5000
+402 - get all assigns which affect another assign 2 statements apart
+assign a1, a2; stmt s;
+Select <a1, a2> such that Next(a1, s) and Next(s, a2) and Affects(a1, a2)
+19 21, 38 39
+5000
+403 - Statement before those which affect themselves
+stmt s; assign a;
+Select <s, a> such that Next(s, a) and Affects(a, a)
+17 18, 23 25, 24 25, 37 38
+5000
+404 - Statements in 3-loops
+stmt s1, s2, s3;
+Select s1 such that Next(s1, s2) and Next(s2, s3) and Next(s3, s1)
+36, 37, 38
+5000
+405 -
+procedure proc1, proc2; variable v;
+Select <proc1, v> such that Calls(proc1, proc2) and Modifies(proc2, v)
+main x, main z, main sum, main f, main y, main count, main m, main a, generation x, computation y, computation x, computation sum, computation z, computation f, computation y, computation sum, computation m, computation count, computation a
+5000
