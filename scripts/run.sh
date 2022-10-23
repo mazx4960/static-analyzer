@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # Run the sample program once
-build/src/runner/runner Team14/Tests14/simple_code/compute_centroid.txt Team14/Tests14/pql_code/basic.txt
+build/src/runner/runner Team14/Tests14/playground/0.txt Team14/Tests14/playground/0_1.txt
