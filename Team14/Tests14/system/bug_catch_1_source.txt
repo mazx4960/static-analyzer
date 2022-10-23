@@ -1,7 +1,7 @@
 procedure main {
-    read z;             #1
-    count = 5;          #2
-    call generation;    #3
+    read z;                             #1
+    count = 5;                          #2
+    call generation;                    #3
 }
 
 procedure check {
@@ -14,48 +14,48 @@ procedure check {
 }
 
 procedure generation {
-    read y;                         #8
-    x = y;                          #9
-    sum = sum * sum + f + x;        #10
-    z = 1;                          #11
-    f = 0;                          #12
-    y = 1;                          #13
-    count = count + 1;              #14
-    sum = 0;                        #15
-    call check;                     #16
-    while (count <= x) {            #17
-        sum = sum + y;              #18
-        m = y + z;                  #19
-        y = z;                      #20
-        z = m;                      #21
-        if (sum > 10) then {        #22
-            f = 1;                  #23
+    read y;                             #8
+    x = y;                              #9
+    sum = sum * sum + f + x;            #10
+    z = 1;                              #11
+    f = 0;                              #12
+    y = 1;                              #13
+    count = count + 1;                  #14
+    sum = 0;                            #15
+    call check;                         #16
+    while (count <= x) {                #17
+        sum = sum + y;                  #18
+        m = y + z;                      #19
+        y = z;                          #20
+        z = m;                          #21
+        if (sum > 10) then {            #22
+            f = 1;                      #23
         } else {
-            f = 0;                  #24
+            f = 0;                      #24
         }
-        count = count + 1;          #25
+        count = count + 1;              #25
     }
-    print sum;                      #26
+    print sum;                          #26
     a = f + y + z + sum * sum / f + x;  #27
-    print a;                        #28
+    print a;                            #28
 }
 
 procedure computation {
-    read x;                         #29
-    y = 2 *z;                       #30
-    call check;                     #31
-    z = p - y;                      #32
-    if (q!=1) then {                #33
-        z = x + 24;                 #34
-        call main;                  #35
+    read x;                             #29
+    y = 2 *z;                           #30
+    call check;                         #31
+    z = p - y;                          #32
+    if (q!=1) then {                    #33
+        z = x + 24;                     #34
+        call main;                      #35
     } else {
-        while (z > 0) {             #36
-            y = x * q - 5;          #37
-            z = z - 1;              #38
+        while (z > 0) {                 #36
+            y = x * q - 5;              #37
+            z = z - 1;                  #38
         }
-        y = x + y * z + p*q;        #39
-        call check;                 #40
+        y = x + y * z + p*q;            #39
+        call check;                     #40
     }
-    i = x + j + z;                  #41
-    print z;                        #42
+    i = x + j + z;                      #41
+    print z;                            #42
 }

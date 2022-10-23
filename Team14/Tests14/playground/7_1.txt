@@ -1,0 +1,10 @@
+501 -
+stmt s1, s2; procedure p1; assign a; variable v1;
+Select <a, p1, s2> such that Modifies(p1, v1) and Calls("main", p1) and Affects(s1, s2) and Uses(s1, "x") pattern a("x", _)
+5 generation 39, 6 generation 39, 9 generation 39
+5000
+502 -
+stmt s1, s2, s3;
+Select <s1, s3> such that Uses(s3, "x") and Affects(s1, s2) and Affects(s2, s3) and Parent*(_, s3)
+30 39, 32 39, 38 39
+5000
