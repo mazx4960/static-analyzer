@@ -43,11 +43,49 @@ procedure p1, p2, p3;
 Select <p1, p2, p3> such that Calls(p1, p2) and Calls(p2, p3)
 main generation check, computation main generation
 5000
-205 - affects inner loop
+205 - chain calling (order swapped)
+procedure p1, p2, p3;
+Select <p1, p2, p3> such that Calls(p2, p3) and Calls(p1, p2)
+main generation check, computation main generation
+5000
+206 - affects inner loop
 stmt s1, s2;
 Select <s1, s2> such that Affects(s1, s2) and Follows* (8, s1) and Parent* (17, s2)
 11 19, 11 20, 13 18, 13 19, 14 25, 15 18
 5000
+207 - affects inner loop (order swapped)
+stmt s1, s2;
+Select <s1, s2> such that Follows* (8, s1) and Parent* (17, s2) and Affects(s1, s2)
+11 19, 11 20, 13 18, 13 19, 14 25, 15 18
+5000
+208 - test cyclic clauses
+stmt s1, s2, s3, s4;
+Select <s1, s2, s3, s4> such that Follows(s1, s2) and Follows(s2, s3) and Follows(s3, s4) and Next*(s4, s1)
+18 19 20 21, 19 20 21 22, 20 21 22 25
+5000
+301 -
+assign a1, a2; variable v; while w;
+Select v such that Modifies(a1,v) and Uses(a1,v) and Affects(a2,_) and Parent(w, a1)
+count, sum, z
+5000
+302 - call in if stmt
+if if; call c;
+Select <if, c> such that Modifies(c,"count") and Parent*(if,c) and Next*(29,c)
+33 35
+5000
+303 - assignment stmt uses and modifies same variable in while loop
+assign a; while w; variable v;
+Select <w, a, v> such that Modifies(a,"sum") and Parent(w,a) and Next*(9,a) and Uses(a,v)
+17 18 sum, 17 18 y
+304 -
+assign a1; if if; while w;
+Select <if, w, a1> such that Modifies(a1,"y") and Parent(if,w) and Parent(w,a1) and Next(if,w)
+33 36 37
+5000
+305 - tuple in nested if while
+procedure p; assign a1, a2; while w;
+Select a1 such that Affects*(a1,a2) and Parent*(w,a1) and Parent(w,a2) and Follows(a1,a2) and Next*(8,a1)
+19, 20
 401 - get all assigns with variables they use and modify
 assign a; variable u, v;
 Select <a, u, v> such that Modifies(a, u) such that Uses(a, v)
@@ -72,4 +110,44 @@ Select s1 such that Next(s1, s2) and Next(s2, s3) and Next(s3, s1)
 procedure proc1, proc2; variable v;
 Select <proc1, v> such that Calls(proc1, proc2) and Modifies(proc2, v)
 main x, main z, main sum, main f, main y, main count, main m, main a, generation x, computation y, computation x, computation sum, computation z, computation f, computation y, computation sum, computation m, computation count, computation a
+5000
+501 -
+stmt s1, s2; procedure p1; assign a; variable v1;
+Select <a, p1, s2> such that Modifies(p1, v1) and Calls("main", p1) and Affects(s1, s2) and Uses(s1, "x") pattern a("x", _)
+5 generation 39, 6 generation 39, 9 generation 39
+5000
+502 - Stmt affected at 2nd level
+stmt s1, s2, s3;
+Select <s1, s3> such that Uses(s3, "x") and Affects(s1, s2) and Affects(s2, s3) and Parent*(_, s3)
+30 39, 32 39, 38 39
+5000
+601 - read, call
+read r1; call c1;
+Select <r1, c1> such that Follows*(r1, c1) and Modifies(r1, "y")
+8 16
+5000
+602 - parent, modifies, assign pattern
+stmt s; assign a; variable v;
+Select <s, a> such that Parent(s, a) and Modifies(a, v) pattern a ("x", _)
+4 5, 4 6
+5000
+611 - uses, affects
+stmt s1, s2;
+Select <s1, s2> such that Uses(s1, "sum") and Affects(s1, s2)
+18 18, 18 27
+5000
+612 - affects, modifies
+stmt s1, s2;
+Select <s1, s2> such that Affects(s1, s2) and Modifies(s1, "sum")
+15 18, 15 27, 18 18, 18 27
+5000
+613 - affects, modifies, uses
+stmt s1, s2; variable v1, v2;
+Select <s1, v1, s2, v2> such that Affects(s1, s2) and Modifies(s1, v1) and Uses(s2, v2) and Modifies(s1, "sum")
+15 sum 18 sum, 15 sum 18 y, 15 sum 27 f, 15 sum 27 y, 15 sum 27 z, 15 sum 27 sum, 15 sum 27 x, 18 sum 18 sum, 18 sum 18 y, 18 sum 27 f, 18 sum 27 y, 18 sum 27 z, 18 sum 27 sum, 18 sum 27 x
+5000
+614 - affectsT
+stmt s1, s2;
+Select <s1, s2> such that Affects*(s1, s2) and Modifies(s2, "sum")
+9 10, 13 18, 15 18, 20 18, 21 18, 11 18, 19 18, 18 18
 5000
