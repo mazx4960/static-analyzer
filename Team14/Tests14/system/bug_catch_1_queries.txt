@@ -78,3 +78,8 @@ stmt s1, s2;
 Select <s1, s2> such that Affects*(s1, s2) and Modifies(s2, "sum")
 9 10, 13 18, 15 18, 20 18, 21 18, 11 18, 19 18, 18 18
 5000
+615 - affects, next
+stmt s1, s2, s;
+Select <s1, s2> such that Affects(s1, s2) and Next(s1, s) and Next(s, s2)
+19 21, 30 32, 38 39
+5000
