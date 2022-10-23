@@ -1,0 +1,25 @@
+201 - multi clause
+stmt s1, s2; while w; variable v;
+Select <s1, s2, w, v> such that Follows(s1, s2) and Parent(w, s1) and Uses(w, v) and Modifies(s2, v)
+18 19 17 m, 19 20 17 y, 20 21 17 z, 22 25 17 count, 37 38 36 z
+5000
+202 - same variable in tuple, modified and used in the same assignment
+assign a; variable v;
+Select <a, v, v> such that Modifies(a, v) and Uses(a, v)
+5 x x, 10 sum sum, 14 count count, 18 sum sum, 25 count count, 38 z z, 39 y y
+5000
+203 - same variable in tuple, modified and used in the same statement, cross procedures
+stmt s; variable v;
+Select <s, v, v> such that Modifies(s, v) and Uses(s, v)
+10 sum sum, 14 count count, 16 x x, 17 count count, 17 m m, 17 sum sum, 17 y y, 17 z z, 18 sum sum, 25 count count, 3 a a, 3 count count, 3 f f, 3 m m, 3 sum sum, 3 x x, 3 y y, 3 z z, 31 x x, 33 a a, 33 count count, 33 f f, 33 m m, 33 sum sum, 33 x x, 33 y y, 33 z z, 35 a a, 35 count count, 35 f f, 35 m m, 35 sum sum, 35 x x, 35 y y, 35 z z, 36 z z, 38 z z, 39 y y, 4 x x, 40 x x, 5 x x
+5000
+204 - chain calling
+procedure p1, p2, p3;
+Select <p1, p2, p3> such that Calls(p1, p2) and Calls(p2, p3)
+main generation check, computation main generation
+5000
+205 - affects inner loop
+stmt s1, s2;
+Select <s1, s2> such that Affects(s1, s2) and Follows* (8, s1) and Parent* (17, s2)
+11 19, 11 20, 13 18, 13 19, 14 25, 15 18
+5000

@@ -14,6 +14,7 @@ test_names=(
   "affects_edge"
   "code_6"
   "demo"
+  "bug_catch_1"
 )
 num_failed=0
 
