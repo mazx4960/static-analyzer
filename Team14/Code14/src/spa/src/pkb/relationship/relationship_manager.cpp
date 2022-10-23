@@ -108,9 +108,9 @@ EntityPointerUnorderedSet RelationshipManager::Get(RsType rs_type, Entity *entit
       break;
     }
     case RsType::kAffectsT:// fallthrough
-    case RsType::kCallsT:// fallthrough
+    case RsType::kCallsT:  // fallthrough
     case RsType::kFollowsT:// fallthrough
-    case RsType::kParentT:// fallthrough
+    case RsType::kParentT: // fallthrough
     case RsType::kNextT: {
       matches = this->GetAll(rs_type, entity, is_inverse);
       break;

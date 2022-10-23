@@ -110,11 +110,29 @@ TEST(CacheTest, MultipleRelationship){
   ASSERT_TRUE(PKBTestHelper::set_compare(
       relationship_manager.GetCache()->Get({a4, RsType::kUses, false}).value, {v3}));
 
-  // Expensive query with multiple cache
+  // Expensive query with multiple caches
   relationship_manager.Get(RsType::kAffectsT, a2, false);
   ASSERT_EQ(relationship_manager.GetCache()->Size(), 6);
   ASSERT_TRUE(PKBTestHelper::set_compare(
       relationship_manager.GetCache()->Get({a2, RsType::kAffectsT, false}).value, {a3, a4}));
+  ASSERT_TRUE(PKBTestHelper::set_compare(
+      relationship_manager.GetCache()->Get({a2, RsType::kAffects, false}).value, {a3}));
+  ASSERT_TRUE(PKBTestHelper::set_compare(
+      relationship_manager.GetCache()->Get({a3, RsType::kAffects, false}).value, {a4}));
+
+  // Same expensive query, not caching
+  relationship_manager.Get(RsType::kAffectsT, a2, false);
+  ASSERT_EQ(relationship_manager.GetCache()->Size(), 6);
+
+  // Another expensive query
+  relationship_manager.Get(RsType::kAffectsT, a2, true);
+  ASSERT_EQ(relationship_manager.GetCache()->Size(), 9);
+  ASSERT_TRUE(PKBTestHelper::set_compare(
+      relationship_manager.GetCache()->Get({a2, RsType::kAffectsT, true}).value, {a1}));
+  ASSERT_TRUE(PKBTestHelper::set_compare(
+      relationship_manager.GetCache()->Get({a2, RsType::kAffects, true}).value, {a1}));
+  ASSERT_TRUE(PKBTestHelper::set_compare(
+      relationship_manager.GetCache()->Get({a1, RsType::kAffects, true}).value, {}));
 
   // Clear cache
   relationship_manager.ClearCache();
