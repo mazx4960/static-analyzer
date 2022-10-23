@@ -66,6 +66,9 @@ class Result {
  * Empty result class.
  */
 class EmptyResult : public Result {
+ private:
+  const std::string synonym_string_ = "{ EMPTY:EMPTY }";
+
  public:
   EmptyResult() = default;
 
@@ -90,7 +93,7 @@ class ElemResult : public Result {
  */
 class BooleanResult : public Result {
  private:
-  const std::string synonym_string_ = "BOOLEAN:BOOLEAN";
+  const std::string synonym_string_ = "{ BOOLEAN:BOOLEAN }";
 
   const std::unordered_set<std::string> true_set_ = {"true"};
 
