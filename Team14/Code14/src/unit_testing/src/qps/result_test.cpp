@@ -102,7 +102,7 @@ TEST(BoolResultCreationTest, HasResults) {
   ASSERT_EQ(bool_result->get_synonyms(), "{ BOOLEAN:BOOLEAN }");
   ASSERT_FALSE(bool_result->is_empty());
 
-  std::unordered_set<std::string> exp_set = {"true"};
+  std::unordered_set<std::string> exp_set = {"TRUE"};
 
   ASSERT_EQ(bool_result->get_results_set(), exp_set);
 }
@@ -112,7 +112,7 @@ TEST(BoolResultCreationTest, NoResults) {
   ASSERT_EQ(bool_result->get_synonyms(), "{ BOOLEAN:BOOLEAN }");
   ASSERT_FALSE(bool_result->is_empty());
 
-  std::unordered_set<std::string> exp_set = {"false"};
+  std::unordered_set<std::string> exp_set = {"FALSE"};
 
   ASSERT_EQ(bool_result->get_results_set(), exp_set);
 }
