@@ -96,7 +96,7 @@ Select <a, u, v> such that Modifies(a, u) such that Uses(a, v)
 402 - get all assigns which affect another assign 2 statements apart
 assign a1, a2; stmt s;
 Select <a1, a2> such that Next(a1, s) and Next(s, a2) and Affects(a1, a2)
-19 21, 38 39, 31 33
+19 21, 38 39, 30 32
 5000
 403 - Statement before those which affect themselves
 stmt s; assign a;
