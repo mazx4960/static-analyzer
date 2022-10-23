@@ -154,30 +154,79 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
   all_synonyms.erase(std::unique(all_synonyms.begin(), all_synonyms.end(), QuerySynonymPointerEquality()),
                      all_synonyms.end());
 
+  std::vector<std::vector<ResultRow>::iterator> first_copy;
+  first_copy.reserve(this->table_rows_.size());
+  for (int i = 0; i < this->table_rows_.size(); ++i) {
+    first_copy.push_back(this->table_rows_.begin() + i);
+  }
+  std::vector<std::vector<ResultRow>::iterator> second_copy;
+  first_copy.reserve(other.table_rows_.size());
+  for (int i = 0; i < other.table_rows_.size(); ++i) {
+    second_copy.push_back(other.table_rows_.begin() + i);
+  }
+  auto cmp = [common_synonyms] (const std::vector<ResultRow>::iterator& first, const std::vector<ResultRow>::iterator& second) {
+    for (auto *synonym : common_synonyms) {
+      if ((*first)[synonym]->GetValue() != (*second)[synonym]->GetValue()) {
+        return (*first)[synonym]->GetValue() < (*second)[synonym]->GetValue();
+      }
+    }
+    return false;
+  };
+  auto eq = [common_synonyms] (const std::vector<ResultRow>::iterator& first, const std::vector<ResultRow>::iterator& second) {
+    for (auto *synonym : common_synonyms) {
+      if ((*first)[synonym]->GetValue() != (*second)[synonym]->GetValue()) {
+        return false;
+      }
+    }
+    return true;
+  };
+  // Sort rows by values in common columns
+  std::sort(first_copy.begin(), first_copy.end(), cmp);
+  std::sort(second_copy.begin(), second_copy.end(), cmp);
+
+  // Get intersection via merge sort method
+
   std::vector<ResultRow> new_rows{};
-  for (auto this_row : table_rows_) {
-    std::string first_row_string;
-    for (auto *syn : common_synonyms)
-      first_row_string += this_row[syn]->ToString() + ", ";
-    for (auto that_row : other.table_rows_) {
-      std::string second_row_string;
-      for (auto *syn : common_synonyms)
-        second_row_string += that_row[syn]->ToString() + ", ";
-      bool can_join = true;
-      spdlog::debug("Comparing ({}) to ({})", first_row_string, second_row_string);
-      for (auto *syn : common_synonyms) {
-        if (!(*this_row[syn] == *that_row[syn])) {
-          spdlog::debug("Fail at synonym {}", syn->ToString());
-          can_join = false;
-          break;
+  auto first_iter = first_copy.begin();
+  auto second_iter = second_copy.begin();
+  while (first_iter != first_copy.end() && second_iter != second_copy.end()) {
+    std::string first_string = "(";
+    for (auto *syn : synonyms_) {
+      first_string += (**first_iter)[syn]->ToString() + ", ";
+    }
+    first_string += ")";
+    std::string second_string = "(";
+    for (auto *syn : other.synonyms_) {
+      second_string += (**second_iter)[syn]->ToString() + ", ";
+    }
+    second_string += ")";
+    spdlog::debug("Comparing {} to {}", first_string, second_string);
+    if (eq(*first_iter, *second_iter)) {
+      spdlog::debug("Equal");
+      auto first_end = first_iter;
+      while (first_end != first_copy.end() && eq(*first_iter, *first_end)) {
+        ++first_end;
+      }
+      auto second_end = second_iter;
+      while (second_end != second_copy.end() && eq(*second_iter, *second_end)) {
+        ++second_end;
+      }
+      for (auto first_common = first_iter; first_common != first_end; ++first_common) {
+        for (auto second_common = second_iter; second_common != second_end; ++second_common) {
+          // Merge rows
+          ResultRow new_row = **first_common;
+          new_row.insert((*second_common)->begin(), (*second_common)->end());
+          new_rows.push_back(new_row);
         }
       }
-      if (can_join) {
-        // Creates a hashmap with the contents of the two hash maps
-        ResultRow new_row = this_row;
-        new_row.insert(that_row.begin(), that_row.end());
-        new_rows.push_back(new_row);
-      }
+      first_iter = first_end;
+      second_iter = second_end;
+    }
+    else if (cmp(*first_iter, *second_iter)) {
+      ++first_iter;
+    }
+    else {
+      ++second_iter;
     }
   }
   spdlog::debug("Number of rows in result: {}", new_rows.size());
