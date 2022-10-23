@@ -51,7 +51,7 @@ Result *QueryEvaluator::evaluate() {
   switch (select_call->getSelectType()) {
     case SelectType::kElem: {
       spdlog::debug("Creating Result for Element select type");
-      auto *elem_select_call = static_cast<ElemSelect *>(this->query_.getQueryCall());
+      auto *elem_select_call = static_cast<ElemSelect *>(select_call);
       std::vector<ElemReference *> called_declarations = elem_select_call->getReferences();
       auto *result_projector = new SelectProjector(called_declarations, subquery_results);
       result_projector->project();

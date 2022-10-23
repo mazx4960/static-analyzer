@@ -25,7 +25,7 @@ int Result::size() const {
 }
 
 std::string EmptyResult::get_synonyms() const {
-  return "";
+  return this->synonym_string_;
 }
 
 ElemResult::ElemResult(std::vector<ElemReference *> &elem_refs, SubqueryResult &table) : elem_refs_(elem_refs) {
@@ -52,10 +52,12 @@ ElemResult::ElemResult(std::vector<ElemReference *> &elem_refs, SubqueryResult &
 
 std::string ElemResult::get_synonyms() const {
   std::string synonyms_string;
-  for (auto *elem_ref : elem_refs_) {
-    synonyms_string += elem_ref->toString() + ", ";
+  int size = this->elem_refs_.size();
+  for (int i = 0; i < size; i++) {
+    auto *ref = this->elem_refs_[i];
+    synonyms_string += ref->toString() + (i < size - 1 ? ", " : "");
   }
-  return synonyms_string;
+  return "{ " + synonyms_string + " }";
 }
 
 BooleanResult::BooleanResult(bool has_results) {
