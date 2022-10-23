@@ -3,39 +3,42 @@
 #pragma once
 
 #include <string>
+#include "commons/types.h"
 
 class QuerySynonym {
  private:
-  std::string synonym_;
+  std::string name_;
+  EntityType type_;
 
  public:
-  explicit QuerySynonym(std::string synonym) : synonym_(std::move(synonym)) {
+  explicit QuerySynonym(std::string name, EntityType type) : name_(std::move(name)), type_(type) {
   };
-  static QuerySynonym *empty();
 
-  [[nodiscard]] std::string toString() const;
+  [[nodiscard]] std::string GetName() const;
+  [[nodiscard]] EntityType GetEntityType() const;
+  [[nodiscard]] std::string ToString() const;
   bool operator==(const QuerySynonym &) const;
   bool operator!=(const QuerySynonym &) const;
 };
 
 struct QuerySynonymHashFunction {
   size_t operator()(const QuerySynonym &synonym) const {
-    return std::hash<std::string>()(synonym.toString());
+    return std::hash<std::string>()(synonym.ToString());
   }
   size_t operator()(const QuerySynonym *synonym) const {
-    return std::hash<std::string>()(synonym->toString());
+    return std::hash<std::string>()(synonym->ToString());
   };
 };
 
 struct QuerySynonymPointerEquality {
   bool operator()(const QuerySynonym *lhs, const QuerySynonym *rhs) const {
-    return lhs->toString() == rhs->toString();
+    return lhs->ToString() == rhs->ToString();
   }
 };
 
 struct QuerySynonymPointerComparison {
   bool operator()(const QuerySynonym *lhs, const QuerySynonym *rhs) const {
-    return lhs->toString().compare(rhs->toString()) < 0;
+    return lhs->ToString().compare(rhs->ToString()) < 0;
   }
 };
 

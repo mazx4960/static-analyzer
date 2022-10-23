@@ -8,8 +8,9 @@
 #include "qps/pql/query_clause.h"
 #include "qps/query_evaluator/subquery_result.h"
 #include "qps/result.h"
-
-using EntitySet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
+#include "types.h"
+#include "context.h"
+#include "util.h"
 
 class EvaluationStrategy {
  protected:
@@ -27,39 +28,15 @@ class EvaluationStrategy {
    */
   static EvaluationStrategy *getStrategy(IPKBQuerier *, QueryClause *);
 
-  virtual SubqueryResult evaluate() = 0;
+  virtual SubqueryResult evaluate(Context *ctx) = 0;
 
   /**
    * Get the candidates for the given query declaration.
    * @param query_declaration query declaration.
    * @return set of Entity candidates.
    */
-  EntitySet getCandidates(QueryReference *);
+  EntitySet getCandidates(Context *ctx, QueryReference *);
   static std::string unwrapEntity(QueryReference *, Entity *);
-
-  /**
-   * Checks if the context of two QueryDeclarations should be intersected.
-   * If the context is empty it means that the QueryDeclaration is a wildcard or a literal.
-   * @param declaration query declaration.
-   * @return true if the context should be intersected, false otherwise.
-   */
-  static bool shouldIntersect(QueryReference *);
-
-  /**
-   * Intersect the context of two QueryDeclarations.
-   * @param first first set of Entity pointers.
-   * @param second second set of Entity pointers.
-   * @return intersection of sets of Entity pointers.
-   */
-  static EntitySet intersect(const EntitySet &first, const EntitySet &second);
-
-  /**
-   * Copy the elements of a set of Entity pointers that satisfy a predicate.
-   * @param candidates
-   * @param pred
-   * @return
-   */
-  static EntitySet copy_if(const EntitySet &candidates, const std::function<bool(Entity *)> &pred);
 };
 
 /*
@@ -77,7 +54,7 @@ class SuchThatStrategy : public EvaluationStrategy {
    * Evaluate the SuchThat clause.
    * @return true if query clause has results, false otherwise.
    */
-  SubqueryResult evaluate() override;
+  SubqueryResult evaluate(Context *ctx) override;
 
   /**
    * Evaluate pattern clause given parameters.
@@ -85,7 +62,7 @@ class SuchThatStrategy : public EvaluationStrategy {
    * @param expr_param Right-hand side expression.
    * @return set of Entity pointers matching the parameter and expression.
    */
-  EntityPointerUnorderedMap evaluateParameter(QueryReference *, RsType, bool, const EntitySet &);
+  EntityPointerUnorderedMap evaluateParameter(Context *ctx, QueryReference *, RsType, bool, const EntitySet &);
 };
 
 /*
@@ -102,7 +79,7 @@ class PatternStrategy : public EvaluationStrategy {
   * Evaluate the Pattern clause.
   * @return true if query clause has results, false otherwise.
   */
-  SubqueryResult evaluate() override;
+  SubqueryResult evaluate(Context *ctx) override;
 
   /**
    * Evaluate query parameter.
@@ -111,7 +88,10 @@ class PatternStrategy : public EvaluationStrategy {
    * @param invert_search true if searching by second parameter (e.g. searching by s2 in Follows(s1, s2)).
    * @return set of Entity pointers matching the parameter and relationship type.
    */
-  EntityPointerUnorderedMap evaluateParameter(QueryReference *var_param, ExpressionSpec *expr_param, const EntitySet &potential_matches);
+  EntityPointerUnorderedMap evaluateParameter(Context *ctx,
+                                              QueryReference *var_param,
+                                              ExpressionSpec *expr_param,
+                                              const EntitySet &potential_matches);
 };
 
 /*
@@ -128,12 +108,12 @@ class WithStrategy : public EvaluationStrategy {
   * Evaluate the With clause.
   * @return true if query clause has results, false otherwise.
   */
-  SubqueryResult evaluate() override;
+  SubqueryResult evaluate(Context *ctx) override;
 
   /**
    * Evaluate query parameter.
    * @param param parameter to evaluated.
    * @return set of Entity pointers matching the parameter and relationship type.
    */
-  EntityPointerUnorderedMap evaluateParameter(QueryReference *, QueryReference *, Comparator);
+  EntityPointerUnorderedMap evaluateParameter(Context *ctx, QueryReference *, QueryReference *, Comparator);
 };

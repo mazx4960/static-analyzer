@@ -51,7 +51,8 @@ class ElemSelectProjector : public ResultProjector {
    * Select results (columns) based on called synonyms.
    * @return subset of intermediate result table with only columns for selected synonyms.
    */
-  SubqueryResult selectResults();
+  SubqueryResult select_results(Context *ctx);
+};
 
  public:
   ElemSelectProjector(std::vector<ElemReference *> &declarations, std::vector<SubqueryResult> &subquery_results);

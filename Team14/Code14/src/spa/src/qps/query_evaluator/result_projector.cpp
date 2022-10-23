@@ -48,11 +48,11 @@ SubqueryResult ElemSelectProjector::getEmptyFinalTable() {
   return SubqueryResult::Empty(this->called_synonyms_);
 }
 
-SubqueryResult ElemSelectProjector::selectResults() {
+SubqueryResult ElemSelectProjector::selectResults(Context *ctx) {
   for (auto *decl : called_declarations_) {
     auto *synonym = decl->getSynonym();
     if (!this->joined_results_.Uses(synonym)) {
-      this->joined_results_ = this->joined_results_.AddColumn(synonym, decl->getContext());
+      this->joined_results_ = this->joined_results_.AddColumn(synonym, ctx->Get(synonym));
     }
   }
   return this->joined_results_.GetColumns(this->called_synonyms_);
