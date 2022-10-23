@@ -1,0 +1,566 @@
+procedure proc1 {
+	if (a + 1 == b) then {
+		while (c != 2) {
+			if (3 == d % (d-3)) then {
+				read x4;
+				print x5;
+				read x6;
+				print x7;
+				x8 = 8 * (e-f);
+				read x9;
+				print x10;
+				x11 = x11 % (g*h - (11 - i));
+				call proc2;
+			} else {
+				x13 = x8 + 13;
+				read x14;
+				print x15;
+			}
+			x16 = x13 + x13 - 100/23;
+		}
+	} else {
+		if (k >= 17) then {
+			read x18;
+			read x19;
+			read x20;
+			x21 = x18 + x19 + x20;
+			print x22;
+			x23 = x21 / x22 * 42;
+		} else {
+			while ((24 != (m+n % (o-p))) && (12 > 11)) {
+				read x25;
+				read x26;
+				print x27;
+				x28 = 28 * (e-f);
+				read x29;
+				print x30;
+				x31 = x31 % (g*h - (31 - i));
+			}
+			read x32;
+			print x33;
+			read x34;
+			print x35;
+			x36 = 103 % (12 / 7 + m+n);
+			read x37;
+			print x38;
+			x39 = 0;
+			call proc3;
+			read x41;
+			print x42;
+			read x43;
+			print x44;
+		}
+	}
+	print x45;
+	print x46;
+	print x47;
+	read x48;
+	read x49;
+	read x50;
+	while (51 < x) {
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		while (62 != (x+y) % Z) {
+			if (63 == 1) then {
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+			} else {
+				x64 = b10 + x;
+			}
+		}
+		call proc2;
+	}
+	x66 = x66 - 1;
+	if (67 > 0) then {
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+	} else {
+		x78 = 0 - 1;
+		if (!(79 <= 12 * t + v/u)) then {
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+		} else {
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+		}
+		x100 = 13 * 4 - (x100 % 6);
+	}
+}
+
+procedure proc2 {
+	read x101;
+	print x102;
+	read x103;
+	print x104;
+	x105 = (x101-x102+x103) / 4;
+	read x106;
+	print x107;
+	x108 = 42;
+	print x109;
+	print x110;
+	x111 = 12 % 1 + x/y;
+	read x112;
+	if ((13 != (14 * 2 % x)) || (x < y)) then {
+		read x114;
+		print x115;
+		read x116;
+		read x117;
+		print x118;
+		x119 = 0;
+		x120 = 17;
+	} else {
+		print x121;
+		call proc3;
+		print x123;
+		read x124;
+		print x125;
+		read x126;
+		x127 = x126 + 1;
+		read x129;
+		print x130;
+	}
+	while ((131 > 0) && (m*n != (2-4))) {
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		if (142 != a+b+C) then {
+			read x143;
+			while (1 == 144) {
+				read x145;
+				read x146;
+				print x147;
+			}
+		} else {
+			x148 = x147 - x146;
+			read x149;
+		}
+	}
+	print x150;
+	print b10;
+	read b10;
+	print b10;
+	read b10;
+	print b10;
+	read b10;
+	print b10;
+	read b10;
+	print b10;
+	read b10;
+	while (!(161 > 1)) {
+		if (x+y+z != 162) then {
+			while (y == 163) {
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+			}
+		} else {
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+		}
+		read x193;
+		print x194;
+		x195 = 0;
+		x196 = 1;
+		x197 = 2;
+		read x198;
+		x199 = x195 + x196 + x197 + x198;
+		x200 = x199 - 42 * (t+v);
+	}
+}
+
+procedure proc3 {
+	if (a + 201 == b) then {
+		while (c != 202) {
+			if (203 == d % (d-3)) then {
+				read x204;
+				print x205;
+				read x206;
+				print x207;
+				x208 = 8 * (e-f);
+				read x209;
+				print x210;
+				x211 = x11 % (g*h - (11 - i));
+				call proc4;
+			} else {
+				x213 = x8 + 13;
+				read x214;
+				print x215;
+			}
+			x216 = x13 + x13 - 100/23;
+		}
+	} else {
+		if (k >= 217) then {
+			read x218;
+			read x219;
+			read x220;
+			x221 = x18 + x19 + x20;
+			print x222;
+			x223 = x21 / x22 * 42;
+		} else {
+			while ((224 != (m+n % (o-p))) && (12 > 11)) {
+				read x225;
+				read x226;
+				print x227;
+				x228 = 28 * (e-f);
+				read x229;
+				print x30;
+				x231 = x31 % (g*h - (31 - i));
+			}
+			read x232;
+			print x233;
+			read x234;
+			print x235;
+			x236 = 103 % (12 / 7 + m+n);
+			read x237;
+			print x238;
+			x239 = 0;
+			call proc5;
+			read x241;
+			print x242;
+			read x243;
+			print x244;
+		}
+	}
+	print x245;
+	print x246;
+	print x247;
+	read x248;
+	read x249;
+	read x250;
+	while (251 < x) {
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		while (262 != (x+y) % Z) {
+			if (263 == 1) then {
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+			} else {
+				x264 = b10 + x;
+			}
+		}
+		call proc4;
+	}
+	x266 = x66 - 1;
+	if (267 > 0) then {
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+	} else {
+		x278 = 0 - 1;
+		if (!(279 <= 12 * t + v/u)) then {
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+		} else {
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+		}
+		x300 = 13 * 4 - (x100 % 6);
+	}
+}
+
+procedure proc4 {
+	read x301;
+	print x302;
+	read x303;
+	print x304;
+	x305 = (x101-x102+x103) / 4;
+	read x306;
+	print x307;
+	x308 = 42;
+	print x309;
+	print x310;
+	x311 = 12 % 1 + x/y;
+	read x312;
+	if ((313 != (14 * 2 % x)) || (x < y)) then {
+		read x314;
+		print x315;
+		read x316;
+		read x317;
+		print x318;
+		x319 = 0;
+		x320 = 17;
+	} else {
+		print x321;
+		call proc5;
+		print x323;
+		read x324;
+		print x325;
+		read x326;
+		x327 = x126 + 1;
+		read x329;
+		print x330;
+	}
+	while ((331 > 0) && (m*n != (2-4))) {
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		if (342 != a+b+C) then {
+			read x343;
+			while (1 == 344) {
+				read x345;
+				read x346;
+				print x347;
+			}
+		} else {
+			x348 = x147 - x146;
+			read x349;
+		}
+	}
+	print x350;
+	print b10;
+	read b10;
+	print b10;
+	read b10;
+	print b10;
+	read b10;
+	print b10;
+	read b10;
+	print b10;
+	read b10;
+	while (!(361 > 1)) {
+		if (x+y+z != 362) then {
+			while (y == 363) {
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+			}
+		} else {
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+		}
+		read x393;
+		print x394;
+		x395 = 0;
+		x396 = 1;
+		x397 = 2;
+		read x398;
+		x399 = x195 + x196 + x197 + x198;
+		x400 = x199 - 42 * (t+v);
+	}
+}
+
+procedure proc5 {
+	read x401;
+	print x402;
+	read x403;
+	print x404;
+	x405 = (x101-x102+x103) / 4;
+	read x406;
+	print x407;
+	x408 = 42;
+	print x409;
+	print x410;
+	x411 = 12 % 1 + x/y;
+	read x412;
+	if ((413 != (14 * 2 % x)) || (x < y)) then {
+		read x414;
+		print x415;
+		read x416;
+		read x417;
+		print x418;
+		x419 = 0;
+		x420 = 17;
+	} else {
+		print x421;
+		read x422;
+		print x423;
+		read x424;
+		print x425;
+		read x426;
+		x427 = x126 + 1;
+		read x429;
+		print x430;
+	}
+	while ((431 > 0) && (m*n != (2-4))) {
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		print b10;
+		read b10;
+		if (442 != a+b+C) then {
+			read x443;
+			while (1 == 444) {
+				read x445;
+				read x446;
+				print x447;
+			}
+		} else {
+			x448 = x147 - x146;
+			read x449;
+		}
+	}
+	print x450;
+	print b10;
+	read b10;
+	print b10;
+	read b10;
+	print b10;
+	read b10;
+	print b10;
+	read b10;
+	print b10;
+	read b10;
+	while (!(461 > 1)) {
+		if (x+y+z != 462) then {
+			while (y == 463) {
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+				print b10;
+				read b10;
+			}
+		} else {
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+			print b10;
+			read b10;
+		}
+		read x493;
+		print x494;
+		x495 = 0;
+		x496 = 1;
+		x497 = 2;
+		read x498;
+		x499 = x195 + x196 + x197 + x198;
+		x500 = x199 - 42 * (t+v);
+	}
+}
