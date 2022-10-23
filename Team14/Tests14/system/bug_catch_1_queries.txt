@@ -123,6 +123,11 @@ stmt s1, s2, s3;
 Select <s1, s3> such that Uses(s3, "x") and Affects(s1, s2) and Affects(s2, s3) and Parent*(_, s3)
 30 39, 32 39, 38 39
 5000
+503 - Select if that is nested in another statement
+if if;
+Select <if> pattern if(_, _, _) such that Parent*(_, if) and Next*(_, if)
+22
+5000
 601 - read, call
 read r1; call c1;
 Select <r1, c1> such that Follows*(r1, c1) and Modifies(r1, "y")
