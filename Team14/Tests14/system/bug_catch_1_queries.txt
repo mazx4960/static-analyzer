@@ -16,12 +16,12 @@ Select a such that Modifies(a, "sum") and Uses(a, "sum") and Uses(a, "f") and Us
 103
 assign a; while w; procedure p;
 Select a such that Parent(w, a) and Calls(p, "check")
-18, 19, 20, 21, 25
+18, 19, 20, 21, 25, 37, 38
 5000
 104
 print pn; procedure p; 
 Select pn such that Uses(pn, "sum") and Calls("generation", p) and Calls("computation", p)
-7
+7, 26
 5000 
 201 - multi clause
 stmt s1, s2; while w; variable v;
