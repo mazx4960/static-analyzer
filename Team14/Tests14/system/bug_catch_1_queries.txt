@@ -58,3 +58,33 @@ stmt s1, s2, s3;
 Select <s1, s3> such that Uses(s3, "x") and Affects(s1, s2) and Affects(s2, s3) and Parent*(_, s3)
 30 39, 32 39, 38 39
 5000
+601 - read, call
+read r1; call c1;
+Select <r1, c1> such that Follows*(r1, c1) and Modifies(r1, "y")
+8 16
+5000
+602 - parent, modifies, assign pattern
+stmt s; assign a; variable v;
+Select <s, a> such that Parent(s, a) and Modifies(a, v) pattern a ("x", _)
+4 5, 4 6
+5000
+611 - uses, affects
+stmt s1, s2;
+Select <s1, s2> such that Uses(s1, "sum") and Affects(s1, s2)
+18 18, 18 27
+5000
+612 - affects, modifies
+stmt s1, s2;
+Select <s1, s2> such that Affects(s1, s2) and Modifies(s1, "sum")
+15 18, 15 27, 18 18, 18 27
+5000
+613 - affects, modifies, uses
+stmt s1, s2; variable v1, v2;
+Select <s1, v1, s2, v2> such that Affects(s1, s2) and Modifies(s1, v1) and Uses(s2, v2) and Modifies(s1, "sum")
+15 sum 18 sum, 15 sum 18 y, 15 sum 27 f, 15 sum 27 y, 15 sum 27 z, 15 sum 27 sum, 15 sum 27 x, 18 sum 18 sum, 18 sum 18 y, 18 sum 27 f, 18 sum 27 y, 18 sum 27 z, 18 sum 27 sum, 18 sum 27 x
+5000
+614 - affectsT
+stmt s1, s2;
+Select <s1, s2> such that Affects*(s1, s2) and Modifies(s2, "sum")
+9 10, 13 18, 15 18, 20 18, 21 18, 11 18, 19 18, 18 18
+5000
