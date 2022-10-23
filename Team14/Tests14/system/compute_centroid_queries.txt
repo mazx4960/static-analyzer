@@ -546,20 +546,20 @@ Select <s> such that Affects*(s, s)
 1001 - select boolean
 assign a;
 Select BOOLEAN such that Uses(a, "x")
-true
+TRUE
 5000
 1002 - select boolean
 
 Select BOOLEAN such that Affects*(10, 23)
-true
+TRUE
 5000
 1003 - select boolean
 stmt s;
 Select BOOLEAN such that Next(s, s)
-false
+FALSE
 5000
 1004 - select boolean
 stmt s;
 Select BOOLEAN such that Affects(s, s)
-true
+TRUE
 5000

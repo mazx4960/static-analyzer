@@ -95,9 +95,9 @@ class BooleanResult : public Result {
  private:
   const std::string synonym_string_ = "{ BOOLEAN:BOOLEAN }";
 
-  const std::unordered_set<std::string> true_set_ = {"true"};
+  const std::unordered_set<std::string> true_set_ = {"TRUE"};
 
-  const std::unordered_set<std::string> false_set_ = {"false"};
+  const std::unordered_set<std::string> false_set_ = {"FALSE"};
 
  public:
   explicit BooleanResult(bool has_results);
