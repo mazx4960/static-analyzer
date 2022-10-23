@@ -161,10 +161,11 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
   }
   std::vector<std::vector<ResultRow>::iterator> second_copy;
   first_copy.reserve(other.table_rows_.size());
+  second_copy.reserve(other.table_rows_.size());
   for (int i = 0; i < other.table_rows_.size(); ++i) {
     second_copy.push_back(other.table_rows_.begin() + i);
   }
-  auto cmp = [common_synonyms] (const std::vector<ResultRow>::iterator& first, const std::vector<ResultRow>::iterator& second) {
+  auto cmp = [common_synonyms](const std::vector<ResultRow>::iterator &first, const std::vector<ResultRow>::iterator &second) {
     for (auto *synonym : common_synonyms) {
       if ((*first)[synonym]->GetValue() != (*second)[synonym]->GetValue()) {
         return (*first)[synonym]->GetValue() < (*second)[synonym]->GetValue();
@@ -172,13 +173,10 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
     }
     return false;
   };
-  auto eq = [common_synonyms] (const std::vector<ResultRow>::iterator& first, const std::vector<ResultRow>::iterator& second) {
-    for (auto *synonym : common_synonyms) {
-      if ((*first)[synonym]->GetValue() != (*second)[synonym]->GetValue()) {
-        return false;
-      }
-    }
-    return true;
+  auto eq = [common_synonyms](const std::vector<ResultRow>::iterator &first, const std::vector<ResultRow>::iterator &second) {
+    return std::all_of(common_synonyms.begin(), common_synonyms.end(), [first, second](QuerySynonym *synonym) {
+      return (*first)[synonym]->GetValue() == (*second)[synonym]->GetValue();
+    });
   };
   // Sort rows by values in common columns
   std::sort(first_copy.begin(), first_copy.end(), cmp);
@@ -200,9 +198,10 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
       second_string += (**second_iter)[syn]->ToString() + ", ";
     }
     second_string += ")";
-    spdlog::debug("Comparing {} to {}", first_string, second_string);
+
+    std::string comp_outcome;
     if (eq(*first_iter, *second_iter)) {
-      spdlog::debug("Equal");
+      comp_outcome = "Equal";
       auto first_end = first_iter;
       while (first_end != first_copy.end() && eq(*first_iter, *first_end)) {
         ++first_end;
@@ -221,13 +220,14 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
       }
       first_iter = first_end;
       second_iter = second_end;
-    }
-    else if (cmp(*first_iter, *second_iter)) {
+    } else if (cmp(*first_iter, *second_iter)) {
+      comp_outcome = "Smaller";
       ++first_iter;
-    }
-    else {
+    } else {
+      comp_outcome = "Larger";
       ++second_iter;
     }
+    spdlog::debug("Comparing {} to {}: {}", first_string, second_string, comp_outcome);
   }
   spdlog::debug("Number of rows in result: {}", new_rows.size());
   return SubqueryResult(all_synonyms, new_rows);
