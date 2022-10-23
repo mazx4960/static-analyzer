@@ -5,8 +5,8 @@ Select a pattern a("count", _) such that Parent*(w, a)
 5000
 101
 procedure p;
-Select p such that Calls(p, "Main") and Calls(p, "Check")
-"Computation"
+Select p such that Calls(p, "main") and Calls(p, "check")
+computation
 5000
 102
 assign a;
@@ -15,12 +15,12 @@ Select a such that Modifies(a, "sum") and Uses(a, "sum") and Uses(a, "f") and Us
 5000
 103
 assign a; while w; procedure p;
-Select a such that Parent(w, a) and Calls(p, "Check")
+Select a such that Parent(w, a) and Calls(p, "check")
 18, 19, 20, 21, 25
 5000
 104
 print pn; procedure p; 
-Select pn such that Uses(pn, "sum") and Calls("Generation", p) and Calls("Computation", p)
+Select pn such that Uses(pn, "sum") and Calls("generation", p) and Calls("computation", p)
 7
 5000 
 201 - multi clause
