@@ -77,6 +77,7 @@ Select <if, c> such that Modifies(c,"count") and Parent*(if,c) and Next*(29,c)
 assign a; while w; variable v;
 Select <w, a, v> such that Modifies(a,"sum") and Parent(w,a) and Next*(9,a) and Uses(a,v)
 17 18 sum, 17 18 y
+5000
 304 -
 assign a1; if if; while w;
 Select <if, w, a1> such that Modifies(a1,"y") and Parent(if,w) and Parent(w,a1) and Next(if,w)
@@ -86,6 +87,7 @@ Select <if, w, a1> such that Modifies(a1,"y") and Parent(if,w) and Parent(w,a1) 
 procedure p; assign a1, a2; while w;
 Select a1 such that Affects*(a1,a2) and Parent*(w,a1) and Parent(w,a2) and Follows(a1,a2) and Next*(8,a1)
 19, 20
+5000
 401 - get all assigns with variables they use and modify
 assign a; variable u, v;
 Select <a, u, v> such that Modifies(a, u) such that Uses(a, v)
