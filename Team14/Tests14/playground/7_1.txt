@@ -1,0 +1,2 @@
+stmt s1, s2;
+Select <s1, s2> such that Affects(s1, s2) and Follows* (8, s1) and Parent* (17, s2)
