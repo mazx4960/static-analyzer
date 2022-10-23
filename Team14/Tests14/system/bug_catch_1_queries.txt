@@ -23,6 +23,29 @@ stmt s1, s2;
 Select <s1, s2> such that Affects(s1, s2) and Follows* (8, s1) and Parent* (17, s2)
 11 19, 11 20, 13 18, 13 19, 14 25, 15 18
 5000
+301 -
+assign a1, a2; variable v; while w;
+Select v such that Modifies(a1,v) and Uses(a1,v) and Affects(a2,_) and Parent(w, a1)
+count, sum, z
+5000
+302 - call in if stmt
+if if; call c;
+Select <if, c> such that Modifies(c,"count") and Parent*(if,c) and Next*(29,c)
+33 35
+5000
+303 - assignment stmt uses and modifies same variable in while loop
+assign a; while w; variable v;
+Select <w, a, v> such that Modifies(a,"sum") and Parent(w,a) and Next*(9,a) and Uses(a,v)
+17 18 sum, 17 18 y
+304 -
+assign a1; if if; while w;
+Select <if, w, a1> such that Modifies(a1,"y") and Parent(if,w) and Parent(w,a1) and Next(if,w)
+33 36 37
+5000
+305 - tuple in nested if while
+procedure p; assign a1, a2; while w;
+Select a1 such that Affects*(a1,a2) and Parent*(w,a1) and Parent(w,a2) and Follows(a1,a2) and Next*(8,a1)
+19, 20
 401 - get all assigns with variables they use and modify
 assign a; variable u, v;
 Select <a, u, v> such that Modifies(a, u) such that Uses(a, v)
