@@ -8,6 +8,15 @@ RelationshipManager::RelationshipManager() {
   this->relationship_table_map_ = std::unordered_map<RsType, RelationshipTable *>();
   this->cache_ = new Cache<EntityRsInv, EntityPointerUnorderedSet, TripletHash>(100);
 }
+
+RelationshipManager::~RelationshipManager() {
+  this->ClearCache();
+}
+
+EntityPointerUnorderedSet RelationshipManager::Empty() {
+  return EntityPointerUnorderedSet();
+}
+
 /**
  * Form the cache query
  * @param entity
@@ -23,6 +32,23 @@ EntityRsInv RelationshipManager::GetCacheQuery(Entity *entity, RsType rs_type, b
  */
 void RelationshipManager::ClearCache() {
   this->cache_->Clear();
+}
+
+void RelationshipManager::AddResultToCache(EntityRsInv *key, EntityPointerUnorderedSet *value) {
+  this->cache_->Add(*key, *value);
+}
+
+bool RelationshipManager::IsResultInCache(EntityRsInv *key) {
+  auto cache_query = this->cache_->Get(*key);
+  return cache_query.found;
+}
+
+EntityPointerUnorderedSet RelationshipManager::GetResultInCache(EntityRsInv *key) {
+  return this->cache_->Get(*key).value;
+}
+
+Cache<EntityRsInv, EntityPointerUnorderedSet, TripletHash> *RelationshipManager::GetCache() {
+  return this->cache_;
 }
 /**
  * Get the relationship table for the given relationship type
@@ -81,24 +107,12 @@ EntityPointerUnorderedSet RelationshipManager::Get(RsType rs_type, Entity *entit
       matches = this->GetCalls(entity, is_inverse);
       break;
     }
-    case RsType::kAffectsT: {
-      matches = this->GetAll(RsType::kAffects, entity, is_inverse);
-      break;
-    }
-    case RsType::kCallsT: {
-      matches = this->GetAll(RsType::kCalls, entity, is_inverse);
-      break;
-    }
-    case RsType::kFollowsT: {
-      matches = this->GetAll(RsType::kFollows, entity, is_inverse);
-      break;
-    }
-    case RsType::kParentT: {
-      matches = this->GetAll(RsType::kParent, entity, is_inverse);
-      break;
-    }
+    case RsType::kAffectsT:// fallthrough
+    case RsType::kCallsT:  // fallthrough
+    case RsType::kFollowsT:// fallthrough
+    case RsType::kParentT: // fallthrough
     case RsType::kNextT: {
-      matches = this->GetAll(RsType::kNext, entity, is_inverse);
+      matches = this->GetAll(rs_type, entity, is_inverse);
       break;
     }
     case RsType::kModifies:// fallthrough
@@ -114,11 +128,27 @@ EntityPointerUnorderedSet RelationshipManager::Get(RsType rs_type, Entity *entit
   return matches;
 }
 
-EntityPointerUnorderedSet RelationshipManager::Empty() {
-  return EntityPointerUnorderedSet();
+RsType RelationshipManager::GetRsTypeMapping(RsType rs_type) {
+  switch (rs_type) {
+    case RsType::kAffectsT: return RsType::kAffects;
+    case RsType::kCallsT: return RsType::kCalls;
+    case RsType::kFollowsT: return RsType::kFollows;
+    case RsType::kParentT: return RsType::kParent;
+    case RsType::kNextT: return RsType::kNext;
+    default: return rs_type;
+  }
 }
 
 EntityPointerUnorderedSet RelationshipManager::GetAll(RsType rs_type, Entity *entity, bool is_inverse) {
+  auto cache_query = this->GetCacheQuery(entity, rs_type, is_inverse);
+  bool is_result_found_in_cache = this->IsResultInCache(&cache_query);
+
+  if (is_result_found_in_cache) {
+    return this->GetResultInCache(&cache_query);
+  }
+
+  rs_type = this->GetRsTypeMapping(rs_type);
+
   EntityPointerUnorderedSet matches = this->Empty();
   EntityPointerUnorderedSet visited = this->Empty();
 
@@ -136,21 +166,41 @@ EntityPointerUnorderedSet RelationshipManager::GetAll(RsType rs_type, Entity *en
     }
     queue.pop();
   }
+  this->AddResultToCache(&cache_query, &matches);
   return matches;
 }
 
 EntityPointerUnorderedSet RelationshipManager::GetInference(RsType rs_type, Entity *entity, bool is_inverse) {
+  auto cache_query = this->GetCacheQuery(entity, rs_type, is_inverse);
+  bool is_result_found_in_cache = this->IsResultInCache(&cache_query);
+
+  if (is_result_found_in_cache) {
+    return this->GetResultInCache(&cache_query);
+  }
+
   auto entity_type = entity->GetType();
   auto *relationship_table = this->GetTable(rs_type);
+  auto results = this->Empty();
 
   switch (entity_type) {
-    case EntityType::kCallStmt: return this->GetInferenceGivenCallStatement(relationship_table, entity);
+    case EntityType::kCallStmt: {
+      results = this->GetInferenceGivenCallStatement(rs_type, entity);
+      break;
+    }
     case EntityType::kProcedure:// fallthrough
     case EntityType::kIfStmt:   // fallthrough
-    case EntityType::kWhileStmt: return this->GetInferenceFromChildren(relationship_table, entity);
-    case EntityType::kVariable: return this->GetInferenceGivenVariable(relationship_table, entity);
-    default: return relationship_table->get(entity, is_inverse);
+    case EntityType::kWhileStmt: {
+      results = this->GetInferenceFromChildren(rs_type, entity);
+      break;
+    }
+    case EntityType::kVariable: {
+      results = this->GetInferenceGivenVariable(rs_type, entity);
+      break;
+    }
+    default: results = relationship_table->get(entity, is_inverse);
   }
+  this->AddResultToCache(&cache_query, &results);
+  return results;
 }
 
 Entity *RelationshipManager::GetProcedureEntity(Entity *entity, bool is_call_statement_entity) {
@@ -169,21 +219,22 @@ Entity *RelationshipManager::GetProcedureEntity(Entity *entity, bool is_call_sta
   return entity;
 }
 
-EntityPointerUnorderedSet RelationshipManager::GetInferenceGivenCallStatement(RelationshipTable *relationship_table,
+EntityPointerUnorderedSet RelationshipManager::GetInferenceGivenCallStatement(RsType rs_type,
                                                                               Entity *entity) {
   // Get corresponding procedure entity
   auto *procedure_entity = this->GetProcedureEntity(entity, true);
   if (procedure_entity->GetValue().empty()) {
     return this->Empty();
   }
-  return this->GetInferenceFromChildren(relationship_table, procedure_entity);
+  return this->GetInferenceFromChildren(rs_type, procedure_entity);
 }
 
-EntityPointerUnorderedSet RelationshipManager::GetInferenceFromChildren(RelationshipTable *relationship_table,
+EntityPointerUnorderedSet RelationshipManager::GetInferenceFromChildren(RsType rs_type,
                                                                         Entity *entity) {
   EntityPointerUnorderedSet result = this->Empty();
 
   // Check if current statement is in relationship table.
+  auto *relationship_table = this->GetTable(rs_type);
   auto current_statement_variables = relationship_table->get(entity, false);
   if (current_statement_variables != this->Empty()) {
     result.insert(current_statement_variables.begin(), current_statement_variables.end());
@@ -195,7 +246,7 @@ EntityPointerUnorderedSet RelationshipManager::GetInferenceFromChildren(Relation
     if (child_entity->GetType() == EntityType::kCallStmt) {
       auto *procedure_entity = this->GetProcedureEntity(child_entity, true);
       if (!procedure_entity->GetValue().empty()) {
-        auto child_result = this->GetInferenceFromChildren(relationship_table, procedure_entity);
+        auto child_result = this->GetInferenceFromChildren(rs_type, procedure_entity);
         result.insert(procedure_entity);
         result.insert(child_result.begin(), child_result.end());
       }
@@ -207,10 +258,10 @@ EntityPointerUnorderedSet RelationshipManager::GetInferenceFromChildren(Relation
   return result;
 }
 
-EntityPointerUnorderedSet RelationshipManager::GetInferenceGivenVariable(RelationshipTable *relationship_table,
+EntityPointerUnorderedSet RelationshipManager::GetInferenceGivenVariable(RsType rs_type,
                                                                          Entity *entity) {
   EntityPointerUnorderedSet result = this->Empty();
-
+  auto *relationship_table = this->GetTable(rs_type);
   auto statements = relationship_table->get(entity, true);
   for (auto *statement_entity : statements) {
     auto *procedure_entity = this->GetProcedureEntity(statement_entity, false);
@@ -247,6 +298,13 @@ EntityPointerUnorderedSet RelationshipManager::GetCalls(Entity *entity, bool is_
 }
 
 EntityPointerUnorderedSet RelationshipManager::GetAffects(Entity *query_entity, bool is_inverse) {
+  auto cache_query = this->GetCacheQuery(query_entity, RsType::kAffects, is_inverse);
+  bool is_result_found_in_cache = this->IsResultInCache(&cache_query);
+
+  if (is_result_found_in_cache) {
+    return this->GetResultInCache(&cache_query);
+  }
+
   RelationshipTable *table;
   if (query_entity->GetType() != EntityType::kAssignStmt) {
     return this->Empty();
@@ -258,15 +316,19 @@ EntityPointerUnorderedSet RelationshipManager::GetAffects(Entity *query_entity, 
   }
   auto next_statements = this->GetTable(RsType::kNext)->get(query_entity, is_inverse);
   auto query_statement_variables = table->get(query_entity, false);
+  auto results = this->Empty();
   std::stack<std::pair<Entity *, EntityPointerUnorderedSet>> stack;
 
   for (auto *entity : next_statements) {
     stack.push(std::pair(entity, query_statement_variables));
   }
   if (is_inverse) {
-    return this->GetAffectsInverseHelper(&stack);
+    results = this->GetAffectsInverseHelper(&stack);
+  } else {
+    results = this->GetAffectsHelper(&stack);
   }
-  return this->GetAffectsHelper(&stack);
+  this->AddResultToCache(&cache_query, &results);
+  return results;
 }
 
 EntityPointerUnorderedSet RelationshipManager::GetAffectsHelper(
@@ -343,7 +405,7 @@ bool RelationshipManager::IsVariableModified(EntityPointerUnorderedSet *query_st
   EntityPointerUnorderedSet modified_variables = this->Empty();
   if (statement_entity->GetType() == EntityType::kCallStmt) {
     auto *procedure_entity = this->GetProcedureEntity(statement_entity, true);
-    modified_variables = this->GetInferenceFromChildren(GetTable(RsType::kModifies), procedure_entity);
+    modified_variables = this->GetInference(RsType::kModifies, procedure_entity, false);
   } else {
     modified_variables = this->GetTable(RsType::kModifies)->get(statement_entity, false);
   }
