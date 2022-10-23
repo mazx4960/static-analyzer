@@ -77,6 +77,7 @@ Select <if, c> such that Modifies(c,"count") and Parent*(if,c) and Next*(29,c)
 assign a; while w; variable v;
 Select <w, a, v> such that Modifies(a,"sum") and Parent(w,a) and Next*(9,a) and Uses(a,v)
 17 18 sum, 17 18 y
+5000
 304 -
 assign a1; if if; while w;
 Select <if, w, a1> such that Modifies(a1,"y") and Parent(if,w) and Parent(w,a1) and Next(if,w)
@@ -86,6 +87,7 @@ Select <if, w, a1> such that Modifies(a1,"y") and Parent(if,w) and Parent(w,a1) 
 procedure p; assign a1, a2; while w;
 Select a1 such that Affects*(a1,a2) and Parent*(w,a1) and Parent(w,a2) and Follows(a1,a2) and Next*(8,a1)
 19, 20
+5000
 401 - get all assigns with variables they use and modify
 assign a; variable u, v;
 Select <a, u, v> such that Modifies(a, u) such that Uses(a, v)
@@ -94,7 +96,7 @@ Select <a, u, v> such that Modifies(a, u) such that Uses(a, v)
 402 - get all assigns which affect another assign 2 statements apart
 assign a1, a2; stmt s;
 Select <a1, a2> such that Next(a1, s) and Next(s, a2) and Affects(a1, a2)
-19 21, 38 39
+19 21, 38 39, 30 32
 5000
 403 - Statement before those which affect themselves
 stmt s; assign a;
@@ -109,7 +111,7 @@ Select s1 such that Next(s1, s2) and Next(s2, s3) and Next(s3, s1)
 405 -
 procedure proc1, proc2; variable v;
 Select <proc1, v> such that Calls(proc1, proc2) and Modifies(proc2, v)
-main x, main z, main sum, main f, main y, main count, main m, main a, generation x, computation y, computation x, computation sum, computation z, computation f, computation y, computation sum, computation m, computation count, computation a
+main x, main z, main sum, main f, main y, main count, main m, main a, generation x, computation y, computation x, computation sum, computation z, computation f, computation m, computation count, computation a
 5000
 501 -
 stmt s1, s2; procedure p1; assign a; variable v1;
