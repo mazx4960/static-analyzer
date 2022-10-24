@@ -322,21 +322,15 @@ TEST(PopulateEntityTest, MultipleEntitiesTest) {
   auto *read_table = entity_manager->GetTable(EntityType::kReadStmt);
   auto *if_table = entity_manager->GetTable(EntityType::kIfStmt);
   auto *while_table = entity_manager->GetTable(EntityType::kWhileStmt);
-  bool compare_variable = PKBTestHelper::set_compare(variable_table->get(), expected_variable);
-  bool compare_constant = PKBTestHelper::set_compare(constant_table->get(), expected_constant);
-  bool compare_procedure = PKBTestHelper::set_compare(procedure_table->get(), expected_procedure);
-  bool compare_assign = PKBTestHelper::set_compare(assign_table->get(), expected_assign);
-  bool compare_read = PKBTestHelper::set_compare(read_table->get(), expected_read);
-  bool compare_if = PKBTestHelper::set_compare(if_table->get(), expected_if);
-  bool compare_while = PKBTestHelper::set_compare(while_table->get(), expected_while);
 
-  ASSERT_EQ(compare_variable, true);
-  ASSERT_EQ(compare_constant, true);
-  ASSERT_EQ(compare_procedure, true);
-  ASSERT_EQ(compare_assign, true);
-  ASSERT_EQ(compare_read, true);
-  ASSERT_EQ(compare_if, true);
-  ASSERT_EQ(compare_while, true);
+  ASSERT_TRUE(PKBTestHelper::set_compare(variable_table->get(), expected_variable));
+  ASSERT_TRUE(PKBTestHelper::set_compare(constant_table->get(), expected_constant));
+  ASSERT_TRUE(PKBTestHelper::set_compare(procedure_table->get(), expected_procedure));
+  ASSERT_TRUE(PKBTestHelper::set_compare(assign_table->get(), expected_assign));
+  ASSERT_TRUE(PKBTestHelper::set_compare(read_table->get(), expected_read));
+  ASSERT_TRUE(PKBTestHelper::set_compare(if_table->get(), expected_if));
+  ASSERT_TRUE(PKBTestHelper::set_compare(while_table->get(), expected_while));
+
   ASSERT_EQ(variable_table->get().size(), 4);
   ASSERT_EQ(constant_table->get().size(), 5);
   ASSERT_EQ(procedure_table->get().size(), 3);
@@ -442,13 +436,14 @@ TEST(PopulateEntityTest, MultipleDuplicateEntitiesTest) {
   auto *read_table = entity_manager->GetTable(EntityType::kReadStmt);
   auto *if_table = entity_manager->GetTable(EntityType::kIfStmt);
   auto *while_table = entity_manager->GetTable(EntityType::kWhileStmt);
-  bool compare_variable = PKBTestHelper::set_compare(variable_table->get(), expected_variable);
-  bool compare_constant = PKBTestHelper::set_compare(constant_table->get(), expected_constant);
-  bool compare_procedure = PKBTestHelper::set_compare(procedure_table->get(), expected_procedure);
-  bool compare_assign = PKBTestHelper::set_compare(assign_table->get(), expected_assign);
-  bool compare_read = PKBTestHelper::set_compare(read_table->get(), expected_read);
-  bool compare_if = PKBTestHelper::set_compare(if_table->get(), expected_if);
-  bool compare_while = PKBTestHelper::set_compare(while_table->get(), expected_while);
+
+  ASSERT_TRUE(PKBTestHelper::set_compare(variable_table->get(), expected_variable));
+  ASSERT_TRUE(PKBTestHelper::set_compare(constant_table->get(), expected_constant));
+  ASSERT_TRUE(PKBTestHelper::set_compare(procedure_table->get(), expected_procedure));
+  ASSERT_TRUE(PKBTestHelper::set_compare(assign_table->get(), expected_assign));
+  ASSERT_TRUE(PKBTestHelper::set_compare(read_table->get(), expected_read));
+  ASSERT_TRUE(PKBTestHelper::set_compare(if_table->get(), expected_if));
+  ASSERT_TRUE(PKBTestHelper::set_compare(while_table->get(), expected_while));
 
   ASSERT_EQ(variable_table->get().size(), 4);
   ASSERT_EQ(constant_table->get().size(), 5);
@@ -457,11 +452,4 @@ TEST(PopulateEntityTest, MultipleDuplicateEntitiesTest) {
   ASSERT_EQ(read_table->get().size(), 4);
   ASSERT_EQ(if_table->get().size(), 3);
   ASSERT_EQ(while_table->get().size(), 1);
-  ASSERT_EQ(compare_variable, true);
-  ASSERT_EQ(compare_constant, true);
-  ASSERT_EQ(compare_procedure, true);
-  ASSERT_EQ(compare_assign, true);
-  ASSERT_EQ(compare_read, true);
-  ASSERT_EQ(compare_if, true);
-  ASSERT_EQ(compare_while, true);
 }
