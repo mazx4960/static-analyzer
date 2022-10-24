@@ -3,6 +3,7 @@
 #pragma once
 
 #include <algorithm>
+#include <format>
 #include <iterator>
 #include <string>
 #include <unordered_set>
@@ -82,6 +83,8 @@ class ElemResult : public Result {
  private:
   std::vector<ElemReference *> elem_refs_;
 
+  int numSynonymsNotInTable(SubqueryResult &);
+
  public:
   ElemResult(std::vector<ElemReference *> &, SubqueryResult &);
 
@@ -103,4 +106,10 @@ class BooleanResult : public Result {
   explicit BooleanResult(bool has_results);
 
   [[nodiscard]] std::string get_synonyms() const override;
+};
+
+class ResultCreationError : public std::runtime_error {
+ public:
+  explicit ResultCreationError(const std::string &message) : std::runtime_error(message) {
+  }
 };
