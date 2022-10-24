@@ -17,7 +17,7 @@ class Pattern {
   std::string expr_;
 
  public:
-  Pattern(Entity *stmt, Entity *variable, std::string &expr_) : stmt_(stmt), variable_(variable), expr_(expr_) {
+  Pattern(Entity *stmt, Entity *variable, std::string expr_) : stmt_(stmt), variable_(variable), expr_(std::move(expr_)) {
   };
   [[nodiscard]] Entity *GetStmt() const;
   [[nodiscard]] Entity *GetVariable() const;
