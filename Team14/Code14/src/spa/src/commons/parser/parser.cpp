@@ -2,11 +2,7 @@
 
 #include "parser.h"
 
-#include <utility>
-
-#include "commons/parser/expr_definition/expr_grammar.h"
-
-Node *Parser::Parse(GrammarRule *grammar_rule, std::vector<Token *> tokens) {
+Node *Parser::Parse(GrammarRule *grammar_rule, std::vector<Token *> &tokens) {
   auto *eof = new EndOfFileToken();
   if (tokens.back() != eof) {
     tokens.push_back(eof);
@@ -14,6 +10,6 @@ Node *Parser::Parse(GrammarRule *grammar_rule, std::vector<Token *> tokens) {
   auto token_stream = tokens.begin();
   return grammar_rule->parseNode(token_stream);
 }
-Node *Parser::ParseExpression(const std::vector<Token *> &tokens) {
-  return Parse(new RelFactorGrammarRule(), std::move(tokens));
+Node *Parser::ParseExpression(std::vector<Token *> &tokens) {
+  return Parse(new RelFactorGrammarRule(), tokens);
 }

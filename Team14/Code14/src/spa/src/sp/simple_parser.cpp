@@ -3,8 +3,8 @@
 #include <spdlog/spdlog.h>
 #include "simple_parser.h"
 
-Node *SimpleParser::ParseProgram(const std::vector<Token *> &tokens) {
-  auto *ast = Parser::Parse(new ProgramGrammarRule(), std::move(tokens));
+Node *SimpleParser::ParseProgram(std::vector<Token *> &tokens) {
+  auto *ast = Parser::Parse(new ProgramGrammarRule(), tokens);
   if (ast == nullptr) {
     throw ParseSyntaxError("Failed to Parse program");
   }

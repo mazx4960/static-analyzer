@@ -21,6 +21,6 @@ class SimpleParser : public Parser {
   static bool IsCyclicUtil(const std::string &proc, StringMap *call_map, StringSet *visited, StringSet *rec_stack);
 
  public:
-  static Node *ParseProgram(const std::vector<Token *> &tokens);
+  static Node *ParseProgram(std::vector<Token *> &tokens);
   static void ValidateProgram(Node *node);
 };
