@@ -8,24 +8,21 @@
 #include "commons/entity.h"
 #include "qps/exceptions.h"
 #include "query_synonym.h"
-#include "qps/pql/interface/check_syntax.h"
-#include "qps/pql/interface/query_elem.h"
-#include "qps/pql/interface/stmt_ref.h"
-#include "qps/pql/interface/ent_ref.h"
-#include "qps/pql/interface/boolean_ref.h"
+#include "qps/pql/pql_interfaces.h"
 #include "types.h"
-#include "qps/pql/interface/attrcompare_ref.h"
-#include "qps/pql/interface/check_semantics.h"
 
 class QueryReference : public ICheckSyntax, public IStmtRef, public IEntRef, public IAttrCompareRef {
  private:
   ReferenceType reference_type_;
+
   EntityType entity_type_;
+
   EntityPointerUnorderedSet context_;
+
  protected:
   explicit QueryReference(ReferenceType reference_type, EntityType entity_type)
       : reference_type_(reference_type), entity_type_(entity_type) {
-  };
+  }
   explicit QueryReference(ReferenceType reference_type) : reference_type_(reference_type) {
   };
 
@@ -49,8 +46,8 @@ class QueryReference : public ICheckSyntax, public IStmtRef, public IEntRef, pub
 
 class WildcardReference : public QueryReference {
  public:
-  explicit WildcardReference(EntityType wildcard_type = EntityType::kUnknown) : QueryReference(ReferenceType::kWildcard,
-                                                                                               wildcard_type) {
+  explicit WildcardReference(EntityType wildcard_type = EntityType::kUnknown)
+      : QueryReference(ReferenceType::kWildcard, wildcard_type) {
   };
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;
@@ -64,6 +61,7 @@ class WildcardReference : public QueryReference {
 class IdentReference : public QueryReference {
  private:
   std::string value_;
+
  public:
   explicit IdentReference(std::string value, EntityType entity_type = EntityType::kUnknown) : QueryReference(
       ReferenceType::kIdent,
@@ -81,6 +79,7 @@ class IdentReference : public QueryReference {
 class IntegerReference : public QueryReference {
  private:
   std::string value_;
+
  public:
   explicit IntegerReference(std::string value, EntityType entity_type = EntityType::kStatement) : QueryReference(
       ReferenceType::kInteger,
@@ -106,6 +105,7 @@ class ElemReference {
 class SynonymReference : public QueryReference, public IBooleanRef, public ElemReference {
  private:
   QuerySynonym *query_synonym_;
+
   bool is_boolean_ref_;
 
  public:
@@ -129,12 +129,13 @@ class SynonymReference : public QueryReference, public IBooleanRef, public ElemR
 class AttrReference : public QueryReference, public ElemReference, public ICheckSemantics {
  private:
   SynonymReference *synonym_reference_;
+
   AttributeType attribute_type_;
 
  public:
-  explicit AttrReference(SynonymReference *synonym_reference, AttributeType attribute_type) : QueryReference(
-      ReferenceType::kAttr,
-      EntityType::kUnknown), synonym_reference_(synonym_reference), attribute_type_(attribute_type) {
+  explicit AttrReference(SynonymReference *synonym_reference, AttributeType attribute_type) : QueryReference(ReferenceType::kAttr, EntityType::kUnknown),
+                                                                                              synonym_reference_(synonym_reference),
+                                                                                              attribute_type_(attribute_type) {
   };
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;
