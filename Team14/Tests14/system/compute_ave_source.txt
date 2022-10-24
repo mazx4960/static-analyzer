@@ -1,10 +1,10 @@
 procedure computeAverage {
-    read num1;
-    read num2;
-    read num3;
+    read num1;                      # 1
+    read num2;                      # 2
+    read num3;                      # 3
 
-    sum = num1 + num2 + num3;
-    ave = sum / 3;
+    sum = num1 + num2 + num3;       # 4
+    ave = sum / 3;                  # 5
 
-    print ave;
+    print ave;                      # 6
 }

@@ -133,3 +133,53 @@ procedure p;
 Select p such that Calls(p, "void")
 none
 5000
+601 - verify valid boolean
+procedure p;
+Select BOOLEAN such that Modifies(p, "x")
+TRUE
+5000
+602 - verify valid boolean
+if ifs;
+Select BOOLEAN pattern ifs ("x", _, _)
+TRUE
+5000
+603 - verify valid boolean
+while w; variable v;
+Select BOOLEAN pattern w (v, _)
+FALSE
+5000
+604 - verify valid boolean
+
+Select BOOLEAN such that Calls*("main", "b")
+TRUE
+5000
+605 - verify valid boolean
+print pn1, pn2;
+Select BOOLEAN such that Uses(pn1, "x") and Uses(pn2, "y") and Next(pn1, pn2) and Follows(pn1, pn2)
+TRUE
+5000
+606 - verify valid boolean
+print pn1, pn2;
+Select BOOLEAN such that Uses(pn1, "x") and Uses(pn2, "y")
+TRUE
+5000
+611 - verify invalid boolean
+procedure p1, p2;
+Select BOOLEAN such that Calls*(p1, p2) and Calls*(p2, p1)
+FALSE
+5000
+612 - verify invalid boolean
+assign a;
+Select BOOLEAN such that Modifies(a, "y")
+FALSE
+5000
+613 - verify invalid boolean
+
+Select BOOLEAN such that Uses(1, "x")
+FALSE
+5000
+614 - verify invalid boolean
+
+Select BOOLEAN such that Follows(1, 2) and Next(3, 4) and Follows(5, 8) and Next(6, 7)
+FALSE
+5000
