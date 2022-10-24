@@ -27,21 +27,20 @@ class QueryReference : public ICheckSyntax, public IStmtRef, public IEntRef, pub
   };
 
  public:
-  ReferenceType getRefType() const;
-
-  virtual EntityType getEntityType() const;
-  virtual EntityPointerUnorderedSet getContext() const;
   virtual void setContext(EntityPointerUnorderedSet);
   virtual void setEntityType(EntityType entity_type);
-  virtual bool operator==(const QueryReference &other) const = 0;
-  virtual bool operator==(const QueryReference *other) const = 0;
-  virtual std::string getReferenceValue() const = 0;
-  virtual std::string toString() const = 0;
 
-  bool isSyntacticallyCorrect() const override = 0;
-  bool isStmtRef() const override;
-  bool isEntRef() const override;
-  bool isAttrCompareRef() const override;
+  [[nodiscard]] ReferenceType getRefType() const;
+  [[nodiscard]] virtual EntityType getEntityType() const;
+  [[nodiscard]] virtual EntityPointerUnorderedSet getContext() const;
+  [[nodiscard]] virtual std::string getReferenceValue() const = 0;
+  [[nodiscard]] virtual std::string toString() const = 0;
+  [[nodiscard]] bool isSyntacticallyCorrect() const override = 0;
+  [[nodiscard]] bool isStmtRef() const override;
+  [[nodiscard]] bool isEntRef() const override;
+  [[nodiscard]] bool isAttrCompareRef() const override;
+
+  virtual bool operator==(const QueryReference &other) const = 0;
 };
 
 class WildcardReference : public QueryReference {
@@ -49,13 +48,13 @@ class WildcardReference : public QueryReference {
   explicit WildcardReference(EntityType wildcard_type = EntityType::kUnknown)
       : QueryReference(ReferenceType::kWildcard, wildcard_type) {
   };
+  [[nodiscard]] std::string getReferenceValue() const override;
+  [[nodiscard]] bool isStmtRef() const override;
+  [[nodiscard]] bool isEntRef() const override;
+  [[nodiscard]] bool isSyntacticallyCorrect() const override;
+  [[nodiscard]] std::string toString() const override;
+
   bool operator==(const QueryReference &other) const override;
-  bool operator==(const QueryReference *other) const override;
-  std::string getReferenceValue() const override;
-  bool isStmtRef() const override;
-  bool isEntRef() const override;
-  bool isSyntacticallyCorrect() const override;
-  std::string toString() const override;
 };
 
 class IdentReference : public QueryReference {
@@ -67,13 +66,13 @@ class IdentReference : public QueryReference {
       ReferenceType::kIdent,
       entity_type), value_(std::move(value)) {
   }
+  [[nodiscard]]  std::string getReferenceValue() const override;
+  [[nodiscard]] bool isEntRef() const override;
+  [[nodiscard]] bool isAttrCompareRef() const override;
+  [[nodiscard]] bool isSyntacticallyCorrect() const override;
+  [[nodiscard]] std::string toString() const override;
+
   bool operator==(const QueryReference &other) const override;
-  bool operator==(const QueryReference *other) const override;
-  std::string getReferenceValue() const override;
-  bool isEntRef() const override;
-  bool isAttrCompareRef() const override;
-  bool isSyntacticallyCorrect() const override;
-  std::string toString() const override;
 };
 
 class IntegerReference : public QueryReference {
@@ -85,13 +84,13 @@ class IntegerReference : public QueryReference {
       ReferenceType::kInteger,
       entity_type), value_(std::move(value)) {
   }
+  [[nodiscard]] std::string getReferenceValue() const override;
+  [[nodiscard]] bool isStmtRef() const override;
+  [[nodiscard]] bool isAttrCompareRef() const override;
+  [[nodiscard]] bool isSyntacticallyCorrect() const override;
+  [[nodiscard]] std::string toString() const override;
+
   bool operator==(const QueryReference &other) const override;
-  bool operator==(const QueryReference *other) const override;
-  std::string getReferenceValue() const override;
-  bool isStmtRef() const override;
-  bool isAttrCompareRef() const override;
-  bool isSyntacticallyCorrect() const override;
-  std::string toString() const override;
 };
 
 class ElemReference {
@@ -112,18 +111,19 @@ class SynonymReference : public QueryReference, public IBooleanRef, public ElemR
   explicit SynonymReference(QuerySynonym *query_synonym, EntityType entity_type = EntityType::kUnknown)
       : QueryReference(ReferenceType::kSynonym, entity_type), query_synonym_(query_synonym) {
   };
-  bool operator==(const QueryReference &other) const override;
-  bool operator==(const QueryReference *other) const override;
-  ReferenceType getRefType() const override;
-  QuerySynonym *getSynonym() const override;
-  std::string getReferenceValue() const override;
-  EntityPointerUnorderedSet getContext() const override;
-  bool isStmtRef() const override;
-  bool isEntRef() const override;
-  bool isSyntacticallyCorrect() const override;
-  bool isBooleanRef() const override;
   void setBooleanRef(bool is_boolean_Ref) override;
-  std::string toString() const override;
+
+  [[nodiscard]] ReferenceType getRefType() const override;
+  [[nodiscard]] QuerySynonym *getSynonym() const override;
+  [[nodiscard]] std::string getReferenceValue() const override;
+  [[nodiscard]] EntityPointerUnorderedSet getContext() const override;
+  [[nodiscard]] bool isStmtRef() const override;
+  [[nodiscard]] bool isEntRef() const override;
+  [[nodiscard]] bool isSyntacticallyCorrect() const override;
+  [[nodiscard]] bool isBooleanRef() const override;
+  [[nodiscard]] std::string toString() const override;
+
+  bool operator==(const QueryReference &other) const override;
 };
 
 class AttrReference : public QueryReference, public ElemReference, public ICheckSemantics {
@@ -137,25 +137,26 @@ class AttrReference : public QueryReference, public ElemReference, public ICheck
                                                                                               synonym_reference_(synonym_reference),
                                                                                               attribute_type_(attribute_type) {
   };
-  bool operator==(const QueryReference &other) const override;
-  bool operator==(const QueryReference *other) const override;
-  SynonymReference *getSynonymReference() const;
-  QuerySynonym *getSynonym() const override;
-  ReferenceType getRefType() const override;
-  AttributeType getAttributeType() const;
-  std::string getAttribute(Entity *entity) const;
-  EntityType getEntityType() const override;
-  EntityPointerUnorderedSet getContext() const override;
   void setContext(EntityPointerUnorderedSet context) override;
   void setEntityType(EntityType entity_type) override;
   void setSynonymReference(SynonymReference *synonym_reference);
-  std::string getReferenceValue() const override;
-  bool isStmtRef() const override;
-  bool isEntRef() const override;
-  bool isAttrCompareRef() const override;
-  bool isSyntacticallyCorrect() const override;
-  bool isSemanticallyCorrect() const override;
-  std::string toString() const override;
+
+  [[nodiscard]] SynonymReference *getSynonymReference() const;
+  [[nodiscard]] QuerySynonym *getSynonym() const override;
+  [[nodiscard]] ReferenceType getRefType() const override;
+  [[nodiscard]] AttributeType getAttributeType() const;
+  [[nodiscard]] std::string getAttribute(Entity *entity) const;
+  [[nodiscard]] EntityType getEntityType() const override;
+  [[nodiscard]] EntityPointerUnorderedSet getContext() const override;
+  [[nodiscard]] std::string getReferenceValue() const override;
+  [[nodiscard]] bool isStmtRef() const override;
+  [[nodiscard]] bool isEntRef() const override;
+  [[nodiscard]] bool isAttrCompareRef() const override;
+  [[nodiscard]] bool isSyntacticallyCorrect() const override;
+  [[nodiscard]] bool isSemanticallyCorrect() const override;
+  [[nodiscard]] std::string toString() const override;
+
+  bool operator==(const QueryReference &other) const override;
 };
 
 class StatementDeclaration : public SynonymReference {

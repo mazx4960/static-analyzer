@@ -34,9 +34,6 @@ bool QueryReference::isAttrCompareRef() const {
 bool WildcardReference::operator==(const QueryReference &other) const {
   return other.getRefType() == ReferenceType::kWildcard;
 }
-bool WildcardReference::operator==(const QueryReference *other) const {
-  return other->getRefType() == ReferenceType::kWildcard;
-}
 std::string WildcardReference::getReferenceValue() const {
   return "";
 }
@@ -57,9 +54,6 @@ std::string WildcardReference::toString() const {
 bool IdentReference::operator==(const QueryReference &other) const {
   return other.getRefType() == ReferenceType::kIdent && this->getReferenceValue() == other.getReferenceValue();
 }
-bool IdentReference::operator==(const QueryReference *other) const {
-  return other->getRefType() == ReferenceType::kIdent && this->getReferenceValue() == other->getReferenceValue();
-}
 std::string IdentReference::getReferenceValue() const {
   return this->value_;
 }
@@ -79,9 +73,6 @@ bool IdentReference::isAttrCompareRef() const {
 // IntegerDeclaration
 bool IntegerReference::operator==(const QueryReference &other) const {
   return other.getRefType() == ReferenceType::kInteger && this->getReferenceValue() == other.getReferenceValue();
-}
-bool IntegerReference::operator==(const QueryReference *other) const {
-  return other->getRefType() == ReferenceType::kInteger && this->getReferenceValue() == other->getReferenceValue();
 }
 std::string IntegerReference::getReferenceValue() const {
   return this->value_;
@@ -116,14 +107,6 @@ bool SynonymReference::operator==(const QueryReference &other) const {
   }
   return false;
 }
-bool SynonymReference::operator==(const QueryReference *other) const {
-  if (other->getRefType() == this->getRefType()) {
-    const auto &synonym_other = static_cast<const SynonymReference *>(other);
-    return synonym_other->getEntityType() == this->getEntityType()
-        && (*synonym_other->getSynonym()) == (*this->getSynonym());
-  }
-  return false;
-}
 std::string SynonymReference::getReferenceValue() const {
   return this->getSynonym()->toString();
 }
@@ -154,14 +137,6 @@ bool AttrReference::operator==(const QueryReference &other) const {
     const auto &elem_other = static_cast<const AttrReference &>(other);
     return (*elem_other.getSynonymReference()) == (*this->getSynonymReference())
         && (elem_other.getAttributeType()) == (this->getAttributeType());
-  }
-  return false;
-}
-bool AttrReference::operator==(const QueryReference *other) const {
-  if (other->getRefType() == this->getRefType()) {
-    const auto &elem_other = static_cast<const AttrReference *>(other);
-    return (*elem_other->getSynonymReference()) == (*this->getSynonymReference())
-        && (elem_other->getAttributeType()) == (this->getAttributeType());
   }
   return false;
 }
@@ -205,8 +180,7 @@ std::string AttrReference::getAttribute(Entity *entity) const {
           || entity_type == EntityType::kPrintStmt || entity_type == EntityType::kReadStmt) {
         return entity->GetValue();
       }
-    default:
-      return entity->GetValue();
+    default:return entity->GetValue();
   }
 }
 std::string AttrReference::toString() const {
@@ -246,51 +220,42 @@ bool AttrReference::isSemanticallyCorrect() const {
   switch (getAttributeType()) {
     case AttributeType::kProcName: {
       switch (getEntityType()) {
-        case EntityType::kProcedure:
-        case EntityType::kCallStmt:
-          break;
-        default:
-          return false;
+        case EntityType::kProcedure: // fallthrough
+        case EntityType::kCallStmt:break;
+        default:return false;
       }
       break;
     }
     case AttributeType::kVarName: {
       switch (getEntityType()) {
-        case EntityType::kVariable:
-        case EntityType::kPrintStmt:
-        case EntityType::kReadStmt:
-          break;
-        default:
-          return false;
+        case EntityType::kVariable: // fallthrough
+        case EntityType::kPrintStmt: // fallthrough
+        case EntityType::kReadStmt:break;
+        default:return false;
       }
       break;
     }
     case AttributeType::kValue: {
       switch (getEntityType()) {
-        case EntityType::kConstant:
-          break;
-        default:
-          return false;
+        case EntityType::kConstant:break;
+        default:return false;
       }
       break;
     }
     case AttributeType::kStmtNo: {
       switch (getEntityType()) {
-        case EntityType::kStatement:
-        case EntityType::kAssignStmt:
-        case EntityType::kCallStmt:
-        case EntityType::kIfStmt:
-        case EntityType::kWhileStmt:
-        case EntityType::kPrintStmt:
-        case EntityType::kReadStmt:
-          break;
-        default:
-          return false;
+        case EntityType::kStatement: // fallthrough
+        case EntityType::kAssignStmt: // fallthrough
+        case EntityType::kCallStmt: // fallthrough
+        case EntityType::kIfStmt: // fallthrough
+        case EntityType::kWhileStmt: // fallthrough
+        case EntityType::kPrintStmt: // fallthrough
+        case EntityType::kReadStmt:break;
+        default:return false;
       }
       break;
     }
-    default:
-      break;
+    default:break;
   }
   return true;
 }
