@@ -9,7 +9,8 @@ class QuerySynonym {
   std::string synonym_;
 
  public:
-  explicit QuerySynonym(std::string);
+  explicit QuerySynonym(std::string synonym) : synonym_(std::move(synonym)) {
+  };
   static QuerySynonym *empty();
 
   [[nodiscard]] std::string toString() const;
