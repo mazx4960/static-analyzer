@@ -68,3 +68,33 @@ if ifs;
 Select ifs such that Modifies(ifs, "c")
 4, 8
 5000
+501 - verify valid boolean
+stmt s1, s2;
+Select BOOLEAN such that Follows(s1, s2)
+TRUE
+5000
+502 - verify valid boolean
+if i1, i2; while w1, w2, w3; assign s;
+Select BOOLEAN such that Parent(w1, i1) and Parent(i1, w2) and Parent(w2, i2) and Parent(i2, w3) and Parent(w3, s) and Modifies(s, "b")
+TRUE
+500
+503 - verify valid boolean
+while w1, w2;
+Select BOOLEAN such that Next*(w1, w2)
+TRUE
+5000
+504 - verify valid boolean
+assign a1, a2;
+Select BOOLEAN such that Modifies(a1, "x") and Modifies(a2, "b") and Next*(a1, a2)
+TRUE
+5000
+511 - verify invalid boolean
+stmt s1, s2;
+Select BOOLEAN such that Affects(s1, s2)
+FALSE
+5000
+512 - verify invalid boolean
+procedure p1;
+Select BOOLEAN such that Modifies(p1, "c") and Calls(p1, _)
+FALSE
+5000
