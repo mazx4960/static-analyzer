@@ -2,10 +2,7 @@
 
 #include "entity_extractor.h"
 
-#include <iostream>
 #include <spdlog/spdlog.h>
-
-#include "sp/simple_definition/simple_ast.h"
 
 /**
  * Extracts all entities from a given AST of a program.
@@ -81,16 +78,13 @@ Entity *EntityExtractor::GetStmtEntity(Node *node) {
       entity = new CallStmtEntity(std::to_string(stmt_no), proc_name);
       break;
     }
-    case EntityType::kReadStmt:
-      var_node = static_cast<ReadNode *>(stmt)->GetVariable();
+    case EntityType::kReadStmt:var_node = static_cast<ReadNode *>(stmt)->GetVariable();
       entity = new ReadStmtEntity(std::to_string(stmt_no), var_node->GetVariableName());
       break;
-    case EntityType::kPrintStmt:
-      var_node = static_cast<PrintNode *>(stmt)->GetVariable();
+    case EntityType::kPrintStmt:var_node = static_cast<PrintNode *>(stmt)->GetVariable();
       entity = new PrintStmtEntity(std::to_string(stmt_no), var_node->GetVariableName());
       break;
-    default:
-      entity = new Entity(stmt_type, std::to_string(stmt_no));
+    default:entity = new Entity(stmt_type, std::to_string(stmt_no));
       break;
   }
   return entity;
