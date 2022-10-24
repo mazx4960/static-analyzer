@@ -1,6 +1,6 @@
 101 - Procedure with specified name
 procedure p;
-Select p such that p.procName = 'Second'
+Select p with p.procName = "Second"
 Second
 5000
 102 - Stmt number same as constant value
@@ -26,7 +26,7 @@ Select c such that Calls(p1,p2) and Next*(7,c) with p2.procName = "Third"
 106 - Tuple, specified stmt number
 if if; while w;
 Select <if, w> such that Parent(if,w) with if.stmt# = 27
-27 28, 27 30
+27 28, 27 32
 5000
 107 - Procedure name same as constant value
 procedure p; constant c;
@@ -36,17 +36,17 @@ SemanticError
 108 - Assign stmts in nested if/while
 assign a; if if; while w;
 Select a.stmt# such that Parent(if,w) and Parent(w,a)
-18, 19, 20, 30, 33
+18, 19, 20, 30, 31, 34
 5000
 109 - Tuple, nested in specified if stmt
 procedure p; while w; if if; assign a;
 Select <if, w, a> such that Parent(if,w) and Parent(w,a) with if.stmt# = 27
-27 28 30, 27 31 33
+27 28 30, 27 28 31, 27 32 34
 5000
 201 -Procedure given specified p1
 procedure p1, p2;
 Select p2.procName such that Calls(p1,p2) with p1.procName = "Third"
-None
+none
 5000
 202 - Procedure given specified p2
 procedure p1, p2;
@@ -55,12 +55,12 @@ First
 5000
 203 - Meaningless Query
 stmt s;
-Select BOOLEAN s.stmt# = 1
+Select BOOLEAN with s.stmt# = 1
 TRUE
 5000
 204 - Meaningless Query
 stmt s;
-Select BOOLEAN s.stmt# = 99
+Select BOOLEAN with s.stmt# = 99
 FALSE
 5000
 205 - Assign stmts in while loop that modifies specified variable
@@ -101,7 +101,7 @@ Select a1 such that Affects(_,a1) and Uses(a1,v) with a1.stmt# = 23 and v.varNam
 303 - While pattern given specified control variable
 while w; variable v;
 Select w.stmt# pattern w(v,_) with v.varName = "x28"
-28 32
+28, 32
 5000
 304 - If pattern given specified control variable
 if if; variable v;
