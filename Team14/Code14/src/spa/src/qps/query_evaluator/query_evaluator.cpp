@@ -34,5 +34,9 @@ Result *QueryEvaluator::Evaluate() {
   auto *select_call = this->query_.getQueryCall();
 
   ResultProjector *result_projector = ResultProjector::getProjector(select_call, subquery_results);
-  return result_projector->project();
+  auto *result = result_projector->project(this->ctx_);
+  end = std::chrono::steady_clock::now();
+  spdlog::info("Time taken to project results: {} ms",
+               std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
+  return result;
 }

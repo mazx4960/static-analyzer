@@ -3,10 +3,7 @@
 #include "qps/pql/query_synonym.h"
 #include "qps/query_evaluator/subquery_result.h"
 
-using ResultRow = std::unordered_map<QuerySynonym *,
-                                     Entity *,
-                                     QuerySynonymHashFunction,
-                                     QuerySynonymPointerEquality>;
+using ResultRow = std::unordered_map<QuerySynonym *, Entity *, QuerySynonymHashFunction, QuerySynonymPointerEquality>;
 
 struct ResultTestStatics {
  public:
@@ -47,20 +44,19 @@ struct ResultTestStatics {
   inline static SubqueryResult no_syns_all_rows_ = SubqueryResult({}, {row1_, row2_, row3_});
 
   // Table with completely different synonyms
-  inline static ResultRow row_diff_syn_ = {
-      {new QuerySynonym("var_a"), new VariableEntity("a")},
-      {new QuerySynonym("assign_b"), new AssignStmtEntity("3")},
-      {new QuerySynonym("proc_c"), new ProcedureEntity("do_this")}
-  };
+  inline static ResultRow row_diff_syn_ = {{new QuerySynonym("var_a", EntityType::kVariable), new VariableEntity("a")},
+                                           {new QuerySynonym("assign_b", EntityType::kAssignStmt),
+                                            new AssignStmtEntity("3")},
+                                           {new QuerySynonym("proc_c", EntityType::kProcedure),
+                                            new ProcedureEntity("do_this")}};
 
   inline static SubqueryResult no_syns_diff_row_ = SubqueryResult({}, {row_diff_syn_});
 
   // Table with partially different synonyms
-  inline static ResultRow row_partial_diff_syn_ = {
-      {new QuerySynonym("var_a"), new VariableEntity("a")},
-      {new QuerySynonym("assign_y"), new AssignStmtEntity("3")},
-      {new QuerySynonym("proc_z"), new ProcedureEntity("do_this")}
-  };
+  inline static ResultRow row_partial_diff_syn_ =
+      {{new QuerySynonym("var_a", EntityType::kVariable), new VariableEntity("a")},
+       {new QuerySynonym("assign_y", EntityType::kAssignStmt), new AssignStmtEntity("3")},
+       {new QuerySynonym("proc_z", EntityType::kProcedure), new ProcedureEntity("do_this")}};
 
   inline static SubqueryResult no_syns_partial_diff_row_ = SubqueryResult({}, {row_partial_diff_syn_});
 
@@ -125,14 +121,20 @@ TEST(ElemResultCreationTest, SingleSynEmptyTable) {
  * Test that Result throws an error when synonym is not in table.
  */
 TEST(ElemResultCreationTest, SynNotInTable) {
-  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_var_, ResultTestStatics::no_syns_diff_row_), ResultCreationError);
-  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_full_, ResultTestStatics::no_syns_diff_row_), ResultCreationError);
+  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_var_, ResultTestStatics::no_syns_diff_row_),
+               ResultCreationError);
+  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_full_, ResultTestStatics::no_syns_diff_row_),
+               ResultCreationError);
 
-  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_var_, ResultTestStatics::no_syns_all_rows_), ResultCreationError);
-  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_full_, ResultTestStatics::no_syns_all_rows_), ResultCreationError);
+  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_var_, ResultTestStatics::no_syns_all_rows_),
+               ResultCreationError);
+  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_full_, ResultTestStatics::no_syns_all_rows_),
+               ResultCreationError);
 
-  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_var_, ResultTestStatics::no_syns_partial_diff_row_), ResultCreationError);
-  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_full_, ResultTestStatics::no_syns_partial_diff_row_), ResultCreationError);
+  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_var_, ResultTestStatics::no_syns_partial_diff_row_),
+               ResultCreationError);
+  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_full_, ResultTestStatics::no_syns_partial_diff_row_),
+               ResultCreationError);
 }
 
 TEST(BoolResultCreationTest, HasResults) {
