@@ -5,6 +5,7 @@
 #include "commons/entity.h"
 #include "commons/parser/node/node.h"
 #include "commons/relationship.h"
+#include "sp/simple_definition/simple_ast.h"
 
 class EntityExtractor {
  public:
@@ -13,6 +14,7 @@ class EntityExtractor {
   static std::vector<Entity *> ExtractProcedureCalls(Node *node);
   static void ExtractProcedure(std::vector<Entity *> &entities, Node *node);
   static void ExtractStatement(std::vector<Entity *> &entities, Node *node);
+  static Entity *GetStmtEntity(Node *node);
   static void ExtractVariable(std::vector<Entity *> &entities, Node *node);
   static void ExtractConstant(std::vector<Entity *> &entities, Node *node);
 };

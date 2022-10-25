@@ -26,15 +26,13 @@ TEST(ExtractorTest, TestNextSingleBlock) {
   program->VisitAll(op);
 
   // DFS traversal should yield the following result
-  std::vector<Relationship *> expected = {
-      new NextRelationship(new AssignStmtEntity("1"), new AssignStmtEntity("2")),
-  };
+  std::vector<Relationship *> expected = {new NextRelationship(new AssignStmtEntity("1"), new AssignStmtEntity("2")),};
 
   ASSERT_EQ(relationships.size(), expected.size());
   for (int i = 0; i < relationships.size(); ++i) {
     ASSERT_EQ(relationships[i]->GetType(), expected[i]->GetType());
-    ASSERT_EQ(relationships[i]->GetFirst()->ToString(), expected[i]->GetFirst()->ToString());
-    ASSERT_EQ(relationships[i]->GetSecond()->ToString(), expected[i]->GetSecond()->ToString());
+    ASSERT_EQ(relationships[i]->GetFirst()->GetValue(), expected[i]->GetFirst()->GetValue());
+    ASSERT_EQ(relationships[i]->GetSecond()->GetValue(), expected[i]->GetSecond()->GetValue());
   }
 }
 
@@ -59,17 +57,15 @@ TEST(ExtractorTest, TestNextIfBlock) {
   program->VisitAll(op);
 
   // DFS traversal should yield the following result
-  std::vector<Relationship *> expected = {
-      new NextRelationship(new AssignStmtEntity("1"), new IfStmtEntity("2")),
-      new NextRelationship(new IfStmtEntity("2"), new AssignStmtEntity("3")),
-      new NextRelationship(new IfStmtEntity("2"), new AssignStmtEntity("4")),
-  };
+  std::vector<Relationship *> expected = {new NextRelationship(new AssignStmtEntity("1"), new IfStmtEntity("2")),
+                                          new NextRelationship(new IfStmtEntity("2"), new AssignStmtEntity("3")),
+                                          new NextRelationship(new IfStmtEntity("2"), new AssignStmtEntity("4")),};
 
   ASSERT_EQ(relationships.size(), expected.size());
   for (int i = 0; i < relationships.size(); ++i) {
     ASSERT_EQ(relationships[i]->GetType(), expected[i]->GetType());
-    ASSERT_EQ(relationships[i]->GetFirst()->ToString(), expected[i]->GetFirst()->ToString());
-    ASSERT_EQ(relationships[i]->GetSecond()->ToString(), expected[i]->GetSecond()->ToString());
+    ASSERT_EQ(relationships[i]->GetFirst()->GetValue(), expected[i]->GetFirst()->GetValue());
+    ASSERT_EQ(relationships[i]->GetSecond()->GetValue(), expected[i]->GetSecond()->GetValue());
   }
 }
 
@@ -95,19 +91,17 @@ TEST(ExtractorTest, TestNextWhileBlock) {
   program->VisitAll(op);
 
   // DFS traversal should yield the following result
-  std::vector<Relationship *> expected = {
-      new NextRelationship(new AssignStmtEntity("1"), new WhileStmtEntity("2")),
-      new NextRelationship(new WhileStmtEntity("2"), new AssignStmtEntity("3")),
-      new NextRelationship(new WhileStmtEntity("2"), new AssignStmtEntity("5")),
-      new NextRelationship(new AssignStmtEntity("3"), new AssignStmtEntity("4")),
-      new NextRelationship(new AssignStmtEntity("4"), new WhileStmtEntity("2")),
-  };
+  std::vector<Relationship *> expected = {new NextRelationship(new AssignStmtEntity("1"), new WhileStmtEntity("2")),
+                                          new NextRelationship(new WhileStmtEntity("2"), new AssignStmtEntity("3")),
+                                          new NextRelationship(new WhileStmtEntity("2"), new AssignStmtEntity("5")),
+                                          new NextRelationship(new AssignStmtEntity("3"), new AssignStmtEntity("4")),
+                                          new NextRelationship(new AssignStmtEntity("4"), new WhileStmtEntity("2")),};
 
   ASSERT_EQ(relationships.size(), expected.size());
   for (int i = 0; i < relationships.size(); ++i) {
     ASSERT_EQ(relationships[i]->GetType(), expected[i]->GetType());
-    ASSERT_EQ(relationships[i]->GetFirst()->ToString(), expected[i]->GetFirst()->ToString());
-    ASSERT_EQ(relationships[i]->GetSecond()->ToString(), expected[i]->GetSecond()->ToString());
+    ASSERT_EQ(relationships[i]->GetFirst()->GetValue(), expected[i]->GetFirst()->GetValue());
+    ASSERT_EQ(relationships[i]->GetSecond()->GetValue(), expected[i]->GetSecond()->GetValue());
   }
 }
 
@@ -124,20 +118,20 @@ TEST(ExtractorTest, TestNextIfNested) {
   program_node->VisitAll(op);
 
   // DFS traversal should yield the following result
-  std::vector<Relationship *> expected = {
-      new NextRelationship(new AssignStmtEntity("1"), new IfStmtEntity("2")),
-      new NextRelationship(new IfStmtEntity("2"), new AssignStmtEntity("3")),
-      new NextRelationship(new IfStmtEntity("2"), new ReadStmtEntity("7", std::string())),
-      new NextRelationship(new AssignStmtEntity("3"), new IfStmtEntity("4")),
-      new NextRelationship(new IfStmtEntity("4"), new AssignStmtEntity("5")),
-      new NextRelationship(new IfStmtEntity("4"), new ReadStmtEntity("6", std::string())),
-  };
+  std::vector<Relationship *> expected = {new NextRelationship(new AssignStmtEntity("1"), new IfStmtEntity("2")),
+                                          new NextRelationship(new IfStmtEntity("2"), new AssignStmtEntity("3")),
+                                          new NextRelationship(new IfStmtEntity("2"),
+                                                               new ReadStmtEntity("7", std::string())),
+                                          new NextRelationship(new AssignStmtEntity("3"), new IfStmtEntity("4")),
+                                          new NextRelationship(new IfStmtEntity("4"), new AssignStmtEntity("5")),
+                                          new NextRelationship(new IfStmtEntity("4"),
+                                                               new ReadStmtEntity("6", std::string())),};
 
   ASSERT_EQ(relationships.size(), expected.size());
   for (int i = 0; i < relationships.size(); ++i) {
     ASSERT_EQ(relationships[i]->GetType(), expected[i]->GetType());
-    ASSERT_EQ(relationships[i]->GetFirst()->ToString(), expected[i]->GetFirst()->ToString());
-    ASSERT_EQ(relationships[i]->GetSecond()->ToString(), expected[i]->GetSecond()->ToString());
+    ASSERT_EQ(relationships[i]->GetFirst()->GetValue(), expected[i]->GetFirst()->GetValue());
+    ASSERT_EQ(relationships[i]->GetSecond()->GetValue(), expected[i]->GetSecond()->GetValue());
   }
 }
 
@@ -154,23 +148,23 @@ TEST(ExtractorTest, TestNextWhileNested) {
   program_node->VisitAll(op);
 
   // DFS traversal should yield the following result
-  std::vector<Relationship *> expected = {
-      new NextRelationship(new WhileStmtEntity("1"), new WhileStmtEntity("2")),
-      new NextRelationship(new WhileStmtEntity("1"), new AssignStmtEntity("6")),
-      new NextRelationship(new WhileStmtEntity("2"), new WhileStmtEntity("3")),
-      new NextRelationship(new WhileStmtEntity("2"), new WhileStmtEntity("1")),
-      new NextRelationship(new WhileStmtEntity("3"), new WhileStmtEntity("4")),
-      new NextRelationship(new WhileStmtEntity("3"), new WhileStmtEntity("2")),
-      new NextRelationship(new WhileStmtEntity("4"), new PrintStmtEntity("5", std::string())),
-      new NextRelationship(new WhileStmtEntity("4"), new WhileStmtEntity("3")),
-      new NextRelationship(new PrintStmtEntity("5", std::string()), new WhileStmtEntity("4")),
-  };
+  std::vector<Relationship *> expected = {new NextRelationship(new WhileStmtEntity("1"), new WhileStmtEntity("2")),
+                                          new NextRelationship(new WhileStmtEntity("1"), new AssignStmtEntity("6")),
+                                          new NextRelationship(new WhileStmtEntity("2"), new WhileStmtEntity("3")),
+                                          new NextRelationship(new WhileStmtEntity("2"), new WhileStmtEntity("1")),
+                                          new NextRelationship(new WhileStmtEntity("3"), new WhileStmtEntity("4")),
+                                          new NextRelationship(new WhileStmtEntity("3"), new WhileStmtEntity("2")),
+                                          new NextRelationship(new WhileStmtEntity("4"),
+                                                               new PrintStmtEntity("5", std::string())),
+                                          new NextRelationship(new WhileStmtEntity("4"), new WhileStmtEntity("3")),
+                                          new NextRelationship(new PrintStmtEntity("5", std::string()),
+                                                               new WhileStmtEntity("4")),};
 
   ASSERT_EQ(relationships.size(), expected.size());
   for (int i = 0; i < relationships.size(); ++i) {
     ASSERT_EQ(relationships[i]->GetType(), expected[i]->GetType());
-    ASSERT_EQ(relationships[i]->GetFirst()->ToString(), expected[i]->GetFirst()->ToString());
-    ASSERT_EQ(relationships[i]->GetSecond()->ToString(), expected[i]->GetSecond()->ToString());
+    ASSERT_EQ(relationships[i]->GetFirst()->GetValue(), expected[i]->GetFirst()->GetValue());
+    ASSERT_EQ(relationships[i]->GetSecond()->GetValue(), expected[i]->GetSecond()->GetValue());
   }
 }
 
@@ -187,21 +181,24 @@ TEST(ExtractorTest, TestNextIfWhileNested) {
   program_node->VisitAll(op);
 
   // DFS traversal should yield the following result
-  std::vector<Relationship *> expected = {
-      new NextRelationship(new AssignStmtEntity("1"), new WhileStmtEntity("2")),
-      new NextRelationship(new WhileStmtEntity("2"), new AssignStmtEntity("3")),
-      new NextRelationship(new WhileStmtEntity("2"), new PrintStmtEntity("7", std::string())),
-      new NextRelationship(new AssignStmtEntity("3"), new IfStmtEntity("4")),
-      new NextRelationship(new IfStmtEntity("4"), new PrintStmtEntity("5", std::string())),
-      new NextRelationship(new IfStmtEntity("4"), new PrintStmtEntity("6", std::string())),
-      new NextRelationship(new PrintStmtEntity("6", std::string()), new WhileStmtEntity("2")),
-      new NextRelationship(new PrintStmtEntity("5", std::string()), new WhileStmtEntity("2")),
-  };
+  std::vector<Relationship *> expected = {new NextRelationship(new AssignStmtEntity("1"), new WhileStmtEntity("2")),
+                                          new NextRelationship(new WhileStmtEntity("2"), new AssignStmtEntity("3")),
+                                          new NextRelationship(new WhileStmtEntity("2"),
+                                                               new PrintStmtEntity("7", std::string())),
+                                          new NextRelationship(new AssignStmtEntity("3"), new IfStmtEntity("4")),
+                                          new NextRelationship(new IfStmtEntity("4"),
+                                                               new PrintStmtEntity("5", std::string())),
+                                          new NextRelationship(new IfStmtEntity("4"),
+                                                               new PrintStmtEntity("6", std::string())),
+                                          new NextRelationship(new PrintStmtEntity("6", std::string()),
+                                                               new WhileStmtEntity("2")),
+                                          new NextRelationship(new PrintStmtEntity("5", std::string()),
+                                                               new WhileStmtEntity("2")),};
 
   ASSERT_EQ(relationships.size(), expected.size());
   for (int i = 0; i < relationships.size(); ++i) {
     ASSERT_EQ(relationships[i]->GetType(), expected[i]->GetType());
-    ASSERT_EQ(relationships[i]->GetFirst()->ToString(), expected[i]->GetFirst()->ToString());
-    ASSERT_EQ(relationships[i]->GetSecond()->ToString(), expected[i]->GetSecond()->ToString());
+    ASSERT_EQ(relationships[i]->GetFirst()->GetValue(), expected[i]->GetFirst()->GetValue());
+    ASSERT_EQ(relationships[i]->GetSecond()->GetValue(), expected[i]->GetSecond()->GetValue());
   }
 }

@@ -1,13 +1,6 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 #include "pattern_extractor.h"
 
-#include <spdlog/spdlog.h>
-
-#include <iostream>
-
-#include "entity_extractor.h"
-#include "sp/simple_definition/simple_ast.h"
-
 std::vector<Pattern *> PatternExtractor::ExtractAll(Node *node) {
   std::vector<Pattern *> patterns;
   auto const op = [&patterns](Node *node) {

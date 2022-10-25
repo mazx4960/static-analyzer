@@ -1,14 +1,18 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #pragma once
+#include <unordered_set>
 
 #include "commons/entity.h"
 #include "commons/parser/node/node.h"
 #include "commons/types.h"
+#include "entity_extractor.h"
+#include "sp/simple_definition/simple_ast.h"
 
 class CFGNode : public Node {
  private:
   Entity *stmt_;
+
   std::vector<Node *> children_;
 
  public:
@@ -24,6 +28,7 @@ class CFGNode : public Node {
 class CFGBuilder {
  private:
   CFGNode *start_node_;
+
   static CFGNode *ToCFGNode(Node *node);
   static void ConnectNode(CFGNode *parent, CFGNode *child);
   static CFGNode *BuildBlock(Node *node, CFGNode *parent, CFGNode *terminal);

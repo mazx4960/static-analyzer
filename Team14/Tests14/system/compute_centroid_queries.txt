@@ -543,3 +543,53 @@ stmt s;
 Select <s> such that Affects*(s, s)
 15, 16, 17
 5000
+1001 - verify valid boolean
+assign a;
+Select BOOLEAN such that Uses(a, "x")
+TRUE
+5000
+1002 - verify valid boolean
+
+Select BOOLEAN such that Affects*(10, 23)
+TRUE
+5000
+1003 - verify valid boolean
+stmt s;
+Select BOOLEAN such that Affects(s, s)
+TRUE
+5000
+1004 - verify valid boolean
+procedure p1, p2;
+Select BOOLEAN such that Calls(p1, p2) and Modifies(p2, "x")
+TRUE
+5000
+1005 - verify valid boolean
+while w; if ifs; assign a;
+Select BOOLEAN such that Next(w, ifs) and Parent(ifs, a) pattern a ("cenX", _) such that Uses(a, "cenX")
+TRUE
+5000
+1006 - verify valid boolean
+while w; if ifs; assign a1, a2;
+Select BOOLEAN such that Parent(w, a1) and Parent(w, a2) and Modifies(a1, "count") and Next*(a1, a2) pattern a2 (_, _"count"_)
+TRUE
+5000
+1007 - verify valid boolean
+assign a;
+Select BOOLEAN such that Next*(a, a) pattern a (_, _"x"_) such that Modifies(a, "cenX")
+TRUE
+5000
+1011 - verify invalid boolean
+stmt s;
+Select BOOLEAN such that Next(s, s)
+FALSE
+5000
+1012 - verify invalid boolean
+
+Select BOOLEAN such that Next(20, 21)
+FALSE
+5000
+1013 - verify invalid boolean
+
+Select BOOLEAN such that Next(18, 15)
+FALSE
+5000

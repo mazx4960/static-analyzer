@@ -3,6 +3,7 @@
 #include "query_reference.h"
 
 #include <utility>
+#include <spdlog/spdlog.h>
 
 ReferenceType QueryReference::getRefType() const {
   return this->reference_type_;
@@ -33,9 +34,6 @@ bool QueryReference::isAttrCompareRef() const {
 bool WildcardReference::operator==(const QueryReference &other) const {
   return other.getRefType() == ReferenceType::kWildcard;
 }
-bool WildcardReference::operator==(const QueryReference *other) const {
-  return other->getRefType() == ReferenceType::kWildcard;
-}
 std::string WildcardReference::getReferenceValue() const {
   return "";
 }
@@ -56,9 +54,6 @@ std::string WildcardReference::toString() const {
 bool IdentReference::operator==(const QueryReference &other) const {
   return other.getRefType() == ReferenceType::kIdent && this->getReferenceValue() == other.getReferenceValue();
 }
-bool IdentReference::operator==(const QueryReference *other) const {
-  return other->getRefType() == ReferenceType::kIdent && this->getReferenceValue() == other->getReferenceValue();
-}
 std::string IdentReference::getReferenceValue() const {
   return this->value_;
 }
@@ -78,9 +73,6 @@ bool IdentReference::isAttrCompareRef() const {
 // IntegerDeclaration
 bool IntegerReference::operator==(const QueryReference &other) const {
   return other.getRefType() == ReferenceType::kInteger && this->getReferenceValue() == other.getReferenceValue();
-}
-bool IntegerReference::operator==(const QueryReference *other) const {
-  return other->getRefType() == ReferenceType::kInteger && this->getReferenceValue() == other->getReferenceValue();
 }
 std::string IntegerReference::getReferenceValue() const {
   return this->value_;
@@ -112,14 +104,6 @@ bool SynonymReference::operator==(const QueryReference &other) const {
     const auto &synonym_other = static_cast<const SynonymReference &>(other);
     return synonym_other.getEntityType() == this->getEntityType()
         && (*synonym_other.getSynonym()) == (*this->getSynonym());
-  }
-  return false;
-}
-bool SynonymReference::operator==(const QueryReference *other) const {
-  if (other->getRefType() == this->getRefType()) {
-    const auto &synonym_other = static_cast<const SynonymReference *>(other);
-    return synonym_other->getEntityType() == this->getEntityType()
-        && (*synonym_other->getSynonym()) == (*this->getSynonym());
   }
   return false;
 }
@@ -156,14 +140,6 @@ bool AttrReference::operator==(const QueryReference &other) const {
   }
   return false;
 }
-bool AttrReference::operator==(const QueryReference *other) const {
-  if (other->getRefType() == this->getRefType()) {
-    const auto &elem_other = static_cast<const AttrReference *>(other);
-    return (*elem_other->getSynonymReference()) == (*this->getSynonymReference())
-        && (elem_other->getAttributeType()) == (this->getAttributeType());
-  }
-  return false;
-}
 SynonymReference *AttrReference::getSynonymReference() const {
   return this->synonym_reference_;
 }
@@ -176,6 +152,7 @@ AttributeType AttrReference::getAttributeType() const {
   return this->attribute_type_;
 }
 std::string AttrReference::getAttribute(Entity *entity) const {
+  spdlog::debug("Getting attribute {} of entity {}", AttrToString(this->getAttributeType()), entity->ToString());
   auto entity_type = entity->GetType();
   switch (attribute_type_) {
     case AttributeType::kProcName:
@@ -190,6 +167,7 @@ std::string AttrReference::getAttribute(Entity *entity) const {
         return entity->GetValue();
       } else if (entity_type == EntityType::kReadStmt || entity_type == EntityType::kPrintStmt) {
         auto *stmt = static_cast<StmtEntity *>(entity);
+        spdlog::debug("Getting attribute {} of stmt {}", AttrToString(this->getAttributeType()), stmt->ToString());
         return stmt->GetAttr();
       }
     case AttributeType::kValue:
@@ -242,7 +220,7 @@ bool AttrReference::isSemanticallyCorrect() const {
   switch (getAttributeType()) {
     case AttributeType::kProcName: {
       switch (getEntityType()) {
-        case EntityType::kProcedure:
+        case EntityType::kProcedure: // fallthrough
         case EntityType::kCallStmt:break;
         default:return false;
       }
@@ -250,8 +228,8 @@ bool AttrReference::isSemanticallyCorrect() const {
     }
     case AttributeType::kVarName: {
       switch (getEntityType()) {
-        case EntityType::kVariable:
-        case EntityType::kPrintStmt:
+        case EntityType::kVariable: // fallthrough
+        case EntityType::kPrintStmt: // fallthrough
         case EntityType::kReadStmt:break;
         default:return false;
       }
@@ -266,18 +244,18 @@ bool AttrReference::isSemanticallyCorrect() const {
     }
     case AttributeType::kStmtNo: {
       switch (getEntityType()) {
-        case EntityType::kStatement:
-        case EntityType::kAssignStmt:
-        case EntityType::kCallStmt:
-        case EntityType::kIfStmt:
-        case EntityType::kWhileStmt:
-        case EntityType::kPrintStmt:
+        case EntityType::kStatement: // fallthrough
+        case EntityType::kAssignStmt: // fallthrough
+        case EntityType::kCallStmt: // fallthrough
+        case EntityType::kIfStmt: // fallthrough
+        case EntityType::kWhileStmt: // fallthrough
+        case EntityType::kPrintStmt: // fallthrough
         case EntityType::kReadStmt:break;
         default:return false;
       }
       break;
     }
-    default: break;
+    default:break;
   }
   return true;
 }

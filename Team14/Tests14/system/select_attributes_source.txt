@@ -1,0 +1,52 @@
+procedure First {
+    x1 = 1 + C;
+    x2 = x1 + x2 + 2;
+    while (x3 == 0) {
+        call Second;
+    }
+    x5 = x2 + x1 + 1;
+    x6 = x5 + x2 + 1;
+}
+
+procedure Second {
+    x7 = y1 + y2 * 2;
+    if ( (x8 == 1) && (x7 < x2) ) then {
+        if (x9 == 0) then {
+            x10 = x9 + x8;
+            print p11;
+            call Third;
+        } else {
+            read r13;
+            x14 = x7 * (x8 / x9) % x10 - x11 + x13;
+        }
+        x15 = (x14) + (x13) / (x12 / x11) * ((x10) - (x9));
+    } else {
+        x16 = x16 * x15 + 2;
+        while ( (x2 == 0) && (x17 >= x16) ) {
+            x18 = x19 + x20 + C;
+            x19 = x20 + x18 + C;
+            x20 = x18 + x19 + C;
+        }
+        print p21;
+        call Third;
+    }
+    x23 = x7 - x8 / x2;
+    read r13;
+}
+
+procedure Third {
+    x25 = x7 * C;
+    x7 = x26 / 26;
+    if (x27 == 0) then {
+        while (x28 < 1) {
+            print x29;
+            x30 = x30 + x29;
+            x18 = x31 + x18 + x19;
+        }
+    } else {
+        while ( (x31 > 0) && (x28 < 2) ) {
+            read x32;
+            x33 = x25 * x1 / x2 / x18;
+        }
+    }
+}

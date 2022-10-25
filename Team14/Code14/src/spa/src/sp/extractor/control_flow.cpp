@@ -1,12 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "control_flow.h"
-
 #include <spdlog/spdlog.h>
-
-#include <unordered_set>
-
-#include "sp/simple_definition/simple_ast.h"
 
 CFGNode::CFGNode(Entity *stmt) : Node(NodeType::kStatement), stmt_(stmt) {
 }
@@ -35,7 +30,9 @@ std::string CFGNode::ToString() {
 /**
  * Builder class for control flow graph
  */
-CFGBuilder::CFGBuilder() { this->start_node_ = new CFGNode(new StmtEntity(EntityType::kStatement, "-1", "")); }
+CFGBuilder::CFGBuilder() {
+  this->start_node_ = new CFGNode(new StmtEntity(EntityType::kStatement, "-1", ""));
+}
 
 /**
  * Build the control flow graph for a given procedure node
@@ -68,7 +65,8 @@ void CFGBuilder::Clean() {
         should_collapse = true;
       }
       if (should_collapse) {
-        spdlog::debug("CFGBuilder::Clean: removing temp terminal node between {} and {}", node->ToString(),
+        spdlog::debug("CFGBuilder::Clean: removing temp terminal node between {} and {}",
+                      node->ToString(),
                       immediate_child->ToString());
         cfg_node->SetChild(immediate_child, i);
       }
@@ -84,11 +82,8 @@ CFGNode *CFGBuilder::ToCFGNode(Node *node) {
   if (node->GetNodeType() != NodeType::kStatement) {
     return nullptr;
   }
-  auto *stmt = static_cast<StatementNode *>(node);
-  auto stmt_type = stmt->GetStmtType();
-  auto stmt_no = stmt->GetStmtNo();
-  auto *stmt_ent = new Entity(stmt_type, std::to_string(stmt_no));
-  return new CFGNode(stmt_ent);
+  auto *stmt = EntityExtractor::GetStmtEntity(node);
+  return new CFGNode(stmt);
 }
 /**
  * Add the child node to the parent node
@@ -116,11 +111,11 @@ CFGNode *CFGBuilder::BuildBlock(Node *node, CFGNode *parent, CFGNode *terminal) 
     auto *stmt_node = static_cast<StatementNode *>(node);
     ConnectNode(parent, child);
     switch (stmt_node->GetStmtType()) {
-      case EntityType::kIfStmt: parent = BuildIf(node, child);
+      case EntityType::kIfStmt:parent = BuildIf(node, child);
         break;
-      case EntityType::kWhileStmt: parent = BuildWhile(node, child);
+      case EntityType::kWhileStmt:parent = BuildWhile(node, child);
         break;
-      default: parent = child;
+      default:parent = child;
         break;
     }
   };

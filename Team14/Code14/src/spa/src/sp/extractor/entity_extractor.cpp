@@ -2,9 +2,7 @@
 
 #include "entity_extractor.h"
 
-#include <iostream>
-
-#include "sp/simple_definition/simple_ast.h"
+#include <spdlog/spdlog.h>
 
 /**
  * Extracts all entities from a given AST of a program.
@@ -61,6 +59,14 @@ void EntityExtractor::ExtractStatement(std::vector<Entity *> &entities, Node *no
   if (node->GetNodeType() != NodeType::kStatement) {
     return;
   }
+  Entity *entity = GetStmtEntity(node);
+  entities.push_back(entity);
+}
+Entity *EntityExtractor::GetStmtEntity(Node *node) {
+  if (node->GetNodeType() != NodeType::kStatement) {
+    spdlog::error("Node " + node->ToString() + " is not a statement");
+    return nullptr;
+  }
   auto *stmt = static_cast<StatementNode *>(node);
   auto stmt_type = stmt->GetStmtType();
   auto stmt_no = stmt->GetStmtNo();
@@ -81,7 +87,7 @@ void EntityExtractor::ExtractStatement(std::vector<Entity *> &entities, Node *no
     default:entity = new Entity(stmt_type, std::to_string(stmt_no));
       break;
   }
-  entities.push_back(entity);
+  return entity;
 }
 void EntityExtractor::ExtractVariable(std::vector<Entity *> &entities, Node *node) {
   if (node->GetNodeType() != NodeType::kVariable) {

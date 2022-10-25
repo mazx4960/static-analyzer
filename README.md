@@ -42,18 +42,20 @@ Results:
 
 ```
 ==============================================================
-Profiling 'stress'
+Profiling 'sp_stress_1'
 [INFO] Checking required python packages...
 [INFO] Requirement satisfied.
-[MEM USAGE] Peak Memory Usage: 7.664 MiB
+[MEM USAGE] Peak Memory Usage: 8.152 MiB
+[PARSE TIME] 30.825000
+[MAX QUERY TIME] 5.142000
+==============================================================
+==============================================================
+Profiling 'stress_1'
+[INFO] Checking required python packages...
+[INFO] Requirement satisfied.
+[MEM USAGE] Peak Memory Usage: 188.574 MiB
 [PARSE TIME] 26.676000
-==============================================================
-==============================================================
-Profiling 'stress2'
-[INFO] Checking required python packages...
-[INFO] Requirement satisfied.
-[MEM USAGE] Peak Memory Usage: 7.664 MiB
-[PARSE TIME] 17.157000
+[MAX QUERY TIME] 11860 !!!
 ==============================================================
 ```
 

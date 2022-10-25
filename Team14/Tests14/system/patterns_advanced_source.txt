@@ -1,0 +1,90 @@
+procedure food {
+    noodles = flour * noodles;
+    print butter;
+
+    if (rice > 10) then {
+		print noodles;
+	} else {
+		print flour;
+	}
+    
+    if (6 == 8) then {
+        while (7 == 9) {
+            biscuit = 1; 
+        }
+    } else {
+        if (rice == 5) then {
+            while (ramen == noodles) {
+                bread = 0; 
+            }
+        } else {
+            bread = 2 * flour;
+        }
+    }
+
+    while (fries < 5) {
+        print fries;
+    }
+
+    if (6 > rice + 1 - 22) then {
+        while(bread != flour) {
+            bread = butter * noodles;
+            read butter;
+            print noodles;
+            noodles = 1;
+        }
+        if (ramen == noodles) then {
+            chocolate = candy;
+            sugar = rice + sugar;
+            read kaya;
+        } else {
+            flour = fresh - rice * biscuit;
+            butter = 7;
+            print chocolate;
+            print candy;
+        }
+    } else {
+        if (flour - flour * 1 % (rice + 12) > flour) then {
+            print sugar;
+            noodles = 1;
+            read flour;
+        } else {
+            rice = chocolate * 2;
+            flour = 0;
+        }
+        read chocolate; 
+        while(tart - 6 < cake % 1) {
+            candy = candy / 2;
+            rice = candy / (candy - sugar + rice % butter);
+            butter = sugar - 5;
+        }
+    }
+
+    if (rice == noodles) then {
+        if (sugar == flour) then { 
+            if (chocolate == butter) then {
+                print chocolate;
+            } else { 
+                print butter;
+            }
+        } else {
+            if (cake < tart * 2) then {
+                print cake;
+            } else {
+                print tart;
+            }
+        }
+    } else {
+        noodles = rice % butter;
+        print noodles;
+    } 
+
+    while (rice < flour * 3 - butter) {
+        if (chocolate == (tart + sugar * butter)) then {
+            chocolate = tart + 1;
+        } else {
+            chocolate = sugar + 1;
+        }
+        rice = flour * 2;
+    }
+}

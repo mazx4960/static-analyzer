@@ -31,7 +31,9 @@ std::vector<Relationship *> RelationshipExtractor::ExtractAll(Node *node) {
  * @param parent entity
  * @param children vector of entities
  */
-void RelationshipExtractor::Match(std::vector<Relationship *> &relationships, RsType rs_type, Entity *parent,
+void RelationshipExtractor::Match(std::vector<Relationship *> &relationships,
+                                  RsType rs_type,
+                                  Entity *parent,
                                   const std::vector<Entity *> &children) {
   for (auto *child : children) {
     auto *match = new Relationship(rs_type, parent, child);
@@ -50,9 +52,7 @@ void RelationshipExtractor::ExtractFollows(std::vector<Relationship *> &relation
   }
   Entity *prev_entity = nullptr;
   for (auto *stmt : static_cast<StatementListNode *>(node)->GetStatements()) {
-    auto stmt_type = stmt->GetStmtType();
-    auto stmt_no = stmt->GetStmtNo();
-    auto *cur_entity = new Entity(stmt_type, std::to_string(stmt_no));
+    auto *cur_entity = EntityExtractor::GetStmtEntity(stmt);
     if (prev_entity != nullptr) {
       Relationship *follows = new FollowsRelationship(prev_entity, cur_entity);
       relationships.push_back(follows);
@@ -96,11 +96,13 @@ void RelationshipExtractor::ExtractParent(std::vector<Relationship *> &relations
           ExtractParentHelper(relationships, parent, else_stmt_list);
           break;
         }
-        default: break;// other statement entity types are ignored.
+        default:
+          break;// other statement entity types are ignored.
       }
       break;
     }
-    default: break;// other node types are ignored.
+    default:
+      break;// other node types are ignored.
   }
 }
 /**
@@ -111,7 +113,8 @@ void RelationshipExtractor::ExtractParent(std::vector<Relationship *> &relations
  * @param parent
  * @param node statement list node
  */
-void RelationshipExtractor::ExtractParentHelper(std::vector<Relationship *> &relationships, Entity *parent,
+void RelationshipExtractor::ExtractParentHelper(std::vector<Relationship *> &relationships,
+                                                Entity *parent,
                                                 Node *node) {
   if (node->GetNodeType() != NodeType::kStatementList) {
     return;
@@ -135,13 +138,11 @@ void RelationshipExtractor::ExtractUses(std::vector<Relationship *> &relationshi
   if (node->GetNodeType() != NodeType::kStatement) {
     return;
   }
-  auto *stmt = static_cast<StatementNode *>(node);
-  auto stmt_type = stmt->GetStmtType();
-  auto *parent = new Entity(stmt_type, std::to_string(stmt->GetStmtNo()));
-  switch (stmt_type) {
+  auto *parent = EntityExtractor::GetStmtEntity(node);
+  switch (parent->GetType()) {
     case EntityType::kAssignStmt: {
-      std::vector<Entity *> children =
-          EntityExtractor::ExtractAllVariables(static_cast<AssignNode *>(node)->GetExpression());
+      std::vector<Entity *>
+          children = EntityExtractor::ExtractAllVariables(static_cast<AssignNode *>(node)->GetExpression());
       Match(relationships, RsType::kUses, parent, children);
       break;
     }
@@ -163,7 +164,8 @@ void RelationshipExtractor::ExtractUses(std::vector<Relationship *> &relationshi
       Match(relationships, RsType::kUses, parent, children);
       break;
     }
-    default: break;// other statement entity types are ignored.
+    default:
+      break;// other statement entity types are ignored.
   }
 }
 /**
@@ -176,10 +178,8 @@ void RelationshipExtractor::ExtractModifies(std::vector<Relationship *> &relatio
   if (node->GetNodeType() != NodeType::kStatement) {
     return;
   }
-  auto *stmt = static_cast<StatementNode *>(node);
-  auto stmt_type = stmt->GetStmtType();
-  auto *parent = new Entity(stmt_type, std::to_string(stmt->GetStmtNo()));
-  switch (stmt_type) {
+  auto *parent = EntityExtractor::GetStmtEntity(node);
+  switch (parent->GetType()) {
     case EntityType::kAssignStmt: {
       VariableNode *variable = static_cast<AssignNode *>(node)->GetVariable();
       Entity *child = new VariableEntity(variable->GetVariableName());
@@ -192,7 +192,8 @@ void RelationshipExtractor::ExtractModifies(std::vector<Relationship *> &relatio
       relationships.push_back(new Relationship(RsType::kModifies, parent, child));
       break;
     }
-    default: break;
+    default:
+      break;
   }
 }
 /**

@@ -1,0 +1,145 @@
+101 - Procedure with specified name
+procedure p;
+Select p with p.procName = "Second"
+Second
+5000
+102 - Stmt number same as constant value
+stmt s; constant c;
+Select s with s.stmt# = c.value
+1, 2, 26
+5000
+103 - Specified stmt number and constant value
+stmt s; constant c;
+Select <s, c> with s.stmt# = 16 and c.value = 2
+16 2
+5000
+104 - Assign stmts that uses a specified variable
+assign a; variable v;
+Select a such that Uses(a,v) with v.varName = "C"
+1, 18, 19, 20, 25
+5000
+105 - Call stmts in p1 that calls p2.procName = Third
+call c; procedure p1, p2;
+Select c such that Calls(p1,p2) and Next*(7,c) with p2.procName = "Third"
+12, 22
+5000
+106 - Tuple, specified stmt number
+if if; while w;
+Select <if, w> such that Parent(if,w) with if.stmt# = 27
+27 28, 27 32
+5000
+107 - Procedure name same as constant value
+procedure p; constant c;
+Select p with p.procName = c.value
+SemanticError
+5000
+108 - Assign stmts in nested if/while
+assign a; if if; while w;
+Select a.stmt# such that Parent(if,w) and Parent(w,a)
+18, 19, 20, 30, 31, 34
+5000
+109 - Tuple, nested in specified if stmt
+procedure p; while w; if if; assign a;
+Select <if, w, a> such that Parent(if,w) and Parent(w,a) with if.stmt# = 27
+27 28 30, 27 28 31, 27 32 34
+5000
+201 -Procedure given specified p1
+procedure p1, p2;
+Select p2.procName such that Calls(p1,p2) with p1.procName = "Third"
+none
+5000
+202 - Procedure given specified p2
+procedure p1, p2;
+Select p1.procName such that Calls(p1,p2) with p2.procName = "Second"
+First
+5000
+203 - Meaningless Query
+stmt s;
+Select BOOLEAN with s.stmt# = 1
+TRUE
+5000
+204 - Meaningless Query
+stmt s;
+Select BOOLEAN with s.stmt# = 99
+FALSE
+5000
+205 - Assign stmts in while loop that modifies specified variable
+assign a; if if; variable v;
+Select a such that Parent*(if,a) and Modifies(a,v) with v.varName = "x18"
+18, 31
+5000
+206 - Tuple, affects with specified variable name
+assign a1, a2; variable v;
+Select <a1,a2> such that Affects(a1,a2) and Modifies(a1,v) with v.varName = "x2"
+2 5, 2 6
+5000
+207 - Stmt whereby subsequent statement modifies a specified variable
+stmt s1, s2; assign a1; variable v;
+Select s1.stmt# such that Follows(s1,s2) and Modifies(a1,v) with s2.stmt# = a1.stmt# and v.varName = "x2"
+1
+5000
+208 - Assign stmt in loop with specified variable being modified
+assign a; while w; stmt s;
+Select a such that Parent*(w,a) and Next*(7, s) pattern a("x19",_) with a.stmt# = s.stmt#
+19
+5000
+209 - Stmts that have a control flow path to specified stmt
+stmt s1, s2;
+Select s1.stmt# such that Next*(s1,s2) with s2.stmt# = 15
+7, 8, 9, 10, 11, 12, 13, 14
+5000
+301 - Stmt that affects a specified stmt given stmt number
+assign a1; variable v;
+Select a1 such that Affects(_,a1) and Modifies(a1,v) with a1.stmt# = 34
+34
+5000
+302 - Stmt that affects a specified stmt given stmt number and variable name
+assign a1; variable v;
+Select a1 such that Affects(_,a1) and Uses(a1,v) with a1.stmt# = 23 and v.varName = "x7"
+23
+5000
+303 - While pattern given specified control variable
+while w; variable v;
+Select w.stmt# pattern w(v,_) with v.varName = "x28"
+28, 32
+5000
+304 - If pattern given specified control variable
+if if; variable v;
+Select if.stmt# pattern if(v,_,_) with v.varName = "x8"
+8
+5000
+305 - If pattern given specified control variable
+if if; variable v;
+Select if.stmt# pattern if(v,_,_) with v.varName = "x7"
+8
+5000
+306 - While and if pattern given specified control variable
+if if; while w; variable v1, v2;
+Select <if, w> pattern if(v1,_,_) pattern w(v2,_) with v2.varName = "x2"
+8 17, 9 17, 27 17
+5000
+307 - While and if pattern given specified control variable
+if if; while w; variable v1, v2;
+Select <if, w> pattern if(v1,_,_) pattern w(v2,_) with v1.varName = "x8" with v2.varName = "x2"
+8 17
+5000
+308 - Chain next stmt
+stmt s1, s2, s3;
+Select <s1, s2, s3> such that Next(s1,s2) and Next(s2,s3) with s1.stmt# = s3.stmt#
+3 4 3, 4 3 4
+5000
+308 - Chain affects stmt
+stmt s1, s2, s3;
+Select s1.stmt# such that Affects(s1,s2) and Affects(s2,s3) with s1.stmt# = s3.stmt#
+18, 19, 20, 30, 31
+5000
+309 - Stmt within certain lines
+stmt s1, s2, s3;
+Select s2.stmt# such that Next*(s1,s2) and Next*(s2,s3) with s1.stmt# = 7 and s3.stmt# = 24
+8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+5000
+401 - Stmt within certain lines
+stmt s1, s2, s3;
+Select s2.stmt# such that Follows*(s1,s2) and Follows*(s2,s3) with s1.stmt# = 7 and s3.stmt# = 24
+8, 23
+5000

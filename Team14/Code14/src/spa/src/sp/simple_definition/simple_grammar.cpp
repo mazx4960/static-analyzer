@@ -9,7 +9,7 @@
 ProgramGrammarRule::ProgramGrammarRule() : ListGrammarRule(new ProcedureGrammarProducer()) {
 }
 
-ProgramNode *ProgramGrammarRule::assembleNode(std::vector<Node *> children) {
+ProgramNode *ProgramGrammarRule::assembleNode(std::vector<Node *> &children) {
   std::vector<ProcedureNode *> procedures{};
   procedures.reserve(children.size());
   for (auto *child : children) {
@@ -18,7 +18,7 @@ ProgramNode *ProgramGrammarRule::assembleNode(std::vector<Node *> children) {
   return new ProgramNode(procedures);
 }
 
-bool ProgramGrammarRule::shouldStop(TokenIterator token_stream) {
+bool ProgramGrammarRule::shouldStop(TokenIterator &token_stream) {
   return **token_stream == EndOfFileToken();
 }
 
@@ -28,7 +28,7 @@ ProcedureGrammarRule::ProcedureGrammarRule()
     new NodeRuleFragment(new BracedGrammarProducer(new StatementListGrammarProducer()))}) {
 }
 
-ProcedureNode *ProcedureGrammarRule::assembleNode(std::vector<Node *> child_nodes) {
+ProcedureNode *ProcedureGrammarRule::assembleNode(std::vector<Node *> &child_nodes) {
   return new ProcedureNode(static_cast<VariableNode *>(child_nodes[0])->GetVariableName(),
                            static_cast<StatementListNode *>(child_nodes[1]));
 }
@@ -36,7 +36,7 @@ ProcedureNode *ProcedureGrammarRule::assembleNode(std::vector<Node *> child_node
 StatementListGrammarRule::StatementListGrammarRule() : ListGrammarRule(new StatementGrammarProducer()) {
 }
 
-StatementListNode *StatementListGrammarRule::assembleNode(std::vector<Node *> children) {
+StatementListNode *StatementListGrammarRule::assembleNode(std::vector<Node *> &children) {
   std::vector<StatementNode *> statements{};
   statements.reserve(children.size());
   for (auto *child : children) {
@@ -45,7 +45,7 @@ StatementListNode *StatementListGrammarRule::assembleNode(std::vector<Node *> ch
   return new StatementListNode(statements);
 }
 
-bool StatementListGrammarRule::shouldStop(TokenIterator token_stream) {
+bool StatementListGrammarRule::shouldStop(TokenIterator &token_stream) {
   return **token_stream == EndOfFileToken()
       || !(**token_stream == KeywordToken("read") || **token_stream == KeywordToken("print")
           || **token_stream == KeywordToken("call") || **token_stream == KeywordToken("while")
@@ -88,7 +88,7 @@ ReadGrammarRule::ReadGrammarRule()
                                                        new TokenRuleFragment(new SemicolonToken())}) {
 }
 
-ReadNode *ReadGrammarRule::assembleNode(std::vector<Node *> childNodes) {
+ReadNode *ReadGrammarRule::assembleNode(std::vector<Node *> &childNodes) {
   return new ReadNode(static_cast<VariableNode *>(childNodes[0]));
 }
 
@@ -98,7 +98,7 @@ PrintGrammarRule::PrintGrammarRule()
                                                        new TokenRuleFragment(new SemicolonToken())}) {
 }
 
-PrintNode *PrintGrammarRule::assembleNode(std::vector<Node *> childNodes) {
+PrintNode *PrintGrammarRule::assembleNode(std::vector<Node *> &childNodes) {
   return new PrintNode(static_cast<VariableNode *>(childNodes[0]));
 }
 
@@ -108,7 +108,7 @@ CallGrammarRule::CallGrammarRule()
                                                        new TokenRuleFragment(new SemicolonToken())}) {
 }
 
-CallNode *CallGrammarRule::assembleNode(std::vector<Node *> childNodes) {
+CallNode *CallGrammarRule::assembleNode(std::vector<Node *> &childNodes) {
   return new CallNode(static_cast<VariableNode *>(childNodes[0])->GetVariableName());
 }
 
@@ -119,7 +119,7 @@ WhileGrammarRule::WhileGrammarRule()
     new NodeRuleFragment(new BracedGrammarProducer(new StatementListGrammarProducer()))}) {
 }
 
-WhileNode *WhileGrammarRule::assembleNode(std::vector<Node *> childNodes) {
+WhileNode *WhileGrammarRule::assembleNode(std::vector<Node *> &childNodes) {
   return new WhileNode(static_cast<CondExprNode *>(childNodes[0]), static_cast<StatementListNode *>(childNodes[1]));
 }
 
@@ -133,7 +133,7 @@ IfGrammarRule::IfGrammarRule()
     new NodeRuleFragment(new BracedGrammarProducer(new StatementListGrammarProducer()))}) {
 }
 
-IfNode *IfGrammarRule::assembleNode(std::vector<Node *> childNodes) {
+IfNode *IfGrammarRule::assembleNode(std::vector<Node *> &childNodes) {
   return new IfNode(static_cast<CondExprNode *>(childNodes[0]), static_cast<StatementListNode *>(childNodes[1]),
                     static_cast<StatementListNode *>(childNodes[2]));
 }
@@ -144,7 +144,7 @@ AssignGrammarRule::AssignGrammarRule()
     new NodeRuleFragment(new RelFactorGrammarProducer()), new TokenRuleFragment(new SemicolonToken())}) {
 }
 
-AssignNode *AssignGrammarRule::assembleNode(std::vector<Node *> childNodes) {
+AssignNode *AssignGrammarRule::assembleNode(std::vector<Node *> &childNodes) {
   return new AssignNode(static_cast<VariableNode *>(childNodes[0]), static_cast<RelFactorNode *>(childNodes[1]));
 }
 
@@ -171,7 +171,7 @@ NotExprGrammarRule::NotExprGrammarRule()
     new NodeRuleFragment(new ParenthesizedGrammarProducer(new CondExprGrammarProducer()))}) {
 }
 
-NotExprNode *NotExprGrammarRule::assembleNode(std::vector<Node *> children) {
+NotExprNode *NotExprGrammarRule::assembleNode(std::vector<Node *> &children) {
   return new NotExprNode(static_cast<CondExprNode *>(children[0]));
 }
 

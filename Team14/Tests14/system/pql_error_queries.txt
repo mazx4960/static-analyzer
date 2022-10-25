@@ -33,6 +33,31 @@ constant c; assign a; variable v;
 Select c such that Uses(a, v) pattern a (_,  c)
 SyntaxError
 5000
+108 - syntax error, undefined argument in pattern
+if ifs; assign a;
+Select ifs pattern ifs (_, a, _)
+SyntaxError
+5000
+109 - syntax error, undefined argument in pattern
+if ifs; variable v;
+Select ifs pattern ifs (_, _, v)
+SyntaxError
+5000
+110 - syntax error, undefined argument in pattern
+if ifs;
+Select ifs pattern w (_, "x", "y")
+SyntaxError
+5000
+111 - syntax error, undefined argument in pattern
+while w; assign a;
+Select w pattern w (_, a)
+SyntaxError
+5000
+112 - syntax error, undefined argument in pattern
+while w; variable v;
+Select w pattern w (_, v)
+SyntaxError
+5000
 201 - semantic error, "x" not defined in Select
 while w; stmt s;
 Select x such that Uses(s,  "x")
@@ -101,6 +126,31 @@ SemanticError
 215 - semantic error, wrong argument type in Affects
 while w; assign a;
 Select w such that Affects(a, w)
+SemanticError
+5000
+216 - semantic error, wrong synonym for pattern
+procedure p;
+Select p pattern p (_, _)
+SemanticError
+5000
+217 - semantic error, wrong synonym for pattern
+call c; variable v;
+Select c pattern c (v, _)
+SemanticError
+5000
+218 - syntax error, wrong argument length in pattern
+if ifs;
+Select ifs pattern ifs (_, _)
+SemanticError
+5000
+219 - syntax error, wrong argument length in pattern
+while w;
+Select w pattern w (_, _, _)
+SemanticError
+5000
+220 - syntax error, undefined argument in while pattern
+while w;
+Select w pattern w (_, "x")
 SemanticError
 5000
 301 - error in both syntax (extra "+" in pattern, same as 33) and semantics (undefined synonym), syntax error should be prioritised

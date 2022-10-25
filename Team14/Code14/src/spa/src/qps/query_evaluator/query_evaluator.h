@@ -10,9 +10,7 @@
 #include "result_projector.h"
 #include "subquery_evaluator.h"
 
-using SynonymReferencePointerUnorderedSet = std::unordered_set<SynonymReference *,
-                                                               SynonymReferenceHashFunction,
-                                                               SynonymReferencePointerEquality>;
+using SynonymReferencePointerUnorderedSet = std::unordered_set<SynonymReference *, SynonymReferenceHashFunction, SynonymReferencePointerEquality>;
 
 class QueryEvaluator {
  protected:

@@ -5,14 +5,12 @@ abstract class  "Token" {
     String value
 }
 
-class Symbol
-class Literal
-class Keyword
-class Operator
-class Separator
-class Wildcard
 
-abstract class  "PQL" {
+class Query {
+    SynonymReference[] getSynonymDeclarations()
+    QueryCall getQueryCall()
+    QueryClause[] getClauses()
+    String toString()
 }
 
 abstract class "EvaluationStrategy" {
@@ -20,13 +18,6 @@ abstract class "EvaluationStrategy" {
     SubqueryResult evaluate()
     Entity[] getCandidates()
     Entity[] intersect()
-}
-
-class "SuchThatStrategy" {
-    Entity[] evaluateParameter()
-}
-class "PatternStrategy" {
-    Entity[] evaluateParameter()
 }
 
 interface UIInterface {
@@ -46,16 +37,11 @@ class QPS {
 }
 
 class QueryParser {
-
-	void parse(String)
-	QueryDeclaration[] getDeclarations(QueryDeclarations[])
-	QueryCall[] getQueryCalls(QueryCall[])
+	Query parse(Token[])
 }
 
 class QueryBuilder {
 	Query build()
-	void withDeclarations(QueryDeclarations[])
-	void withQueryCalls(QueryCall[])
 }
 
 class Lexer {
@@ -75,22 +61,13 @@ class SubqueryEvaluator {
 	SubqueryResult evaluate()
 }
 
-class SubqueryEvaluator {
-	SubqueryResult evaluate()
-}
-
 class SubqueryResult {
 	SubqueryResult Join()
-	SubqueryResult Intersect()
 }
 
-Token <|.down. Symbol
-Token <|.down. Literal
-Token <|.down. Keyword
-Token <|.down. Operator
-Token <|.down. Separator
-Token <|.down. Wildcard
-
+class ResultProjector {
+    SubqueryResult Project()
+}
 
 UI -down- UIInterface
 PKB -down- PKBInterface
@@ -100,24 +77,21 @@ QPS *-up- PKBInterface
 QPS *-down- QueryLexer
 QPS *-down- QueryParser
 QPS *-down- QueryEvaluator
-QPS *-down- QueryBuilder
+
+QueryParser *-down- QueryBuilder
+QueryParser *-down- Query
 
 Lexer <|-down- QueryLexer
 
 QueryLexer *-down- Token
 
-QueryBuilder *-down- PQL
+QueryBuilder o-right- Query
 
 QueryEvaluator *-down- SubqueryEvaluator
 QueryEvaluator *-down- SubqueryResult
+QueryEvaluator *-down- ResultProjector
 
-EvaluationStrategy <|.down. SuchThatStrategy
-EvaluationStrategy <|.down.PatternStrategy
-
-SuchThatEvaluator *-down- SuchThatStrategy
-PatternEvaluator *-down- PatternStrategy
-
-SubqueryEvaluator <|-down- SuchThatEvaluator
-SubqueryEvaluator <|-down- PatternEvaluator
+SubqueryEvaluator <|-down- EvaluationStrategy
 SubqueryEvaluator -right- SubqueryResult
+SubqueryResult -right- ResultProjector
 @enduml

@@ -13,19 +13,20 @@ TEST(ExtractorTest, TestCalls) {
   auto *program = new ProgramNode(procs);
 
   std::vector<Relationship *> relationships;
-  auto const op = [&relationships](Node *node) { RelationshipExtractor::ExtractCalls(relationships, node); };
+  auto const op = [&relationships](Node *node) {
+    RelationshipExtractor::ExtractCalls(relationships, node);
+  };
   program->VisitAll(op);
 
   // DFS traversal should yield the following result
-  std::vector<Relationship *> expected = {
-      new CallsRelationship(new CallStmtEntity("1", std::string()), new ProcedureEntity("test")),
-  };
+  std::vector<Relationship *>
+      expected = {new CallsRelationship(new CallStmtEntity("1", "test"), new ProcedureEntity("test")),};
 
   ASSERT_EQ(relationships.size(), expected.size());
   for (int i = 0; i < relationships.size(); ++i) {
     ASSERT_EQ(relationships[i]->GetType(), expected[i]->GetType());
-    ASSERT_EQ(relationships[i]->GetFirst()->ToString(), expected[i]->GetFirst()->ToString());
-    ASSERT_EQ(relationships[i]->GetSecond()->ToString(), expected[i]->GetSecond()->ToString());
+    ASSERT_EQ(relationships[i]->GetFirst()->GetValue(), expected[i]->GetFirst()->GetValue());
+    ASSERT_EQ(relationships[i]->GetSecond()->GetValue(), expected[i]->GetSecond()->GetValue());
   }
 }
 
@@ -42,19 +43,20 @@ TEST(ExtractorTest, TestCallsNested) {
   auto *program = new ProgramNode(procs);
 
   std::vector<Relationship *> relationships;
-  auto const op = [&relationships](Node *node) { RelationshipExtractor::ExtractCalls(relationships, node); };
+  auto const op = [&relationships](Node *node) {
+    RelationshipExtractor::ExtractCalls(relationships, node);
+  };
   program->VisitAll(op);
 
   // DFS traversal should yield the following result
-  std::vector<Relationship *> expected = {
-      new CallsRelationship(new CallStmtEntity("3", std::string()), new ProcedureEntity("test2")),
-      new CallsRelationship(new CallStmtEntity("1", std::string()), new ProcedureEntity("test1")),
-  };
+  std::vector<Relationship *> expected =
+      {new CallsRelationship(new CallStmtEntity("3", "test2"), new ProcedureEntity("test2")),
+       new CallsRelationship(new CallStmtEntity("1", "test1"), new ProcedureEntity("test1")),};
 
   ASSERT_EQ(relationships.size(), expected.size());
   for (int i = 0; i < relationships.size(); ++i) {
     ASSERT_EQ(relationships[i]->GetType(), expected[i]->GetType());
-    ASSERT_EQ(relationships[i]->GetFirst()->ToString(), expected[i]->GetFirst()->ToString());
-    ASSERT_EQ(relationships[i]->GetSecond()->ToString(), expected[i]->GetSecond()->ToString());
+    ASSERT_EQ(relationships[i]->GetFirst()->GetValue(), expected[i]->GetFirst()->GetValue());
+    ASSERT_EQ(relationships[i]->GetSecond()->GetValue(), expected[i]->GetSecond()->GetValue());
   }
 }

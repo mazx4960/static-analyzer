@@ -17,8 +17,8 @@ class SubqueryResult {
 
   std::vector<ResultRow> table_rows_;
 
-  SubqueryResult(std::vector<QuerySynonym *>, std::vector<ResultRow>);
  public:
+  SubqueryResult(std::vector<QuerySynonym *>, std::vector<ResultRow>);
   SubqueryResult(const EntityPointerUnorderedMap &, QueryReference *, QueryReference *);
   [[nodiscard]] bool IsEmpty();
   bool Uses(QuerySynonym *synonym);

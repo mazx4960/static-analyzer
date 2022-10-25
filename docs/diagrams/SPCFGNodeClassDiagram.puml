@@ -1,0 +1,14 @@
+@startuml
+
+abstract class Node
+class CFGNode {
+    -Entity stmt_
+    +Entity* GetStmt()
+    +void AddChild(Node *)
+    +void SetChild(Node *, int)
+    +bool IsTerminal()
+}
+
+CFGNode .up.|> Node
+
+@enduml
