@@ -1,2 +1,2 @@
-read r;
-Select r.varName such that Next(4, r)
+read r; print p;
+Select <r, p>

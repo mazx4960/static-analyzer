@@ -77,12 +77,17 @@ class DeclarationBlueprint {
 class SelectBlueprint {
  private:
   std::vector<ElemBlueprint *> blueprint_references_;
+  ElemBlueprint *single_reference_;
 
  public:
-  explicit SelectBlueprint(std::vector<ElemBlueprint *> blueprint_references) : blueprint_references_(std::move(
-      blueprint_references)) {
+  explicit SelectBlueprint(std::vector<ElemBlueprint *> blueprint_references)
+      : single_reference_(nullptr), blueprint_references_(std::move(blueprint_references)) {
+  };
+  explicit SelectBlueprint(ElemBlueprint *single_reference)
+      : single_reference_(single_reference), blueprint_references_({single_reference}) {
   };
   [[nodiscard]] std::vector<ElemBlueprint *> getBlueprintReferences() const;
+  [[nodiscard]] ElemBlueprint *getSingleReference() const;
 };
 
 /**

@@ -24,6 +24,9 @@ EntityType DeclarationBlueprint::getEntityType() const {
 std::vector<ElemBlueprint *> SelectBlueprint::getBlueprintReferences() const {
   return this->blueprint_references_;
 }
+ElemBlueprint *SelectBlueprint::getSingleReference() const {
+  return this->single_reference_;
+}
 RsType SuchThatBlueprint::getRsType() const {
   return this->rs_type_;
 }

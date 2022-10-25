@@ -57,17 +57,20 @@ SelectCall *QueryBuilder::BuildSelect() {
   if (select_bp_ == nullptr) {
     throw ParseSemanticError("Missing Select call");
   }
-  auto selected = select_bp_->getBlueprintReferences();
-  if (selected.empty()) {
-    throw ParseSemanticError("Select call must have at least one synonym");
-  }
-  if (selected.size() == 1) {
-    auto *reference = selected[0];
-    spdlog::debug("Select call has one synonym: {}", reference->toString());
-    if (reference->getValue() == "BOOLEAN" && reference->getAttributeType() == AttributeType::kNone
+
+  // account for boolean edge cases
+  auto *single_select = select_bp_->getSingleReference();
+  if (single_select != nullptr) {
+    spdlog::debug("Select call has one synonym: {}", single_select->toString());
+    if (single_select->getValue() == "BOOLEAN" && single_select->getAttributeType() == AttributeType::kNone
         && !IsSynonymDeclared("BOOLEAN")) {
       return new BooleanSelect();
     }
+  }
+
+  auto selected = select_bp_->getBlueprintReferences();
+  if (selected.empty()) {
+    throw ParseSemanticError("Select call must have at least one synonym");
   }
   return new ElemSelect(BuildElems(selected));
 }
