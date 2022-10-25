@@ -14,7 +14,8 @@ class Node {
   NodeType nodeType_;
 
  public:
-  explicit Node(NodeType nodeType);
+  explicit Node(NodeType nodeType) : nodeType_(nodeType) {
+  };
   [[nodiscard]] NodeType GetNodeType() const;
   virtual std::vector<Node *> GetChildren() = 0;
   virtual std::string ToString() = 0;

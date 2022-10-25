@@ -1,13 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "control_flow.h"
-
 #include <spdlog/spdlog.h>
-
-#include <unordered_set>
-
-#include "sp/simple_definition/simple_ast.h"
-#include "entity_extractor.h"
 
 CFGNode::CFGNode(Entity *stmt) : Node(NodeType::kStatement), stmt_(stmt) {
 }
@@ -117,14 +111,11 @@ CFGNode *CFGBuilder::BuildBlock(Node *node, CFGNode *parent, CFGNode *terminal) 
     auto *stmt_node = static_cast<StatementNode *>(node);
     ConnectNode(parent, child);
     switch (stmt_node->GetStmtType()) {
-      case EntityType::kIfStmt:
-        parent = BuildIf(node, child);
+      case EntityType::kIfStmt:parent = BuildIf(node, child);
         break;
-      case EntityType::kWhileStmt:
-        parent = BuildWhile(node, child);
+      case EntityType::kWhileStmt:parent = BuildWhile(node, child);
         break;
-      default:
-        parent = child;
+      default:parent = child;
         break;
     }
   };

@@ -1,10 +1,6 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 #include "relationship.h"
 
-#include <utility>
-
-#include "entity.h"
-
 Relationship::Relationship(RsType type, Entity *first, Entity *second)
     : type_(type),
       first_(std::move(first)),

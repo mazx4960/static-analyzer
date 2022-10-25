@@ -111,9 +111,7 @@ class PatternStrategy : public EvaluationStrategy {
    * @param invert_search true if searching by second parameter (e.g. searching by s2 in Follows(s1, s2)).
    * @return set of Entity pointers matching the parameter and relationship type.
    */
-  EntityPointerUnorderedMap evaluateParameter(QueryReference *var_param,
-                                              ExpressionSpec *expr_param,
-                                              const EntitySet &potential_matches);
+  EntityPointerUnorderedMap evaluateParameter(QueryReference *var_param, ExpressionSpec *expr_param, const EntitySet &potential_matches);
 };
 
 /*

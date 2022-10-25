@@ -41,7 +41,7 @@ ParenthesizedGrammarRule::ParenthesizedGrammarRule(GrammarRuleProducer *parenthe
 }) {
 }
 
-Node *ParenthesizedGrammarRule::assembleNode(std::vector<Node *> children) {
+Node *ParenthesizedGrammarRule::assembleNode(std::vector<Node *> &children) {
   return children[0];
 }
 
@@ -53,6 +53,6 @@ BracedGrammarRule::BracedGrammarRule(GrammarRuleProducer *parenthesizedNode)
 }) {
 }
 
-Node *BracedGrammarRule::assembleNode(std::vector<Node *> children) {
+Node *BracedGrammarRule::assembleNode(std::vector<Node *> &children) {
   return children[0];
 }
