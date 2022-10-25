@@ -3,7 +3,6 @@
 #pragma once
 
 #include <algorithm>
-#include <format>
 #include <iterator>
 #include <string>
 #include <unordered_set>
