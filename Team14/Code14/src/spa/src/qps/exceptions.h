@@ -17,3 +17,9 @@ class EvaluationStrategyError : public SemanticError {
   explicit EvaluationStrategyError(const std::string &message) : SemanticError(message) {
   };
 };
+
+class ResultCreationError : public std::runtime_error {
+ public:
+  explicit ResultCreationError(const std::string &message) : std::runtime_error(message) {
+  }
+};
