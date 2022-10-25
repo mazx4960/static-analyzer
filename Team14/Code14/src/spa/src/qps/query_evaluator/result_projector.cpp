@@ -4,14 +4,19 @@
 ResultProjector *ResultProjector::getProjector(SelectCall *select_call, std::vector<SubqueryResult> &subquery_results) {
   switch (select_call->getSelectType()) {
     case SelectType::kElem: {
+      spdlog::debug("Creating projector for Elem select");
       auto *elem_select_call = static_cast<ElemSelect *>(select_call);
       std::vector<ElemReference *> called_references = elem_select_call->getReferences();
       return new SelectProjector(called_references, subquery_results);
     }
     case SelectType::kBoolean: {
+      spdlog::debug("Creating projector for Boolean select");
       return new BooleanProjector(subquery_results);
     }
-    default: throw std::runtime_error("Invalid select type.");
+    default: {
+      spdlog::error("Invalid select type encountered.");
+      throw std::runtime_error("Invalid select type encountered.");
+    }
   }
 }
 
@@ -55,6 +60,7 @@ SubqueryResult SelectProjector::select_results() {
 Result *SelectProjector::getResult() {
   this->project();
   SubqueryResult final_table = this->select_results();
+  spdlog::debug("Element Result context size: {}", final_table.GetRows().size())
   return new ElemResult(this->called_declarations_, final_table);
 }
 
@@ -64,5 +70,7 @@ bool BooleanProjector::has_results() {
 
 Result *BooleanProjector::getResult() {
   this->join();
-  return new BooleanResult(this->has_results());
+  bool has_results = this->has_results();
+  spdlog::debug("Boolean Result non-empty? {}", has_results);
+  return new BooleanResult(has_results);
 }
