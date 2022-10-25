@@ -23,6 +23,7 @@ class ResultProjector {
 
   /**
    * Join results from list of subquery results.
+   * Joined table is stored in instance attribute joined_results_.
    */
   void join();
 
@@ -67,6 +68,6 @@ class BooleanProjector : public ResultProjector {
  public:
   explicit BooleanProjector(std::vector<SubqueryResult> &subquery_results) : ResultProjector(subquery_results) {
   };
-  
+
   Result *getResult() override;
 };
