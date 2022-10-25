@@ -3,7 +3,7 @@
 #include "spdlog/spdlog.h"
 
 SubQueryEvaluator::SubQueryEvaluator(IPKBQuerier *pkb, QueryClause *query_clause) {
-  spdlog::info("Creating evaluation strategy for {}", query_clause->toString());
+  spdlog::info("Creating evaluation strategy for {}, weight: {}", query_clause->toString(), query_clause->getWeight());
   this->strategy_ = EvaluationStrategy::getStrategy(pkb, query_clause);
 }
 
