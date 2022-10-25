@@ -25,7 +25,7 @@ void ResultProjector::join() {
                   [](SubqueryResult subquery_result) {
                     return subquery_result.IsEmpty();
                   })) {
-    spdlog::debug("Some table empty");
+    spdlog::debug("Empty table encountered, terminating JOIN operation.");
     this->joined_results_ = this->getEmptyFinalTable();
   }
   SubqueryResult intermediate_result = SubqueryResult::FullNoSynonym();
