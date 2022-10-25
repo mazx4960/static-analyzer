@@ -50,9 +50,12 @@ struct ResultTestStatics {
       {new QuerySynonym("proc_z"), new ProcedureEntity("do_this")}
   };
 
-  inline static SubqueryResult all_rows_ = SubqueryResult(syn_vec_1_, {row1_, row2_, row3_});
+  inline static std::vector<ResultRow> full_result_rows_ = {row1_, row2_, row3_};
+  inline static std::vector<ResultRow> empty_result_rows_ = {};
 
-  inline static SubqueryResult no_rows_ = SubqueryResult(syn_vec_1_, {});
+  inline static SubqueryResult all_rows_ = SubqueryResult(syn_vec_1_, full_result_rows_);
+
+  inline static SubqueryResult no_rows_ = SubqueryResult(syn_vec_1_, empty_result_rows_);
 
   // Table without any synonyms declared
   inline static SubqueryResult no_syns_all_rows_ = SubqueryResult({}, {row1_, row2_, row3_});
@@ -107,6 +110,17 @@ TEST(ElemResultCreationTest, AllSynonymShuffledFullTable) {
   ASSERT_EQ(elem_result->get_results_set(), exp_set);
 }
 
+TEST(ElemResultCreationTest, AllSynonymEmptyTable) {
+  Result *elem_result = new ElemResult({ResultTestStatics::elemref_vec_full_}, ResultTestStatics::no_rows_);
+  ASSERT_EQ(elem_result->get_synonyms(), "{ Variable:var_x, AssignStmt:assign_y, Procedure:proc_z }");
+  ASSERT_TRUE(elem_result->is_empty());
+  ASSERT_EQ(elem_result->size(), 0);
+
+  std::unordered_set<std::string> exp_set = {};
+
+  ASSERT_EQ(elem_result->get_results_set(), exp_set);
+}
+
 TEST(ElemResultCreationTest, SingleSynFullTable) {
   Result *elem_result = new ElemResult(ResultTestStatics::elemref_vec_var_, ResultTestStatics::all_rows_);
   ASSERT_EQ(elem_result->get_synonyms(), "{ Variable:var_x }");
@@ -114,6 +128,17 @@ TEST(ElemResultCreationTest, SingleSynFullTable) {
   ASSERT_EQ(elem_result->size(), 2);
 
   std::unordered_set<std::string> exp_set = {"a", "b"};
+
+  ASSERT_EQ(elem_result->get_results_set(), exp_set);
+}
+
+TEST(ElemResultCreationTest, SingleSynEmptyTable) {
+  Result *elem_result = new ElemResult({ResultTestStatics::elemref_vec_var_}, ResultTestStatics::no_rows_);
+  ASSERT_EQ(elem_result->get_synonyms(), "{ Variable:var_x }");
+  ASSERT_TRUE(elem_result->is_empty());
+  ASSERT_EQ(elem_result->size(), 0);
+
+  std::unordered_set<std::string> exp_set = {};
 
   ASSERT_EQ(elem_result->get_results_set(), exp_set);
 }

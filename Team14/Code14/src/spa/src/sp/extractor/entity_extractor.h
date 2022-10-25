@@ -5,6 +5,7 @@
 #include "commons/entity.h"
 #include "commons/parser/node/node.h"
 #include "commons/relationship.h"
+#include "sp/simple_definition/simple_ast.h"
 
 class EntityExtractor {
  public:

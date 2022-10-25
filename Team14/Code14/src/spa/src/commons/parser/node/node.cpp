@@ -2,8 +2,6 @@
 
 #include "node.h"
 
-Node::Node(NodeType nodeType) : nodeType_(nodeType) {
-}
 NodeType Node::GetNodeType() const {
   return nodeType_;
 }

@@ -9,8 +9,8 @@
 
 class ProgramGrammarRule : public ListGrammarRule {
  private:
-  bool shouldStop(TokenIterator token_stream) override;
-  ProgramNode *assembleNode(std::vector<Node *> children) override;
+  bool shouldStop(TokenIterator &token_stream) override;
+  ProgramNode *assembleNode(std::vector<Node *> &children) override;
 
  public:
   ProgramGrammarRule();
@@ -18,7 +18,7 @@ class ProgramGrammarRule : public ListGrammarRule {
 
 class ProcedureGrammarRule : public CompositeGrammarRule {
  private:
-  ProcedureNode *assembleNode(std::vector<Node *>) override;
+  ProcedureNode *assembleNode(std::vector<Node *> &) override;
 
  public:
   ProcedureGrammarRule();
@@ -26,8 +26,8 @@ class ProcedureGrammarRule : public CompositeGrammarRule {
 
 class StatementListGrammarRule : public ListGrammarRule {
  private:
-  bool shouldStop(TokenIterator token_stream) override;
-  StatementListNode *assembleNode(std::vector<Node *> children) override;
+  bool shouldStop(TokenIterator &token_stream) override;
+  StatementListNode *assembleNode(std::vector<Node *> &children) override;
 
  public:
   StatementListGrammarRule();
@@ -40,7 +40,7 @@ class StatementGrammarRule : public EarlyChoiceGrammarRule {
 
 class ReadGrammarRule : public CompositeGrammarRule {
  private:
-  ReadNode *assembleNode(std::vector<Node *>) override;
+  ReadNode *assembleNode(std::vector<Node *> &) override;
 
  public:
   ReadGrammarRule();
@@ -48,7 +48,7 @@ class ReadGrammarRule : public CompositeGrammarRule {
 
 class PrintGrammarRule : public CompositeGrammarRule {
  private:
-  PrintNode *assembleNode(std::vector<Node *>) override;
+  PrintNode *assembleNode(std::vector<Node *> &) override;
 
  public:
   PrintGrammarRule();
@@ -56,7 +56,7 @@ class PrintGrammarRule : public CompositeGrammarRule {
 
 class CallGrammarRule : public CompositeGrammarRule {
  private:
-  CallNode *assembleNode(std::vector<Node *>) override;
+  CallNode *assembleNode(std::vector<Node *> &) override;
 
  public:
   CallGrammarRule();
@@ -64,7 +64,7 @@ class CallGrammarRule : public CompositeGrammarRule {
 
 class WhileGrammarRule : public CompositeGrammarRule {
  private:
-  WhileNode *assembleNode(std::vector<Node *>) override;
+  WhileNode *assembleNode(std::vector<Node *> &) override;
 
  public:
   WhileGrammarRule();
@@ -72,7 +72,7 @@ class WhileGrammarRule : public CompositeGrammarRule {
 
 class IfGrammarRule : public CompositeGrammarRule {
  private:
-  IfNode *assembleNode(std::vector<Node *>) override;
+  IfNode *assembleNode(std::vector<Node *> &) override;
 
  public:
   IfGrammarRule();
@@ -80,7 +80,7 @@ class IfGrammarRule : public CompositeGrammarRule {
 
 class AssignGrammarRule : public CompositeGrammarRule {
  private:
-  AssignNode *assembleNode(std::vector<Node *>) override;
+  AssignNode *assembleNode(std::vector<Node *> &) override;
 
  public:
   AssignGrammarRule();
@@ -93,7 +93,7 @@ class CondExprGrammarRule : public EarlyChoiceGrammarRule {
 
 class NotExprGrammarRule : public CompositeGrammarRule {
  private:
-  NotExprNode *assembleNode(std::vector<Node *>) override;
+  NotExprNode *assembleNode(std::vector<Node *> &) override;
 
  public:
   NotExprGrammarRule();
