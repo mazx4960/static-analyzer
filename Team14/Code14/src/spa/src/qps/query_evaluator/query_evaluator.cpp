@@ -48,28 +48,6 @@ Result *QueryEvaluator::evaluate() {
   // Query declarations for whose subquery_results are to be returned.
   auto *select_call = this->query_.getQueryCall();
 
-  switch (select_call->getSelectType()) {
-    case SelectType::kElem: {
-      spdlog::debug("Creating Result for Element select type");
-      auto *elem_select_call = static_cast<ElemSelect *>(select_call);
-      std::vector<ElemReference *> called_declarations = elem_select_call->getReferences();
-      auto *result_projector = new SelectProjector(called_declarations, subquery_results);
-      result_projector->project();
-      SubqueryResult result_context = result_projector->select_results();
-      spdlog::debug("Element Result context size: {}", result_context.GetRows().size());
-      return new ElemResult(called_declarations, result_context);
-    }
-    case SelectType::kBoolean: {
-      spdlog::debug("Creating Result for Boolean select type");
-      auto *result_projector = new BooleanProjector(subquery_results);
-      result_projector->project();
-      bool has_results = result_projector->has_results();
-      spdlog::debug("Boolean Result non-empty? {}", has_results);
-      return new BooleanResult(has_results);
-    }
-    default: {
-      spdlog::debug("Invalid select type");
-      return Result::empty();
-    }
-  }
+  ResultProjector *result_projector = ResultProjector::getProjector(select_call, subquery_results);
+  return result_projector->getResult();
 }

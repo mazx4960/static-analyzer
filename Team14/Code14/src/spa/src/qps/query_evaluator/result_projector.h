@@ -2,10 +2,11 @@
 
 #include <utility>
 
-#include "evaluation_strategy.h"
 #include "commons/entity.h"
+#include "evaluation_strategy.h"
 #include "qps/result.h"
 #include "qps/pql/query_reference.h"
+#include "qps/pql/query_call.h"
 #include "subquery_result.h"
 
 /**
@@ -26,10 +27,13 @@ class ResultProjector {
   void join();
 
  public:
+  static ResultProjector *getProjector(SelectCall *, std::vector<SubqueryResult> &);
+
   /**
-   * Project results from list of subquery results.
+   * Projects and merges subquery result tables and creates an instance of Result class.
+   * @return instance of Result class matching the Select call.
    */
-  virtual void project() = 0;
+  virtual Result *getResult() = 0;
 };
 
 class SelectProjector : public ResultProjector {
@@ -38,28 +42,31 @@ class SelectProjector : public ResultProjector {
 
   std::vector<QuerySynonym *> called_synonyms_;
 
- public:
-  SelectProjector(std::vector<ElemReference *> &declarations, std::vector<SubqueryResult> &subquery_results);
-
-  void project() override;
+  void project();
 
   /**
    * Select results (columns) based on called synonyms.
    * @return subset of intermediate result table with only columns for selected synonyms.
    */
   SubqueryResult select_results();
+
+ public:
+  SelectProjector(std::vector<ElemReference *> &declarations, std::vector<SubqueryResult> &subquery_results);
+
+  Result *getResult() override;
 };
 
 class BooleanProjector : public ResultProjector {
+ private:
+  /**
+  * Checks if final table has any rows.
+  * @return true if table is non empty.
+  */
+  bool has_results();
+
  public:
   explicit BooleanProjector(std::vector<SubqueryResult> &subquery_results) : ResultProjector(subquery_results) {
   };
-
-  void project() override;
-
-  /**
-   * Checks if final table has any rows.
-   * @return true if table is non empty.
-   */
-  bool has_results();
+  
+  Result *getResult() override;
 };
