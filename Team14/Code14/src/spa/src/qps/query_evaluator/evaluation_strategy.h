@@ -28,8 +28,10 @@ class EvaluationStrategy {
    */
   static EvaluationStrategy *getStrategy(IPKBQuerier *, QueryClause *);
 
-  virtual SubqueryResult evaluate(Context *ctx) = 0;
+  static void updateContext(Context *ctx, QueryReference *synonym_ref, EntitySet &entities);
 
+  virtual SubqueryResult evaluate(Context *ctx) = 0;
+  
   /**
    * Get the candidates for the given query declaration.
    * @param query_declaration query declaration.
@@ -37,7 +39,6 @@ class EvaluationStrategy {
    */
   EntitySet getCandidates(Context *ctx, QueryReference *);
   static std::string unwrapEntity(QueryReference *, Entity *);
-  void updateContext(Context *ctx, QueryReference *synonym_ref, EntitySet &entities);
 };
 
 /*
