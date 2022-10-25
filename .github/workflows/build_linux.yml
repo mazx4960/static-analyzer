@@ -32,6 +32,7 @@ jobs:
           scripts/test.sh
       - name: Profiling (runner)
         shell: bash
+        run: |
           alias python3=python
           chmod +x scripts/run.sh
           scripts/run.sh
