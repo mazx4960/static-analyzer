@@ -31,7 +31,7 @@ class QueryReference : public ICheckSyntax, public IStmtRef, public IEntRef, pub
 
  public:
   ReferenceType getRefType() const;
-
+  virtual int getUses() const = 0;
   virtual EntityType getEntityType() const;
   virtual EntityPointerUnorderedSet getContext() const;
   virtual void setContext(EntityPointerUnorderedSet);
@@ -52,6 +52,9 @@ class WildcardReference : public QueryReference {
   explicit WildcardReference(EntityType wildcard_type = EntityType::kUnknown) : QueryReference(ReferenceType::kWildcard,
                                                                                                wildcard_type) {
   };
+  inline int getUses() const override {
+    return 0;
+  }
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;
   std::string getReferenceValue() const override;
@@ -69,6 +72,9 @@ class IdentReference : public QueryReference {
       ReferenceType::kIdent,
       entity_type), value_(std::move(value)) {
   }
+  inline int getUses() const override {
+    return 0;
+  }
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;
   std::string getReferenceValue() const override;
@@ -85,6 +91,9 @@ class IntegerReference : public QueryReference {
   explicit IntegerReference(std::string value, EntityType entity_type = EntityType::kStatement) : QueryReference(
       ReferenceType::kInteger,
       entity_type), value_(std::move(value)) {
+  }
+  inline int getUses() const override {
+    return 0;
   }
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;
@@ -107,11 +116,14 @@ class SynonymReference : public QueryReference, public IBooleanRef, public ElemR
  private:
   QuerySynonym *query_synonym_;
   bool is_boolean_ref_;
+  int uses_ = 0;
 
  public:
   explicit SynonymReference(QuerySynonym *query_synonym, EntityType entity_type = EntityType::kUnknown)
       : QueryReference(ReferenceType::kSynonym, entity_type), query_synonym_(query_synonym) {
   };
+  void incrementUses(int uses = 1);
+  int getUses() const override;
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;
   ReferenceType getRefType() const override;
@@ -136,6 +148,9 @@ class AttrReference : public QueryReference, public ElemReference, public ICheck
       ReferenceType::kAttr,
       EntityType::kUnknown), synonym_reference_(synonym_reference), attribute_type_(attribute_type) {
   };
+  inline int getUses() const override {
+    return 0;
+  }
   bool operator==(const QueryReference &other) const override;
   bool operator==(const QueryReference *other) const override;
   SynonymReference *getSynonymReference() const;

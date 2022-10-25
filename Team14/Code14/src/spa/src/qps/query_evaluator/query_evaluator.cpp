@@ -29,7 +29,7 @@ SynonymReferencePointerUnorderedSet QueryEvaluator::fetchContext() {
 }
 
 std::vector<SubqueryResult> QueryEvaluator::evaluateSubqueries() {
-  std::vector<QueryClause *> subquery_clauses = this->query_.getClauses();
+  std::vector<QueryClause *> subquery_clauses = getSortedQueries();
   std::vector<SubqueryResult> subquery_results_list;
   for (auto *clause : subquery_clauses) {
     SubQueryEvaluator subquery_evaluator = SubQueryEvaluator(this->pkb_, clause);
@@ -72,4 +72,73 @@ Result *QueryEvaluator::evaluate() {
       return Result::empty();
     }
   }
+}
+
+Clauses QueryEvaluator::getSortedQueries() {
+  auto clauses = this->query_.getClauses();
+  for (auto *clause:clauses) {
+    updateWeight(clause);
+  }
+
+  struct {
+    bool operator()(QueryClause *a, QueryClause *b) const { return a->getWeight() > b->getWeight(); }
+  } comparator;
+
+  std::sort(clauses.begin(), clauses.end(), comparator);
+  return clauses;
+}
+
+QueryClause *QueryEvaluator::updateWeight(QueryClause *clause) {
+  if (clause->getClauseType() == ClauseType::kSuchThat) {
+    double first_weight = 1;
+    double second_weight = 1;
+    auto *such_that_clause = static_cast<SuchThatClause *>(clause);
+    auto *first = such_that_clause->getFirst();
+    auto *second = such_that_clause->getSecond();
+    if (first->getUses() == 0 && second->getUses() == 0) {
+      return clause;
+    }
+
+    if (first->getUses() > 0) {
+      first_weight = calculateWeight(first->getContext().size(), first->getUses());
+    }
+
+    if (second->getUses() > 0) {
+      second_weight = calculateWeight(second->getContext().size(), second->getUses());
+    }
+
+    clause->setWeight(first_weight * second_weight);
+    return clause;
+  }
+
+  if (clause->getClauseType() == ClauseType::kWith) {
+    return clause;
+  }
+
+  if (clause->getClauseType() == ClauseType::kPattern) {
+    double first_weight = 1;
+    double second_weight = 1;
+    auto *pattern_clause = static_cast<PatternClause *>(clause);
+    auto *synonym_ref = pattern_clause->getSynonymDeclaration();
+    auto *ent_ref = pattern_clause->getEntRef();
+    if (synonym_ref->getUses() == 0 && ent_ref->getUses() == 0) {
+      return clause;
+    }
+
+    if (synonym_ref->getUses() > 0) {
+      first_weight = calculateWeight(synonym_ref->getContext().size(), synonym_ref->getUses());
+    }
+
+    if (ent_ref->getUses() > 0) {
+      second_weight = calculateWeight(ent_ref->getContext().size(), ent_ref->getUses());
+    }
+
+    clause->setWeight(first_weight * second_weight);
+    return clause;
+  }
+  return clause;
+}
+
+double QueryEvaluator::calculateWeight(double contex_size, int usage_count) {
+  return (1.0 - (1.0 / contex_size)) * usage_count;
 }

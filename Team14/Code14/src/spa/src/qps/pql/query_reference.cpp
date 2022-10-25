@@ -30,6 +30,7 @@ bool QueryReference::isAttrCompareRef() const {
   return false;
 }
 
+
 // WildcardDeclaration
 bool WildcardReference::operator==(const QueryReference &other) const {
   return other.getRefType() == ReferenceType::kWildcard;
@@ -147,6 +148,14 @@ bool SynonymReference::isBooleanRef() const {
 }
 EntityPointerUnorderedSet SynonymReference::getContext() const {
   return QueryReference::getContext();
+}
+
+void SynonymReference::incrementUses(int uses) {
+  this->uses_ += uses;
+}
+
+int SynonymReference::getUses() const {
+  return this->uses_;
 }
 
 bool AttrReference::operator==(const QueryReference &other) const {

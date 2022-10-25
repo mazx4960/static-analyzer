@@ -15,6 +15,11 @@ using SynonymReferencePointerUnorderedSet = std::unordered_set<SynonymReference 
                                                                SynonymReferencePointerEquality>;
 
 class QueryEvaluator {
+ private:
+  Clauses getSortedQueries();
+  QueryClause *updateWeight(QueryClause *clause);
+  static double calculateWeight(double contex_size, int usage_count);
+
  protected:
   Query query_;
 

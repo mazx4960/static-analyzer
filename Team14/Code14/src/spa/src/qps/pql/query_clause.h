@@ -11,6 +11,7 @@
 class QueryClause : public ICheckSyntax, public ICheckSemantics {
  private:
   ClauseType clause_type_;
+  double weight_ = 0;
 
  protected:
   explicit QueryClause(ClauseType clauseType) : clause_type_(clauseType) {
@@ -21,6 +22,9 @@ class QueryClause : public ICheckSyntax, public ICheckSemantics {
   [[nodiscard]] bool isSyntacticallyCorrect() const override = 0;
   [[nodiscard]] bool isSemanticallyCorrect() const override = 0;
   [[nodiscard]] virtual std::string toString() const = 0;
+  void setWeight(double weight);
+  double getWeight() const;
+  virtual bool operator<(const QueryClause &other) const;
   virtual bool operator==(const QueryClause &other) const = 0;
 };
 

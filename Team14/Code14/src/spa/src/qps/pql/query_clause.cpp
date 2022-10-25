@@ -5,6 +5,15 @@
 ClauseType QueryClause::getClauseType() const {
   return this->clause_type_;
 }
+void QueryClause::setWeight(double weight) {
+  this->weight_ = weight;
+}
+double QueryClause::getWeight() const {
+  return this->weight_;
+}
+bool QueryClause::operator<(const QueryClause &other) const {
+  return this->getWeight() < other.getWeight();
+}
 SuchThatClause *SuchThatClause::Create(RsType type, QueryReference *first, QueryReference *second) {
   switch (type) {
     case RsType::kParent:return new ParentClause(first, second);

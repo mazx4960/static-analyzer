@@ -7,6 +7,7 @@ SynonymReference *QueryBuilder::GetSynonymReference(const std::string &name) {
   if (synonym_table_.find(name) == synonym_table_.end()) {
     throw ParseSemanticError("Synonym " + name + " not declared");
   }
+  synonym_table_[name]->incrementUses();
   return synonym_table_[name];
 }
 
