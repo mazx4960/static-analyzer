@@ -16,5 +16,6 @@ class Context {
   Context() = default;
   EntitySet Get(QuerySynonym *synonym) const;
   void Set(QuerySynonym *synonym, EntitySet &entities);
+  void Erase(QuerySynonym *synonym, Entity *entity);
 };
 

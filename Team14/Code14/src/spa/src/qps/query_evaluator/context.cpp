@@ -16,3 +16,11 @@ void Context::Set(QuerySynonym *synonym, EntitySet &entities) {
   }
   context_[synonym] = entities;
 }
+
+void Context::Erase(QuerySynonym *synonym, Entity *entity) {
+  auto it = context_.find(synonym);
+  if (it == context_.end()) {
+    return;
+  }
+  it->second.erase(entity);
+}

@@ -37,6 +37,7 @@ class EvaluationStrategy {
    */
   EntitySet getCandidates(Context *ctx, QueryReference *);
   static std::string unwrapEntity(QueryReference *, Entity *);
+  void updateContext(Context *ctx, QueryReference *synonym_ref, EntitySet &entities);
 };
 
 /*
@@ -62,7 +63,7 @@ class SuchThatStrategy : public EvaluationStrategy {
    * @param expr_param Right-hand side expression.
    * @return set of Entity pointers matching the parameter and expression.
    */
-  EntityPointerUnorderedMap evaluateParameter(Context *ctx, QueryReference *, RsType, bool, const EntitySet &);
+  EntityPointerUnorderedMap evaluateParameter(Context *ctx, RsType, QueryReference *, QueryReference *);
 };
 
 /*
@@ -89,9 +90,9 @@ class PatternStrategy : public EvaluationStrategy {
    * @return set of Entity pointers matching the parameter and relationship type.
    */
   EntityPointerUnorderedMap evaluateParameter(Context *ctx,
+                                              SynonymReference *stmt_param,
                                               QueryReference *var_param,
-                                              ExpressionSpec *expr_param,
-                                              const EntitySet &potential_matches);
+                                              ExpressionSpec *expr_param);
 };
 
 /*

@@ -52,80 +52,106 @@ std::string EvaluationStrategy::unwrapEntity(QueryReference *query_reference, En
   }
   return entity->GetValue();
 }
+void EvaluationStrategy::updateContext(Context *ctx, QueryReference *synonym_ref, EntitySet &entities) {
+  if (synonym_ref->getRefType() != ReferenceType::kAttr && synonym_ref->getRefType() != ReferenceType::kSynonym) {
+    return;
+  }
+  auto *synonym = static_cast<ElemReference *>(synonym_ref)->getSynonym();
+  ctx->Set(synonym, entities);
+}
 
 SubqueryResult SuchThatStrategy::evaluate(Context *ctx) {
   RsType rs_type = this->clause_->getSuchThatType();
-  spdlog::debug("Evaluating SuchThat clause with relationship {}", RsTypeToString(rs_type));
-
   QueryReference *first_param = this->clause_->getFirst();
   QueryReference *second_param = this->clause_->getSecond();
-  EntitySet first_param_candidates = this->getCandidates(ctx, first_param);
-  EntitySet second_param_candidates = this->getCandidates(ctx, second_param);
+  spdlog::debug("Evaluating SuchThat clause {}: {}, {}",
+                RsTypeToString(rs_type),
+                first_param->toString(),
+                second_param->toString());
 
-  auto matches = this->evaluateParameter(ctx, first_param, rs_type, false, second_param_candidates);
+  auto matches = this->evaluateParameter(ctx, rs_type, first_param, second_param);
   return SubqueryResult(matches, first_param, second_param);
 }
 
 EntityPointerUnorderedMap SuchThatStrategy::evaluateParameter(Context *ctx,
-                                                              QueryReference *param,
                                                               RsType rs_type,
-                                                              bool invert_search,
-                                                              const EntitySet &potential_matches) {
-  spdlog::debug("Evaluating SuchThat parameter for {}, inverse = {}", RsTypeToString(rs_type), invert_search);
-  EntitySet candidates = this->getCandidates(ctx, param);
+                                                              QueryReference *first,
+                                                              QueryReference *second) {
+  EntitySet candidates = this->getCandidates(ctx, first);
+  EntitySet potential_matches = this->getCandidates(ctx, second);
   std::string candidate_string;
   for (auto *candidate : candidates) {
     candidate_string += candidate->ToString() + ", ";
   }
   spdlog::debug("Candidates[{}]: {}", candidates.size(), candidate_string);
+
   EntityPointerUnorderedMap results;
+  EntitySet valid_first;
+  EntitySet valid_second;
   for (auto *entity : candidates) {
-    EntitySet valid_entities = this->pkb_->getByRelationship(rs_type, entity, invert_search);
+    EntitySet valid_entities = this->pkb_->getByRelationship(rs_type, entity, false);
     auto intersected = intersect(valid_entities, potential_matches);
+    if (intersected.empty()) {
+      continue;
+    }
+    valid_first.insert(entity);
+    valid_second.insert(intersected.begin(), intersected.end());
     results[entity] = intersected;
   }
+  this->updateContext(ctx, first, valid_first);
+  this->updateContext(ctx, second, valid_second);
   return results;
 }
 
 SubqueryResult PatternStrategy::evaluate(Context *ctx) {
-  spdlog::debug("Evaluating Pattern clause");
-
   SynonymReference *stmt_param = this->clause_->getStmtRef();
   QueryReference *var_param = this->clause_->getEntRef();
   ExpressionSpec *expr_param = this->clause_->getFirstExpression();
-  EntitySet stmt_param_context = this->getCandidates(ctx, stmt_param);
+  spdlog::debug("Evaluating Pattern clause {}: {}, {}",
+                stmt_param->toString(),
+                var_param->toString(),
+                expr_param->toString());
 
-  auto stmt_matches = this->evaluateParameter(ctx, var_param, expr_param, stmt_param_context);
+  auto stmt_matches = this->evaluateParameter(ctx, stmt_param, var_param, expr_param);
   return SubqueryResult(stmt_matches, var_param, stmt_param);
 }
 
 EntityPointerUnorderedMap PatternStrategy::evaluateParameter(Context *ctx,
+                                                             SynonymReference *stmt_param,
                                                              QueryReference *var_param,
-                                                             ExpressionSpec *expr_param,
-                                                             const EntitySet &potential_matches) {
-  spdlog::debug("Evaluating Pattern parameter for {}", expr_param->toString());
+                                                             ExpressionSpec *expr_param) {
   EntitySet candidates = this->getCandidates(ctx, var_param);
+  EntitySet potential_matches = this->getCandidates(ctx, stmt_param);
   std::string candidate_string;
   for (auto *candidate : candidates) {
     candidate_string += candidate->ToString() + ", ";
   }
   spdlog::debug("Candidates[{}]: {}", candidates.size(), candidate_string);
+
   EntityPointerUnorderedMap results;
+  EntitySet valid_stmt;
+  EntitySet valid_var;
   std::string expr = expr_param->toString();
-  for (auto *entity : candidates) {
-    EntitySet valid_entities = this->pkb_->getByPattern(entity, expr, expr_param->isWild());
+  for (auto *var : candidates) {
+    EntitySet valid_entities = this->pkb_->getByPattern(var, expr, expr_param->isWild());
     auto intersected = intersect(valid_entities, potential_matches);
-    results[entity] = intersected;
+    if (intersected.empty()) {
+      continue;
+    }
+    valid_var.insert(var);
+    valid_stmt.insert(intersected.begin(), intersected.end());
+    results[var] = intersected;
   }
+  this->updateContext(ctx, var_param, valid_var);
+  this->updateContext(ctx, stmt_param, valid_stmt);
   return results;
 }
 
 SubqueryResult WithStrategy::evaluate(Context *ctx) {
-  spdlog::debug("Evaluating With clause");
-
   Comparator comparator = this->clause_->getComparator();
   QueryReference *first_param = this->clause_->getFirst();
   QueryReference *second_param = this->clause_->getSecond();
+  spdlog::debug("Evaluating With clause {} = {}", first_param->toString(), second_param->toString());
 
   auto matches = this->evaluateParameter(ctx, first_param, second_param, comparator);
   return SubqueryResult(matches, first_param, second_param);
@@ -134,7 +160,6 @@ EntityPointerUnorderedMap WithStrategy::evaluateParameter(Context *ctx,
                                                           QueryReference *first,
                                                           QueryReference *second,
                                                           Comparator comparator) {
-  spdlog::debug("Evaluating With parameter {} = {}", first->toString(), second->toString());
   EntitySet first_candidates = this->getCandidates(ctx, first);
   EntitySet second_candidates = this->getCandidates(ctx, second);
   std::string candidate_string1;
@@ -149,6 +174,8 @@ EntityPointerUnorderedMap WithStrategy::evaluateParameter(Context *ctx,
   spdlog::debug("Candidates2[{}]: {}", second_candidates.size(), candidate_string2);
 
   EntityPointerUnorderedMap results;
+  EntitySet valid_first;
+  EntitySet valid_second;
   for (auto *entity : first_candidates) {
     auto target = EvaluationStrategy::unwrapEntity(first, entity);
     auto const pred = [&comparator, &second, &target](Entity *other) {
@@ -160,7 +187,14 @@ EntityPointerUnorderedMap WithStrategy::evaluateParameter(Context *ctx,
       return false;
     };
     auto valid_entities = copy_if(second_candidates, pred);
+    if (valid_entities.empty()) {
+      continue;
+    }
+    valid_first.insert(entity);
+    valid_second.insert(valid_entities.begin(), valid_entities.end());
     results[entity] = valid_entities;
   }
+  this->updateContext(ctx, first, valid_first);
+  this->updateContext(ctx, second, valid_second);
   return results;
 }
