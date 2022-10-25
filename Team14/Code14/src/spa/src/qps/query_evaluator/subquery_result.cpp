@@ -1,3 +1,5 @@
+// Copyright 2022 CS3203 Team14. All rights reserved.
+
 #include "subquery_result.h"
 
 #include <utility>
@@ -5,18 +7,12 @@
 #include "spdlog/spdlog.h"
 
 SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryReference *first, QueryReference *second) {
-  if (first->getRefType() == ReferenceType::kAttr) {
-    first = static_cast<AttrReference *>(first)->getSynonymReference();
-  }
-  if (second->getRefType() == ReferenceType::kAttr) {
-    second = static_cast<AttrReference *>(second)->getSynonymReference();
-  }
-  if (first->getRefType() == ReferenceType::kSynonym) {
-    QuerySynonym *first_synonym = static_cast<SynonymReference *>(first)->getSynonym();
+  if (first->getRefType() == ReferenceType::kSynonym || first->getRefType() == ReferenceType::kAttr) {
+    QuerySynonym *first_synonym = static_cast<ElemReference *>(first)->getSynonym();
     spdlog::debug("First synonym used");
     synonyms_.push_back(first_synonym);
-    if (second->getRefType() == ReferenceType::kSynonym) {
-      QuerySynonym *second_synonym = static_cast<SynonymReference *>(second)->getSynonym();
+    if (second->getRefType() == ReferenceType::kSynonym || second->getRefType() == ReferenceType::kAttr) {
+      QuerySynonym *second_synonym = static_cast<ElemReference *>(second)->getSynonym();
       spdlog::debug("Second synonym used");
       // Corner case: first and second synonyms are the same
       if (*first_synonym == *second_synonym) {
@@ -41,8 +37,8 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryRefe
         }
       }
     }
-  } else if (second->getRefType() == ReferenceType::kSynonym) {
-    QuerySynonym *second_synonym = static_cast<SynonymReference *>(second)->getSynonym();
+  } else if (second->getRefType() == ReferenceType::kSynonym || second->getRefType() == ReferenceType::kAttr) {
+    QuerySynonym *second_synonym = static_cast<ElemReference *>(second)->getSynonym();
     spdlog::debug("Second synonym used");
     synonyms_.push_back(second_synonym);
     for (auto [entity, entity_set] : table) {
@@ -64,13 +60,15 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryRefe
     }
   }
   std::string synonym_string;
-  for (auto *syn : synonyms_)
-    synonym_string += syn->toString() + ", ";
+  for (auto *syn : synonyms_) {
+    synonym_string += syn->ToString() + ", ";
+  }
   spdlog::debug("Creating new table with synonyms: {} and tuples:", synonym_string);
   for (auto row : table_rows_) {
     std::string row_string;
-    for (auto *syn : synonyms_)
+    for (auto *syn : synonyms_) {
       row_string += row[syn]->ToString() + ", ";
+    }
     spdlog::debug("({})", row_string);
   }
 }
@@ -79,7 +77,7 @@ SubqueryResult::SubqueryResult(std::vector<QuerySynonym *> synonyms, std::vector
     : synonyms_(std::move(synonyms)), table_rows_(std::move(result_rows)) {
   std::string synonym_string;
   for (auto *syn : synonyms_)
-    synonym_string += syn->toString() + ", ";
+    synonym_string += syn->ToString() + ", ";
   spdlog::debug("Creating new table with synonyms: {} and tuples:", synonym_string);
   for (auto row : table_rows_) {
     std::string row_string;
@@ -103,10 +101,10 @@ bool SubqueryResult::Uses(QuerySynonym *synonym) {
 std::vector<QuerySynonym *> SubqueryResult::GetCommonSynonyms(SubqueryResult other) {
   std::vector<QuerySynonym *> common_synonyms{};
   for (auto *syn : synonyms_) {
-    spdlog::debug("This synonym: {}", syn->toString());
+    spdlog::debug("This synonym: {}", syn->ToString());
   }
   for (auto *syn : other.synonyms_) {
-    spdlog::debug("Other synonym: {}", syn->toString());
+    spdlog::debug("Other synonym: {}", syn->ToString());
   }
   for (auto *synonym : synonyms_) {
     if (other.Uses(synonym)) {
@@ -169,7 +167,7 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
       spdlog::debug("Comparing ({}) to ({})", first_row_string, second_row_string);
       for (auto *syn : common_synonyms) {
         if (!(*this_row[syn] == *that_row[syn])) {
-          spdlog::debug("Fail at synonym {}", syn->toString());
+          spdlog::debug("Fail at synonym {}", syn->ToString());
           can_join = false;
           break;
         }

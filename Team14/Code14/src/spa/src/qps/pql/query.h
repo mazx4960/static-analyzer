@@ -9,26 +9,26 @@
 #include "query_reference.h"
 #include "query_clause.h"
 
-using SynonymReferences = std::vector<SynonymReference *>;
-using Clauses = std::vector<QueryClause *>;
+using SynonymSet = std::unordered_set<QuerySynonym *>;
+using ClauseVector = std::vector<QueryClause *>;
 
 class Query {
  private:
-  SynonymReferences synonym_declarations_;
+  SynonymSet synonym_declarations_;
 
   SelectCall *query_call_;
 
-  Clauses query_clauses_;
+  ClauseVector query_clauses_;
 
  public:
-  Query(SynonymReferences synonym_declarations, SelectCall *query_call, Clauses query_clauses)
+  Query(SynonymSet synonym_declarations, SelectCall *query_call, ClauseVector query_clauses)
       : synonym_declarations_(std::move(synonym_declarations)),
         query_call_(query_call),
         query_clauses_(std::move(query_clauses)) {
   }
 
-  [[nodiscard]] SynonymReferences getSynonymDeclarations() const;
+  [[nodiscard]] SynonymSet getSynonymDeclarations() const;
   [[nodiscard]] SelectCall *getQueryCall() const;
-  [[nodiscard]] Clauses getClauses() const;
+  [[nodiscard]] ClauseVector getClauses() const;
   [[nodiscard]] std::string toString() const;
 };

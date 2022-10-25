@@ -1,3 +1,2 @@
-stmt s1, s2;
-Select <s1, s2> such that Affects(s1, s2) and Follows* (8, s1) and Parent* (17, s2)
-
+procedure p; call c; while w;
+Select p.procName such that Calls ("Second", p) and Parent (w, c) with c.procName = "Third"

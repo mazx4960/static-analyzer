@@ -9,6 +9,7 @@
 #include <utility>
 #include <vector>
 
+#include "exceptions.h"
 #include "commons/entity.h"
 #include "qps/pql/query_synonym.h"
 #include "qps/query_evaluator/subquery_result.h"
@@ -105,10 +106,4 @@ class BooleanResult : public Result {
   explicit BooleanResult(bool has_results);
 
   [[nodiscard]] std::string get_synonyms() const override;
-};
-
-class ResultCreationError : public std::runtime_error {
- public:
-  explicit ResultCreationError(const std::string &message) : std::runtime_error(message) {
-  }
 };

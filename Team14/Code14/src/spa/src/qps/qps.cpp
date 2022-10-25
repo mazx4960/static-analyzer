@@ -23,6 +23,6 @@ Result *QPS::EvaluateQuery(std::istream *query_stream) {
   spdlog::debug("Query: {}", query->toString());
 
   QueryEvaluator qe(this->pkb_, *query);
-  Result *result = qe.evaluate();
+  Result *result = qe.Evaluate();
   return result;
 }

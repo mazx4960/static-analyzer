@@ -4,14 +4,17 @@
 
 #include <utility>
 
-QuerySynonym *QuerySynonym::empty() {
-  return new QuerySynonym("");
+std::string QuerySynonym::GetName() const {
+  return this->name_;
 }
-std::string QuerySynonym::toString() const {
-  return this->synonym_;
+EntityType QuerySynonym::GetEntityType() const {
+  return this->type_;
+}
+std::string QuerySynonym::ToString() const {
+  return EntityTypeToString(this->GetEntityType()) + ": " + this->GetName();
 }
 bool QuerySynonym::operator==(const QuerySynonym &other) const {
-  return this->synonym_ == other.toString();
+  return this->name_ == other.name_ && this->type_ == other.type_;
 }
 bool QuerySynonym::operator!=(const QuerySynonym &other) const {
   return !(*this == other);
