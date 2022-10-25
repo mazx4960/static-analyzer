@@ -7,11 +7,11 @@ ResultProjector *ResultProjector::getProjector(SelectCall *select_call, std::vec
       spdlog::debug("Creating projector for Elem select");
       auto *elem_select_call = static_cast<ElemSelect *>(select_call);
       std::vector<ElemReference *> called_references = elem_select_call->getReferences();
-      return new SelectProjector(called_references, subquery_results);
+      return new ElemSelectProjector(called_references, subquery_results);
     }
     case SelectType::kBoolean: {
       spdlog::debug("Creating projector for Boolean select");
-      return new BooleanProjector(subquery_results);
+      return new BooleanSelectProjector(subquery_results);
     }
     default: {
       spdlog::error("Invalid select type encountered.");
@@ -35,7 +35,7 @@ void ResultProjector::join() {
   this->joined_results_ = intermediate_result;
 }
 
-SelectProjector::SelectProjector(std::vector<ElemReference *> &declarations, std::vector<SubqueryResult> &subquery_results)
+ElemSelectProjector::ElemSelectProjector(std::vector<ElemReference *> &declarations, std::vector<SubqueryResult> &subquery_results)
     : ResultProjector(subquery_results), called_declarations_(declarations) {
   this->called_synonyms_.reserve(called_declarations_.size());
   for (auto *elem_ref : called_declarations_) {
@@ -43,12 +43,12 @@ SelectProjector::SelectProjector(std::vector<ElemReference *> &declarations, std
   }
 };
 
-SubqueryResult SelectProjector::getEmptyFinalTable() {
+SubqueryResult ElemSelectProjector::getEmptyFinalTable() {
   spdlog::debug("Creating empty table with all synonyms.");
   return SubqueryResult::Empty(this->called_synonyms_);
 }
 
-SubqueryResult SelectProjector::select_results() {
+SubqueryResult ElemSelectProjector::selectResults() {
   for (auto *decl : called_declarations_) {
     auto *synonym = decl->getSynonym();
     if (!this->joined_results_.Uses(synonym)) {
@@ -58,23 +58,23 @@ SubqueryResult SelectProjector::select_results() {
   return this->joined_results_.GetColumns(this->called_synonyms_);
 }
 
-Result *SelectProjector::getResult() {
+Result *ElemSelectProjector::getResult() {
   this->join();
-  SubqueryResult final_table = this->select_results();
+  SubqueryResult final_table = this->selectResults();
   spdlog::debug("Element Result context size: {}", final_table.GetRows().size());
   return new ElemResult(this->called_declarations_, final_table);
 }
 
-SubqueryResult BooleanProjector::getEmptyFinalTable() {
+SubqueryResult BooleanSelectProjector::getEmptyFinalTable() {
   spdlog::debug("Creating empty table with no synonyms.");
   return SubqueryResult::FullNoSynonym();
 }
 
-bool BooleanProjector::has_results() {
+bool BooleanSelectProjector::has_results() {
   return !this->joined_results_.IsEmpty();
 }
 
-Result *BooleanProjector::getResult() {
+Result *BooleanSelectProjector::getResult() {
   this->join();
   bool has_results = this->has_results();
   spdlog::debug("Boolean Result non-empty? {}", has_results);

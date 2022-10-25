@@ -39,7 +39,7 @@ class ResultProjector {
   virtual Result *getResult() = 0;
 };
 
-class SelectProjector : public ResultProjector {
+class ElemSelectProjector : public ResultProjector {
  private:
   std::vector<ElemReference *> called_declarations_;
 
@@ -51,26 +51,26 @@ class SelectProjector : public ResultProjector {
    * Select results (columns) based on called synonyms.
    * @return subset of intermediate result table with only columns for selected synonyms.
    */
-  SubqueryResult select_results();
+  SubqueryResult selectResults();
 
  public:
-  SelectProjector(std::vector<ElemReference *> &declarations, std::vector<SubqueryResult> &subquery_results);
+  ElemSelectProjector(std::vector<ElemReference *> &declarations, std::vector<SubqueryResult> &subquery_results);
 
   Result *getResult() override;
 };
 
-class BooleanProjector : public ResultProjector {
+class BooleanSelectProjector : public ResultProjector {
  private:
+  SubqueryResult getEmptyFinalTable() override;
+
   /**
   * Checks if final table has any rows.
   * @return true if table is non empty.
   */
   bool has_results();
 
-  SubqueryResult getEmptyFinalTable() override;
-
  public:
-  explicit BooleanProjector(std::vector<SubqueryResult> &subquery_results) : ResultProjector(subquery_results) {
+  explicit BooleanSelectProjector(std::vector<SubqueryResult> &subquery_results) : ResultProjector(subquery_results) {
   };
 
   Result *getResult() override;
