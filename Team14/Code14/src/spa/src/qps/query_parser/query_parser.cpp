@@ -62,12 +62,6 @@ void QueryParser::ParseDeclaration() {
 void QueryParser::ParseSelect() {
   Expect(SymbolToken("Select"));
 
-  if ((*token_stream_)->type == TokenType::kSymbol && (*token_stream_)->value == "BOOLEAN") {
-    query_builder_->SetSelect(new SelectBlueprint(SelectType::kBoolean, {}));
-    Expect(SymbolToken("BOOLEAN"));
-    return;
-  }
-
   auto elems = std::vector<ElemBlueprint *>();
   if (**token_stream_ == AngleOpenBracketToken()) {
     Expect(AngleOpenBracketToken());
@@ -81,7 +75,7 @@ void QueryParser::ParseSelect() {
   } else {
     elems.push_back(ParseElem());
   }
-  query_builder_->SetSelect(new SelectBlueprint(SelectType::kElem, elems));
+  query_builder_->SetSelect(new SelectBlueprint(elems));
 }
 void QueryParser::ParseClause(std::vector<ClauseBlueprint *> &clauses) {
   spdlog::debug("Checking clause for " + (*token_stream_)->ToString());

@@ -25,21 +25,21 @@ class BaseBlueprint {
   [[nodiscard]] std::string toString() const;
 };
 
-class SynonymBlueprint : public BaseBlueprint {
- public:
-  explicit SynonymBlueprint(std::string value) : BaseBlueprint(ReferenceType::kSynonym, std::move(value)) {
-  };
-};
-
 class ExprBlueprint : public BaseBlueprint {
  private:
   bool is_exact_;
 
  public:
-  explicit ExprBlueprint(std::string value, bool is_exact)
-      : BaseBlueprint(ReferenceType::kIdent, std::move(value)), is_exact_(is_exact) {
+  explicit ExprBlueprint(std::string value, bool is_exact) : BaseBlueprint(ReferenceType::kIdent, std::move(value)),
+                                                             is_exact_(is_exact) {
   };
   [[nodiscard]] bool isExact() const;
+};
+
+class SynonymBlueprint : public BaseBlueprint {
+ public:
+  explicit SynonymBlueprint(std::string value) : BaseBlueprint(ReferenceType::kSynonym, std::move(value)) {
+  };
 };
 
 class ElemBlueprint : public BaseBlueprint {
@@ -47,8 +47,9 @@ class ElemBlueprint : public BaseBlueprint {
   AttributeType attribute_type_;
 
  public:
-  explicit ElemBlueprint(SynonymBlueprint *synonym_blueprint, AttributeType attribute_type)
-      : BaseBlueprint(ReferenceType::kAttr, synonym_blueprint->getValue()), attribute_type_(attribute_type) {
+  explicit ElemBlueprint(SynonymBlueprint *synonym_blueprint, AttributeType attribute_type) : BaseBlueprint(
+      ReferenceType::kAttr,
+      synonym_blueprint->getValue()), attribute_type_(attribute_type) {
   };
   [[nodiscard]] AttributeType getAttributeType() const;
 };
@@ -75,15 +76,12 @@ class DeclarationBlueprint {
  */
 class SelectBlueprint {
  private:
-  SelectType select_type_;
-
   std::vector<ElemBlueprint *> blueprint_references_;
 
  public:
-  explicit SelectBlueprint(SelectType select_type, std::vector<ElemBlueprint *> blueprint_references)
-      : select_type_(select_type), blueprint_references_(std::move(blueprint_references)) {
+  explicit SelectBlueprint(std::vector<ElemBlueprint *> blueprint_references) : blueprint_references_(std::move(
+      blueprint_references)) {
   };
-  [[nodiscard]] SelectType getSelectType() const;
   [[nodiscard]] std::vector<ElemBlueprint *> getBlueprintReferences() const;
 };
 

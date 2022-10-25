@@ -21,9 +21,6 @@ std::string DeclarationBlueprint::getName() const {
 EntityType DeclarationBlueprint::getEntityType() const {
   return this->entity_type_;
 }
-SelectType SelectBlueprint::getSelectType() const {
-  return this->select_type_;
-}
 std::vector<ElemBlueprint *> SelectBlueprint::getBlueprintReferences() const {
   return this->blueprint_references_;
 }

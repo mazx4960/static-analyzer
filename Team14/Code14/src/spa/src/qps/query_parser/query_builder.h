@@ -17,7 +17,8 @@ class QueryBuilder {
   SelectBlueprint *select_bp_;
   std::vector<ClauseBlueprint *> clauses_bp_;
 
-  QuerySynonym *GetSynonymReference(const std::string &name);
+  QuerySynonym *GetSynonym(const std::string &name);
+  bool IsSynonymDeclared(const std::string &name);
 
  public:
   explicit QueryBuilder() = default;

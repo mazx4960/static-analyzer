@@ -1,13 +1,18 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
+#include <spdlog/spdlog.h>
 #include "query_builder.h"
 #include "qps/pql/query_keywords.h"
 
-QuerySynonym *QueryBuilder::GetSynonymReference(const std::string &name) {
+QuerySynonym *QueryBuilder::GetSynonym(const std::string &name) {
   if (synonym_table_.find(name) == synonym_table_.end()) {
     throw ParseSemanticError("Synonym " + name + " not declared");
   }
   return synonym_table_[name];
+}
+
+bool QueryBuilder::IsSynonymDeclared(const std::string &name) {
+  return synonym_table_.find(name) != synonym_table_.end();
 }
 
 Query *QueryBuilder::Build() {
@@ -52,14 +57,19 @@ SelectCall *QueryBuilder::BuildSelect() {
   if (select_bp_ == nullptr) {
     throw ParseSemanticError("Missing Select call");
   }
-  switch (select_bp_->getSelectType()) {
-    case SelectType::kBoolean:
-      return new BooleanSelect();
-    case SelectType::kElem:
-      return new ElemSelect(BuildElems(select_bp_->getBlueprintReferences()));
-    default:
-      throw ParseSemanticError("Invalid Select type");
+  auto selected = select_bp_->getBlueprintReferences();
+  if (selected.empty()) {
+    throw ParseSemanticError("Select call must have at least one synonym");
   }
+  if (selected.size() == 1) {
+    auto *reference = selected[0];
+    spdlog::debug("Select call has one synonym: {}", reference->toString());
+    if (reference->getValue() == "BOOLEAN" && reference->getAttributeType() == AttributeType::kNone
+        && !IsSynonymDeclared("BOOLEAN")) {
+      return new BooleanSelect();
+    }
+  }
+  return new ElemSelect(BuildElems(selected));
 }
 std::vector<QueryClause *> QueryBuilder::BuildClauses() {
   auto clauses = std::vector<QueryClause *>();
@@ -90,7 +100,7 @@ std::vector<ElemReference *> QueryBuilder::BuildElems(const std::vector<ElemBlue
   auto elems = std::vector<ElemReference *>();
   for (auto *elem_blueprint : elem_blueprints) {
     std::string name = elem_blueprint->getValue();
-    auto *synonym = GetSynonymReference(name);
+    auto *synonym = GetSynonym(name);
     auto *attr = new AttrReference(synonym, elem_blueprint->getAttributeType());
     if (!attr->isSemanticallyCorrect()) {
       throw ParseSemanticError("Invalid AttrRef");
@@ -104,7 +114,7 @@ QueryReference *QueryBuilder::BuildReference(BaseBlueprint *blueprint) {
   QueryReference *ref;
   switch (blueprint->getReferenceType()) {
     case ReferenceType::kSynonym:
-      ref = new SynonymReference(GetSynonymReference(blueprint->getValue()));
+      ref = new SynonymReference(GetSynonym(blueprint->getValue()));
       break;
     case ReferenceType::kIdent:
       ref = new IdentReference(blueprint->getValue());
@@ -116,7 +126,7 @@ QueryReference *QueryBuilder::BuildReference(BaseBlueprint *blueprint) {
       ref = new WildcardReference();
       break;
     case ReferenceType::kAttr:
-      ref = new AttrReference(GetSynonymReference(blueprint->getValue()),
+      ref = new AttrReference(GetSynonym(blueprint->getValue()),
                               static_cast<ElemBlueprint *>(blueprint)->getAttributeType());
       break;
     default:
@@ -126,7 +136,7 @@ QueryReference *QueryBuilder::BuildReference(BaseBlueprint *blueprint) {
 }
 
 PatternClause *QueryBuilder::BuildPattern(PatternBlueprint *clause_blueprint) {
-  auto *stmt = GetSynonymReference(clause_blueprint->getStmt()->getValue());
+  auto *stmt = GetSynonym(clause_blueprint->getStmt()->getValue());
   auto *stmt_ref = new SynonymReference(stmt);
   auto *var_bp = clause_blueprint->getVar();
   if (var_bp == nullptr) {
