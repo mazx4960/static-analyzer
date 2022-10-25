@@ -4,13 +4,6 @@
 
 #include "pattern.h"
 
-#include <utility>
-
-Pattern::Pattern(Entity *stmt, Entity *variable, std::string expr_) {
-  this->stmt_ = stmt;
-  this->variable_ = variable;
-  this->expr_ = std::move(expr_);
-}
 Entity *Pattern::GetStmt() const {
   return this->stmt_;
 }

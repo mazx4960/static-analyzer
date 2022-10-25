@@ -6,6 +6,8 @@
 #include "commons/parser/node/node.h"
 #include "commons/pattern.h"
 #include "commons/relationship.h"
+#include "entity_extractor.h"
+#include "sp/simple_definition/simple_ast.h"
 
 class PatternExtractor {
  public:

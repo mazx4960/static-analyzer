@@ -4,9 +4,6 @@
 
 #include <utility>
 
-QuerySynonym::QuerySynonym(std::string synonym) {
-  this->synonym_ = std::move(synonym);
-}
 QuerySynonym *QuerySynonym::empty() {
   return new QuerySynonym("");
 }

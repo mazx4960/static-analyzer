@@ -31,7 +31,7 @@ class CompositeGrammarRule : public GrammarRule {
  private:
   std::vector<RuleFragment *> rule_fragments_;
 
-  virtual Node *assembleNode(std::vector<Node *>) = 0;
+  virtual Node *assembleNode(std::vector<Node *> &) = 0;
 
  public:
   explicit CompositeGrammarRule(std::vector<RuleFragment *> ruleFragments);
@@ -42,7 +42,7 @@ class ParenthesizedGrammarRule : public CompositeGrammarRule {
  private:
   GrammarRuleProducer *parenthesized_node_;
 
-  Node *assembleNode(std::vector<Node *>) override;
+  Node *assembleNode(std::vector<Node *> &) override;
 
  public:
   explicit ParenthesizedGrammarRule(GrammarRuleProducer *parenthesizedNode);
@@ -52,7 +52,7 @@ class BracedGrammarRule : public CompositeGrammarRule {
  private:
   GrammarRuleProducer *parenthesized_node_;
 
-  Node *assembleNode(std::vector<Node *>) override;
+  Node *assembleNode(std::vector<Node *> &) override;
 
  public:
   explicit BracedGrammarRule(GrammarRuleProducer *parenthesizedNode);

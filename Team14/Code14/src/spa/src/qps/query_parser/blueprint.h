@@ -13,21 +13,16 @@
 class BaseBlueprint {
  private:
   ReferenceType reference_type_;
+
   std::string value_;
 
  public:
   BaseBlueprint(ReferenceType reference_type, std::string value)
       : reference_type_(reference_type), value_(std::move(value)) {
   };
-  [[nodiscard]] ReferenceType getReferenceType() const {
-    return reference_type_;
-  };
-  [[nodiscard]] std::string getValue() const {
-    return value_;
-  };
-  [[nodiscard]] std::string toString() const {
-    return RefTypeToString(reference_type_) + ": " + value_;
-  };
+  [[nodiscard]] ReferenceType getReferenceType() const;
+  [[nodiscard]] std::string getValue() const;
+  [[nodiscard]] std::string toString() const;
 };
 
 class SynonymBlueprint : public BaseBlueprint {
@@ -39,26 +34,23 @@ class SynonymBlueprint : public BaseBlueprint {
 class ExprBlueprint : public BaseBlueprint {
  private:
   bool is_exact_;
+
  public:
-  explicit ExprBlueprint(std::string value, bool is_exact) : BaseBlueprint(ReferenceType::kIdent, std::move(value)),
-                                                             is_exact_(is_exact) {
+  explicit ExprBlueprint(std::string value, bool is_exact)
+      : BaseBlueprint(ReferenceType::kIdent, std::move(value)), is_exact_(is_exact) {
   };
-  [[nodiscard]] bool isExact() const {
-    return is_exact_;
-  };
+  [[nodiscard]] bool isExact() const;
 };
 
 class ElemBlueprint : public BaseBlueprint {
  private:
   AttributeType attribute_type_;
+
  public:
-  explicit ElemBlueprint(SynonymBlueprint *synonym_blueprint, AttributeType attribute_type) : BaseBlueprint(
-      ReferenceType::kAttr,
-      synonym_blueprint->getValue()), attribute_type_(attribute_type) {
+  explicit ElemBlueprint(SynonymBlueprint *synonym_blueprint, AttributeType attribute_type)
+      : BaseBlueprint(ReferenceType::kAttr, synonym_blueprint->getValue()), attribute_type_(attribute_type) {
   };
-  [[nodiscard]] AttributeType getAttributeType() const {
-    return this->attribute_type_;
-  };
+  [[nodiscard]] AttributeType getAttributeType() const;
 };
 
 /**
@@ -67,17 +59,15 @@ class ElemBlueprint : public BaseBlueprint {
 class DeclarationBlueprint {
  private:
   SynonymBlueprint *synonym_;
+
   EntityType entity_type_;
+
  public:
   explicit DeclarationBlueprint(SynonymBlueprint *synonym, EntityType entity_type)
       : synonym_(synonym), entity_type_(entity_type) {
   };
-  [[nodiscard]] std::string getName() const {
-    return synonym_->getValue();
-  };
-  [[nodiscard]] EntityType getEntityType() const {
-    return entity_type_;
-  };
+  [[nodiscard]] std::string getName() const;
+  [[nodiscard]] EntityType getEntityType() const;
 };
 
 /**
@@ -86,17 +76,15 @@ class DeclarationBlueprint {
 class SelectBlueprint {
  private:
   SelectType select_type_;
+
   std::vector<ElemBlueprint *> blueprint_references_;
+
  public:
-  explicit SelectBlueprint(SelectType select_type, std::vector<ElemBlueprint *> blueprint_references) : select_type_(
-      select_type), blueprint_references_(std::move(blueprint_references)) {
+  explicit SelectBlueprint(SelectType select_type, std::vector<ElemBlueprint *> blueprint_references)
+      : select_type_(select_type), blueprint_references_(std::move(blueprint_references)) {
   };
-  [[nodiscard]] SelectType getSelectType() const {
-    return select_type_;
-  };
-  [[nodiscard]] std::vector<ElemBlueprint *> getBlueprintReferences() const {
-    return blueprint_references_;
-  };
+  [[nodiscard]] SelectType getSelectType() const;
+  [[nodiscard]] std::vector<ElemBlueprint *> getBlueprintReferences() const;
 };
 
 /**
@@ -118,27 +106,20 @@ class ClauseBlueprint {
 class SuchThatBlueprint : public ClauseBlueprint {
  private:
   RsType rs_type_;
+
   BaseBlueprint *first_;
+
   BaseBlueprint *second_;
+
  public:
   SuchThatBlueprint(RsType rs_type, BaseBlueprint *first, BaseBlueprint *second)
       : ClauseBlueprint(ClauseType::kSuchThat), rs_type_(rs_type), first_(first), second_(second) {
   };
-  [[nodiscard]] RsType getRsType() const {
-    return this->rs_type_;
-  };
-  [[nodiscard]] BaseBlueprint *getFirst() const {
-    return this->first_;
-  };
-  [[nodiscard]] BaseBlueprint *getSecond() const {
-    return this->second_;
-  };
-  bool checkSyntax() {
-    return CheckSuchThat(this->rs_type_, this->first_->getReferenceType(), this->second_->getReferenceType());
-  }
-  [[nodiscard]] std::string toString() const override {
-    return "SuchThatBlueprint: " + RsTypeToString(rs_type_) + " " + first_->toString() + " " + second_->toString();
-  };
+  [[nodiscard]] RsType getRsType() const;
+  [[nodiscard]] BaseBlueprint *getFirst() const;
+  [[nodiscard]] BaseBlueprint *getSecond() const;
+  [[nodiscard]] bool checkSyntax() const;
+  [[nodiscard]] std::string toString() const override;
 };
 
 /**
@@ -147,9 +128,13 @@ class SuchThatBlueprint : public ClauseBlueprint {
 class PatternBlueprint : public ClauseBlueprint {
  private:
   SynonymBlueprint *stmt_;
+
   BaseBlueprint *var_;
+
   ExprBlueprint *expr_;
+
   ExprBlueprint *expr_2_;
+
  public:
   PatternBlueprint(SynonymBlueprint *stmt, BaseBlueprint *var, ExprBlueprint *expr)
       : ClauseBlueprint(ClauseType::kPattern), stmt_(stmt), var_(var), expr_(expr), expr_2_(nullptr) {
@@ -157,24 +142,12 @@ class PatternBlueprint : public ClauseBlueprint {
   PatternBlueprint(SynonymBlueprint *stmt, BaseBlueprint *var, ExprBlueprint *expr, ExprBlueprint *expr_2)
       : ClauseBlueprint(ClauseType::kPattern), stmt_(stmt), var_(var), expr_(expr), expr_2_(expr_2) {
   };
-  [[nodiscard]] SynonymBlueprint *getStmt() const {
-    return this->stmt_;
-  };
-  [[nodiscard]] BaseBlueprint *getVar() const {
-    return this->var_;
-  };
-  [[nodiscard]] ExprBlueprint *getExpr() const {
-    return this->expr_;
-  };
-  [[nodiscard]] ExprBlueprint *getExpr2() const {
-    return this->expr_2_;
-  };
-  bool checkSyntax() {
-    return CheckPattern(this->var_->getReferenceType());
-  }
-  [[nodiscard]] std::string toString() const override {
-    return "PatternBlueprint: " + stmt_->toString() + " " + var_->toString() + " " + expr_->toString();
-  };
+  [[nodiscard]] SynonymBlueprint *getStmt() const;
+  [[nodiscard]] BaseBlueprint *getVar() const;
+  [[nodiscard]] ExprBlueprint *getExpr() const;
+  [[nodiscard]] ExprBlueprint *getExpr2() const;
+  [[nodiscard]] bool checkSyntax() const;
+  [[nodiscard]] std::string toString() const override;
 };
 
 /**
@@ -183,25 +156,18 @@ class PatternBlueprint : public ClauseBlueprint {
 class WithBlueprint : public ClauseBlueprint {
  private:
   Comparator comparator_;
+
   BaseBlueprint *first_;
+
   BaseBlueprint *second_;
+
  public:
   WithBlueprint(Comparator comparator, BaseBlueprint *first, BaseBlueprint *second)
       : ClauseBlueprint(ClauseType::kWith), comparator_(comparator), first_(first), second_(second) {
   };
-  [[nodiscard]] Comparator getComparator() const {
-    return this->comparator_;
-  };
-  [[nodiscard]] BaseBlueprint *getFirst() const {
-    return this->first_;
-  };
-  [[nodiscard]] BaseBlueprint *getSecond() const {
-    return this->second_;
-  };
-  bool checkSyntax() {
-    return CheckWith(this->first_->getReferenceType(), this->second_->getReferenceType());
-  }
-  [[nodiscard]] std::string toString() const override {
-    return "WithBlueprint: " + first_->toString() + " " + second_->toString();
-  };
+  [[nodiscard]] Comparator getComparator() const;
+  [[nodiscard]] BaseBlueprint *getFirst() const;
+  [[nodiscard]] BaseBlueprint *getSecond() const;
+  [[nodiscard]] bool checkSyntax() const;
+  [[nodiscard]] std::string toString() const override;
 };

@@ -29,6 +29,11 @@ std::string EmptyResult::get_synonyms() const {
 }
 
 ElemResult::ElemResult(std::vector<ElemReference *> &elem_refs, SubqueryResult &table) : elem_refs_(elem_refs) {
+  int missing_count = this->numSynonymsNotInTable(table);
+  if (missing_count > 0) {
+    throw ResultCreationError(std::to_string(missing_count) + " synonyms not found in table");
+  }
+
   std::vector<ResultRow> rows = table.GetRows();
   this->results_.reserve(rows.size());
   for (auto row : rows) {
@@ -48,6 +53,16 @@ ElemResult::ElemResult(std::vector<ElemReference *> &elem_refs, SubqueryResult &
     }
     this->results_.insert(row_string);
   }
+}
+
+int ElemResult::numSynonymsNotInTable(SubqueryResult &table) {
+  int count = 0;
+  for (auto *elem_ref : this->elem_refs_) {
+    if (!table.Uses(elem_ref->getSynonym())) {
+      count++;
+    }
+  }
+  return count;
 }
 
 std::string ElemResult::get_synonyms() const {
