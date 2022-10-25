@@ -57,10 +57,31 @@ struct ResultTestStatics {
 
   inline static SubqueryResult no_rows_ = SubqueryResult(syn_vec_1_, empty_result_rows_);
 
+  // Table without any synonyms declared
+  inline static SubqueryResult no_syns_all_rows_ = SubqueryResult({}, {row1_, row2_, row3_});
+
+  // Table with completely different synonyms
+  inline static ResultRow row_diff_syn_ = {
+      {new QuerySynonym("var_a"), new VariableEntity("a")},
+      {new QuerySynonym("assign_b"), new AssignStmtEntity("3")},
+      {new QuerySynonym("proc_c"), new ProcedureEntity("do_this")}
+  };
+
+  inline static SubqueryResult no_syns_diff_row_ = SubqueryResult({}, {row_diff_syn_});
+
+  // Table with partially different synonyms
+  inline static ResultRow row_partial_diff_syn_ = {
+      {new QuerySynonym("var_a"), new VariableEntity("a")},
+      {new QuerySynonym("assign_y"), new AssignStmtEntity("3")},
+      {new QuerySynonym("proc_z"), new ProcedureEntity("do_this")}
+  };
+
+  inline static SubqueryResult no_syns_partial_diff_row_ = SubqueryResult({}, {row_partial_diff_syn_});
+
 };
 
 TEST(ElemResultCreationTest, AllSynonymFullTable) {
-  Result *elem_result = new ElemResult({ResultTestStatics::elemref_vec_full_}, ResultTestStatics::all_rows_);
+  Result *elem_result = new ElemResult(ResultTestStatics::elemref_vec_full_, ResultTestStatics::all_rows_);
   ASSERT_EQ(elem_result->get_synonyms(), "{ Variable:var_x, AssignStmt:assign_y, Procedure:proc_z }");
   ASSERT_FALSE(elem_result->is_empty());
   ASSERT_EQ(elem_result->size(), 3);
@@ -75,7 +96,7 @@ TEST(ElemResultCreationTest, AllSynonymFullTable) {
 }
 
 TEST(ElemResultCreationTest, AllSynonymShuffledFullTable) {
-  Result *elem_result = new ElemResult({ResultTestStatics::elemref_vec_full_shuffled_}, ResultTestStatics::all_rows_);
+  Result *elem_result = new ElemResult(ResultTestStatics::elemref_vec_full_shuffled_, ResultTestStatics::all_rows_);
   ASSERT_EQ(elem_result->get_synonyms(), "{ AssignStmt:assign_y, Procedure:proc_z, Variable:var_x }");
   ASSERT_FALSE(elem_result->is_empty());
   ASSERT_EQ(elem_result->size(), 3);
@@ -101,7 +122,7 @@ TEST(ElemResultCreationTest, AllSynonymEmptyTable) {
 }
 
 TEST(ElemResultCreationTest, SingleSynFullTable) {
-  Result *elem_result = new ElemResult({ResultTestStatics::elemref_vec_var_}, ResultTestStatics::all_rows_);
+  Result *elem_result = new ElemResult(ResultTestStatics::elemref_vec_var_, ResultTestStatics::all_rows_);
   ASSERT_EQ(elem_result->get_synonyms(), "{ Variable:var_x }");
   ASSERT_FALSE(elem_result->is_empty());
   ASSERT_EQ(elem_result->size(), 2);
@@ -120,6 +141,20 @@ TEST(ElemResultCreationTest, SingleSynEmptyTable) {
   std::unordered_set<std::string> exp_set = {};
 
   ASSERT_EQ(elem_result->get_results_set(), exp_set);
+}
+
+/*
+ * Test that Result throws an error when synonym is not in table.
+ */
+TEST(ElemResultCreationTest, SynNotInTable) {
+  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_var_, ResultTestStatics::no_syns_diff_row_), ResultCreationError);
+  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_full_, ResultTestStatics::no_syns_diff_row_), ResultCreationError);
+
+  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_var_, ResultTestStatics::no_syns_all_rows_), ResultCreationError);
+  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_full_, ResultTestStatics::no_syns_all_rows_), ResultCreationError);
+
+  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_var_, ResultTestStatics::no_syns_partial_diff_row_), ResultCreationError);
+  ASSERT_THROW(new ElemResult(ResultTestStatics::elemref_vec_full_, ResultTestStatics::no_syns_partial_diff_row_), ResultCreationError);
 }
 
 TEST(BoolResultCreationTest, HasResults) {

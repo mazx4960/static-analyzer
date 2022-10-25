@@ -2,10 +2,11 @@
 
 #include <utility>
 
-#include "evaluation_strategy.h"
 #include "commons/entity.h"
+#include "evaluation_strategy.h"
 #include "qps/result.h"
 #include "qps/pql/query_reference.h"
+#include "qps/pql/query_call.h"
 #include "subquery_result.h"
 
 /**
@@ -22,44 +23,55 @@ class ResultProjector {
 
   /**
    * Join results from list of subquery results.
+   * Joined table is stored in instance attribute joined_results_.
    */
   void join();
 
+  virtual SubqueryResult getEmptyFinalTable() = 0;
+
  public:
+  static ResultProjector *getProjector(SelectCall *, std::vector<SubqueryResult> &);
+
   /**
-   * Project results from list of subquery results.
+   * Projects and merges subquery result tables and creates an instance of Result class.
+   * @return instance of Result class matching the Select call.
    */
-  virtual void project() = 0;
+  virtual Result *project() = 0;
 };
 
-class SelectProjector : public ResultProjector {
+class ElemSelectProjector : public ResultProjector {
  private:
   std::vector<ElemReference *> called_declarations_;
 
   std::vector<QuerySynonym *> called_synonyms_;
 
- public:
-  SelectProjector(std::vector<ElemReference *> &declarations, std::vector<SubqueryResult> &subquery_results);
-
-  void project() override;
+  SubqueryResult getEmptyFinalTable() override;
 
   /**
    * Select results (columns) based on called synonyms.
    * @return subset of intermediate result table with only columns for selected synonyms.
    */
-  SubqueryResult select_results();
+  SubqueryResult selectResults();
+
+ public:
+  ElemSelectProjector(std::vector<ElemReference *> &declarations, std::vector<SubqueryResult> &subquery_results);
+
+  Result *project() override;
 };
 
-class BooleanProjector : public ResultProjector {
- public:
-  explicit BooleanProjector(std::vector<SubqueryResult> &subquery_results) : ResultProjector(subquery_results) {
-  };
-
-  void project() override;
+class BooleanSelectProjector : public ResultProjector {
+ private:
+  SubqueryResult getEmptyFinalTable() override;
 
   /**
-   * Checks if final table has any rows.
-   * @return true if table is non empty.
-   */
+  * Checks if final table has any rows.
+  * @return true if table is non empty.
+  */
   bool has_results();
+
+ public:
+  explicit BooleanSelectProjector(std::vector<SubqueryResult> &subquery_results) : ResultProjector(subquery_results) {
+  };
+
+  Result *project() override;
 };
