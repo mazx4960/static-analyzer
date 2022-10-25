@@ -49,5 +49,5 @@ Result *QueryEvaluator::evaluate() {
   auto *select_call = this->query_.getQueryCall();
 
   ResultProjector *result_projector = ResultProjector::getProjector(select_call, subquery_results);
-  return result_projector->getResult();
+  return result_projector->project();
 }

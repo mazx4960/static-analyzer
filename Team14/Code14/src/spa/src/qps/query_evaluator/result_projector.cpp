@@ -58,7 +58,7 @@ SubqueryResult ElemSelectProjector::selectResults() {
   return this->joined_results_.GetColumns(this->called_synonyms_);
 }
 
-Result *ElemSelectProjector::getResult() {
+Result *ElemSelectProjector::project() {
   this->join();
   SubqueryResult final_table = this->selectResults();
   spdlog::debug("Element Result context size: {}", final_table.GetRows().size());
@@ -74,7 +74,7 @@ bool BooleanSelectProjector::has_results() {
   return !this->joined_results_.IsEmpty();
 }
 
-Result *BooleanSelectProjector::getResult() {
+Result *BooleanSelectProjector::project() {
   this->join();
   bool has_results = this->has_results();
   spdlog::debug("Boolean Result non-empty? {}", has_results);

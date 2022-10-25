@@ -36,7 +36,7 @@ class ResultProjector {
    * Projects and merges subquery result tables and creates an instance of Result class.
    * @return instance of Result class matching the Select call.
    */
-  virtual Result *getResult() = 0;
+  virtual Result *project() = 0;
 };
 
 class ElemSelectProjector : public ResultProjector {
@@ -56,7 +56,7 @@ class ElemSelectProjector : public ResultProjector {
  public:
   ElemSelectProjector(std::vector<ElemReference *> &declarations, std::vector<SubqueryResult> &subquery_results);
 
-  Result *getResult() override;
+  Result *project() override;
 };
 
 class BooleanSelectProjector : public ResultProjector {
@@ -73,5 +73,5 @@ class BooleanSelectProjector : public ResultProjector {
   explicit BooleanSelectProjector(std::vector<SubqueryResult> &subquery_results) : ResultProjector(subquery_results) {
   };
 
-  Result *getResult() override;
+  Result *project() override;
 };
