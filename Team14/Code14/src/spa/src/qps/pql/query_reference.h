@@ -27,15 +27,8 @@ class QueryReference : public ICheckSyntax, public IStmtRef, public IEntRef, pub
   };
 
  public:
-  <<<<<<<
-  HEAD
-      ReferenceType
-  getRefType() const;
+
   virtual int getUses() const = 0;
-  virtual EntityType getEntityType() const;
-  virtual EntityPointerUnorderedSet getContext() const;
-  =======
-  >>>>>>> 49b4993be065f5d4330ee632c881d1f9db9e84b7
   virtual void setContext(EntityPointerUnorderedSet);
   virtual void setEntityType(EntityType entity_type);
 
@@ -57,19 +50,17 @@ class WildcardReference : public QueryReference {
   explicit WildcardReference(EntityType wildcard_type = EntityType::kUnknown)
       : QueryReference(ReferenceType::kWildcard, wildcard_type) {
   };
-  <<<<<<<
-  HEAD
+
   inline int getUses() const override {
     return 0;
   }
-  =======
+
   [[nodiscard]] std::string getReferenceValue() const override;
   [[nodiscard]] bool isStmtRef() const override;
   [[nodiscard]] bool isEntRef() const override;
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] std::string toString() const override;
 
-  >>>>>>> 49b4993be065f5d4330ee632c881d1f9db9e84b7
   bool operator==(const QueryReference &other) const override;
 };
 
@@ -82,19 +73,17 @@ class IdentReference : public QueryReference {
       ReferenceType::kIdent,
       entity_type), value_(std::move(value)) {
   }
-  <<<<<<<
-  HEAD
+
   inline int getUses() const override {
     return 0;
   }
-  =======
+
   [[nodiscard]]  std::string getReferenceValue() const override;
   [[nodiscard]] bool isEntRef() const override;
   [[nodiscard]] bool isAttrCompareRef() const override;
   [[nodiscard]] bool isSyntacticallyCorrect() const override;
   [[nodiscard]] std::string toString() const override;
 
-  >>>>>>> 49b4993be065f5d4330ee632c881d1f9db9e84b7
   bool operator==(const QueryReference &other) const override;
 };
 
