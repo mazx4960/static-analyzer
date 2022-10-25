@@ -4,17 +4,18 @@
 test_folder="Team14/Tests14/system"
 result_folder="Team14/Code14/tests"
 test_names=(
-  "pql_error"
+  "affects_edge"
   "basic"
+  "bug_catch_1"
+  "code_6"
   "compute_ave"
   "compute_centroid"
-  "extreme_nesting"
-  "patterns"
-  "intertwined_procedures"
-  "affects_edge"
-  "code_6"
   "demo"
-  "bug_catch_1"
+  "extreme_nesting"
+  "intertwined_procedures"
+  "patterns"
+  "pql_error"
+  "select_attributes"
 )
 num_failed=0
 
