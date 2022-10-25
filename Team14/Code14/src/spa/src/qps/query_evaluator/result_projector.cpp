@@ -21,6 +21,13 @@ ResultProjector *ResultProjector::getProjector(SelectCall *select_call, std::vec
 }
 
 void ResultProjector::join() {
+  if (std::any_of(subquery_results_.begin(), subquery_results_.end(),
+                  [](SubqueryResult subquery_result) {
+                    return subquery_result.IsEmpty();
+                  })) {
+    spdlog::debug("Some table empty");
+    this->joined_results_ = this->getEmptyFinalTable();
+  }
   SubqueryResult intermediate_result = SubqueryResult::FullNoSynonym();
   for (auto result : subquery_results_) {
     intermediate_result = intermediate_result.Join(result);
@@ -36,16 +43,9 @@ SelectProjector::SelectProjector(std::vector<ElemReference *> &declarations, std
   }
 };
 
-void SelectProjector::project() {
-  if (std::any_of(subquery_results_.begin(), subquery_results_.end(),
-                  [](SubqueryResult subquery_result) {
-                    return subquery_result.IsEmpty();
-                  })) {
-    spdlog::debug("Some table is empty");
-    this->joined_results_ = SubqueryResult::Empty(this->called_synonyms_);
-  } else {
-    this->join();
-  }
+SubqueryResult SelectProjector::getEmptyFinalTable() {
+  spdlog::debug("Creating empty table with all synonyms.");
+  return SubqueryResult::Empty(this->called_synonyms_);
 }
 
 SubqueryResult SelectProjector::select_results() {
@@ -57,11 +57,17 @@ SubqueryResult SelectProjector::select_results() {
   }
   return this->joined_results_.GetColumns(this->called_synonyms_);
 }
+
 Result *SelectProjector::getResult() {
-  this->project();
+  this->join();
   SubqueryResult final_table = this->select_results();
-  spdlog::debug("Element Result context size: {}", final_table.GetRows().size())
+  spdlog::debug("Element Result context size: {}", final_table.GetRows().size());
   return new ElemResult(this->called_declarations_, final_table);
+}
+
+SubqueryResult BooleanProjector::getEmptyFinalTable() {
+  spdlog::debug("Creating empty table with no synonyms.");
+  return SubqueryResult::FullNoSynonym();
 }
 
 bool BooleanProjector::has_results() {

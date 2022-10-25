@@ -27,6 +27,8 @@ class ResultProjector {
    */
   void join();
 
+  virtual SubqueryResult getEmptyFinalTable() = 0;
+
  public:
   static ResultProjector *getProjector(SelectCall *, std::vector<SubqueryResult> &);
 
@@ -43,7 +45,7 @@ class SelectProjector : public ResultProjector {
 
   std::vector<QuerySynonym *> called_synonyms_;
 
-  void project();
+  SubqueryResult getEmptyFinalTable() override;
 
   /**
    * Select results (columns) based on called synonyms.
@@ -64,6 +66,8 @@ class BooleanProjector : public ResultProjector {
   * @return true if table is non empty.
   */
   bool has_results();
+
+  SubqueryResult getEmptyFinalTable() override;
 
  public:
   explicit BooleanProjector(std::vector<SubqueryResult> &subquery_results) : ResultProjector(subquery_results) {
