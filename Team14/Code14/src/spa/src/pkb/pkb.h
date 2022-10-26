@@ -12,8 +12,6 @@
 #include "pkb/pattern/pattern_manager.h"
 #include "pkb/relationship/relationship_manager.h"
 
-using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
-
 /*
  * Interface for SP -> PKB
  */
@@ -41,6 +39,8 @@ class IPKBQuerier {
   virtual EntityPointerUnorderedSet getByRelationship(RsType, Entity *, bool) = 0;
   virtual EntityPointerUnorderedSet getByPattern(Entity *, std::string &, bool isSubmatch) = 0;
   virtual EntityPointerUnorderedSet getEntitiesByString(std::string &) = 0;
+
+  virtual void LogStatistics() = 0;
 };
 
 class PKB : public IPKBPopulator, public IPKBQuerier {
@@ -62,4 +62,6 @@ class PKB : public IPKBPopulator, public IPKBQuerier {
   void populate(std::vector<Entity *> entities) override;
   void populate(std::vector<Relationship *> relationships) override;
   void populate(std::vector<Pattern *> patterns) override;
+
+  void LogStatistics() override;
 };

@@ -17,6 +17,7 @@ using EntityRsInv = std::tuple<Entity *, RsType, bool>;
 
 class RelationshipManager {
  private:
+  int num_queries_ = 0;
   Cache<EntityRsInv, EntityPointerUnorderedSet, TripletHash> *cache_;
   std::unordered_map<RsType, RelationshipTable *> relationship_table_map_;
 
@@ -50,4 +51,6 @@ class RelationshipManager {
   void ClearCache();
   void Populate(std::vector<Relationship *> &relationships);
   Cache<EntityRsInv, EntityPointerUnorderedSet, TripletHash> *GetCache(); //Used for testing
+
+  void LogStatistics();
 };

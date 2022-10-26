@@ -11,10 +11,6 @@
 #include "commons/relationship.h"
 #include "commons/types.h"
 
-using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
-using EntityPointerUnorderedMap =
-    std::unordered_map<Entity *, EntityPointerUnorderedSet, EntityHashFunction, EntityPointerEquality>;
-
 class RelationshipTable {
  protected:
   EntityPointerUnorderedMap table_;

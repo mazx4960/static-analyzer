@@ -9,6 +9,9 @@
 #include "commons/hash_combine.h"
 #include "types.h"
 
+/**
+ * Entity is the base class for all entities in the program.
+ */
 class Entity {
  protected:
   EntityType type_;
@@ -24,6 +27,35 @@ class Entity {
   virtual std::string ToString();
 };
 
+/**
+ * Hash function for Entity
+ *
+ * Usage: std::unordered_map<Entity *, std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>, EntityHashFunction, EntityPointerEquality>
+ */
+struct EntityPointerEquality {
+  bool operator()(Entity const *lhs, Entity const *rhs) const {
+    return lhs->GetType() == rhs->GetType() && lhs->GetValue() == rhs->GetValue();
+  }
+};
+
+struct EntityHashFunction {
+  size_t operator()(const Entity &entity) const {
+    return entity.GetHash();
+  }
+  size_t operator()(const Entity *entity) const {
+    return entity->GetHash();
+  }
+};
+
+using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
+using EntityPointerUnorderedMap = std::unordered_map<Entity *,
+                                                     EntityPointerUnorderedSet,
+                                                     EntityHashFunction,
+                                                     EntityPointerEquality>;
+
+// ========================================================================
+// Entity implementations
+// ========================================================================
 class ProcedureEntity : public Entity {
  public:
   explicit ProcedureEntity(std::string name) : Entity(EntityType::kProcedure, std::move(name)) {
@@ -99,26 +131,6 @@ class WhileStmtEntity : public StmtEntity {
 class IfStmtEntity : public StmtEntity {
  public:
   explicit IfStmtEntity(const std::string &stmt_no) : StmtEntity(EntityType::kIfStmt, std::move(stmt_no), "") {
-  }
-};
-
-/**
- * Hash function for Entity
- *
- * Usage: std::unordered_map<Entity *, std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>, EntityHashFunction, EntityPointerEquality>
- */
-struct EntityPointerEquality {
-  bool operator()(Entity const *lhs, Entity const *rhs) const {
-    return lhs->GetType() == rhs->GetType() && lhs->GetValue() == rhs->GetValue();
-  }
-};
-
-struct EntityHashFunction {
-  size_t operator()(const Entity &entity) const {
-    return entity.GetHash();
-  }
-  size_t operator()(const Entity *entity) const {
-    return entity->GetHash();
   }
 };
 

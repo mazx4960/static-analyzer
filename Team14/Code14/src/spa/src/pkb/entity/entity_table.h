@@ -9,8 +9,6 @@
 #include "commons/types.h"
 #include "qps/result.h"
 
-using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
-
 class EntityTable {
  protected:
   EntityPointerUnorderedSet table_;
@@ -20,6 +18,7 @@ class EntityTable {
  public:
   void populate(Entity &entity);
   EntityPointerUnorderedSet get();
+  int size();
 };
 
 class VariableTable : public EntityTable {

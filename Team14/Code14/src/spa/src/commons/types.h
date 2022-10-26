@@ -30,36 +30,61 @@ enum class RsType {
 
 inline std::string EntityTypeToString(EntityType type) {
   switch (type) {
-    case EntityType::kProcedure: return "Procedure";
-    case EntityType::kStatement: return "Statement";
-    case EntityType::kVariable: return "Variable";
-    case EntityType::kConstant: return "Constant";
-    case EntityType::kAssignStmt: return "AssignStmt";
-    case EntityType::kCallStmt: return "CallStmt";
-    case EntityType::kIfStmt: return "IfStmt";
-    case EntityType::kWhileStmt: return "WhileStmt";
-    case EntityType::kPrintStmt: return "PrintStmt";
-    case EntityType::kReadStmt: return "ReadStmt";
-    default: return "Unknown";
+    case EntityType::kProcedure:
+      return "Procedure";
+    case EntityType::kStatement:
+      return "Statement";
+    case EntityType::kVariable:
+      return "Variable";
+    case EntityType::kConstant:
+      return "Constant";
+    case EntityType::kAssignStmt:
+      return "AssignStmt";
+    case EntityType::kCallStmt:
+      return "CallStmt";
+    case EntityType::kIfStmt:
+      return "IfStmt";
+    case EntityType::kWhileStmt:
+      return "WhileStmt";
+    case EntityType::kPrintStmt:
+      return "PrintStmt";
+    case EntityType::kReadStmt:
+      return "ReadStmt";
+    default:
+      return "Unknown";
   }
 }
 
 inline std::string RsTypeToString(RsType type) {
   switch (type) {
-    case RsType::kFollows: return "Follows";
-    case RsType::kFollowsT: return "Follows*";
-    case RsType::kParent: return "Parent";
-    case RsType::kParentT: return "Parent*";
-    case RsType::kUses: return "Uses";
-    case RsType::kModifies: return "Modifies";
-    case RsType::kCalls: return "Calls";
-    case RsType::kCallsT: return "Calls*";
-    case RsType::kNext: return "Next";
-    case RsType::kNextT: return "Next*";
-    case RsType::kAffects: return "Affects";
-    case RsType::kAffectsT:return "Affects*";
-    case RsType::kAssignPattern: return "pattern";
-    default: return "Unknown";
+    case RsType::kFollows:
+      return "Follows";
+    case RsType::kFollowsT:
+      return "Follows*";
+    case RsType::kParent:
+      return "Parent";
+    case RsType::kParentT:
+      return "Parent*";
+    case RsType::kUses:
+      return "Uses";
+    case RsType::kModifies:
+      return "Modifies";
+    case RsType::kCalls:
+      return "Calls";
+    case RsType::kCallsT:
+      return "Calls*";
+    case RsType::kNext:
+      return "Next";
+    case RsType::kNextT:
+      return "Next*";
+    case RsType::kAffects:
+      return "Affects";
+    case RsType::kAffectsT:
+      return "Affects*";
+    case RsType::kAssignPattern:
+      return "pattern";
+    default:
+      return "Unknown";
   }
 }
 

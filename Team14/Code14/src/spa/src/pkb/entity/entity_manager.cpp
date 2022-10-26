@@ -18,25 +18,35 @@ EntityTable *EntityManager::GetTable(EntityType entity_type) {
 void EntityManager::CreateTable(EntityType entity_type) {
   EntityTable *table;
   switch (entity_type) {
-    case EntityType::kProcedure: table = new ProcedureTable();
+    case EntityType::kProcedure:
+      table = new ProcedureTable();
       break;
-    case EntityType::kVariable: table = new VariableTable();
+    case EntityType::kVariable:
+      table = new VariableTable();
       break;
-    case EntityType::kConstant: table = new ConstantTable();
+    case EntityType::kConstant:
+      table = new ConstantTable();
       break;
-    case EntityType::kAssignStmt: table = new AssignTable();
+    case EntityType::kAssignStmt:
+      table = new AssignTable();
       break;
-    case EntityType::kCallStmt: table = new CallTable();
+    case EntityType::kCallStmt:
+      table = new CallTable();
       break;
-    case EntityType::kIfStmt: table = new IfTable();
+    case EntityType::kIfStmt:
+      table = new IfTable();
       break;
-    case EntityType::kPrintStmt: table = new PrintTable();
+    case EntityType::kPrintStmt:
+      table = new PrintTable();
       break;
-    case EntityType::kReadStmt: table = new ReadTable();
+    case EntityType::kReadStmt:
+      table = new ReadTable();
       break;
-    case EntityType::kWhileStmt: table = new WhileTable();
+    case EntityType::kWhileStmt:
+      table = new WhileTable();
       break;
-    default: throw PKBException(EntityTypeToString(entity_type) + "table could not be created");
+    default:
+      throw PKBException(EntityTypeToString(entity_type) + "table could not be created");
   }
   this->entity_table_map_[entity_type] = table;
 }
@@ -50,6 +60,7 @@ void EntityManager::Populate(const std::vector<Entity *> &entities) {
   }
 }
 EntityPointerUnorderedSet EntityManager::Get(EntityType entity_type) {
+  this->num_queries_++;
   spdlog::debug("Retrieving all {}s", EntityTypeToString(entity_type));
   EntityPointerUnorderedSet matches;
   if (entity_type == EntityType::kStatement) {
@@ -71,6 +82,7 @@ EntityPointerUnorderedSet EntityManager::Get(EntityType entity_type) {
 }
 
 EntityPointerUnorderedSet EntityManager::Get(std::string &entity_value) {
+  this->num_queries_++;
   spdlog::debug("Retrieving all entities with {}", entity_value);
   EntityPointerUnorderedSet result = {};
   for (auto [k, v] : this->entity_table_map_) {
@@ -81,4 +93,10 @@ EntityPointerUnorderedSet EntityManager::Get(std::string &entity_value) {
     }
   }
   return result;
+}
+void EntityManager::LogStatistics() {
+  spdlog::info("Number of queries: {}", this->num_queries_);
+  for (auto [k, v] : this->entity_table_map_) {
+    spdlog::info("{}: {}", EntityTypeToString(k), v->size());
+  }
 }

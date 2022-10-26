@@ -38,5 +38,9 @@ Result *QueryEvaluator::Evaluate() {
   end = std::chrono::steady_clock::now();
   spdlog::info("Time taken to project results: {} ms",
                std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
+  
+  // display pkb stats
+  this->pkb_->LogStatistics();
+
   return result;
 }
