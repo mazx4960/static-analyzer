@@ -9,7 +9,7 @@ class QuerySynonym {
  private:
   std::string name_;
   EntityType type_;
-  int usage_;
+  int usage_ = 0;
 
  public:
   explicit QuerySynonym(std::string name, EntityType type) : name_(std::move(name)), type_(type) {
