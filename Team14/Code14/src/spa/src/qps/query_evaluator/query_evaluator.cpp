@@ -42,16 +42,16 @@ Result *QueryEvaluator::Evaluate() {
 }
 
 ClauseVector QueryEvaluator::getSortedQueries() {
-  auto clauses = this->query_.getClauses();
-  for (auto *clause : clauses) {
-    updateWeight(clause);
-  }
   struct {
     bool operator()(QueryClause *a, QueryClause *b) const {
       return a->getWeight() > b->getWeight();
     }
   } comparator;
 
+  auto clauses = this->query_.getClauses();
+  for (auto *clause : clauses) {
+    updateWeight(clause);
+  }
   std::sort(clauses.begin(), clauses.end(), comparator);
   return clauses;
 }
@@ -59,20 +59,17 @@ ClauseVector QueryEvaluator::getSortedQueries() {
 QueryClause *QueryEvaluator::updateWeight(QueryClause *clause) {
   if (clause->getClauseType() == ClauseType::kSuchThat) {
     auto *such_that_clause = static_cast<SuchThatClause *>(clause);
-    clause->setWeight(calculateWeight(such_that_clause->getFirst()->getUses(),
-                                      such_that_clause->getSecond()->getUses()));
+    clause->setWeight(calculateWeight(such_that_clause->getFirst()->getUsage(),
+                                      such_that_clause->getSecond()->getUsage()));
     return clause;
   }
-
-  if (clause->getClauseType() == ClauseType::kWith) {
-    return clause;
-  }
-
   if (clause->getClauseType() == ClauseType::kPattern) {
     auto *pattern_clause = static_cast<PatternClause *>(clause);
-    clause->setWeight(calculateWeight(pattern_clause->getStmtRef()->getUses(), pattern_clause->getEntRef()->getUses()));
+    clause->setWeight(calculateWeight(pattern_clause->getStmtRef()->getUsage(),
+                                      pattern_clause->getEntRef()->getUsage()));
     return clause;
   }
+  return clause;
 }
 
 double QueryEvaluator::calculateWeight(int first_usage_count, int second_usage_count) {

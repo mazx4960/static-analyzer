@@ -22,7 +22,7 @@ class QueryClause : public ICheckSemantics {
   [[nodiscard]] bool isSemanticallyCorrect() const override = 0;
   [[nodiscard]] virtual std::string toString() const = 0;
   void setWeight(double weight);
-  double getWeight() const;
+  [[nodiscard]] double getWeight() const;
   virtual bool operator<(const QueryClause &other) const;
   virtual bool operator==(const QueryClause &other) const = 0;
 };
