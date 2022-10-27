@@ -4,6 +4,7 @@
 test_folder="Team14/Tests14/system"
 result_folder="Team14/Code14/tests"
 test_names=(
+  "compute_centroid"
 #  "qps_stress_1"
   "sp_stress_1"
 #  "stress_1"

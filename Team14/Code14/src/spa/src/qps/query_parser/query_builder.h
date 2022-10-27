@@ -12,12 +12,18 @@
 
 class QueryBuilder {
  private:
+  inline static const std::string k_boolean_str_ = "BOOLEAN";
+
   std::unordered_map<std::string, QuerySynonym *> synonym_table_;
+
   std::vector<DeclarationBlueprint *> declaration_bps_;
+
   SelectBlueprint *select_bp_;
+
   std::vector<ClauseBlueprint *> clauses_bp_;
 
-  QuerySynonym *GetSynonymReference(const std::string &name);
+  QuerySynonym *GetSynonym(const std::string &name);
+  bool IsSynonymDeclared(const std::string &name);
 
  public:
   explicit QueryBuilder() = default;

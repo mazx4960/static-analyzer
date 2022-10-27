@@ -593,3 +593,23 @@ FALSE
 Select BOOLEAN such that Next(18, 15)
 FALSE
 5000
+1014 - boolean edge cases
+stmt BOOLEAN;
+Select BOOLEAN
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+5000
+1015 - boolean edge cases
+stmt BOOLEAN;
+Select BOOLEAN such that Next(1, BOOLEAN)
+2
+5000
+1016 - boolean edge cases
+stmt BOOLEAN;
+Select BOOLEAN.stmt# such that Next(BOOLEAN, 2)
+1
+5000
+1017 - boolean edge cases
+stmt BOOLEAN; procedure p;
+Select <p, BOOLEAN> such that Next*(BOOLEAN, BOOLEAN)
+main 14, readPoint 14, printResults 14, computeCentroid 14, main 15, readPoint 15, printResults 15, computeCentroid 15, main 16, readPoint 16, printResults 16, computeCentroid 16, main 17, readPoint 17, printResults 17, computeCentroid 17, main 18, readPoint 18, printResults 18, computeCentroid 18
+5000

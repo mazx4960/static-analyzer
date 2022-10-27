@@ -158,3 +158,23 @@ assign a;
 Select b pattern a (_, _" +temp"_)
 SyntaxError
 5000
+401 - select errors
+
+Select <>
+SyntaxError
+5000
+402 - select errors
+stmt s1, s2;
+Select <s s2>
+SyntaxError
+5000
+403 - select errors
+
+Select <BOOLEAN>
+SemanticError
+5000
+404 - select errors
+
+Select BOOLEAN.stmt#
+SemanticError
+5000
