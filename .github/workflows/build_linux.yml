@@ -17,6 +17,10 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
       - name: Build Project
         shell: bash
         run: |
@@ -30,9 +34,13 @@ jobs:
         run: |
           chmod +x scripts/test.sh
           scripts/test.sh
+      - name: Profiling (runner)
+        shell: bash
+        run: |
+          alias python3=python
           chmod +x scripts/run.sh
           scripts/run.sh
-      - name: Profiling
+      - name: Profiling (autotester)
         shell: bash
         run: |
           alias python3=python

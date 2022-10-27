@@ -1,14 +1,11 @@
-//
-// Created by gabri on 19/9/2022.
-//
+// Copyright 2022 CS3203 Team14. All rights reserved.
+
 #pragma once
 
 #include "pkb/relationship/relationship_table.h"
 #include "qps/pql/query_reference.h"
-using ResultRow = std::unordered_map<QuerySynonym *,
-                                     Entity *,
-                                     QuerySynonymHashFunction,
-                                     QuerySynonymPointerEquality>;
+
+using ResultRow = std::unordered_map<QuerySynonym *, Entity *, QuerySynonymHashFunction, QuerySynonymPointerEquality>;
 
 class SubqueryResult {
  private:

@@ -6,8 +6,6 @@
 
 #include "commons/entity.h"
 
-using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
-
 enum class SelectType {
   kElem, kBoolean
 };

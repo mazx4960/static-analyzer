@@ -2,20 +2,20 @@
 
 #include "query.h"
 
-std::vector<SynonymReference *> Query::getSynonymDeclarations() const {
+SynonymSet Query::getSynonymDeclarations() const {
   return this->synonym_declarations_;
 }
 SelectCall *Query::getQueryCall() const {
   return this->query_call_;
 }
-Clauses Query::getClauses() const {
+ClauseVector Query::getClauses() const {
   return this->query_clauses_;
 }
 std::string Query::toString() const {
   std::string str;
   str.append("Declarations: {");
   for (auto *declaration : synonym_declarations_) {
-    str.append(declaration->toString() + "; ");
+    str.append(declaration->ToString() + "; ");
   }
   str.append("}, ");
   str.append("QueryCall:");

@@ -8,55 +8,40 @@
 #include "evaluation_strategy.h"
 #include "qps/pql/query.h"
 #include "result_projector.h"
-#include "subquery_evaluator.h"
-
-using SynonymReferencePointerUnorderedSet = std::unordered_set<SynonymReference *, SynonymReferenceHashFunction, SynonymReferencePointerEquality>;
+#include "context.h"
 
 class QueryEvaluator {
  private:
   Clauses getSortedQueries();
-  QueryClause *updateWeight(QueryClause *clause);
-  static double calculateWeight(double contex_size, int usage_count);
+  static QueryClause *updateWeight(QueryClause *clause);
+  static double calculateWeight(int first_usage_count, int second_usage_count);
 
  protected:
   Query query_;
 
   IPKBQuerier *pkb_;
 
-  SynonymReferencePointerUnorderedSet declarations_;
-
-  /**
-   * Copy declarations from Query into a set.
-   * @return set of query declarations.
-   */
-  SynonymReferencePointerUnorderedSet copyDeclarations();
+  Context *ctx_;
 
   /**
    * Calls PKB to fetch context for each query declaration.
-   * @return set of query declarations.
    */
-  SynonymReferencePointerUnorderedSet fetchContext();
-
-  /**
-   * Copies query declarations into a set.
-   * Used to ensure immutability.
-   * @return duplicated set of query declarations.
-   */
-  SynonymReferencePointerUnorderedSet getDeclarationAsSet();
+  void InitContext();
 
   /**
    * Evaluate sub-queries.
    * @return vector of SubqueryResults.
    */
-  std::vector<SubqueryResult> evaluateSubqueries();
+  std::vector<SubqueryResult> EvaluateSubqueries();
 
  public:
   QueryEvaluator(IPKBQuerier *pkb, Query &query) : pkb_(pkb), query_(query) {
+    this->ctx_ = new Context();
   };
 
   /**
    * Evaluate query.
    * @return ElemResult of query with set of Entity instances.
    */
-  Result *evaluate();
+  Result *Evaluate();
 };

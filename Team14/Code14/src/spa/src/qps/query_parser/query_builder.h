@@ -12,21 +12,21 @@
 
 class QueryBuilder {
  private:
-  std::unordered_map<std::string, SynonymReference *> synonym_table_;
+  std::unordered_map<std::string, QuerySynonym *> synonym_table_;
   std::vector<DeclarationBlueprint *> declaration_bps_;
   SelectBlueprint *select_bp_;
   std::vector<ClauseBlueprint *> clauses_bp_;
 
-  SynonymReference *GetSynonymReference(const std::string &name);
+  QuerySynonym *GetSynonymReference(const std::string &name);
 
  public:
   explicit QueryBuilder() = default;
   Query *Build();
 
   void AddDeclaration(DeclarationBlueprint *declaration);
-  void AddSelect(SelectBlueprint *select);
+  void SetSelect(SelectBlueprint *select);
   void AddClauses(std::vector<ClauseBlueprint *> &clauses);
-  std::vector<SynonymReference *> BuildDeclarations();
+  std::unordered_set<QuerySynonym *> BuildDeclarations();
   SelectCall *BuildSelect();
   std::vector<QueryClause *> BuildClauses();
   PatternClause *BuildPattern(PatternBlueprint *clause_blueprint);

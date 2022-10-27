@@ -1,6 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "query_clause.h"
+#include "qps/exceptions.h"
 
 ClauseType QueryClause::getClauseType() const {
   return this->clause_type_;
@@ -16,19 +17,32 @@ bool QueryClause::operator<(const QueryClause &other) const {
 }
 SuchThatClause *SuchThatClause::Create(RsType type, QueryReference *first, QueryReference *second) {
   switch (type) {
-    case RsType::kParent:return new ParentClause(first, second);
-    case RsType::kFollows:return new FollowsClause(first, second);
-    case RsType::kModifies:return new ModifiesClause(first, second);
-    case RsType::kUses:return new UsesClause(first, second);
-    case RsType::kCalls:return new CallsClause(first, second);
-    case RsType::kCallsT:return new CallsTClause(first, second);
-    case RsType::kNext:return new NextClause(first, second);
-    case RsType::kNextT:return new NextTClause(first, second);
-    case RsType::kAffects:return new AffectsClause(first, second);
-    case RsType::kAffectsT:return new AffectsTClause(first, second);
-    case RsType::kParentT:return new ParentTClause(first, second);
-    case RsType::kFollowsT:return new FollowsTClause(first, second);
-    default:return nullptr;
+    case RsType::kParent:
+      return new ParentClause(first, second);
+    case RsType::kFollows:
+      return new FollowsClause(first, second);
+    case RsType::kModifies:
+      return new ModifiesClause(first, second);
+    case RsType::kUses:
+      return new UsesClause(first, second);
+    case RsType::kCalls:
+      return new CallsClause(first, second);
+    case RsType::kCallsT:
+      return new CallsTClause(first, second);
+    case RsType::kNext:
+      return new NextClause(first, second);
+    case RsType::kNextT:
+      return new NextTClause(first, second);
+    case RsType::kAffects:
+      return new AffectsClause(first, second);
+    case RsType::kAffectsT:
+      return new AffectsTClause(first, second);
+    case RsType::kParentT:
+      return new ParentTClause(first, second);
+    case RsType::kFollowsT:
+      return new FollowsTClause(first, second);
+    default:
+      throw BuilderError("Invalid such that clause type");
   }
 }
 RsType SuchThatClause::getSuchThatType() const {
@@ -39,12 +53,6 @@ QueryReference *SuchThatClause::getFirst() const {
 }
 QueryReference *SuchThatClause::getSecond() const {
   return this->second_;
-}
-void SuchThatClause::setFirst(SynonymReference *synonym_declaration) {
-  this->first_ = synonym_declaration;
-}
-void SuchThatClause::setSecond(SynonymReference *synonym_declaration) {
-  this->second_ = synonym_declaration;
 }
 std::string SuchThatClause::toString() const {
   std::string str;
@@ -60,444 +68,548 @@ bool SuchThatClause::operator==(const QueryClause &other) const {
       && (*static_cast<const SuchThatClause &>(other).getSecond()) == (*this->getSecond());
 }
 
-bool ParentClause::isSyntacticallyCorrect() const {
-  return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
-}
 bool ParentClause::isSemanticallyCorrect() const {
-  switch (getFirst()->getRefType()) {
-    case ReferenceType::kInteger:break;
-    case ReferenceType::kWildcard:getFirst()->setEntityType(EntityType::kStatement);
+  auto *first = this->getFirst();
+  switch (first->getRefType()) {
+    case ReferenceType::kInteger:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(first)->setEntityType(EntityType::kStatement);
       break;
     case ReferenceType::kSynonym:
-      switch (getFirst()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(first)->getSynonym()->GetEntityType()) {
         case EntityType::kStatement:
         case EntityType::kReadStmt:
         case EntityType::kPrintStmt:
         case EntityType::kAssignStmt:
         case EntityType::kCallStmt:
         case EntityType::kWhileStmt:
-        case EntityType::kIfStmt:break;
-        default:return false;
+        case EntityType::kIfStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
-  switch (getSecond()->getRefType()) {
-    case ReferenceType::kInteger:break;
-    case ReferenceType::kWildcard:getSecond()->setEntityType(EntityType::kStatement);
+  auto *second = this->getSecond();
+  switch (second->getRefType()) {
+    case ReferenceType::kInteger:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(second)->setEntityType(EntityType::kStatement);
       break;
     case ReferenceType::kSynonym:
-      switch (getSecond()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(second)->getSynonym()->GetEntityType()) {
         case EntityType::kStatement:
         case EntityType::kReadStmt:
         case EntityType::kPrintStmt:
         case EntityType::kAssignStmt:
         case EntityType::kCallStmt:
         case EntityType::kWhileStmt:
-        case EntityType::kIfStmt:break;
-        default:return false;
+        case EntityType::kIfStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
   return true;
-}
-bool ParentTClause::isSyntacticallyCorrect() const {
-  return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
 bool ParentTClause::isSemanticallyCorrect() const {
+  auto *first = this->getFirst();
   switch (getFirst()->getRefType()) {
-    case ReferenceType::kInteger:break;
-    case ReferenceType::kWildcard:getFirst()->setEntityType(EntityType::kStatement);
+    case ReferenceType::kInteger:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(first)->setEntityType(EntityType::kStatement);
       break;
     case ReferenceType::kSynonym:
-      switch (getFirst()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(first)->getSynonym()->GetEntityType()) {
         case EntityType::kStatement:
         case EntityType::kReadStmt:
         case EntityType::kPrintStmt:
         case EntityType::kAssignStmt:
         case EntityType::kCallStmt:
         case EntityType::kWhileStmt:
-        case EntityType::kIfStmt:break;
-        default:return false;
+        case EntityType::kIfStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
+  auto *second = this->getSecond();
   switch (getSecond()->getRefType()) {
-    case ReferenceType::kInteger:break;
-    case ReferenceType::kWildcard:getSecond()->setEntityType(EntityType::kStatement);
+    case ReferenceType::kInteger:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(second)->setEntityType(EntityType::kStatement);
       break;
     case ReferenceType::kSynonym:
-      switch (getSecond()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(second)->getSynonym()->GetEntityType()) {
         case EntityType::kStatement:
         case EntityType::kReadStmt:
         case EntityType::kPrintStmt:
         case EntityType::kAssignStmt:
         case EntityType::kCallStmt:
         case EntityType::kWhileStmt:
-        case EntityType::kIfStmt:break;
-        default:return false;
+        case EntityType::kIfStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
   return true;
-}
-bool FollowsClause::isSyntacticallyCorrect() const {
-  return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
 bool FollowsClause::isSemanticallyCorrect() const {
+  auto *first = this->getFirst();
   switch (getFirst()->getRefType()) {
-    case ReferenceType::kInteger:break;
-    case ReferenceType::kWildcard:getFirst()->setEntityType(EntityType::kStatement);
+    case ReferenceType::kInteger:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(first)->setEntityType(EntityType::kStatement);
       break;
     case ReferenceType::kSynonym:
-      switch (getFirst()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(first)->getSynonym()->GetEntityType()) {
         case EntityType::kStatement:
         case EntityType::kReadStmt:
         case EntityType::kPrintStmt:
         case EntityType::kAssignStmt:
         case EntityType::kCallStmt:
         case EntityType::kWhileStmt:
-        case EntityType::kIfStmt:break;
-        default:return false;
+        case EntityType::kIfStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
+  auto *second = this->getSecond();
   switch (getSecond()->getRefType()) {
-    case ReferenceType::kInteger:break;
-    case ReferenceType::kWildcard:getSecond()->setEntityType(EntityType::kStatement);
+    case ReferenceType::kInteger:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(second)->setEntityType(EntityType::kStatement);
       break;
     case ReferenceType::kSynonym:
-      switch (getSecond()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(second)->getSynonym()->GetEntityType()) {
         case EntityType::kStatement:
         case EntityType::kReadStmt:
         case EntityType::kPrintStmt:
         case EntityType::kAssignStmt:
         case EntityType::kCallStmt:
         case EntityType::kWhileStmt:
-        case EntityType::kIfStmt:break;
-        default:return false;
+        case EntityType::kIfStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
   return true;
-}
-bool FollowsTClause::isSyntacticallyCorrect() const {
-  return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
 bool FollowsTClause::isSemanticallyCorrect() const {
+  auto *first = this->getFirst();
   switch (getFirst()->getRefType()) {
-    case ReferenceType::kInteger:break;
-    case ReferenceType::kWildcard:getFirst()->setEntityType(EntityType::kStatement);
+    case ReferenceType::kInteger:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(first)->setEntityType(EntityType::kStatement);
       break;
     case ReferenceType::kSynonym:
-      switch (getFirst()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(first)->getSynonym()->GetEntityType()) {
         case EntityType::kStatement:
         case EntityType::kReadStmt:
         case EntityType::kPrintStmt:
         case EntityType::kAssignStmt:
         case EntityType::kCallStmt:
         case EntityType::kWhileStmt:
-        case EntityType::kIfStmt:break;
-        default:return false;
+        case EntityType::kIfStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
+  auto *second = this->getSecond();
   switch (getSecond()->getRefType()) {
-    case ReferenceType::kInteger:break;
-    case ReferenceType::kWildcard:getSecond()->setEntityType(EntityType::kStatement);
+    case ReferenceType::kInteger:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(second)->setEntityType(EntityType::kStatement);
       break;
     case ReferenceType::kSynonym:
-      switch (getSecond()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(second)->getSynonym()->GetEntityType()) {
         case EntityType::kStatement:
         case EntityType::kReadStmt:
         case EntityType::kPrintStmt:
         case EntityType::kAssignStmt:
         case EntityType::kCallStmt:
         case EntityType::kWhileStmt:
-        case EntityType::kIfStmt:break;
-        default:return false;
+        case EntityType::kIfStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
   return true;
-}
-bool UsesClause::isSyntacticallyCorrect() const {
-  return (this->getFirst()->isStmtRef() || this->getFirst()->isEntRef()) && this->getSecond()->isEntRef();
 }
 bool UsesClause::isSemanticallyCorrect() const {
+  auto *first = this->getFirst();
   switch (getFirst()->getRefType()) {
     case ReferenceType::kInteger:
-    case ReferenceType::kIdent:break;
+    case ReferenceType::kIdent:
+      break;
     case ReferenceType::kSynonym:
-      switch (getFirst()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(first)->getSynonym()->GetEntityType()) {
         case EntityType::kAssignStmt:
         case EntityType::kProcedure:
         case EntityType::kStatement:
         case EntityType::kCallStmt:
         case EntityType::kIfStmt:
         case EntityType::kWhileStmt:
-        case EntityType::kPrintStmt:break;
-        default:return false;
+        case EntityType::kPrintStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
+  auto *second = this->getSecond();
   switch (getSecond()->getRefType()) {
-    case ReferenceType::kIdent:break;
-    case ReferenceType::kWildcard:getSecond()->setEntityType(EntityType::kVariable);
+    case ReferenceType::kIdent:
       break;
-    case ReferenceType::kSynonym:return getSecond()->getEntityType() == EntityType::kVariable;
-    default:return false;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(second)->setEntityType(EntityType::kVariable);
+      break;
+    case ReferenceType::kSynonym:
+      return static_cast<SynonymReference *>(second)->getSynonym()->GetEntityType() == EntityType::kVariable;
+    default:
+      return false;
   }
   return true;
-}
-bool ModifiesClause::isSyntacticallyCorrect() const {
-  return (this->getFirst()->isStmtRef() || this->getFirst()->isEntRef()) && this->getSecond()->isEntRef();
 }
 bool ModifiesClause::isSemanticallyCorrect() const {
+  auto *first = this->getFirst();
   switch (getFirst()->getRefType()) {
     case ReferenceType::kInteger:
-    case ReferenceType::kIdent:break;
+    case ReferenceType::kIdent:
+      break;
     case ReferenceType::kSynonym:
-      switch (getFirst()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(first)->getSynonym()->GetEntityType()) {
         case EntityType::kAssignStmt:
         case EntityType::kProcedure:
         case EntityType::kStatement:
         case EntityType::kCallStmt:
         case EntityType::kIfStmt:
         case EntityType::kWhileStmt:
-        case EntityType::kReadStmt:break;
-        default:return false;
+        case EntityType::kReadStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
+  auto *second = this->getSecond();
   switch (getSecond()->getRefType()) {
-    case ReferenceType::kIdent:break;
-    case ReferenceType::kWildcard:getSecond()->setEntityType(EntityType::kVariable);
+    case ReferenceType::kIdent:
       break;
-    case ReferenceType::kSynonym:return getSecond()->getEntityType() == EntityType::kVariable;
-    default:return false;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(second)->setEntityType(EntityType::kVariable);
+      break;
+    case ReferenceType::kSynonym:
+      return static_cast<SynonymReference *>(second)->getSynonym()->GetEntityType() == EntityType::kVariable;
+    default:
+      return false;
   }
   return true;
-}
-bool CallsClause::isSyntacticallyCorrect() const {
-  return this->getFirst()->isEntRef() && this->getSecond()->isEntRef();
 }
 bool CallsClause::isSemanticallyCorrect() const {
+  auto *first = this->getFirst();
   switch (getFirst()->getRefType()) {
-    case ReferenceType::kIdent:break;
-    case ReferenceType::kWildcard:getFirst()->setEntityType(EntityType::kProcedure);
+    case ReferenceType::kIdent:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(first)->setEntityType(EntityType::kProcedure);
       break;
     case ReferenceType::kSynonym:
-      switch (getFirst()->getEntityType()) {
-        case EntityType::kProcedure:break;
-        default:return false;
+      switch (static_cast<SynonymReference *>(first)->getSynonym()->GetEntityType()) {
+        case EntityType::kProcedure:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
+  auto *second = this->getSecond();
   switch (getSecond()->getRefType()) {
-    case ReferenceType::kIdent:break;
-    case ReferenceType::kWildcard:getSecond()->setEntityType(EntityType::kProcedure);
+    case ReferenceType::kIdent:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(second)->setEntityType(EntityType::kProcedure);
       break;
     case ReferenceType::kSynonym:
-      switch (getSecond()->getEntityType()) {
-        case EntityType::kProcedure:break;
-        default:return false;
+      switch (static_cast<SynonymReference *>(second)->getSynonym()->GetEntityType()) {
+        case EntityType::kProcedure:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
   return true;
-}
-bool CallsTClause::isSyntacticallyCorrect() const {
-  return this->getFirst()->isEntRef() && this->getSecond()->isEntRef();
 }
 bool CallsTClause::isSemanticallyCorrect() const {
+  auto *first = this->getFirst();
   switch (getFirst()->getRefType()) {
-    case ReferenceType::kIdent:break;
-    case ReferenceType::kWildcard:getFirst()->setEntityType(EntityType::kProcedure);
+    case ReferenceType::kIdent:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(first)->setEntityType(EntityType::kProcedure);
       break;
     case ReferenceType::kSynonym:
-      switch (getFirst()->getEntityType()) {
-        case EntityType::kProcedure:break;
-        default:return false;
+      switch (static_cast<SynonymReference *>(first)->getSynonym()->GetEntityType()) {
+        case EntityType::kProcedure:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
+  auto *second = this->getSecond();
   switch (getSecond()->getRefType()) {
-    case ReferenceType::kIdent:break;
-    case ReferenceType::kWildcard:getSecond()->setEntityType(EntityType::kProcedure);
+    case ReferenceType::kIdent:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(second)->setEntityType(EntityType::kProcedure);
       break;
     case ReferenceType::kSynonym:
-      switch (getSecond()->getEntityType()) {
-        case EntityType::kProcedure:break;
-        default:return false;
+      switch (static_cast<SynonymReference *>(second)->getSynonym()->GetEntityType()) {
+        case EntityType::kProcedure:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
   return true;
-}
-bool NextClause::isSyntacticallyCorrect() const {
-  return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
 bool NextClause::isSemanticallyCorrect() const {
+  auto *first = this->getFirst();
   switch (getFirst()->getRefType()) {
-    case ReferenceType::kInteger:break;
-    case ReferenceType::kWildcard:getFirst()->setEntityType(EntityType::kStatement);
+    case ReferenceType::kInteger:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(first)->setEntityType(EntityType::kStatement);
       break;
     case ReferenceType::kSynonym:
-      switch (getFirst()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(first)->getSynonym()->GetEntityType()) {
         case EntityType::kStatement:
         case EntityType::kPrintStmt:
         case EntityType::kReadStmt:
         case EntityType::kAssignStmt:
         case EntityType::kCallStmt:
         case EntityType::kWhileStmt:
-        case EntityType::kIfStmt:break;
-        default:return false;
+        case EntityType::kIfStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
+  auto *second = this->getSecond();
   switch (getSecond()->getRefType()) {
-    case ReferenceType::kInteger:break;
-    case ReferenceType::kWildcard:getSecond()->setEntityType(EntityType::kStatement);
+    case ReferenceType::kInteger:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(second)->setEntityType(EntityType::kStatement);
       break;
     case ReferenceType::kSynonym:
-      switch (getSecond()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(second)->getSynonym()->GetEntityType()) {
         case EntityType::kStatement:
         case EntityType::kPrintStmt:
         case EntityType::kReadStmt:
         case EntityType::kAssignStmt:
         case EntityType::kCallStmt:
         case EntityType::kWhileStmt:
-        case EntityType::kIfStmt:break;
-        default:return false;
+        case EntityType::kIfStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
   return true;
-}
-bool NextTClause::isSyntacticallyCorrect() const {
-  return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
 bool NextTClause::isSemanticallyCorrect() const {
+  auto *first = this->getFirst();
   switch (getFirst()->getRefType()) {
-    case ReferenceType::kInteger:break;
-    case ReferenceType::kWildcard:getFirst()->setEntityType(EntityType::kStatement);
+    case ReferenceType::kInteger:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(first)->setEntityType(EntityType::kStatement);
       break;
     case ReferenceType::kSynonym:
-      switch (getFirst()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(first)->getSynonym()->GetEntityType()) {
         case EntityType::kStatement:
         case EntityType::kPrintStmt:
         case EntityType::kReadStmt:
         case EntityType::kAssignStmt:
         case EntityType::kCallStmt:
         case EntityType::kWhileStmt:
-        case EntityType::kIfStmt:break;
-        default:return false;
+        case EntityType::kIfStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
+  auto *second = this->getSecond();
   switch (getSecond()->getRefType()) {
-    case ReferenceType::kInteger:break;
-    case ReferenceType::kWildcard:getSecond()->setEntityType(EntityType::kStatement);
+    case ReferenceType::kInteger:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(second)->setEntityType(EntityType::kStatement);
       break;
     case ReferenceType::kSynonym:
-      switch (getSecond()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(second)->getSynonym()->GetEntityType()) {
         case EntityType::kStatement:
         case EntityType::kPrintStmt:
         case EntityType::kReadStmt:
         case EntityType::kAssignStmt:
         case EntityType::kCallStmt:
         case EntityType::kWhileStmt:
-        case EntityType::kIfStmt:break;
-        default:return false;
+        case EntityType::kIfStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
   return true;
-}
-bool AffectsClause::isSyntacticallyCorrect() const {
-  return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
 bool AffectsClause::isSemanticallyCorrect() const {
+  auto *first = this->getFirst();
   switch (getFirst()->getRefType()) {
-    case ReferenceType::kInteger:break;
-    case ReferenceType::kWildcard:getFirst()->setEntityType(EntityType::kAssignStmt);
+    case ReferenceType::kInteger:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(first)->setEntityType(EntityType::kAssignStmt);
       break;
     case ReferenceType::kSynonym:
-      switch (getFirst()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(first)->getSynonym()->GetEntityType()) {
         case EntityType::kStatement:
-        case EntityType::kAssignStmt:break;
-        default:return false;
+        case EntityType::kAssignStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
+  auto *second = this->getSecond();
   switch (getSecond()->getRefType()) {
-    case ReferenceType::kInteger:break;
-    case ReferenceType::kWildcard:getSecond()->setEntityType(EntityType::kAssignStmt);
+    case ReferenceType::kInteger:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(second)->setEntityType(EntityType::kAssignStmt);
       break;
     case ReferenceType::kSynonym:
-      switch (getSecond()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(second)->getSynonym()->GetEntityType()) {
         case EntityType::kStatement:
-        case EntityType::kAssignStmt:break;
-        default:return false;
+        case EntityType::kAssignStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
   return true;
-}
-bool AffectsTClause::isSyntacticallyCorrect() const {
-  return this->getFirst()->isStmtRef() && this->getSecond()->isStmtRef();
 }
 bool AffectsTClause::isSemanticallyCorrect() const {
+  auto *first = this->getFirst();
   switch (getFirst()->getRefType()) {
-    case ReferenceType::kInteger:break;
-    case ReferenceType::kWildcard:getFirst()->setEntityType(EntityType::kAssignStmt);
+    case ReferenceType::kInteger:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(first)->setEntityType(EntityType::kAssignStmt);
       break;
     case ReferenceType::kSynonym:
-      switch (getFirst()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(first)->getSynonym()->GetEntityType()) {
         case EntityType::kStatement:
-        case EntityType::kAssignStmt:break;
-        default:return false;
+        case EntityType::kAssignStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
+  auto *second = this->getSecond();
   switch (getSecond()->getRefType()) {
-    case ReferenceType::kInteger:break;
-    case ReferenceType::kWildcard:getSecond()->setEntityType(EntityType::kAssignStmt);
+    case ReferenceType::kInteger:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(second)->setEntityType(EntityType::kAssignStmt);
       break;
     case ReferenceType::kSynonym:
-      switch (getSecond()->getEntityType()) {
+      switch (static_cast<SynonymReference *>(second)->getSynonym()->GetEntityType()) {
         case EntityType::kStatement:
-        case EntityType::kAssignStmt:break;
-        default:return false;
+        case EntityType::kAssignStmt:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
   return true;
 }
-SynonymReference *PatternClause::getSynonymDeclaration() const {
-  return this->synonym_declaration_;
+SynonymReference *PatternClause::getStmtRef() const {
+  return this->stmt_ref_;
 }
 QueryReference *PatternClause::getEntRef() const {
   return this->ent_ref_;
@@ -508,42 +620,48 @@ ExpressionSpec *PatternClause::getFirstExpression() const {
 ExpressionSpec *PatternClause::getSecondExpression() const {
   return this->second_expression_;
 }
-void PatternClause::setSynonymReference(SynonymReference *synonym_declaration) {
-  this->synonym_declaration_ = synonym_declaration;
+void PatternClause::setSynonymReference(SynonymReference *stmt_ref) {
+  this->stmt_ref_ = stmt_ref;
 }
 void PatternClause::setEntReference(QueryReference *ent_ref) {
   this->ent_ref_ = ent_ref;
 }
-bool PatternClause::isSyntacticallyCorrect() const {
-  return true;
-}
 bool PatternClause::isSemanticallyCorrect() const {
+  auto *ent_ref = this->getEntRef();
   switch (getEntRef()->getRefType()) {
-    case ReferenceType::kIdent:break;
-    case ReferenceType::kWildcard:getEntRef()->setEntityType(EntityType::kVariable);
+    case ReferenceType::kIdent:
+      break;
+    case ReferenceType::kWildcard:
+      static_cast<WildcardReference *>(ent_ref)->setEntityType(EntityType::kVariable);
       break;
     case ReferenceType::kSynonym:
-      switch (getEntRef()->getEntityType()) {
-        case EntityType::kVariable:break;
-        default:return false;
+      switch (static_cast<SynonymReference *>(ent_ref)->getSynonym()->GetEntityType()) {
+        case EntityType::kVariable:
+          break;
+        default:
+          return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
-  switch (getSynonymDeclaration()->getEntityType()) {
-    case EntityType::kAssignStmt:return getFirstExpression() != nullptr && getSecondExpression() == nullptr;
+  auto *stmt_ref = this->getStmtRef();
+  switch (static_cast<SynonymReference *>(stmt_ref)->getSynonym()->GetEntityType()) {
+    case EntityType::kAssignStmt:
+      return getFirstExpression() != nullptr && getSecondExpression() == nullptr;
     case EntityType::kIfStmt:
       return getFirstExpression() != nullptr && getSecondExpression() != nullptr
           && *getFirstExpression() == WildExpression() && *getSecondExpression() == WildExpression();
     case EntityType::kWhileStmt:
       return getFirstExpression() != nullptr && getSecondExpression() == nullptr
           && *getFirstExpression() == WildExpression();
-    default:return false;
+    default:
+      return false;
   }
 }
 std::string PatternClause::toString() const {
   std::string str;
-  str.append("pattern " + this->synonym_declaration_->toString() + "(" + this->getEntRef()->toString() + ", "
+  str.append("pattern " + this->stmt_ref_->toString() + "(" + this->getEntRef()->toString() + ", "
                  + this->first_expression_->toString() + ")");
   return str;
 }
@@ -552,8 +670,7 @@ bool PatternClause::operator==(const QueryClause &other) const {
     return false;
   }
   auto other_clause = static_cast<const PatternClause &>(other);
-  return (*other_clause.getSynonymDeclaration()) == (*this->getSynonymDeclaration())
-      && (*other_clause.getEntRef()) == (*this->getEntRef())
+  return (*other_clause.getStmtRef()) == (*this->getStmtRef()) && (*other_clause.getEntRef()) == (*this->getEntRef())
       && (*other_clause.getFirstExpression()) == (*this->getFirstExpression());
 }
 Comparator WithClause::getComparator() const {
@@ -565,32 +682,34 @@ QueryReference *WithClause::getFirst() const {
 QueryReference *WithClause::getSecond() const {
   return this->second_;
 }
-bool WithClause::isSyntacticallyCorrect() const {
-  return getFirst()->isAttrCompareRef() && getSecond()->isAttrCompareRef();
-}
 bool WithClause::isSemanticallyCorrect() const {
   auto first_type = getFirst()->getRefType();
   auto second_type = getSecond()->getRefType();
   switch (first_type) {
     case ReferenceType::kInteger:
-    case ReferenceType::kIdent:break;
-    case ReferenceType::kAttr:first_type = AttrToRefType(static_cast<AttrReference *>(getFirst())->getAttributeType());
+    case ReferenceType::kIdent:
+      break;
+    case ReferenceType::kAttr:
+      first_type = AttrToRefType(static_cast<AttrReference *>(getFirst())->getAttributeType());
       if (!static_cast<AttrReference *>(getFirst())->isSemanticallyCorrect()) {
         return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
   switch (second_type) {
     case ReferenceType::kInteger:
-    case ReferenceType::kIdent:break;
+    case ReferenceType::kIdent:
+      break;
     case ReferenceType::kAttr:
       second_type = AttrToRefType(static_cast<AttrReference *>(getSecond())->getAttributeType());
       if (!static_cast<AttrReference *>(getSecond())->isSemanticallyCorrect()) {
         return false;
       }
       break;
-    default:return false;
+    default:
+      return false;
   }
 
   return first_type == second_type && first_type != ReferenceType::kWildcard;
