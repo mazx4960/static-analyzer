@@ -8,10 +8,11 @@
 #include "commons/entity.h"
 #include "commons/pattern.h"
 #include "pattern_table.h"
-using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
+#include "pkb/relationship/relationship_table.h"
 
 class PatternManager {
  private:
+  int num_queries_ = 0;
   PatternTable *pattern_table_;
 
  public:
@@ -19,4 +20,6 @@ class PatternManager {
   PatternTable *GetTable();
   void Populate(const std::vector<Pattern *> &patterns);
   EntityPointerUnorderedSet Get(Entity *variable, const std::string &expr, bool isSubmatch);
+
+  void LogStatistics();
 };

@@ -27,3 +27,10 @@ EntityStringPairUnorderedSet PatternTable::Get(Entity *variable) {
 PatternEntityUnorderedMap PatternTable::GetTable() {
   return this->pattern_table_;
 }
+int PatternTable::Size() {
+  int size = 0;
+  for (const auto &pair : this->pattern_table_) {
+    size += pair.second.size();
+  }
+  return size;
+}

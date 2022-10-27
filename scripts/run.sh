@@ -11,6 +11,9 @@ for test_name in {0..7}; do
     grep "Time taken to fetch results from pkb" $result_folder/"$test_name".log
     grep "Time taken to project results" $result_folder/"$test_name".log
     grep "Time taken to execute query" $result_folder/"$test_name".log
+    grep "Number of queries" $result_folder/"$test_name".log
+    grep "Number of cache hits" $result_folder/"$test_name".log
+    grep "Number of cache misses" $result_folder/"$test_name".log
     python3 -m mprof peak
     echo "=============================================================="
 done

@@ -1,5 +1,6 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
+#include <spdlog/spdlog.h>
 #include "pkb.h"
 
 PKB::PKB() {
@@ -31,4 +32,14 @@ EntityPointerUnorderedSet PKB::getByPattern(Entity *entity, std::string &right_p
 
 EntityPointerUnorderedSet PKB::getEntitiesByString(std::string &entity_value) {
   return this->entity_manager_->Get(entity_value);
+}
+void PKB::LogStatistics() {
+  spdlog::info("====================== PKB STATISTICS ======================");
+  spdlog::info("---------------------- Entity Manager ----------------------");
+  this->entity_manager_->LogStatistics();
+  spdlog::info("------------------- Relationship Manager -------------------");
+  this->relationship_manager_->LogStatistics();
+  spdlog::info("---------------------- Pattern Manager ---------------------");
+  this->pattern_manager_->LogStatistics();
+  spdlog::info("============================================================");
 }

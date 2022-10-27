@@ -15,6 +15,7 @@ void PatternManager::Populate(const std::vector<Pattern *> &patterns) {
   }
 }
 EntityPointerUnorderedSet PatternManager::Get(Entity *variable, const std::string &expr, bool isSubmatch) {
+  this->num_queries_++;
   spdlog::debug("Retrieving all statements that matches {} = {}", variable->GetValue(), expr);
   auto matches = EntityPointerUnorderedSet();
   auto set = this->pattern_table_->Get(variable);
@@ -34,4 +35,8 @@ EntityPointerUnorderedSet PatternManager::Get(Entity *variable, const std::strin
   }
   spdlog::debug("Results[{}]: {}", matches.size(), result_string);
   return matches;
+}
+void PatternManager::LogStatistics() {
+  spdlog::info("Number of queries: {}", this->num_queries_);
+  spdlog::info("Number of patterns: {}", this->pattern_table_->Size());
 }

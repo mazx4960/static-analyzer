@@ -6,10 +6,10 @@
 
 #include "commons/types.h"
 #include "entity_table.h"
-using EntityPointerUnorderedSet = std::unordered_set<Entity *, EntityHashFunction, EntityPointerEquality>;
 
 class EntityManager {
  private:
+  int num_queries_ = 0;
   std::unordered_map<EntityType, EntityTable *> entity_table_map_;
 
   void CreateTable(EntityType);
@@ -20,4 +20,6 @@ class EntityManager {
   void Populate(const std::vector<Entity *> &entities);
   EntityPointerUnorderedSet Get(EntityType entity_type);
   EntityPointerUnorderedSet Get(std::string &entity_value);
+
+  void LogStatistics();
 };

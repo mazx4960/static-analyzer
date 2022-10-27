@@ -9,3 +9,6 @@ void EntityTable::populate(Entity &entity) {
 EntityPointerUnorderedSet EntityTable::get() {
   return this->table_;
 }
+int EntityTable::size() {
+  return this->table_.size();
+}
