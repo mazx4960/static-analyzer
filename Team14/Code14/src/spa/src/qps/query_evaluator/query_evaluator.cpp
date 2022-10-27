@@ -79,7 +79,7 @@ QueryClause *QueryEvaluator::updateWeight(QueryClause *clause) {
 
 double QueryEvaluator::calculateWeight(int first_usage_count, int second_usage_count) {
   if (first_usage_count <= 0 && second_usage_count <= 0) {
-    return INT_MIN;
+    return -1;
   }
   return 1.0 / (std::max(first_usage_count, second_usage_count) * (first_usage_count + second_usage_count));
 }
