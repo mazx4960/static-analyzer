@@ -62,8 +62,9 @@ SelectCall *QueryBuilder::BuildSelect() {
   auto *single_select = select_bp_->getSingleReference();
   if (single_select != nullptr) {
     spdlog::debug("Select call has one synonym: {}", single_select->toString());
-    if (single_select->getValue() == "BOOLEAN" && single_select->getAttributeType() == AttributeType::kNone
-        && !IsSynonymDeclared("BOOLEAN")) {
+    if (single_select->getValue() == k_boolean_str_
+        && single_select->getAttributeType() == AttributeType::kNone
+        && !IsSynonymDeclared(k_boolean_str_)) {
       return new BooleanSelect();
     }
   }
@@ -91,8 +92,9 @@ std::vector<QueryClause *> QueryBuilder::BuildClauses() {
         built_clause = BuildWith(static_cast<WithBlueprint *>(clause));
         break;
       }
-      default:
+      default: {
         throw ParseSemanticError("Unsupported clause type!");
+      }
     }
     clauses.push_back(built_clause);
   }
@@ -116,24 +118,30 @@ std::vector<ElemReference *> QueryBuilder::BuildElems(const std::vector<ElemBlue
 QueryReference *QueryBuilder::BuildReference(BaseBlueprint *blueprint) {
   QueryReference *ref;
   switch (blueprint->getReferenceType()) {
-    case ReferenceType::kSynonym:
+    case ReferenceType::kSynonym: {
       ref = new SynonymReference(GetSynonym(blueprint->getValue()));
       break;
-    case ReferenceType::kIdent:
+    }
+    case ReferenceType::kIdent: {
       ref = new IdentReference(blueprint->getValue());
       break;
-    case ReferenceType::kInteger:
+    }
+    case ReferenceType::kInteger: {
       ref = new IntegerReference(blueprint->getValue());
       break;
-    case ReferenceType::kWildcard:
+    }
+    case ReferenceType::kWildcard: {
       ref = new WildcardReference();
       break;
-    case ReferenceType::kAttr:
+    }
+    case ReferenceType::kAttr: {
       ref = new AttrReference(GetSynonym(blueprint->getValue()),
                               static_cast<ElemBlueprint *>(blueprint)->getAttributeType());
       break;
-    default:
+    }
+    default: {
       throw ParseSemanticError("Invalid reference type for bp: " + blueprint->toString());
+    }
   }
   return ref;
 }
