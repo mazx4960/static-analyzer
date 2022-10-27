@@ -9,6 +9,7 @@ class QuerySynonym {
  private:
   std::string name_;
   EntityType type_;
+  int usage_;
 
  public:
   explicit QuerySynonym(std::string name, EntityType type) : name_(std::move(name)), type_(type) {
@@ -16,7 +17,9 @@ class QuerySynonym {
 
   [[nodiscard]] std::string GetName() const;
   [[nodiscard]] EntityType GetEntityType() const;
+  [[nodiscard]] int GetUsage() const;
   [[nodiscard]] std::string ToString() const;
+  void IncrementUsage();
   bool operator==(const QuerySynonym &) const;
   bool operator!=(const QuerySynonym &) const;
 };

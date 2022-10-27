@@ -16,6 +16,7 @@ class QueryReference {
   };
 
  public:
+  [[nodiscard]] virtual int getUsage() const = 0;
   [[nodiscard]] ReferenceType getRefType() const;
   [[nodiscard]] virtual std::string toString() const = 0;
   virtual bool operator==(const QueryReference &other) const;
@@ -30,6 +31,9 @@ class WildcardReference : public QueryReference {
   explicit WildcardReference(EntityType wildcard_type = EntityType::kUnknown)
       : QueryReference(ReferenceType::kWildcard), entity_type_(wildcard_type) {
   };
+  [[nodiscard]] inline int getUsage() const override {
+    return 0;
+  }
   void setEntityType(EntityType entity_type);
   [[nodiscard]] EntityType getEntityType() const;
   [[nodiscard]] std::string toString() const override;
@@ -44,6 +48,9 @@ class IdentReference : public QueryReference {
  public:
   explicit IdentReference(std::string value) : QueryReference(ReferenceType::kIdent), value_(std::move(value)) {
   }
+  [[nodiscard]] inline int getUsage() const override {
+    return 0;
+  }
   [[nodiscard]] std::string getValue() const;
   [[nodiscard]] std::string toString() const override;
   bool operator==(const QueryReference &other) const override;
@@ -57,6 +64,10 @@ class IntegerReference : public QueryReference {
  public:
   explicit IntegerReference(std::string value) : QueryReference(ReferenceType::kInteger), value_(std::move(value)) {
   }
+  [[nodiscard]] inline int getUsage() const override {
+    return 0;
+  }
+
   [[nodiscard]] std::string getValue() const;
   [[nodiscard]] std::string toString() const override;
   bool operator==(const QueryReference &other) const override;
@@ -78,6 +89,8 @@ class SynonymReference : public ElemReference {
   explicit SynonymReference(QuerySynonym *query_synonym)
       : ElemReference(ReferenceType::kSynonym), query_synonym_(query_synonym) {
   };
+
+  [[nodiscard]] int getUsage() const override;
   [[nodiscard]] QuerySynonym *getSynonym() const override;
   [[nodiscard]] std::string toString() const override;
   bool operator==(const QueryReference &other) const override;
@@ -90,9 +103,13 @@ class AttrReference : public ElemReference, public ICheckSemantics {
   AttributeType attribute_type_;
 
  public:
+
   explicit AttrReference(QuerySynonym *synonym, AttributeType attribute_type)
       : ElemReference(ReferenceType::kAttr), synonym_(synonym), attribute_type_(attribute_type) {
   };
+  [[nodiscard]] inline int getUsage() const override {
+    return 0;
+  }
   [[nodiscard]] QuerySynonym *getSynonym() const override;
   [[nodiscard]] AttributeType getAttributeType() const;
   std::string getAttribute(Entity *entity) const;

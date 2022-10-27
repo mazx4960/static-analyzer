@@ -11,6 +11,13 @@
 #include "context.h"
 
 class QueryEvaluator {
+ private:
+  std::unordered_map<std::string, int> synonym_usage_table_;
+
+  ClauseVector getSortedQueries();
+  static QueryClause *updateWeight(QueryClause *clause);
+  static double calculateWeight(int first_usage_count, int second_usage_count);
+
  protected:
   Query query_;
 

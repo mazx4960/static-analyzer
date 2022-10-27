@@ -14,10 +14,8 @@ bool QueryReference::operator==(const QueryReference *other) const {
   return this->reference_type_ == other->reference_type_;
 }
 
+
 // WildcardDeclaration
-void WildcardReference::setEntityType(EntityType entity_type) {
-  this->entity_type_ = entity_type;
-}
 EntityType WildcardReference::getEntityType() const {
   return this->entity_type_;
 }
@@ -29,6 +27,9 @@ bool WildcardReference::operator==(const QueryReference &other) const {
 }
 bool WildcardReference::operator==(const QueryReference *other) const {
   return QueryReference::operator==(other);
+}
+void WildcardReference::setEntityType(EntityType entity_type) {
+  this->entity_type_ = entity_type;
 }
 
 // IdentDeclaration
@@ -62,6 +63,10 @@ bool IntegerReference::operator==(const QueryReference *other) const {
 // SynonymDeclaration
 QuerySynonym *SynonymReference::getSynonym() const {
   return this->query_synonym_;
+}
+
+int SynonymReference::getUsage() const {
+  return this->getSynonym()->GetUsage();
 }
 std::string SynonymReference::toString() const {
   return this->getSynonym()->ToString();

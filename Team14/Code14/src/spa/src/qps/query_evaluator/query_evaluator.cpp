@@ -10,7 +10,7 @@ void QueryEvaluator::InitContext() {
 }
 
 std::vector<SubqueryResult> QueryEvaluator::EvaluateSubqueries() {
-  std::vector<QueryClause *> subquery_clauses = this->query_.getClauses();
+  std::vector<QueryClause *> subquery_clauses = getSortedQueries();
   std::vector<SubqueryResult> subquery_results_list;
   for (auto *clause : subquery_clauses) {
     auto *strategy = EvaluationStrategy::getStrategy(this->pkb_, clause);
@@ -39,4 +39,42 @@ Result *QueryEvaluator::Evaluate() {
   spdlog::info("Time taken to project results: {} ms",
                std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
   return result;
+}
+
+ClauseVector QueryEvaluator::getSortedQueries() {
+  struct {
+    bool operator()(QueryClause *a, QueryClause *b) const {
+      return a->getWeight() > b->getWeight();
+    }
+  } comparator;
+
+  auto clauses = this->query_.getClauses();
+  for (auto *clause : clauses) {
+    updateWeight(clause);
+  }
+  std::sort(clauses.begin(), clauses.end(), comparator);
+  return clauses;
+}
+
+QueryClause *QueryEvaluator::updateWeight(QueryClause *clause) {
+  if (clause->getClauseType() == ClauseType::kSuchThat) {
+    auto *such_that_clause = static_cast<SuchThatClause *>(clause);
+    clause->setWeight(calculateWeight(such_that_clause->getFirst()->getUsage(),
+                                      such_that_clause->getSecond()->getUsage()));
+    return clause;
+  }
+  if (clause->getClauseType() == ClauseType::kPattern) {
+    auto *pattern_clause = static_cast<PatternClause *>(clause);
+    clause->setWeight(calculateWeight(pattern_clause->getStmtRef()->getUsage(),
+                                      pattern_clause->getEntRef()->getUsage()));
+    return clause;
+  }
+  return clause;
+}
+
+double QueryEvaluator::calculateWeight(int first_usage_count, int second_usage_count) {
+  if (first_usage_count == 0 || second_usage_count == 0) {
+    return first_usage_count + second_usage_count;
+  }
+  return first_usage_count * second_usage_count;
 }
