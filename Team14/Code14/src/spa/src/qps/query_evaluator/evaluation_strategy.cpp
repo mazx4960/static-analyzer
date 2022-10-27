@@ -3,7 +3,7 @@
 #include "spdlog/spdlog.h"
 
 EvaluationStrategy *EvaluationStrategy::getStrategy(IPKBQuerier *pkb, QueryClause *query_clause) {
-  spdlog::info("Creating evaluation strategy for {}", query_clause->toString());
+  spdlog::info("Creating evaluation strategy for {}:{}", query_clause->toString(), query_clause->getWeight());
   switch (query_clause->getClauseType()) {
     case ClauseType::kSuchThat: {
       spdlog::debug("Creating SuchThatEvaluationStrategy");

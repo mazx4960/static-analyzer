@@ -88,6 +88,7 @@ class SynonymReference : public ElemReference {
  public:
   explicit SynonymReference(QuerySynonym *query_synonym)
       : ElemReference(ReferenceType::kSynonym), query_synonym_(query_synonym) {
+    query_synonym->IncrementUsage();
   };
 
   [[nodiscard]] int getUsage() const override;

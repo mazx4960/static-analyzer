@@ -48,7 +48,7 @@ Result *QueryEvaluator::Evaluate() {
 ClauseVector QueryEvaluator::getSortedQueries() {
   struct {
     bool operator()(QueryClause *a, QueryClause *b) const {
-      return a->getWeight() > b->getWeight();
+      return a->getWeight() < b->getWeight();
     }
   } comparator;
 
@@ -61,24 +61,25 @@ ClauseVector QueryEvaluator::getSortedQueries() {
 }
 
 QueryClause *QueryEvaluator::updateWeight(QueryClause *clause) {
-  if (clause->getClauseType() == ClauseType::kSuchThat) {
-    auto *such_that_clause = static_cast<SuchThatClause *>(clause);
-    clause->setWeight(calculateWeight(such_that_clause->getFirst()->getUsage(),
-                                      such_that_clause->getSecond()->getUsage()));
-    return clause;
-  }
-  if (clause->getClauseType() == ClauseType::kPattern) {
-    auto *pattern_clause = static_cast<PatternClause *>(clause);
-    clause->setWeight(calculateWeight(pattern_clause->getStmtRef()->getUsage(),
-                                      pattern_clause->getEntRef()->getUsage()));
-    return clause;
+  switch (clause->getClauseType()) {
+    case ClauseType::kSuchThat:
+      clause->setWeight(calculateWeight(static_cast<SuchThatClause *>(clause)->getFirst()->getUsage(),
+                                        static_cast<SuchThatClause *>(clause)->getSecond()->getUsage()));
+      break;
+    case ClauseType::kPattern:
+      clause->setWeight(calculateWeight(static_cast<PatternClause *>(clause)->getStmtRef()->getUsage(),
+                                        static_cast<PatternClause *>(clause)->getEntRef()->getUsage()));
+      break;
+    default:
+      return clause;
   }
   return clause;
 }
 
+
 double QueryEvaluator::calculateWeight(int first_usage_count, int second_usage_count) {
-  if (first_usage_count == 0 || second_usage_count == 0) {
-    return first_usage_count + second_usage_count;
+  if (first_usage_count <= 0 && second_usage_count <= 0) {
+    return -1;
   }
-  return first_usage_count * second_usage_count;
+  return 1.0 / (std::max(first_usage_count, second_usage_count) * (first_usage_count + second_usage_count));
 }

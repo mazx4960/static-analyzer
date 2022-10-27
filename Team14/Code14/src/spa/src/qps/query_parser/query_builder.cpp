@@ -8,7 +8,6 @@ QuerySynonym *QueryBuilder::GetSynonym(const std::string &name) {
   if (synonym_table_.find(name) == synonym_table_.end()) {
     throw ParseSemanticError("Synonym " + name + " not declared");
   }
-  synonym_table_[name]->IncrementUsage();
   return synonym_table_[name];
 }
 
