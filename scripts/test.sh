@@ -16,6 +16,7 @@ test_names=(
   "patterns"
   "pql_error"
   "select_attributes"
+  "stress_1"
 )
 num_failed=0
 
