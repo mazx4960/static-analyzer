@@ -4,8 +4,6 @@
 
 #include <spdlog/spdlog.h>
 
-#include <utility>
-
 RelationshipManager::RelationshipManager() {
   this->relationship_table_map_ = std::unordered_map<RsType, RelationshipTable *>();
   this->cache_ = new Cache<EntityRsInv, EntityPointerUnorderedSet, TripletHash>(100);
