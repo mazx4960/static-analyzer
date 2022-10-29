@@ -27,11 +27,22 @@ void ResultProjector::join() {
     spdlog::debug("Empty table encountered, terminating JOIN operation.");
     this->joined_results_ = this->getEmptyFinalTable();
   }
-  SubqueryResult intermediate_result = SubqueryResult::FullNoSynonym();
+  std::vector<SubqueryResult> intermediate_results{};
   for (auto result : subquery_results_) {
-    intermediate_result = intermediate_result.Join(result);
+    std::vector<std::vector<SubqueryResult>::iterator> matches{};
+    SubqueryResult merged_result = result;
+    for (auto irt = intermediate_results.begin(); irt != intermediate_results.end(); ++irt) {
+      if (!result.GetCommonSynonyms(*irt).empty()) {
+        matches.push_back(irt);
+        merged_result = merged_result.Join(*irt);
+      }
+    }
+    for (const auto& match : matches) {
+      intermediate_results.erase(match);
+    }
+    intermediate_results.push_back(merged_result);
   }
-  this->joined_results_ = intermediate_result;
+  joined_results_ = intermediate_results;
 }
 
 ElemSelectProjector::ElemSelectProjector(std::vector<ElemReference *> &declarations,
