@@ -101,27 +101,37 @@ TEST(CacheTest, MultipleRelationship){
   // Expensive query made, adding to cache
   relationship_manager.Get(RsType::kModifies, a1, false);
   ASSERT_EQ(relationship_manager.GetCache()->Size(), 1);
+  ASSERT_EQ(relationship_manager.GetCache()->Misses(), 1);
   ASSERT_TRUE(PKBTestHelper::set_compare(
       relationship_manager.GetCache()->Get({a1, RsType::kModifies, false}).value, {v1}));
+  ASSERT_EQ(relationship_manager.GetCache()->Hits(), 1); // Hits increased due to comparison
 
   // Another expensive query
   relationship_manager.Get(RsType::kUses, a4, false);
   ASSERT_EQ(relationship_manager.GetCache()->Size(), 2);
+  ASSERT_EQ(relationship_manager.GetCache()->Misses(), 2);
   ASSERT_TRUE(PKBTestHelper::set_compare(
       relationship_manager.GetCache()->Get({a4, RsType::kUses, false}).value, {v3}));
+  ASSERT_EQ(relationship_manager.GetCache()->Hits(), 2);
 
   // Expensive query with multiple caches
   relationship_manager.Get(RsType::kAffectsT, a2, false);
   ASSERT_EQ(relationship_manager.GetCache()->Size(), 6);
+  ASSERT_EQ(relationship_manager.GetCache()->Misses(), 6);
   ASSERT_TRUE(PKBTestHelper::set_compare(
       relationship_manager.GetCache()->Get({a2, RsType::kAffectsT, false}).value, {a3, a4}));
   ASSERT_TRUE(PKBTestHelper::set_compare(
       relationship_manager.GetCache()->Get({a2, RsType::kAffects, false}).value, {a3}));
   ASSERT_TRUE(PKBTestHelper::set_compare(
       relationship_manager.GetCache()->Get({a3, RsType::kAffects, false}).value, {a4}));
+  ASSERT_TRUE(PKBTestHelper::set_compare(
+      relationship_manager.GetCache()->Get({a4, RsType::kAffects, false}).value, {}));
+  ASSERT_EQ(relationship_manager.GetCache()->Hits(), 6);
 
   // Same expensive query, not caching
   relationship_manager.Get(RsType::kAffectsT, a2, false);
+  ASSERT_EQ(relationship_manager.GetCache()->Misses(), 6);
+  ASSERT_EQ(relationship_manager.GetCache()->Hits(), 8); // Hits increased by two due to programming logic
   ASSERT_EQ(relationship_manager.GetCache()->Size(), 6);
 
   // Another expensive query

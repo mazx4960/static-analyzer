@@ -3,6 +3,7 @@
 #pragma once
 
 #include <stack>
+#include <utility>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -23,7 +24,7 @@ class RelationshipManager {
 
   bool IsVariableModified(EntityPointerUnorderedSet *, Entity *);
   bool IsVariableUsed(EntityPointerUnorderedSet *, Entity *);
-  bool IsResultInCache(EntityRsInv *);
+  bool IsResultInCache(EntityRsInv);
   Entity *GetProcedureEntity(Entity *, bool);
   EntityPointerUnorderedSet GetAffects(Entity *, bool);
   EntityPointerUnorderedSet GetAffectsHelper(std::stack<std::pair<Entity *, EntityPointerUnorderedSet>> *);
@@ -35,9 +36,9 @@ class RelationshipManager {
   EntityPointerUnorderedSet GetInferenceGivenCallStatement(RsType, Entity *);
   EntityPointerUnorderedSet GetInferenceGivenVariable(RsType, Entity *);
   EntityPointerUnorderedSet GetSubMatches(RsType, Entity *, bool);
-  EntityPointerUnorderedSet GetResultInCache(EntityRsInv *);
+  EntityPointerUnorderedSet GetResultInCache(EntityRsInv);
   void CreateTable(RsType);
-  void AddResultToCache(EntityRsInv *, EntityPointerUnorderedSet *);
+  void AddResultToCache(EntityRsInv, EntityPointerUnorderedSet *);
 
   static EntityPointerUnorderedSet Empty();
   static EntityRsInv GetCacheQuery(Entity *entity, RsType rs_type, bool is_inverse);
