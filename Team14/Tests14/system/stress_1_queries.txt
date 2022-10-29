@@ -4,10 +4,10 @@ Select v
 a, a1, a1a, affects, and, animals, apple, assign, ast, b, b1, banana, bare, bb2, bear, biscuit, black, blue, blueberry, bread, brown, butter, c, c1, cake, call, candy, cat, ccc, cfg, chocolate, cider, contains, cony, count, d, d1, dD4, dog, dragon, e, e33, f, f1, fat, fff, fierce, fish, flour, fresh, g, g1, grape, green, grey, grizz, i, icebear, ifs, j, k, kaya, king, lion, lost, love, m, m1, meow, modifies, n1, noodles, orange, p, panda, papaya, parent, pattern, pear, pineapple, pink, print, procedure, progline, purple, pz, q, r1, ramen, rat, red, rice, ring, russia, s1, shine, soju, stmt, stmtLst, strawberry, suchthat, sugar, sum, sweet, t1, tart, tiger, turquoise, uses, velvet, w, white, wolf, x, x1, y, y1, yellow, z, z1
 10000
 200 - multiple clauses
-prog_line n1, n2; while w; constant c; procedure p1, p2; variable v; if ifs; stmt s1, s2;
-Select BOOLEAN such that Affects*(n1, n2) pattern w("y", _) with n2 = c.value such that Calls*(p1, p2) and Uses(p2, v) pattern ifs(v, _, _) such that Next*(w, s2) and Affects(81, s1)
+stmt n1, n2, s1, s2; while w; constant c; procedure p1, p2; variable v; if ifs;
+Select BOOLEAN such that Affects*(n1, n2) pattern w("y", _) with n2.stmt# = c.value such that Calls*(p1, p2) and Uses(p2, v) pattern ifs(v, _, _) such that Next*(w, s2) and Affects(81, s1)
 TRUE
-5000
+50000
 201 - select boolean, boolean clause first (true)
 if ifs; variable v1; assign a1, a2;
 Select BOOLEAN with 10 = 10 and "procedure" = "procedure" and 1 = 1 with v1.varName = "procedure" pattern ifs("procedure", _, _) such that Affects*(a1, a2) and Follows(a1, a2)
