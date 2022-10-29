@@ -8,6 +8,7 @@ test_names=(
 #  "qps_stress_1"
   "sp_stress_1"
   "stress_1"
+  "stress_2"
 )
 
 for test_name in "${test_names[@]}"; do
