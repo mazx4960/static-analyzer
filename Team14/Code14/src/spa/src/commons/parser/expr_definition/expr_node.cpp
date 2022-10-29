@@ -52,9 +52,9 @@ std::string VariableNode::ToString() {
   return "(" + this->variableName_ + ")";
 }
 
-ConstantNode::ConstantNode(int value) : ReferenceNode(NodeType::kConstant), value_(value) {
+ConstantNode::ConstantNode(int64_t value) : ReferenceNode(NodeType::kConstant), value_(value) {
 }
-int ConstantNode::GetValue() const {
+int64_t ConstantNode::GetValue() const {
   return this->value_;
 }
 std::string ConstantNode::ToString() {
