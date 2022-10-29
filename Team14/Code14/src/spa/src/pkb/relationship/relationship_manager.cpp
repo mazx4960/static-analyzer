@@ -4,6 +4,8 @@
 
 #include <spdlog/spdlog.h>
 
+#include <utility>
+
 RelationshipManager::RelationshipManager() {
   this->relationship_table_map_ = std::unordered_map<RsType, RelationshipTable *>();
   this->cache_ = new Cache<EntityRsInv, EntityPointerUnorderedSet, TripletHash>(100);
@@ -34,17 +36,17 @@ void RelationshipManager::ClearCache() {
   this->cache_->Clear();
 }
 
-void RelationshipManager::AddResultToCache(EntityRsInv *key, EntityPointerUnorderedSet *value) {
-  this->cache_->Add(*key, *value);
+void RelationshipManager::AddResultToCache(EntityRsInv key, EntityPointerUnorderedSet *value) {
+  this->cache_->Add(std::move(key), *value);
 }
 
-bool RelationshipManager::IsResultInCache(EntityRsInv *key) {
-  auto cache_query = this->cache_->Get(*key);
+bool RelationshipManager::IsResultInCache(EntityRsInv key) {
+  auto cache_query = this->cache_->Get(std::move(key));
   return cache_query.found;
 }
 
-EntityPointerUnorderedSet RelationshipManager::GetResultInCache(EntityRsInv *key) {
-  return this->cache_->Get(*key).value;
+EntityPointerUnorderedSet RelationshipManager::GetResultInCache(EntityRsInv key) {
+  return this->cache_->Get(std::move(key)).value;
 }
 
 Cache<EntityRsInv, EntityPointerUnorderedSet, TripletHash> *RelationshipManager::GetCache() {
@@ -155,10 +157,10 @@ RsType RelationshipManager::GetRsTypeMapping(RsType rs_type) {
 
 EntityPointerUnorderedSet RelationshipManager::GetAll(RsType rs_type, Entity *entity, bool is_inverse) {
   auto cache_query = this->GetCacheQuery(entity, rs_type, is_inverse);
-  bool is_result_found_in_cache = this->IsResultInCache(&cache_query);
+  bool is_result_found_in_cache = this->IsResultInCache(cache_query);
 
   if (is_result_found_in_cache) {
-    return this->GetResultInCache(&cache_query);
+   return this->GetResultInCache(cache_query);
   }
 
   rs_type = this->GetRsTypeMapping(rs_type);
@@ -180,16 +182,16 @@ EntityPointerUnorderedSet RelationshipManager::GetAll(RsType rs_type, Entity *en
     }
     queue.pop();
   }
-  this->AddResultToCache(&cache_query, &matches);
+  this->AddResultToCache(cache_query, &matches);
   return matches;
 }
 
 EntityPointerUnorderedSet RelationshipManager::GetInference(RsType rs_type, Entity *entity, bool is_inverse) {
   auto cache_query = this->GetCacheQuery(entity, rs_type, is_inverse);
-  bool is_result_found_in_cache = this->IsResultInCache(&cache_query);
+  bool is_result_found_in_cache = this->IsResultInCache(cache_query);
 
   if (is_result_found_in_cache) {
-    return this->GetResultInCache(&cache_query);
+    return this->GetResultInCache(cache_query);
   }
 
   auto entity_type = entity->GetType();
@@ -214,7 +216,7 @@ EntityPointerUnorderedSet RelationshipManager::GetInference(RsType rs_type, Enti
     default:
       results = relationship_table->get(entity, is_inverse);
   }
-  this->AddResultToCache(&cache_query, &results);
+  this->AddResultToCache(cache_query, &results);
   return results;
 }
 
@@ -311,10 +313,10 @@ EntityPointerUnorderedSet RelationshipManager::GetCalls(Entity *entity, bool is_
 
 EntityPointerUnorderedSet RelationshipManager::GetAffects(Entity *query_entity, bool is_inverse) {
   auto cache_query = this->GetCacheQuery(query_entity, RsType::kAffects, is_inverse);
-  bool is_result_found_in_cache = this->IsResultInCache(&cache_query);
+  bool is_result_found_in_cache = this->IsResultInCache(cache_query);
 
   if (is_result_found_in_cache) {
-    return this->GetResultInCache(&cache_query);
+    return this->GetResultInCache(cache_query);
   }
 
   RelationshipTable *table;
@@ -339,7 +341,7 @@ EntityPointerUnorderedSet RelationshipManager::GetAffects(Entity *query_entity, 
   } else {
     results = this->GetAffectsHelper(&stack);
   }
-  this->AddResultToCache(&cache_query, &results);
+  this->AddResultToCache(cache_query, &results);
   return results;
 }
 

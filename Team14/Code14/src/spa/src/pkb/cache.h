@@ -19,8 +19,8 @@ class Cache {
   };
 
  private:
-  int hits_, misses_;
-  int capacity_;
+  int hits_ = 0, misses_ = 0;
+  int capacity_ = 0;
   std::list<std::pair<K, V>> access_list_;
   std::unordered_map<K, typename std::list<std::pair<K, V>>::iterator, KHash> map_;
 
