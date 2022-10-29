@@ -3,11 +3,6 @@ stmt s1, s2, s3;
 Select <s1, s2> such that Next*(s1, s2) and Next*(s2, s3) with s1.stmt# = 0
 none
 5000
-2 - valid independent clauses
-assign a1, a2, a3; variable v1, v2, v3;
-Select BOOLEAN pattern a1 (_, _) pattern a2 (_, _) pattern a3 (_, _) such that Modifies(_, v1) and Uses(_, v2) and Modifies(_, v3)
-TRUE
-5000
 3 - preparation for cross product
 stmt s;
 Select s
