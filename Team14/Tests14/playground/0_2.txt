@@ -1,0 +1,2 @@
+stmt n1, n2, s1, s2; while w; constant c; procedure p1, p2; variable v; if ifs;
+Select BOOLEAN such that Affects*(n1, n2) pattern w("y", _) with n2.stmt# = c.value such that Calls*(p1, p2) and Uses(p2, v) pattern ifs(v, _, _) such that Next*(w, s2) and Affects(81, s1) with s2.stmt# = c.value

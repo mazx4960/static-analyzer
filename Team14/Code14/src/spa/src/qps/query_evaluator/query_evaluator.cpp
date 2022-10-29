@@ -28,6 +28,9 @@ Result *QueryEvaluator::Evaluate() {
   std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
   spdlog::info("Time taken to fetch results from pkb: {} ms",
                std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
+  // display stats
+  this->pkb_->LogStatistics();
+  this->ctx_->LogStatistics();
 
   // Query declarations for whose subquery_results are to be returned.
   begin = std::chrono::steady_clock::now();
@@ -38,9 +41,6 @@ Result *QueryEvaluator::Evaluate() {
   end = std::chrono::steady_clock::now();
   spdlog::info("Time taken to project results: {} ms",
                std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
-  
-  // display pkb stats
-  this->pkb_->LogStatistics();
 
   return result;
 }
@@ -75,7 +75,6 @@ QueryClause *QueryEvaluator::updateWeight(QueryClause *clause) {
   }
   return clause;
 }
-
 
 double QueryEvaluator::calculateWeight(int first_usage_count, int second_usage_count) {
   if (first_usage_count <= 0 && second_usage_count <= 0) {

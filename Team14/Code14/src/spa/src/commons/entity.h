@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <string>
 #include <utility>
+#include <unordered_map>
+#include <unordered_set>
 
 #include "commons/hash_combine.h"
 #include "types.h"
