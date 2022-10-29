@@ -88,3 +88,26 @@ procedure food {
         rice = flour * 2;
     }
 }
+
+procedure colors {
+    print pink; 
+    while ((pink + red) < 30) {
+        if ((white == 10) || (blue == skyblue)) {
+            green = limegreen;
+            read green;
+        } else {
+            yellow = turqoise + blue;
+            read yellow;
+        }
+    }
+
+    if (grey == black) {
+        print grey;
+    } else {
+        print black;
+    }
+
+    if (1 == 1) {
+        print orange;
+    }
+}

@@ -1,94 +1,219 @@
 100 - Select all if pattern clauses
 if ifs; 
 Select ifs pattern ifs(_,_,_)
-5, 16, 29, 36, 47, 63, 64, 65, 71, 83
+5, 16, 29, 36, 47, 63, 64, 65, 71, 83, 95, 104
 5000
 101 - Select all if pattern clauses
 if ifs; variable v;
 Select ifs pattern ifs(v,_,_)
-5, 16, 29, 36, 47, 63, 64, 65, 71, 83
+5, 16, 29, 36, 47, 63, 64, 65, 71, 83, 95, 104
 5000
 102 - Select all tuples of if pattern clauses
 if ifs; variable v;
 Select <ifs, v> pattern ifs(v,_,_)
-5 rice, 16 rice, 29 rice, 36 ramen, 36 noodles, 47 flour, 47 rice, 63 rice, 63 noodles, 64 sugar, 64 flour, 65 chocolate, 65 butter, 71 cake, 71 tart, 83 chocolate, 83 tart, 83 sugar, 83 butter
+5 rice, 16 rice, 29 rice, 36 ramen, 36 noodles, 47 flour, 47 rice, 63 rice, 63 noodles, 64 sugar, 64 flour, 65 chocolate, 65 butter, 71 cake, 71 tart, 83 chocolate, 83 tart, 83 sugar, 83 butter, 95 white, 95 blue, 95 skyblue, 104 grey, 104 black
 5000
 103 - Select specific if pattern clauses with specific variable name
 if ifs; 
 Select ifs pattern ifs("rice",_,_)
 5, 16, 29, 47, 63
 5000
-104 - Non-existent variable name
+104 
+if ifs; variable v;
+Select ifs pattern ifs(v,_,_) with v.varName = "rice"
+5, 16, 29, 47, 63
+5000
+105
+if ifs; variable v;
+Select <ifs, v> pattern ifs(v,_,_) with v.varName = "rice"
+5 rice, 16 rice, 29 rice, 47 rice, 63 rice
+5000
+106 - Non-existent variable name
 if ifs;
 Select ifs pattern ifs("hamburger",_,_)
 none
 5000  
-105 - Invalid query
-if ifs;
-Select ifs pattern ifs("rice","noodles",_)
-SemanticError
-5000
-106 - Invalid query
-if ifs;
-Select ifs pattern ifs("rice",_,"noodles")
-SemanticError
-5000
-107 - Invalid query
-if ifs;
-Select ifs pattern ifs("rice","flour","noodles")
-SemanticError
-5000
-108 - Invalid query
-if ifs;
-Select ifs pattern ifs(_,_)
-SyntaxError
+107
+if ifs; variable v;
+Select ifs pattern ifs(v,_,_) with v.varName = "hamburger"
+none
 5000 
-109 - Invalid query
-if ifs;
-Select ifs pattern ifs("rice",_)
-SyntaxError
+108 - Select all if pattern clauses with the same variables in while clauses
+if ifs; variable v; while w;
+Select ifs pattern ifs(v,_,_) and w(v,_)
+5, 16, 29, 36, 47, 63, 64, 65, 71, 83
+5000
+109
+if ifs; variable v; while w;
+Select ifs pattern w(v,_) and ifs(v,_,_)
+5, 16, 29, 36, 47, 63, 64, 65, 71, 83
+5000
+110 - Select all tuples of if pattern clauses with the same variables in while clauses
+if ifs; variable v; while w;
+Select <ifs, v> pattern ifs(v,_,_) and w(v,_)
+5 rice, 16 rice, 29 rice, 36 ramen, 36 noodles, 47 flour, 47 rice, 63 rice, 63 noodles, 64 flour, 65 butter, 71 cake, 71 tart, 83 tart, 83 butter
+5000  
+111
+if ifs; variable v1, v2; while w;
+Select <ifs, v1> pattern ifs(v1,_,_) and w(v2,_)
+5 rice, 16 rice, 29 rice, 36 ramen, 36 noodles, 47 flour, 47 rice, 63 rice, 63 noodles, 64 sugar, 64 flour, 65 chocolate, 65 butter, 71 cake, 71 tart, 83 chocolate, 83 tart, 83 sugar, 83 butter, 95 white, 95 blue, 95 skyblue, 104 grey, 104 black
+5000
+112 
+if ifs; procedure p;
+Select ifs pattern ifs(_,_,_) with p.procName = "food"
+5, 16, 29, 36, 47, 63, 64, 65, 71, 83, 95, 104
+5000
+113
+if ifs; procedure p;
+Select ifs pattern ifs(_,_,_) with p.procName = "colors"
+5, 16, 29, 36, 47, 63, 64, 65, 71, 83, 95, 104
+5000
+114
+if ifs; procedure p;
+Select ifs pattern ifs(_,_,_) with p.procName = "countries"
+none
 5000 
+115
+if ifs; variable v; procedure p;
+Select ifs pattern ifs(v,_,_) with p.procName = v.varName
+none
+5000  
 200 - Select all while pattern clauses
 while w;
 Select w pattern w(_,_)
-17, 25, 30, 56, 82
+17, 25, 30, 56, 82, 94
 5000
 201 - Select all while pattern clauses
 while w; variable v;
-Select <w, v> pattern w(v,_)
-17, 25, 30, 56, 82
+Select w pattern w(v,_)
+17, 25, 30, 56, 82, 94
 5000
 202 - Select all tuples of while pattern clauses
 while w; variable v;
 Select <w, v> pattern w(v,_)
-17 ramen, 17 noodles, 25 fries, 30 bread, 30 flour, 56 tart, 56 cake, 82 rice, 82 flour, 82 butter
+17 ramen, 17 noodles, 25 fries, 30 bread, 30 flour, 56 tart, 56 cake, 82 rice, 82 flour, 82 butter, 94 pink, 94 red
 5000
 203 - Select while pattern clauses with specific variable name
 while w; 
 Select w pattern w("flour",_)
 30, 82
 5000
-204 - Non-existent variable name
+204 
+while w; variable v;
+Select w pattern w(v,_) with v.varName = "flour"
+30, 82
+5000
+205
+while w; variable v;
+Select <w, v> pattern w(v,_) with v.varName = "flour"
+30 flour, 82 flour
+5000 
+206 - Non-existent variable name
 while w; 
 Select w pattern w("hamburger",_)
 none
 5000
-205 - Invalid query
+207
+while w; variable v;
+Select w pattern w(v,_) with v.varName = "hamburger"
+none
+5000 
+208
+while w; variable v;
+Select <w, v> pattern w(v,_) with v.varName = "hamburger"
+none
+5000 
+209 
+while w; variable v;
+Select w pattern w(_,_) with v.varName = "hamburger"
+none
+5000 
+210
+while w; procedure p;
+Select w pattern w(_,_) with p.procName = "food"
+17, 25, 30, 56, 82, 94
+5000 
+211
+while w; variable v; procedure p;
+Select w pattern w(v,_) with p.procName = "food"
+17, 25, 30, 56, 82, 94
+5000 
+212
+while w; variable v; procedure p;
+Select w pattern w(v,_) with p.procName = "colors"
+17, 25, 30, 56, 82, 94
+5000 
+213
+while w; variable v; procedure p;
+Select w pattern w(v,_) with p.procName = v.varName
+none
+5000 
+214 
+while w; procedure p;
+Select w pattern w(_,_) with p.procName = "countries"
+none
+5000  
+215 - Select all while pattern clauses with the same variables in if clauses
+if ifs; variable v; while w;
+Select w pattern ifs(v,_,_) and w(v,_)
+17, 30, 56, 82
+5000
+216
+if ifs; variable v; while w;
+Select w pattern w(v,_) and ifs(v,_,_) 
+17, 30, 56, 82
+5000
+217
+if ifs; variable v; while w;
+Select <w, v> pattern w(v,_) and ifs(v,_,_) 
+17 ramen, 17 noodles, 30 flour, 56 tart, 56 cake, 82 rice, 82 flour, 82 butter
+5000   
+300 - Invalid query
+if ifs;
+Select ifs pattern ifs("rice","noodles",_)
+SemanticError
+5000
+301 - Invalid query
+if ifs;
+Select ifs pattern ifs("rice",_,"noodles")
+SemanticError
+5000
+302 - Invalid query
+if ifs;
+Select ifs pattern ifs("rice","flour","noodles")
+SemanticError
+5000
+303 - Invalid query
+if ifs;
+Select ifs pattern ifs(_,_)
+SyntaxError
+5000 
+304 - Invalid query
+if ifs;
+Select ifs pattern ifs("rice",_)
+SyntaxError
+5000  
+305 - Invalid query
+if ifs; variable v;
+Select ifs pattern ifs(v,_,_) with v.varName = v
+SyntaxError
+5000 
+306 - Invalid query
 while w;
 Select w pattern w("rice","flour")
 SemanticError
 5000
-206 - Invalid query
+307 - Invalid query
 while w;
 Select w pattern w(_,"flour")
 SemanticError
 5000
-207 - Invalid query
+308 - Invalid query
 while w;
 Select w pattern w(_,_,_)
 SyntaxError
 5000
-208 - Invalid query
+309 - Invalid query
 while w;
 Select w pattern w("rice",_,_)
 SyntaxError
