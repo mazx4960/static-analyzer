@@ -42,6 +42,14 @@ void ResultProjector::join() {
     }
     intermediate_results.push_back(merged_result);
   }
+  for (auto irt : intermediate_results) {
+    if (irt.IsEmpty()) {
+      // Table must be empty with no results
+      joined_results_ = {SubqueryResult::Empty({})};
+      // Short circuit the evaluation
+      return;
+    }
+  }
   joined_results_ = intermediate_results;
 }
 
