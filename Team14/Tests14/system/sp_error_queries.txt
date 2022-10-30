@@ -1,0 +1,15 @@
+100 - cyclic calls should not return any results
+stmt s;
+Select s
+none
+5000
+101
+variable v;
+Select v
+none
+5000
+102
+call c;
+Select c
+none
+5000

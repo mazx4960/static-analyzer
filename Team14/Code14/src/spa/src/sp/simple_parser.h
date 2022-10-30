@@ -15,7 +15,6 @@ using StringSet = std::unordered_set<std::string>;
 
 class SimpleParser : public Parser {
  private:
-  static bool HasDuplicates(std::vector<std::string> &procedures);
   static bool HasInvalidCalls(StringSet &procedures, StringSet &calls);
   static bool IsCyclic(StringMap &call_map);
   static bool IsCyclicUtil(const std::string &proc, StringMap &call_map, StringSet &visited, StringSet &rec_stack);
