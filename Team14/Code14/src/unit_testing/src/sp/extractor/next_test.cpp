@@ -10,7 +10,7 @@
 TEST(ExtractorTest, TestNextSingleBlock) {
   auto *v1 = new VariableNode("v1");
   auto *v2 = new VariableNode("v2");
-  auto *c = new ConstantNode(1);
+  auto *c = new ConstantNode("1");
   auto *a1 = new AssignNode(v1, c);
   auto *a2 = new AssignNode(v2, c);
   std::vector<StatementNode *> stmts = {a1, a2};
@@ -39,7 +39,7 @@ TEST(ExtractorTest, TestNextSingleBlock) {
 TEST(ExtractorTest, TestNextIfBlock) {
   auto *v1 = new VariableNode("v1");
   auto *v2 = new VariableNode("v2");
-  auto *c = new ConstantNode(1);
+  auto *c = new ConstantNode("1");
   auto *a3 = new AssignNode(v2, c);
   auto *a2 = new AssignNode(v2, c);
   auto *iff = new IfNode(new EqualNode(v1, c), new StatementListNode({a2}), new StatementListNode({a3}));
@@ -72,7 +72,7 @@ TEST(ExtractorTest, TestNextIfBlock) {
 TEST(ExtractorTest, TestNextWhileBlock) {
   auto *v1 = new VariableNode("v1");
   auto *v2 = new VariableNode("v2");
-  auto *c = new ConstantNode(1);
+  auto *c = new ConstantNode("1");
   auto *a4 = new AssignNode(v2, c);
   auto *a3 = new AssignNode(v2, c);
   auto *a2 = new AssignNode(v2, c);

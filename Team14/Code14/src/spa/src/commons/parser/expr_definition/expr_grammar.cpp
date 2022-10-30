@@ -88,7 +88,7 @@ VariableNode *VariableGrammarRule::parseNode(TokenIterator &tokenStream) {
 
 ConstantNode *ConstantGrammarRule::parseNode(TokenIterator &tokenStream) {
   if ((*tokenStream)->type == TokenType::kLiteral) {
-    return new ConstantNode(std::stoll((*tokenStream++)->value));
+    return new ConstantNode(((*tokenStream++)->value));
   }
   throw ParseSyntaxError("Expected constant, got " + (*tokenStream++)->value);
 }

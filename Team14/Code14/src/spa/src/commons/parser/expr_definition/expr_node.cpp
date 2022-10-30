@@ -2,6 +2,8 @@
 
 #include "expr_node.h"
 
+#include <utility>
+
 RelFactorNode::RelFactorNode(NodeType nodeType) : Node(nodeType) {
 }
 
@@ -52,11 +54,11 @@ std::string VariableNode::ToString() {
   return "(" + this->variableName_ + ")";
 }
 
-ConstantNode::ConstantNode(int64_t value) : ReferenceNode(NodeType::kConstant), value_(value) {
+ConstantNode::ConstantNode(std::string value) : ReferenceNode(NodeType::kConstant), value_(std::move(value)) {
 }
-int64_t ConstantNode::GetValue() const {
+std::string ConstantNode::GetValue() const {
   return this->value_;
 }
 std::string ConstantNode::ToString() {
-  return "(" + std::to_string(this->value_) + ")";
+  return "(" + this->value_ + ")";
 }

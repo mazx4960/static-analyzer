@@ -102,6 +102,6 @@ void EntityExtractor::ExtractConstant(std::vector<Entity *> &entities, Node *nod
     return;
   }
   auto const_name = static_cast<ConstantNode *>(node)->GetValue();
-  Entity *entity = new ConstantEntity(std::to_string(const_name));
+  Entity *entity = new ConstantEntity(const_name);
   entities.push_back(entity);
 }

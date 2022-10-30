@@ -7,8 +7,8 @@
 TEST(ExtractorTest, TestEntity) {
   auto *v1 = new VariableNode("v1");
   auto *v2 = new VariableNode("v2");
-  auto *c1 = new ConstantNode(1);
-  auto *c2 = new ConstantNode(2);
+  auto *c1 = new ConstantNode("1");
+  auto *c2 = new ConstantNode("2");
   auto *a1 = new AssignNode(v1, c1);
   auto *a2 = new AssignNode(v2, c2);
   std::vector<StatementNode *> stmts = {a1, a2};

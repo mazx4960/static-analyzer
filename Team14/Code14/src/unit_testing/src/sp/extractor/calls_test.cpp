@@ -34,7 +34,7 @@ TEST(ExtractorTest, TestCallsNested) {
   auto *c2 = new CallNode("test2");
   std::vector<StatementNode *> stmts2 = {c2};
   auto *s1 = new StatementListNode(stmts2);
-  auto *w = new WhileNode(new EqualNode(new VariableNode("v1"), new ConstantNode(1)), s1);
+  auto *w = new WhileNode(new EqualNode(new VariableNode("v1"), new ConstantNode("1")), s1);
   auto *c1 = new CallNode("test1");
   std::vector<StatementNode *> stmts = {c1, w};
   auto *s = new StatementListNode(stmts);

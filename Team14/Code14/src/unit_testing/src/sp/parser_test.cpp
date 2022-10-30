@@ -40,7 +40,7 @@ TEST(SimpleParserTest, TestBasic) {
   ASSERT_EQ("x", static_cast<VariableNode *>(variable_node)->GetVariableName());
   auto *constant_node = assign_children[1];
   ASSERT_EQ(NodeType::kConstant, constant_node->GetNodeType());
-  ASSERT_EQ(1, static_cast<ConstantNode *>(constant_node)->GetValue());
+  ASSERT_EQ("1", static_cast<ConstantNode *>(constant_node)->GetValue());
 }
 
 TEST(SimpleParserTestAssignment, AdvancedTest) {
@@ -57,7 +57,7 @@ TEST(ReferenceParser, ConstReferenceTest) {
   auto const_token_stream = const_token.begin();
   Node *const_node = (new ReferenceGrammarRule())->parseNode(const_token_stream);
   ASSERT_EQ(const_node->GetNodeType(), NodeType::kConstant);
-  ASSERT_EQ(87, static_cast<ConstantNode *>(const_node)->GetValue());
+  ASSERT_EQ("87", static_cast<ConstantNode *>(const_node)->GetValue());
 }
 
 TEST(ReferenceParser, VarReferenceTest) {
@@ -90,7 +90,7 @@ TEST(ExprParser, RefExprTest) {
   auto const_token_stream = const_token.begin();
   Node *const_node = expr_parser->parseNode(const_token_stream);
   ASSERT_EQ(const_node->GetNodeType(), NodeType::kConstant);
-  ASSERT_EQ(87, static_cast<ConstantNode *>(const_node)->GetValue());
+  ASSERT_EQ("87", static_cast<ConstantNode *>(const_node)->GetValue());
   std::vector<Token *> var_token = {new SymbolToken("qwerty"), new EndOfFileToken()};
   auto var_token_stream = var_token.begin();
   Node *var_node = expr_parser->parseNode(var_token_stream);
