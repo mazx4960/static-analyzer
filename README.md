@@ -42,20 +42,28 @@ Results:
 
 ```
 ==============================================================
+Profiling 'compute_centroid'
+[MEM USAGE] Peak Memory Usage: 6.992 MiB
+[PARSE TIME] 0.668000ms
+[MAX QUERY TIME] 1.643000ms
+==============================================================
+==============================================================
 Profiling 'sp_stress_1'
-[INFO] Checking required python packages...
-[INFO] Requirement satisfied.
-[MEM USAGE] Peak Memory Usage: 8.152 MiB
-[PARSE TIME] 30.825000
-[MAX QUERY TIME] 5.142000
+[MEM USAGE] Peak Memory Usage: 9.004 MiB
+[PARSE TIME] 14.345000ms
+[MAX QUERY TIME] 1.746000ms
 ==============================================================
 ==============================================================
 Profiling 'stress_1'
-[INFO] Checking required python packages...
-[INFO] Requirement satisfied.
-[MEM USAGE] Peak Memory Usage: 188.574 MiB
-[PARSE TIME] 26.676000
-[MAX QUERY TIME] 11860 !!!
+[MEM USAGE] Peak Memory Usage: 230.609 MiB
+[PARSE TIME] 10.792000ms
+[MAX QUERY TIME] 2041.427000ms
+==============================================================
+==============================================================
+Profiling 'stress_2'
+[MEM USAGE] Peak Memory Usage: 252.105 MiB
+[PARSE TIME] 9.016000ms
+[MAX QUERY TIME] 1577.948000ms
 ==============================================================
 ```
 
