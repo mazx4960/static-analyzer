@@ -61,7 +61,6 @@ void EntityManager::Populate(const std::vector<Entity *> &entities) {
 }
 EntityPointerUnorderedSet EntityManager::Get(EntityType entity_type) {
   this->num_queries_++;
-  spdlog::debug("Retrieving all {}s", EntityTypeToString(entity_type));
   EntityPointerUnorderedSet matches;
   if (entity_type == EntityType::kStatement) {
     for (auto stmt_type : GetAllStmtTypes()) {
@@ -77,13 +76,11 @@ EntityPointerUnorderedSet EntityManager::Get(EntityType entity_type) {
   for (auto *match : matches) {
     result_string += match->GetValue() + ", ";
   }
-  spdlog::debug("Results[{}]: {}", matches.size(), result_string);
   return matches;
 }
 
 EntityPointerUnorderedSet EntityManager::Get(std::string &entity_value) {
   this->num_queries_++;
-  spdlog::debug("Retrieving all entities with {}", entity_value);
   EntityPointerUnorderedSet result = {};
   for (auto [k, v] : this->entity_table_map_) {
     for (auto *entity : v->get()) {
