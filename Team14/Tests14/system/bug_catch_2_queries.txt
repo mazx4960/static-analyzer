@@ -14,6 +14,7 @@ Select <w, v> pattern w(v,_) with v.varName = "x"
 19 x, 82 x
 5000
 103 - Boolean
+
 Select BOOLEAN such that Next*(115, 118) and Next*(118, 124)
 FALSE
 5000
