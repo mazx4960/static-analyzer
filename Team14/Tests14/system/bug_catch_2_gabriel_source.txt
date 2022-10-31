@@ -1,0 +1,102 @@
+procedure main {
+    while (x == 0){ # 1
+        a1 = a2 + a5 + a7 + a9;
+        a2 = a2 + a3 + a4;
+        a3 = a1 + a4 + a6 + a7 + a8;
+        a4 = a1 + a3 + a5 + a6 + a7 + a9;
+        a5 = a1 + a3 + a7;
+        a6 = a2 + a4 + a5 + a7 + a9;
+        a7 = a4 + a5 + a6 + a7 + a8;
+        a8 = a3 + a6;
+        a9 = a2 + a7 + a9;
+    }
+    if (a == 0) then { #11
+        if (a == 0) then {#12
+            if (a == 0) then {#13
+                if (a == 0) then {#14
+                    read x;#15
+                }
+                else {
+                    read x;#16
+                }
+            }
+            else {
+                if (a == 0) then {#17
+                    read x;#18
+                }
+                else {
+                    read x;#19
+                }
+            }
+        }
+        else {
+            if (a == 0) then {#20
+                if (a == 0) then {#21
+                    read x;#22
+                }
+                else {
+                    read x;#23
+                }
+            }
+            else {
+                if (a == 0) then {#24
+                    read x;#25
+                }
+                else {
+                    read x;#26
+                }
+            }
+        }
+    }
+    else {
+        if (a == 0) then {#27
+            if (a == 0) then {#28
+                if (a == 0) then {#29
+                    read x;#30
+                }
+                else {
+                    read x;#31
+                }
+            }
+            else {
+                if (a == 0) then {#32
+                    read x;#33
+                }
+                else {
+                    read x;#34
+                }
+            }
+        }
+        else {
+            if (a == 0) then {#35
+                if (a == 0) then {#36
+                    read x;#37
+                }
+                else {
+                    read x;#38
+                }
+            }
+            else {
+                if (a == 0) then {#39
+                    read x;#40
+                }
+                else {
+                    read x;#41
+                }
+            }
+        }
+    }
+    print x; # 42
+    while (x == 0) { #43
+        z = y;
+        y = w;
+        w = v;
+        v = u;
+        u = t;
+        t = s;
+        s = r;
+        r = q;
+        q = p;
+        p = o; #53
+    }
+}
