@@ -100,6 +100,13 @@ EntityPointerUnorderedMap SuchThatStrategy::evaluateParameter(Context *ctx,
   }
   this->updateContext(ctx, first, valid_first);
   this->updateContext(ctx, second, valid_second);
+
+  std::string result_string;
+  for (auto *entity : valid_second) {
+    result_string += entity->ToString() + ", ";
+  }
+  spdlog::debug("Results[{}]: {}", valid_second.size(), result_string);
+
   return results;
 }
 
@@ -144,6 +151,13 @@ EntityPointerUnorderedMap PatternStrategy::evaluateParameter(Context *ctx,
   }
   this->updateContext(ctx, var_param, valid_var);
   this->updateContext(ctx, stmt_param, valid_stmt);
+
+  std::string result_string;
+  for (auto *entity : valid_stmt) {
+    result_string += entity->ToString() + ", ";
+  }
+  spdlog::debug("Results[{}]: {}", valid_stmt.size(), result_string);
+
   return results;
 }
 

@@ -14,7 +14,6 @@ bool QueryReference::operator==(const QueryReference *other) const {
   return this->reference_type_ == other->reference_type_;
 }
 
-
 // WildcardDeclaration
 EntityType WildcardReference::getEntityType() const {
   return this->entity_type_;
@@ -85,7 +84,6 @@ AttributeType AttrReference::getAttributeType() const {
   return this->attribute_type_;
 }
 std::string AttrReference::getAttribute(Entity *entity) const {
-  spdlog::debug("Getting attribute {} of entity {}", AttrToString(this->getAttributeType()), entity->ToString());
   auto entity_type = entity->GetType();
   switch (attribute_type_) {
     case AttributeType::kProcName:
@@ -100,7 +98,6 @@ std::string AttrReference::getAttribute(Entity *entity) const {
         return entity->GetValue();
       } else if (entity_type == EntityType::kReadStmt || entity_type == EntityType::kPrintStmt) {
         auto *stmt = static_cast<StmtEntity *>(entity);
-        spdlog::debug("Getting attribute {} of stmt {}", AttrToString(this->getAttributeType()), stmt->ToString());
         return stmt->GetAttr();
       }
     case AttributeType::kValue:
@@ -113,7 +110,8 @@ std::string AttrReference::getAttribute(Entity *entity) const {
           || entity_type == EntityType::kPrintStmt || entity_type == EntityType::kReadStmt) {
         return entity->GetValue();
       }
-    default:return entity->GetValue();
+    default:
+      return entity->GetValue();
   }
 }
 std::string AttrReference::toString() const {
@@ -169,7 +167,8 @@ bool AttrReference::isSemanticallyCorrect() const {
       }
       break;
     }
-    default:break;
+    default:
+      break;
   }
   return true;
 }

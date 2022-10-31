@@ -25,28 +25,16 @@ void SP::LoadSource(std::istream *source_stream) {
 
   std::vector<Entity *> entities = EntityExtractor::ExtractAll(program_node);
   spdlog::info("Extracted {} entities", entities.size());
-  for (auto *entity : entities) {
-    spdlog::debug("{}", entity->ToString());
-  }
 
   std::vector<Relationship *> relationships = RelationshipExtractor::ExtractAll(program_node);
   spdlog::info("Extracted {} relationships", relationships.size());
-  for (auto *relationship : relationships) {
-    spdlog::debug("{}", relationship->ToString());
-  }
 
   std::vector<Pattern *> patterns = PatternExtractor::ExtractAll(program_node);
   spdlog::info("Extracted {} patterns", patterns.size());
-  for (auto *pattern : patterns) {
-    spdlog::debug("{}", pattern->ToString());
-  }
 
   spdlog::info("Populating PKB...");
-  spdlog::info("Populating Entities...");
   this->pkb_->populate(entities);
-  spdlog::info("Populating Relationships...");
   this->pkb_->populate(relationships);
-  spdlog::info("Populating Patterns...");
   this->pkb_->populate(patterns);
   spdlog::info("PKB Populated.");
 }

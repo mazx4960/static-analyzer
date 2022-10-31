@@ -9,11 +9,9 @@
 SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryReference *first, QueryReference *second) {
   if (first->getRefType() == ReferenceType::kSynonym || first->getRefType() == ReferenceType::kAttr) {
     QuerySynonym *first_synonym = static_cast<ElemReference *>(first)->getSynonym();
-    spdlog::debug("First synonym used");
     synonyms_.push_back(first_synonym);
     if (second->getRefType() == ReferenceType::kSynonym || second->getRefType() == ReferenceType::kAttr) {
       QuerySynonym *second_synonym = static_cast<ElemReference *>(second)->getSynonym();
-      spdlog::debug("Second synonym used");
       // Corner case: first and second synonyms are the same
       if (*first_synonym == *second_synonym) {
         for (auto [entity, entity_set] : table) {
@@ -39,7 +37,6 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryRefe
     }
   } else if (second->getRefType() == ReferenceType::kSynonym || second->getRefType() == ReferenceType::kAttr) {
     QuerySynonym *second_synonym = static_cast<ElemReference *>(second)->getSynonym();
-    spdlog::debug("Second synonym used");
     synonyms_.push_back(second_synonym);
     for (auto [entity, entity_set] : table) {
       for (auto *other_entity : entity_set) {
@@ -49,7 +46,6 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryRefe
   }
     // In this case there are no synonyms, but still need to add an entry if there are entries in the table
   else {
-    spdlog::debug("No synonyms used");
     for (auto [entity, entity_set] : table) {
       for (auto *other_entity : entity_set) {
         // Adds an empty hash table
@@ -59,32 +55,10 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryRefe
       }
     }
   }
-  std::string synonym_string;
-  for (auto *syn : synonyms_) {
-    synonym_string += syn->ToString() + ", ";
-  }
-  spdlog::debug("Creating new table with synonyms: {} and tuples:", synonym_string);
-  for (auto row : table_rows_) {
-    std::string row_string;
-    for (auto *syn : synonyms_) {
-      row_string += row[syn]->ToString() + ", ";
-    }
-    spdlog::debug("({})", row_string);
-  }
 }
 
 SubqueryResult::SubqueryResult(std::vector<QuerySynonym *> synonyms, std::vector<ResultRow> result_rows)
     : synonyms_(std::move(synonyms)), table_rows_(std::move(result_rows)) {
-  std::string synonym_string;
-  for (auto *syn : synonyms_)
-    synonym_string += syn->ToString() + ", ";
-  spdlog::debug("Creating new table with synonyms: {} and tuples:", synonym_string);
-  for (auto row : table_rows_) {
-    std::string row_string;
-    for (auto *syn : synonyms_)
-      row_string += row[syn]->ToString() + ", ";
-    spdlog::debug("({})", row_string);
-  }
 }
 
 bool SubqueryResult::IsEmpty() {
@@ -100,12 +74,6 @@ bool SubqueryResult::Uses(QuerySynonym *synonym) {
 
 std::vector<QuerySynonym *> SubqueryResult::GetCommonSynonyms(SubqueryResult other) {
   std::vector<QuerySynonym *> common_synonyms{};
-  for (auto *syn : synonyms_) {
-    spdlog::debug("This synonym: {}", syn->ToString());
-  }
-  for (auto *syn : other.synonyms_) {
-    spdlog::debug("Other synonym: {}", syn->ToString());
-  }
   for (auto *synonym : synonyms_) {
     if (other.Uses(synonym)) {
       common_synonyms.push_back(synonym);
@@ -165,19 +133,21 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
   for (int i = 0; i < other.table_rows_.size(); ++i) {
     second_copy.push_back(other.table_rows_.begin() + i);
   }
-  auto cmp = [common_synonyms](const std::vector<ResultRow>::iterator &first, const std::vector<ResultRow>::iterator &second) {
-    for (auto *synonym : common_synonyms) {
-      if ((*first)[synonym]->GetValue() != (*second)[synonym]->GetValue()) {
-        return (*first)[synonym]->GetValue() < (*second)[synonym]->GetValue();
-      }
-    }
-    return false;
-  };
-  auto eq = [common_synonyms](const std::vector<ResultRow>::iterator &first, const std::vector<ResultRow>::iterator &second) {
-    return std::all_of(common_synonyms.begin(), common_synonyms.end(), [first, second](QuerySynonym *synonym) {
-      return (*first)[synonym]->GetValue() == (*second)[synonym]->GetValue();
-    });
-  };
+  auto cmp =
+      [common_synonyms](const std::vector<ResultRow>::iterator &first, const std::vector<ResultRow>::iterator &second) {
+        for (auto *synonym : common_synonyms) {
+          if ((*first)[synonym]->GetValue() != (*second)[synonym]->GetValue()) {
+            return (*first)[synonym]->GetValue() < (*second)[synonym]->GetValue();
+          }
+        }
+        return false;
+      };
+  auto eq =
+      [common_synonyms](const std::vector<ResultRow>::iterator &first, const std::vector<ResultRow>::iterator &second) {
+        return std::all_of(common_synonyms.begin(), common_synonyms.end(), [first, second](QuerySynonym *synonym) {
+          return (*first)[synonym]->GetValue() == (*second)[synonym]->GetValue();
+        });
+      };
   // Sort rows by values in common columns
   std::sort(first_copy.begin(), first_copy.end(), cmp);
   std::sort(second_copy.begin(), second_copy.end(), cmp);
@@ -188,20 +158,7 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
   auto first_iter = first_copy.begin();
   auto second_iter = second_copy.begin();
   while (first_iter != first_copy.end() && second_iter != second_copy.end()) {
-    std::string first_string = "(";
-    for (auto *syn : synonyms_) {
-      first_string += (**first_iter)[syn]->ToString() + ", ";
-    }
-    first_string += ")";
-    std::string second_string = "(";
-    for (auto *syn : other.synonyms_) {
-      second_string += (**second_iter)[syn]->ToString() + ", ";
-    }
-    second_string += ")";
-
-    std::string comp_outcome;
     if (eq(*first_iter, *second_iter)) {
-      comp_outcome = "Equal";
       auto first_end = first_iter;
       while (first_end != first_copy.end() && eq(*first_iter, *first_end)) {
         ++first_end;
@@ -221,13 +178,10 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
       first_iter = first_end;
       second_iter = second_end;
     } else if (cmp(*first_iter, *second_iter)) {
-      comp_outcome = "Smaller";
       ++first_iter;
     } else {
-      comp_outcome = "Larger";
       ++second_iter;
     }
-    spdlog::debug("Comparing {} to {}: {}", first_string, second_string, comp_outcome);
   }
   spdlog::debug("Number of rows in result: {}", new_rows.size());
   return SubqueryResult(all_synonyms, new_rows);
