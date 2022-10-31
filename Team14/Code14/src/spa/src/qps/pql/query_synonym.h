@@ -26,22 +26,22 @@ class QuerySynonym {
 
 struct QuerySynonymHashFunction {
   size_t operator()(const QuerySynonym &synonym) const {
-    return std::hash<std::string>()(synonym.ToString());
+    return std::hash<std::string>()(synonym.GetName() );
   }
   size_t operator()(const QuerySynonym *synonym) const {
-    return std::hash<std::string>()(synonym->ToString());
+    return std::hash<std::string>()(synonym->GetName() );
   };
 };
 
 struct QuerySynonymPointerEquality {
   bool operator()(const QuerySynonym *lhs, const QuerySynonym *rhs) const {
-    return lhs->ToString() == rhs->ToString();
+    return lhs->GetName() == rhs->GetName() ;
   }
 };
 
 struct QuerySynonymPointerComparison {
   bool operator()(const QuerySynonym *lhs, const QuerySynonym *rhs) const {
-    return lhs->ToString().compare(rhs->ToString()) < 0;
+    return lhs->GetName() .compare(rhs->GetName() ) < 0;
   }
 };
 
