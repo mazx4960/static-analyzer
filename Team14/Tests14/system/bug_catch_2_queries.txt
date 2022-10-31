@@ -96,7 +96,7 @@ Select <s1, s2, c1> such that Next(s2, c1) and Next(s1, s2)
 502 - Find all call stmt that can be executed after any other call stmt
 call c1, c2;
 Select <c1, c2> such that Next*(c1, c2) and Next*(c2, c1)
-26 62, 62 26
+26 62, 62 26, 26 26, 62 62
 5000
 503 - Find common used variable in call stmt
 procedure p1, p2, p3; variable v;
