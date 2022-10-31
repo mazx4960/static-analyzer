@@ -72,11 +72,15 @@ assign a1, a2; while w;
 Select <a1, a2, w> such that Parent(w, a1) and Affects(a1, a2) and Uses(a2, "x") pattern w ("x", _)
 83 92 82, 85 92 82, 86 92 82
 5000
-505 - Find affected stmt taht modifies tiger
+505 - Find affected stmt that modifies tiger
 assign a1, a2;
 Select <a1.stmt#, a2> such that Affects (a1, a2) and Modifies(a1, "tiger")
 111 110
 5000
+506
+while w; assign a1;
+Select a1.stmt# pattern w ("bear", _) such that Parent(w, a1) and Uses(a1, "meow")
+102
 601
 variable v; if ifs; while w;
 Select <v, ifs, w> pattern ifs (v, _, _) and w (v, _)
