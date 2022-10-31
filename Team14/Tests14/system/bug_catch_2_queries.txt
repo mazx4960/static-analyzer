@@ -133,3 +133,28 @@ call c; procedure p;
 Select c.stmt# with c.procName = p.procName such that Calls*("nestedLoops", p)
 26, 62, 81
 5000
+609
+call c; stmt s;
+Select c with c = s.stmt#
+SyntaxError
+5000
+610
+variable v; if ifs;
+Select ifs pattern ifs (v, _)
+SemanticError
+5000
+611
+stmt s;
+Select s.stmt# such that Modifies(_, _)
+SemanticError
+5000
+612
+assign a; variable v;
+Select a such that Uses(_, v)
+SemanticError
+5000
+613
+procedure p;
+Select p.stmt#
+SemanticError
+5000
