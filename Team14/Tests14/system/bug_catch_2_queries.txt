@@ -18,6 +18,41 @@ Select <w, v> pattern w(v,_) with v.varName = "x"
 Select BOOLEAN such that Next*(115, 118) and Next*(118, 124)
 FALSE
 5000
+201 - terminal statements
+stmt s1;
+Select s1 such that Next(s1, 8)
+7, 13, 55, 68, 70
+5000
+202 - invalid pattern
+assign a;
+Select a pattern(a, _"x = 1"_)
+SyntaxError
+5000
+203 - invalid pattern
+assign a;
+Select a pattern(a, _"+ -"_)
+SyntaxError
+5000
+204 - pattern
+assign a; variable v;
+Select v pattern a(v, _"(a1 + 1)"_)
+a1
+5000
+205 - variables used in multiple statement types
+if if; while while; assign a; variable v;
+Select v pattern if(v, _, _) pattern while(v, _) pattern a(v, _)
+x1, x, t1, n1, meow, y1, dog, a1
+5000
+206 - assign statement that modifies a control variable
+assign a; while w; if if; variable v;
+Select <a.stmt#, v> pattern a(v, _) pattern w(v, _) pattern if(v, _, _) such that Next*(a, w) and Next*(a, if)
+5 a1, 18 a1, 30 x1, 46 x1, 53 t1, 72 t1, 35 n1, 41 y1, 71 n1, 54 y1, 21 n1
+5000
+207
+assign a, a1; while w, w1; variable v;
+Select <a.stmt#, v> pattern a(v, _) pattern w(v, _) pattern w1(v, _) such that Next*(a, w) and Next*(a, w1) and Parent*(w, w1)
+7 z1, 30 x1, 27 z1, 46 x1, 66 z1, 40 z1
+5000
 300 - Simple Next* with specified statement number
 stmt s1, s2;
 Select <s1,s2> such that Next*(s1,s2) with s2.stmt# = 3
