@@ -123,6 +123,11 @@ assign BOOLEAN;
 Select BOOLEAN.stmt# such that Uses(BOOLEAN, "meow")
 102, 119
 5000
+508
+constant c1, c2;
+Select BOOLEAN with c1.value = c2.value and c2.value = 100
+TRUE
+5000
 601
 variable v; if ifs; while w;
 Select <v, ifs, w> pattern ifs (v, _, _) and w (v, _)
