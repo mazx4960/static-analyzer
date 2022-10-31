@@ -1,0 +1,173 @@
+procedure nestedLoops {
+    read z1;        # 1
+    print b1;       # 2
+    c1 = 20 - c1;   # 3
+    while (x1 % a1 >= 3 - 9 * x1 + z1 / 2) {        # 4
+        a1 = b1 - 2;                                # 5
+        d1 = c1 * c1 - 320;                         # 6
+        z1 = 207;                                   # 7
+        while((a % 200 < 350) || (x1 + y1 == 0)) {  # 8
+            print a;                                # 9
+            if (a1 + b1 - s1 * t1 != 7) then {      # 10
+                print t1;                           # 11
+                m1 = m1 - f1 + y1 * z1;             # 12
+                while(c >= 0) {                     # 13
+                    read s1;                        # 14
+                    a = (c1 * x1 - z1) % 1000000;   # 15
+                    if (100 <= m1 + n1) then {      # 16
+                        f1 = 0;                     # 17
+                        a1 = a1 + 1;                # 18
+                        while (x == 0) {            # 19
+                            c1 = a1 + z1;           # 20
+                            n1 = f1 * s1 - 99 % c1 + x1;                # 21
+                            read t1;                                    # 22
+                            while ((f1 * 2 < 5) && (n1 - 1 == 7)) {     # 23
+                                b1 = c1 % a1 - 300 * z1;                # 24
+                                print b1;                               # 25
+                                call generation;                        # 26
+                                z1 = c1 / b1;                           # 27
+                                if (y1 > 1) then {                      # 28
+                                    c1 = y1 / 10;                       # 29
+                                    x1 = n1 + n1 - s1;                  # 30
+                                    while (t1 < t1 + 2 % 1) {           # 31
+                                        f1 = m1 - 17;                   # 32
+                                        print a1;                       # 33
+                                        read n1;                        # 34
+                                    }
+                                } else {
+                                    n1 = 200;                           # 35
+                                    print a;                            # 36
+                                    read x;                             # 37
+                                    a = a + t1 + y1 - x1 * z1 / 312;    # 38
+                                }
+                            }
+                        }
+                    } else {
+                        print f1;                       # 39
+                        z1 = t1 - 4;                    # 40
+                        y1 = n1 * 3;                    # 41
+                        s1 = s1 - 2;                    # 42
+                        while (n1 * 2 == t1 % 22) {     # 43
+                            d1 = 9;                     # 44
+                            read m1;                    # 45
+                            x1 = d1 - n1;               # 46
+                            s1 = 10 - y1;               # 47
+                        }
+                    }
+                }
+            } else {
+                read x1;                            # 48
+                print f1;                           # 49
+                print d1;                           # 50
+                g1 = 30;                            # 51
+                if (g1 - x1 >= m1 % g1) then {      # 52
+                    t1 = t1 + 2;                    # 53
+                    y1 = n1 - 2;                    # 54
+                    while (z1 == 1) {               # 55
+                        read g1;                    # 56
+                        s1 = 1;                     # 57
+                        read y1;                    # 58
+                        r1 = s1 - z1 * t1;          # 59
+                    }
+                } else {
+                    print x1;                       # 60
+                    m1 = r1 * 1000;                 # 61
+                    call animals;                   # 62
+                    if (m1 % 4 == 11) then {        # 63
+                        read t1;                    # 64
+                        read d1;                    # 65
+                        z1 = m1 - 3;                # 66
+                        s1 = g1 * 2 - x1;           # 67
+                    } else {                        # 68
+                        d1 = s1 - 2;                # 69
+                        while (r1 <= t1) {          # 70
+                            n1 = 30;                # 71
+                            t1 = t1 - x1 + y1 / z1; # 72
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+procedure generation {
+    read y;                     # 73
+    x = y;                      # 74
+    sum = sum * sum + f + x;    # 75
+    z = 1;                      # 76
+    f = 0;                      # 77
+    y = 1;                      # 78
+    count = count + 1;          # 79
+    sum = 0;                    # 80
+    call check;                 # 81
+    while (count <= x) {        # 82
+        sum = sum + y;          # 83
+        m = y + z;              # 84
+        y = z;                  # 85
+        z = m;                  # 86
+        if (sum > 10) then {    # 87
+            f = 1;              # 88
+        } else {
+            f = 0;              # 89
+        }
+        count = count + 1;      # 90
+    }
+    print sum;                  # 91
+    a = f + y + z + sum * sum / f + x;  # 92
+    print a;                    # 93
+}
+
+procedure check {
+    if ((x > 5) && (x < 150)) then {    # 94
+        x = x % 10;                     # 95
+    } else {
+        x = 5;                          # 96
+    }
+    print sum;                          # 97
+}
+
+procedure animals {
+    while (lion == king) {                  # 98
+        while(bear > bare) {                # 99
+            grizz = brown + cony;           # 100
+            read icebear;                   # 101
+            cat = meow + wolf - 1900;       # 102
+            print tiger;                    # 103
+        }
+        panda = dragon / fat - cat - dog;   # 104
+        while (brown <= icebear - 1) {      # 105
+            icebear = russia + love;        # 106
+            print lion;                     # 107
+            read cat;                       # 108
+            panda = panda + 1;              # 109
+        }
+        animals = grizz - icebear * dog % dragon + tiger;   # 110
+        tiger = 9;                          # 111
+        while (meow < 21) {                 # 112
+            print brown;                    # 113
+            cony = brown + love;            # 114
+        }
+    }
+    if (dog + 18 > meow * meow) then {      # 115
+        read icebear;                       # 116
+        russia = 1;                         # 117
+        if (tiger == fierce * tiger) then { # 118
+            love = cat + rat - meow;        # 119
+            lion = panda * dog;             # 120
+        } else {
+            read meow;                      # 121
+            lion = icebear - brown;         # 122
+        }
+        print cat;                          # 123
+    } else {
+        while (cat - (dog + 614) % 1 != animals) {  # 124
+            dog = dog + cat / 14;           # 125
+            meow = 2;                       # 126
+            rat = animals % brown;          # 127
+        }
+        tiger = king - lion;                # 128
+        blue = 99;                          # 129
+        fish = animals;                     # 130
+    }
+}
