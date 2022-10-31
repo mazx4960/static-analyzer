@@ -91,6 +91,24 @@ EntityPointerUnorderedSet EntityManager::Get(std::string &entity_value) {
   }
   return result;
 }
+
+std::unordered_map<EntityType, int> EntityManager::Get() {
+  std::unordered_map<EntityType, int> map;
+  std::vector<EntityType> all_entity_types = GetAllEntityTypes();
+  for (auto type : all_entity_types) {
+    map[type] = this->GetTable(type)->size();
+  }
+  return map;
+}
+
+std::vector<EntityType> EntityManager::GetAllEntityTypes() {
+  std::vector<EntityType> list = {
+      EntityType::kProcedure, EntityType::kVariable, EntityType::kConstant, EntityType::kAssignStmt,
+      EntityType::kCallStmt, EntityType::kIfStmt, EntityType::kPrintStmt, EntityType::kReadStmt, EntityType::kWhileStmt,
+  };
+  return list;
+}
+
 void EntityManager::LogStatistics() {
   spdlog::info("Number of queries: {}", this->num_queries_);
   for (auto [k, v] : this->entity_table_map_) {

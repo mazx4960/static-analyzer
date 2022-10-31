@@ -11,7 +11,7 @@ class EntityManager {
  private:
   int num_queries_ = 0;
   std::unordered_map<EntityType, EntityTable *> entity_table_map_;
-
+  static std::vector<EntityType> GetAllEntityTypes();
   void CreateTable(EntityType);
 
  public:
@@ -20,6 +20,7 @@ class EntityManager {
   void Populate(const std::vector<Entity *> &entities);
   EntityPointerUnorderedSet Get(EntityType entity_type);
   EntityPointerUnorderedSet Get(std::string &entity_value);
+  std::unordered_map<EntityType, int> Get();
 
   void LogStatistics();
 };

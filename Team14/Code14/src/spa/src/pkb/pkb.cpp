@@ -33,6 +33,11 @@ EntityPointerUnorderedSet PKB::getByPattern(Entity *entity, std::string &right_p
 EntityPointerUnorderedSet PKB::getEntitiesByString(std::string &entity_value) {
   return this->entity_manager_->Get(entity_value);
 }
+
+std::unordered_map<EntityType, int> PKB::getSimpleStats() {
+  return this->entity_manager_->Get();
+}
+
 void PKB::LogStatistics() {
   spdlog::info("====================== PKB STATISTICS ======================");
   spdlog::info("---------------------- Entity Manager ----------------------");
