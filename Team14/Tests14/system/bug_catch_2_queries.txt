@@ -19,22 +19,22 @@ Select BOOLEAN such that Next*(115, 118) and Next*(118, 124)
 FALSE
 5000
 300 - Simple Next* with specified statement number
-stmt s1,s2;
+stmt s1, s2;
 Select <s1,s2> such that Next*(s1,s2) with s2.stmt# = 3
 1 3, 2 3
 5000
 301 - Affects* within specified range
-assign a1,a2;
+assign a1, a2;
 Select <a1,a2> such that Affects*(a1,a2) and Next*(82,a1) and Next*(a2,90)
 83 83, 84 83, 84 84, 84 85, 84 86, 85 83, 85 84, 85 85, 85 86, 86 83, 86 84, 86 85, 86 86, 90 90
 5000
 302 - Boolean query
-assign a1,a2;
+assign a1, a2;
 Select BOOLEAN such that Affects*(34,32)
 FALSE
 5000
 303 - Boolean query with select attributes
-assign a1,a2;
+assign a1, a2;
 Select BOOLEAN such that Affects*(a1,a2) with a1.stmt# = 36 with a2.stmt# = 38
 FALSE
 5000
@@ -82,6 +82,7 @@ Select <a1.stmt#, a2> such that Affects (a1, a2) and Modifies(a1, "tiger")
 while w; assign a1;
 Select a1.stmt# pattern w ("bear", _) such that Parent(w, a1) and Uses(a1, "meow")
 102
+5000
 601
 variable v; if ifs; while w;
 Select <v, ifs, w> pattern ifs (v, _, _) and w (v, _)
