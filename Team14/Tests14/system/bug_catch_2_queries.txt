@@ -1,5 +1,25 @@
-0
-stmt s;
-Select s
-none
+501 - Find all call stmt and their leading execution seq
+stmt s1, s2; call c1;
+Select <s1, s2, c1> such that Next(s2, c1) and Next(s1, s2)
+24 25 26, 60 61 62, 79 80 81
+5000
+502 - Find all call stmt that can be executed after any other call stmt
+call c1, c2;
+Select <c1, c2> such that Next*(c1, c2) and Next*(c2, c1)
+26 62, 62 26
+5000
+503 - Find common used variable in call stmt
+procedure p1, p2, p3; variable v;
+Select <p1, p2, p3, v> such that Calls*(p1, p2) and Calls*(p2, p3) and Uses(p1, v) and Uses(p2, v) and Uses(p3, v)
+nestedLoops generation check sum, nestedLoops generation check x
+5000
+504 - Find affected stmt that use assign stmt in while that uses "x"
+assign a1, a2; while w;
+Select <a1, a2, w> such that Parent(w, a1) and Affects(a1, a2) and Uses(a2, "x") pattern w ("x", _)
+83 92 82, 85 92 82, 86 92 82
+5000
+505 - Find affected stmt taht modifies tiger
+assign a1, a2;
+Select <a1.stmt#, a2> such that Affects (a1, a2) and Modifies(a1, "tiger")
+111 110
 5000
