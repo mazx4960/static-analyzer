@@ -3,3 +3,22 @@ stmt s;
 Select s
 none
 5000
+100 - Next*
+stmt s;
+Select s such that Next*(s, 98)
+99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130
+5000
+101 - Affects*
+assign a; 
+Select a such that Affects*(95, a)
+none
+5000
+102 - while pattern and with for 2 procedures using the same variable names
+while w; variable v;
+Select <w, v> pattern w(v,_) with v.varName = "x"
+19 x, 82 x 
+5000
+103 - Boolean
+Select BOOLEAN such that Next*(115, 118) and Next*(118, 124)
+FALSE
+5000
