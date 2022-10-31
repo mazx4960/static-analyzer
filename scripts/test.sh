@@ -15,6 +15,7 @@ test_names=(
   "intertwined_procedures"
   "patterns"
   "pql_error"
+  "sp_error"
   "select_attributes"
 )
 num_failed=0

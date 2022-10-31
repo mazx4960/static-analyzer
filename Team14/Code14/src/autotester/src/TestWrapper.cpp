@@ -3,7 +3,8 @@
 // implementation code of WrapperFactory - do NOT modify the next 5 lines
 AbstractWrapper *WrapperFactory::wrapper = nullptr;
 AbstractWrapper *WrapperFactory::createWrapper() {
-  if (wrapper == nullptr) wrapper = new TestWrapper;
+  if (wrapper == nullptr)
+    wrapper = new TestWrapper;
   return wrapper;
 }
 // Do not modify the following line
@@ -27,7 +28,13 @@ TestWrapper::TestWrapper() {
 // method for parsing the SIMPLE source
 void TestWrapper::parse(std::string filename) {
   this->ui_->SetSourceFile(filename);
-  this->ui_->LoadSource();
+  try {
+    this->ui_->LoadSource();
+  } catch (SyntaxError &e) {
+    AbstractWrapper::GlobalStop = true;
+  } catch (SemanticError &e) {
+    AbstractWrapper::GlobalStop = true;
+  }
 }
 
 // method to evaluating a query
@@ -35,7 +42,9 @@ void TestWrapper::evaluate(std::string query, std::list<std::string> &results) {
   this->ui_->SetQueryString(query);
   try {
     auto *result = this->ui_->ExecuteQuery();
-    if (result->is_empty()) { return; }
+    if (result->is_empty()) {
+      return;
+    }
     // store the answers to the query in the results list (it is initially empty)
     // each result must be a string.
     std::unordered_set<std::string> results_set = result->get_results_set();
