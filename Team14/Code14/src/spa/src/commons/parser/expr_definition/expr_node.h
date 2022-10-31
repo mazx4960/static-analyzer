@@ -87,10 +87,10 @@ class VariableNode : public ReferenceNode {
 
 class ConstantNode : public ReferenceNode {
  private:
-  int value_;
+  std::string value_;
 
  public:
-  explicit ConstantNode(int value);
-  [[nodiscard]] int GetValue() const;
+  explicit ConstantNode(std::string value);
+  [[nodiscard]] std::string GetValue() const;
   std::string ToString() override;
 };

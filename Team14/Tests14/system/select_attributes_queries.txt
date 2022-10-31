@@ -280,8 +280,8 @@ none
 5000
 157 - Large constant value
 constant c;
-Select c with c.value = 9999999999
-none
+Select c with c.value = 214748364777
+214748364777
 5000
 158 - Large stmt number
 stmt s;
