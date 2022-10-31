@@ -23,6 +23,16 @@ print pn; procedure p;
 Select pn such that Uses(pn, "sum") and Calls("generation", p) and Calls("computation", p)
 7, 26
 5000 
+105
+procedure p; 
+Select p such that Calls*(p, "check") 
+computation, main, generation
+5000
+106 
+procedure p, q;
+Select <p, q> such that Calls*(p, q)
+computation main, computation generation, computation check, main generation, main check, generation check
+5000  
 201 - multi clause
 stmt s1, s2; while w; variable v;
 Select <s1, s2, w, v> such that Follows(s1, s2) and Parent(w, s1) and Uses(w, v) and Modifies(s2, v)
