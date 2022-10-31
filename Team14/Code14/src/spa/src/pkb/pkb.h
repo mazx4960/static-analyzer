@@ -39,6 +39,7 @@ class IPKBQuerier {
   virtual EntityPointerUnorderedSet getByRelationship(RsType, Entity *, bool) = 0;
   virtual EntityPointerUnorderedSet getByPattern(Entity *, std::string &, bool isSubmatch) = 0;
   virtual EntityPointerUnorderedSet getEntitiesByString(std::string &) = 0;
+  virtual std::unordered_map<EntityType, int> getSimpleStats() = 0;
 
   virtual void LogStatistics() = 0;
 };
@@ -58,6 +59,7 @@ class PKB : public IPKBPopulator, public IPKBQuerier {
   EntityPointerUnorderedSet getByRelationship(RsType, Entity *, bool) override;
   EntityPointerUnorderedSet getByPattern(Entity *, std::string &, bool isSubmatch) override;
   EntityPointerUnorderedSet getEntitiesByString(std::string &) override;
+  std::unordered_map<EntityType, int> getSimpleStats() override;
 
   void populate(std::vector<Entity *> entities) override;
   void populate(std::vector<Relationship *> relationships) override;
