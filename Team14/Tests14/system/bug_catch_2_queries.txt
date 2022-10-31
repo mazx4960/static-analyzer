@@ -118,6 +118,11 @@ while w; assign a1;
 Select a1.stmt# pattern w ("bear", _) such that Parent(w, a1) and Uses(a1, "meow")
 102
 5000
+507
+assign BOOLEAN;
+Select BOOLEAN.stmt# such that Uses(BOOLEAN, "meow")
+102, 119
+5000
 601
 variable v; if ifs; while w;
 Select <v, ifs, w> pattern ifs (v, _, _) and w (v, _)
