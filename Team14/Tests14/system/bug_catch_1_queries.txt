@@ -23,6 +23,16 @@ print pn; procedure p;
 Select pn such that Uses(pn, "sum") and Calls("generation", p) and Calls("computation", p)
 7, 26
 5000 
+105
+procedure p; 
+Select p such that Calls*(p, "check") 
+computation, main, generation
+5000
+106 
+procedure p, q;
+Select <p, q> such that Calls*(p, q)
+computation main, computation generation, computation check, main generation, main check, generation check
+5000  
 201 - multi clause
 stmt s1, s2; while w; variable v;
 Select <s1, s2, w, v> such that Follows(s1, s2) and Parent(w, s1) and Uses(w, v) and Modifies(s2, v)
@@ -87,6 +97,31 @@ Select <if, w, a1> such that Modifies(a1,"y") and Parent(if,w) and Parent(w,a1) 
 procedure p; assign a1, a2; while w;
 Select a1 such that Affects*(a1,a2) and Parent*(w,a1) and Parent(w,a2) and Follows(a1,a2) and Next*(8,a1)
 19, 20
+5000
+306 - Simple Calls* tuple
+procedure p1, p2;
+Select <p1,p2> such that Calls*(p1,p2)
+main generation, main check, generation check, computation check, computation main, computation generation
+5000
+307 - Calls* tuple with specified p1
+procedure p1,p2;
+Select <p1,p2> such that Calls*(p1,p2) with p1.procName = "main"
+main generation, main check
+5000
+308 - Boolean query Calls*
+procedure p1,p2;
+Select BOOLEAN such that Calls*(p1,p2)
+TRUE
+5000
+309 - Calls* with boolean as synonym
+procedure BOOLEAN;
+Select BOOLEAN such that Calls*(_,BOOLEAN)
+main, check, generation
+5000
+310 - Calls* with boolean as synonym in tuple
+procedure BOOLEAN;
+Select <BOOLEAN> such that Calls*(BOOLEAN,BOOLEAN)
+none
 5000
 401 - get all assigns with variables they use and modify
 assign a; variable u, v;

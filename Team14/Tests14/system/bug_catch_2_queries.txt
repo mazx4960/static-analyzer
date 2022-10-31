@@ -1,0 +1,195 @@
+100 - Next*
+stmt s;
+Select s such that Next*(s, 98)
+98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114
+5000
+101 - Affects*
+assign a;
+Select a such that Affects*(95, a)
+none
+5000
+102 - while pattern and with for 2 procedures using the same variable names
+while w; variable v;
+Select <w, v> pattern w(v,_) with v.varName = "x"
+19 x, 82 x
+5000
+103 - Boolean
+
+Select BOOLEAN such that Next*(115, 118) and Next*(118, 124)
+FALSE
+5000
+201 - terminal statements
+stmt s1;
+Select s1 such that Next(s1, 8)
+7, 13, 55, 68, 70
+5000
+202 - invalid pattern
+assign a;
+Select a pattern(a, _"x = 1"_)
+SyntaxError
+5000
+203 - invalid pattern
+assign a;
+Select a pattern(a, _"+ -"_)
+SyntaxError
+5000
+204 - pattern
+assign a; variable v;
+Select v pattern a(v, _"(a1 + 1)"_)
+a1
+5000
+205 - variables used in multiple statement types
+if if; while while; assign a; variable v;
+Select v pattern if(v, _, _) pattern while(v, _) pattern a(v, _)
+x1, x, t1, n1, meow, y1, dog, a1
+5000
+206 - assign statement that modifies a control variable
+assign a; while w; if if; variable v;
+Select <a.stmt#, v> pattern a(v, _) pattern w(v, _) pattern if(v, _, _) such that Next*(a, w) and Next*(a, if)
+5 a1, 18 a1, 30 x1, 46 x1, 53 t1, 72 t1, 35 n1, 41 y1, 71 n1, 54 y1, 21 n1
+5000
+207
+assign a, a1; while w, w1; variable v;
+Select <a.stmt#, v> pattern a(v, _) pattern w(v, _) pattern w1(v, _) such that Next*(a, w) and Next*(a, w1) and Parent*(w, w1)
+7 z1, 30 x1, 27 z1, 46 x1, 66 z1, 40 z1
+5000
+300 - Simple Next* with specified statement number
+stmt s1, s2;
+Select <s1,s2> such that Next*(s1,s2) with s2.stmt# = 3
+1 3, 2 3
+5000
+301 - Affects* within specified range
+assign a1, a2;
+Select <a1,a2> such that Affects*(a1,a2) and Next*(82,a1) and Next*(a2,90)
+83 83, 84 83, 84 84, 84 85, 84 86, 85 83, 85 84, 85 85, 85 86, 86 83, 86 84, 86 85, 86 86, 90 90
+5000
+302 - Boolean query
+assign a1, a2;
+Select BOOLEAN such that Affects*(34,32)
+FALSE
+5000
+303 - Boolean query with select attributes
+assign a1, a2;
+Select BOOLEAN such that Affects*(a1,a2) with a1.stmt# = 36 with a2.stmt# = 38
+FALSE
+5000
+304 - If pattern
+variable v; if if;
+Select if.stmt# pattern if(v,_,_)
+10, 16, 28, 52, 63, 87, 94, 115, 118
+5000
+305 - If pattern with specified variables
+variable v; if if;
+Select if pattern if(v,_,_) with v.varName = "m1"
+16, 52, 63
+5000
+306 - Nest while in if
+while w; if if;
+Select <if, w> such that Parent(if,w) pattern w(_,_)
+10 13, 16 19, 28 31, 16 43, 52 55, 63 70, 115 124
+5000
+501 - Find all call stmt and their leading execution seq
+stmt s1, s2; call c1;
+Select <s1, s2, c1> such that Next(s2, c1) and Next(s1, s2)
+24 25 26, 60 61 62, 79 80 81
+5000
+502 - Find all call stmt that can be executed after any other call stmt
+call c1, c2;
+Select <c1, c2> such that Next*(c1, c2) and Next*(c2, c1)
+26 62, 62 26, 26 26, 62 62
+5000
+503 - Find common used variable in call stmt
+procedure p1, p2, p3; variable v;
+Select <p1, p2, p3, v> such that Calls*(p1, p2) and Calls*(p2, p3) and Uses(p1, v) and Uses(p2, v) and Uses(p3, v)
+nestedLoops generation check sum, nestedLoops generation check x
+5000
+504 - Find affected stmt that use assign stmt in while that uses "x"
+assign a1, a2; while w;
+Select <a1, a2, w> such that Parent(w, a1) and Affects(a1, a2) and Uses(a2, "x") pattern w ("x", _)
+83 92 82, 85 92 82, 86 92 82
+5000
+505 - Find affected stmt that modifies tiger
+assign a1, a2;
+Select <a1.stmt#, a2> such that Affects (a1, a2) and Modifies(a1, "tiger")
+111 110
+5000
+506
+while w; assign a1;
+Select a1.stmt# pattern w ("bear", _) such that Parent(w, a1) and Uses(a1, "meow")
+102
+5000
+507
+assign BOOLEAN;
+Select BOOLEAN.stmt# such that Uses(BOOLEAN, "meow")
+102, 119
+5000
+508
+constant c1, c2;
+Select BOOLEAN with c1.value = c2.value and c2.value = 100
+TRUE
+5000
+601
+variable v; if ifs; while w;
+Select <v, ifs, w> pattern ifs (v, _, _) and w (v, _)
+x1 52 4, a1 10 4, x1 52 8, y1 28 8, n1 16 23, t1 10 31, n1 16 43, t1 10 43, t1 10 70, x 94 19, x 94 82, meow 115 112, dog 115 124
+5000
+602
+procedure p1, p2;
+Select p2 such that Calls(p1, p2) with 1 = 1
+animals, check, generation
+5000
+603
+procedure p;
+Select p such that Calls*(_, p) with 1 = 1
+animals, check, generation
+5000
+604
+constant c;
+Select c with c.value = 1
+1
+5000
+605
+constant c;
+Select c.value with c.value = 99999
+none
+5000
+606
+print p;
+Select p.varName with p.stmt# = 25
+b1
+5000
+607
+print p;
+Select p.stmt# with p.varName = "f1"
+39, 49
+5000
+608
+call c; procedure p;
+Select c.stmt# with c.procName = p.procName such that Calls*("nestedLoops", p)
+26, 62, 81
+5000
+609
+call c; stmt s;
+Select c with c = s.stmt#
+SyntaxError
+5000
+610
+variable v; if ifs;
+Select ifs pattern ifs (v, _)
+SemanticError
+5000
+611
+stmt s;
+Select s.stmt# such that Modifies(_, _)
+SemanticError
+5000
+612
+assign a; variable v;
+Select a such that Uses(_, v)
+SemanticError
+5000
+613
+procedure p;
+Select p.stmt#
+SemanticError
+5000

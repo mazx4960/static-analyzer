@@ -7,6 +7,8 @@ test_names=(
   "affects_edge"
   "basic"
   "bug_catch_1"
+  "bug_catch_2"
+  "bug_catch_2_gabriel"
   "code_6"
   "compute_ave"
   "compute_centroid"
