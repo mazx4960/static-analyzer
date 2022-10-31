@@ -1,24 +1,40 @@
-0
-stmt s;
-Select s
+601
+variable v; if ifs; while w;
+Select <v, ifs, w> pattern ifs (v, _, _) and w (v, _)
+x1 52 4, a1 10 4, x1 52 8, y1 28 8, n1 16 23, t1 10 31, n1 16 43, t1 10 43, t1 10 70, x 94 19, x 94 82, meow 115 112, dog 115 124
+5000
+602
+procedure p1, p2;
+Select p2 such that Calls(p1, p2) with 1 = 1
+animals, check, generation
+5000
+603
+procedure p;
+Select p such that Calls*(_, p) with 1 = 1
+animals, check, generation
+5000
+604
+constant c;
+Select c with c.value = 1
+1
+5000
+605
+constant c;
+Select c.value with c.value = 99999
 none
 5000
-100 - Next*
-stmt s;
-Select s such that Next*(s, 98)
-99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130
+606
+print p;
+Select p.varName with p.stmt# = 25
+b1
 5000
-101 - Affects*
-assign a; 
-Select a such that Affects*(95, a)
-none
+607
+print p;
+Select p.stmt# with p.varName = "f1"
+39, 49
 5000
-102 - while pattern and with for 2 procedures using the same variable names
-while w; variable v;
-Select <w, v> pattern w(v,_) with v.varName = "x"
-19 x, 82 x 
-5000
-103 - Boolean
-Select BOOLEAN such that Next*(115, 118) and Next*(118, 124)
-FALSE
+608
+call c; procedure p;
+Select c.stmt# with c.procName = p.procName such that Calls*("nestedLoops", p)
+26, 62, 81
 5000
