@@ -3,7 +3,7 @@
 test_folder="Team14/Tests14/playground"
 result_folder="Team14/Code14/tests"
 
-for test_name in {1..2}; do
+for test_name in {1..3}; do
     echo "=============================================================="
     echo "Running test '$test_name'"
     python3 -m mprof run -M -T 0.001 build/src/runner/runner $test_folder/0.txt $test_folder/0_"$test_name".txt > $result_folder/"$test_name".log
