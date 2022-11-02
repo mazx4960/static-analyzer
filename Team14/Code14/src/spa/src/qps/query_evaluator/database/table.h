@@ -2,6 +2,10 @@
 
 #pragma once
 
+#include <utility>
+#include <vector>
+#include <unordered_map>
+
 #include "pkb/relationship/relationship_table.h"
 #include "qps/pql/query_reference.h"
 

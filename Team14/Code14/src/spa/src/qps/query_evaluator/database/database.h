@@ -2,16 +2,21 @@
 
 #pragma once
 
+#include <utility>
 #include <vector>
-#include "table.h"
+
 #include "qps/pql/query.h"
 #include "qps/query_evaluator/context.h"
+#include "table.h"
 
 class Database {
  private:
   Context *ctx_;
+
   SynonymSet all_synonyms_;
+
   std::vector<Table *> unmerged_tables_;
+
   std::vector<Table *> merged_tables_;
 
  public:

@@ -2,7 +2,6 @@
 
 #include <spdlog/spdlog.h>
 
-#include <utility>
 #include "database.h"
 
 std::vector<Table *> Database::Empty(std::vector<QuerySynonym *> synonyms) {

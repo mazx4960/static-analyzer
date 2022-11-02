@@ -2,8 +2,6 @@
 
 #include "table.h"
 
-#include <utility>
-
 #include "spdlog/spdlog.h"
 
 Table::Table(const EntityPointerUnorderedMap &table, QueryReference *first, QueryReference *second) {
