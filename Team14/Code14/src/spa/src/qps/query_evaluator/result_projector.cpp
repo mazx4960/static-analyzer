@@ -26,6 +26,7 @@ void ResultProjector::join() {
   })) {
     spdlog::debug("Empty table encountered, terminating JOIN operation.");
     this->joined_results_ = this->getEmptyFinalTable();
+    return;
   }
   std::vector<SubqueryResult> intermediate_results{};
   for (auto result : subquery_results_) {
