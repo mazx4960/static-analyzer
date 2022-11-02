@@ -1,0 +1,2 @@
+stmt s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20;
+Select s1 such that Next(s1, s2) and Next(s6, s7) and Next(s14, s15) and Next(s4, s5) and Next(s3, s4) and Next(s19, s20) and Next(s20, s1) and Next(s8, s9) and Next(s18, s19) and Next(s15, s16) and Next(s16, s17) and Next(s5, s6) and Next(s9, s10) and Next(s11, s12) and Next(s10, s11) and Next(s2, s3) and Next(s17, s18) and Next(s13, s14) and Next(s7, s8) and Next(s12, s13)

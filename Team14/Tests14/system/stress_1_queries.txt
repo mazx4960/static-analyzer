@@ -48,6 +48,11 @@ stmt s1, s2, s5; if ifs2, ifs5; assign a3; while w3; variable v5; read r3; print
 Select <s1, ifs2, a3, s5> pattern ifs5("a1a", _, _) and ifs5("ccc", _, _) such that Uses(ifs5, v5) with "bb2" = v5.varName such that Parent (s5, ifs5) such that Follows(r3, p3) and Follows(p3, a3) such that Follows(a3, w3) such that Follows(ifs2, s2) with 201 = s2.stmt# with s1.stmt# = 185
 185 191 208 345
 50000
+303 - chained next, shuffled order
+stmt s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20;
+Select s1 such that Next(s1, s2) and Next(s6, s7) and Next(s14, s15) and Next(s4, s5) and Next(s3, s4) and Next(s19, s20) and Next(s20, s1) and Next(s8, s9) and Next(s18, s19) and Next(s15, s16) and Next(s16, s17) and Next(s5, s6) and Next(s9, s10) and Next(s11, s12) and Next(s10, s11) and Next(s2, s3) and Next(s17, s18) and Next(s13, s14) and Next(s7, s8) and Next(s12, s13)
+100, 105, 106, 107, 108, 113, 114, 115, 116, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 148, 149, 150, 151, 158, 159, 160, 161, 162, 179, 180, 181, 182, 201, 202, 203, 204, 205, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 260, 261, 262, 263, 264, 265, 266, 267, 268, 273, 274, 275, 276, 290, 291, 292, 293, 321, 322, 323, 324, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 366, 369, 370, 373, 374, 375, 376, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 390, 391, 392, 393, 394, 395, 396, 397, 398, 58, 59, 60, 61, 70, 71, 72, 73, 82, 83, 84, 85, 96, 97, 98, 99,
+100000
 401 - multiple clauses, select tuple, tuple size = 7
 stmt s1, s2; assign a; while w; if i; procedure p; variable v; read r;
 Select <s1, s2, a, w, i, p, v, r> such that Calls(p, "animals") and Modifies(a, v) and Uses(w, v) and Parent(w, i) and Follows(w, s1) and Next*(s1, s2) pattern a("x", _)

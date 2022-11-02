@@ -1,0 +1,8 @@
+if if; while w; variable v; stmt m, i1, i2, i3, i4, i5, w1, w2, w3, w4, w5;
+Select m such that
+Next(m, i1) and Next(m, w1) and
+Parent(if, i1) and Parent(if, i2) and Parent(if, i3) and Parent(if, i4) and Parent(if, i5) and
+Parent(w, w1) and Parent(w, w2) and Parent(w, w3) and Parent(w, w4) and Parent(w, w5) and
+Follows(i1, i2) and Follows(i2, i3) and Follows(i3, i4) and Follows(i4, i5) and
+Follows(w1, w2) and Follows(w2, w3) and Follows(w3, w4) and Follows(w4, w5)
+pattern if(v, _, _) and w(v, _)
