@@ -67,6 +67,14 @@ jobs:
           cd scripts/windows
           ./profile-windows.bat
           cd ../../
+      - name: Generate Coverage files
+        shell: cmake
+        run: |
+          sudo apt install lcov
+          src=$(pwd)/Team14/Code14
+          lcov --capture --directory . --output-file coverage.info
+          lcov --extract coverage.info "$src/*" --output-file coverage.info
+          lcov --list coverage.info
       - name: Upload Codecov
         uses: codecov/codecov-action@v3
         with:
