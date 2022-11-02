@@ -26,12 +26,32 @@ void ResultProjector::join() {
   })) {
     spdlog::debug("Empty table encountered, terminating JOIN operation.");
     this->joined_results_ = this->getEmptyFinalTable();
+    return;
   }
-  SubqueryResult intermediate_result = SubqueryResult::FullNoSynonym();
+  std::vector<SubqueryResult> intermediate_results{};
   for (auto result : subquery_results_) {
-    intermediate_result = intermediate_result.Join(result);
+    std::vector<std::vector<SubqueryResult>::iterator> matches{};
+    SubqueryResult merged_result = result;
+    for (auto irt = intermediate_results.begin(); irt != intermediate_results.end(); ++irt) {
+      if (!result.GetCommonSynonyms(*irt).empty()) {
+        matches.push_back(irt);
+        merged_result = merged_result.Join(*irt);
+      }
+    }
+    for (auto match = matches.rbegin(); match != matches.rend(); ++match) {
+      intermediate_results.erase(*match);
+    }
+    intermediate_results.push_back(merged_result);
   }
-  this->joined_results_ = intermediate_result;
+  for (auto irt : intermediate_results) {
+    if (irt.IsEmpty()) {
+      // Table must be empty with no results
+      joined_results_ = {SubqueryResult::Empty({})};
+      // Short circuit the evaluation
+      return;
+    }
+  }
+  joined_results_ = intermediate_results;
 }
 
 ElemSelectProjector::ElemSelectProjector(std::vector<ElemReference *> &declarations,
@@ -43,19 +63,26 @@ ElemSelectProjector::ElemSelectProjector(std::vector<ElemReference *> &declarati
   }
 };
 
-SubqueryResult ElemSelectProjector::getEmptyFinalTable() {
+std::vector<SubqueryResult> ElemSelectProjector::getEmptyFinalTable() {
   spdlog::debug("Creating empty table with all synonyms.");
-  return SubqueryResult::Empty(this->called_synonyms_);
+  return {SubqueryResult::Empty(this->called_synonyms_)};
 }
 
 SubqueryResult ElemSelectProjector::selectResults(Context *ctx) {
+  // Take the required synonyms from the existing tables via cross product
+  SubqueryResult joined_result = SubqueryResult::FullNoSynonym();
+  for (SubqueryResult &result : joined_results_) {
+    auto filtered_results = result.GetColumns(called_synonyms_);
+    joined_result = joined_result.Join(filtered_results);
+  }
+  // Get the remaining synonyms via context
   for (auto *decl : called_declarations_) {
     auto *synonym = decl->getSynonym();
-    if (!this->joined_results_.Uses(synonym)) {
-      this->joined_results_ = this->joined_results_.AddColumn(synonym, ctx->Get(synonym));
+    if (!joined_result.Uses(synonym)) {
+      joined_result = joined_result.AddColumn(synonym, ctx->Get(synonym));
     }
   }
-  return this->joined_results_.GetColumns(this->called_synonyms_);
+  return joined_result.GetColumns(this->called_synonyms_);
 }
 
 Result *ElemSelectProjector::project(Context *ctx) {
@@ -65,13 +92,13 @@ Result *ElemSelectProjector::project(Context *ctx) {
   return new ElemResult(this->called_declarations_, final_table);
 }
 
-SubqueryResult BooleanSelectProjector::getEmptyFinalTable() {
+std::vector<SubqueryResult> BooleanSelectProjector::getEmptyFinalTable() {
   spdlog::debug("Creating empty table with no synonyms.");
-  return SubqueryResult::FullNoSynonym();
+  return {SubqueryResult::Empty({})};
 }
 
 bool BooleanSelectProjector::has_results() {
-  return !this->joined_results_.IsEmpty();
+  return this->joined_results_.empty() || !this->joined_results_[0].IsEmpty();
 }
 
 Result *BooleanSelectProjector::project(Context * /*ctx*/) {

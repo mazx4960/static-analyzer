@@ -18,7 +18,7 @@ class SubqueryResult {
   SubqueryResult(std::vector<QuerySynonym *>, std::vector<ResultRow>);
   SubqueryResult(const EntityPointerUnorderedMap &, QueryReference *, QueryReference *);
   [[nodiscard]] bool IsEmpty();
-  bool Uses(QuerySynonym *synonym);
+  bool Uses(QuerySynonym *synonym) const;
   std::vector<QuerySynonym *> GetCommonSynonyms(SubqueryResult other);
   EntityPointerUnorderedSet GetColumn(QuerySynonym *);
   SubqueryResult Join(SubqueryResult &other);

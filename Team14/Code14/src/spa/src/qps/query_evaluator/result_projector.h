@@ -16,7 +16,7 @@ class ResultProjector {
  protected:
   std::vector<SubqueryResult> subquery_results_;
 
-  SubqueryResult joined_results_ = SubqueryResult::FullNoSynonym();
+  std::vector<SubqueryResult> joined_results_;
 
   explicit ResultProjector(std::vector<SubqueryResult> &subquery_results) : subquery_results_(subquery_results) {
   };
@@ -27,7 +27,7 @@ class ResultProjector {
    */
   void join();
 
-  virtual SubqueryResult getEmptyFinalTable() = 0;
+  virtual std::vector<SubqueryResult> getEmptyFinalTable() = 0;
 
  public:
   static ResultProjector *getProjector(SelectCall *, std::vector<SubqueryResult> &);
@@ -45,7 +45,7 @@ class ElemSelectProjector : public ResultProjector {
 
   std::vector<QuerySynonym *> called_synonyms_;
 
-  SubqueryResult getEmptyFinalTable() override;
+  std::vector<SubqueryResult> getEmptyFinalTable() override;
 
   /**
    * Select results (columns) based on called synonyms.
@@ -61,7 +61,7 @@ class ElemSelectProjector : public ResultProjector {
 
 class BooleanSelectProjector : public ResultProjector {
  private:
-  SubqueryResult getEmptyFinalTable() override;
+  std::vector<SubqueryResult> getEmptyFinalTable() override;
 
   /**
   * Checks if final table has any rows.

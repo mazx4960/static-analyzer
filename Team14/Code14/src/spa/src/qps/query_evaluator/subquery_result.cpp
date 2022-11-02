@@ -65,7 +65,7 @@ bool SubqueryResult::IsEmpty() {
   return table_rows_.empty();
 }
 
-bool SubqueryResult::Uses(QuerySynonym *synonym) {
+bool SubqueryResult::Uses(QuerySynonym *synonym) const {
   // Need to use find_if for pointer comparison
   return std::find_if(synonyms_.begin(), synonyms_.end(), [synonym](QuerySynonym *searched_synonym) {
     return *synonym == *searched_synonym;
