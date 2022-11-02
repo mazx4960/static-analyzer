@@ -1,77 +1,44 @@
 #pragma once
 
 #include <utility>
-
-#include "commons/entity.h"
-#include "evaluation_strategy.h"
+#include "qps/query_evaluator/database/database.h"
 #include "qps/result.h"
-#include "qps/pql/query_reference.h"
-#include "qps/pql/query_call.h"
-#include "subquery_result.h"
 
 /**
  * Base projector class.
  */
 class ResultProjector {
  protected:
-  std::vector<SubqueryResult> subquery_results_;
-
-  std::vector<SubqueryResult> joined_results_;
-
-  explicit ResultProjector(std::vector<SubqueryResult> &subquery_results) : subquery_results_(subquery_results) {
+  explicit ResultProjector(Database *database) : database_(database) {
   };
-
-  /**
-   * Join results from list of subquery results.
-   * Joined table is stored in instance attribute joined_results_.
-   */
-  void join();
-
-  virtual std::vector<SubqueryResult> getEmptyFinalTable() = 0;
-
+  Database *database_;
  public:
-  static ResultProjector *getProjector(SelectCall *, std::vector<SubqueryResult> &);
-
+  /**
+   * Factory method to create projector.
+   * @return result projector
+   */
+  static ResultProjector *NewProjector(SelectCall *, Database *);
   /**
    * Projects and merges subquery result tables and creates an instance of Result class.
    * @return instance of Result class matching the Select call.
    */
-  virtual Result *project(Context *ctx) = 0;
+  virtual Result *Project() = 0;
 };
 
 class ElemSelectProjector : public ResultProjector {
  private:
-  std::vector<ElemReference *> called_declarations_;
-
-  std::vector<QuerySynonym *> called_synonyms_;
-
-  std::vector<SubqueryResult> getEmptyFinalTable() override;
-
-  /**
-   * Select results (columns) based on called synonyms.
-   * @return subset of intermediate result table with only columns for selected synonyms.
-   */
-  SubqueryResult selectResults(Context *ctx);
+  std::vector<ElemReference *> selected_;
 
  public:
-  ElemSelectProjector(std::vector<ElemReference *> &declarations, std::vector<SubqueryResult> &subquery_results);
-
-  Result *project(Context *ctx) override;
+  ElemSelectProjector(std::vector<ElemReference *> &selected, Database *database)
+      : selected_(std::move(selected)), ResultProjector(database) {
+  };
+  Result *Project() override;
 };
 
 class BooleanSelectProjector : public ResultProjector {
- private:
-  std::vector<SubqueryResult> getEmptyFinalTable() override;
-
-  /**
-  * Checks if final table has any rows.
-  * @return true if table is non empty.
-  */
-  bool has_results();
-
  public:
-  explicit BooleanSelectProjector(std::vector<SubqueryResult> &subquery_results) : ResultProjector(subquery_results) {
+  explicit BooleanSelectProjector(Database *database) : ResultProjector(database) {
   };
-
-  Result *project(Context *ctx) override;
+  Result *Project() override;
 };

@@ -60,7 +60,7 @@ void EvaluationStrategy::updateContext(Context *ctx, QueryReference *synonym_ref
   ctx->Set(synonym, entities);
 }
 
-SubqueryResult SuchThatStrategy::evaluate(Context *ctx) {
+Table *SuchThatStrategy::evaluate(Context *ctx) {
   RsType rs_type = this->clause_->getSuchThatType();
   QueryReference *first_param = this->clause_->getFirst();
   QueryReference *second_param = this->clause_->getSecond();
@@ -70,7 +70,7 @@ SubqueryResult SuchThatStrategy::evaluate(Context *ctx) {
                 second_param->toString());
 
   auto matches = this->evaluateParameter(ctx, rs_type, first_param, second_param);
-  return SubqueryResult(matches, first_param, second_param);
+  return new Table(matches, first_param, second_param);
 }
 
 EntityPointerUnorderedMap SuchThatStrategy::evaluateParameter(Context *ctx,
@@ -110,7 +110,7 @@ EntityPointerUnorderedMap SuchThatStrategy::evaluateParameter(Context *ctx,
   return results;
 }
 
-SubqueryResult PatternStrategy::evaluate(Context *ctx) {
+Table *PatternStrategy::evaluate(Context *ctx) {
   SynonymReference *stmt_param = this->clause_->getStmtRef();
   QueryReference *var_param = this->clause_->getEntRef();
   ExpressionSpec *expr_param = this->clause_->getFirstExpression();
@@ -120,7 +120,7 @@ SubqueryResult PatternStrategy::evaluate(Context *ctx) {
                 expr_param->toString());
 
   auto stmt_matches = this->evaluateParameter(ctx, stmt_param, var_param, expr_param);
-  return SubqueryResult(stmt_matches, var_param, stmt_param);
+  return new Table(stmt_matches, var_param, stmt_param);
 }
 
 EntityPointerUnorderedMap PatternStrategy::evaluateParameter(Context *ctx,
@@ -161,14 +161,14 @@ EntityPointerUnorderedMap PatternStrategy::evaluateParameter(Context *ctx,
   return results;
 }
 
-SubqueryResult WithStrategy::evaluate(Context *ctx) {
+Table *WithStrategy::evaluate(Context *ctx) {
   Comparator comparator = this->clause_->getComparator();
   QueryReference *first_param = this->clause_->getFirst();
   QueryReference *second_param = this->clause_->getSecond();
   spdlog::debug("Evaluating With clause {} = {}", first_param->toString(), second_param->toString());
 
   auto matches = this->evaluateParameter(ctx, first_param, second_param, comparator);
-  return SubqueryResult(matches, first_param, second_param);
+  return new Table(matches, first_param, second_param);
 }
 EntityPointerUnorderedMap WithStrategy::evaluateParameter(Context *ctx,
                                                           QueryReference *first,

@@ -9,22 +9,18 @@
 #include "qps/pql/query.h"
 #include "result_projector.h"
 #include "context.h"
+#include "qps/query_evaluator/database/database.h"
 
 class QueryEvaluator {
  private:
-  std::unordered_map<std::string, int> synonym_usage_table_;
+  Query query_;
+  IPKBQuerier *pkb_;
+  Context *ctx_;
+  Database *database_;
 
   ClauseVector getSortedQueries();
   static QueryClause *updateWeight(QueryClause *clause);
   static double calculateWeight(int first_usage_count, int second_usage_count);
-
- protected:
-  Query query_;
-
-  IPKBQuerier *pkb_;
-
-  Context *ctx_;
-
   /**
    * Calls PKB to fetch context for each query declaration.
    */
@@ -32,13 +28,13 @@ class QueryEvaluator {
 
   /**
    * Evaluate sub-queries.
-   * @return vector of SubqueryResults.
    */
-  std::vector<SubqueryResult> EvaluateSubqueries();
+  void EvaluateSubQueries();
 
  public:
   QueryEvaluator(IPKBQuerier *pkb, Query &query) : pkb_(pkb), query_(query) {
     this->ctx_ = new Context();
+    this->database_ = new Database(this->ctx_, this->query_.getSynonymDeclarations());
   };
 
   /**
