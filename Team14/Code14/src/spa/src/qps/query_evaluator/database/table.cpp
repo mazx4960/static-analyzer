@@ -1,12 +1,12 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
-#include "subquery_result.h"
+#include "table.h"
 
 #include <utility>
 
 #include "spdlog/spdlog.h"
 
-SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryReference *first, QueryReference *second) {
+Table::Table(const EntityPointerUnorderedMap &table, QueryReference *first, QueryReference *second) {
   if (first->getRefType() == ReferenceType::kSynonym || first->getRefType() == ReferenceType::kAttr) {
     QuerySynonym *first_synonym = static_cast<ElemReference *>(first)->getSynonym();
     synonyms_.push_back(first_synonym);
@@ -57,32 +57,32 @@ SubqueryResult::SubqueryResult(const EntityPointerUnorderedMap &table, QueryRefe
   }
 }
 
-SubqueryResult::SubqueryResult(std::vector<QuerySynonym *> synonyms, std::vector<ResultRow> result_rows)
+Table::Table(std::vector<QuerySynonym *> synonyms, std::vector<ResultRow> result_rows)
     : synonyms_(std::move(synonyms)), table_rows_(std::move(result_rows)) {
 }
 
-bool SubqueryResult::IsEmpty() {
+bool Table::IsEmpty() {
   return table_rows_.empty();
 }
 
-bool SubqueryResult::Uses(QuerySynonym *synonym) const {
+bool Table::Uses(QuerySynonym *synonym) const {
   // Need to use find_if for pointer comparison
   return std::find_if(synonyms_.begin(), synonyms_.end(), [synonym](QuerySynonym *searched_synonym) {
     return *synonym == *searched_synonym;
   }) != synonyms_.end();
 }
 
-std::vector<QuerySynonym *> SubqueryResult::GetCommonSynonyms(SubqueryResult other) {
+std::vector<QuerySynonym *> Table::GetCommonSynonyms(Table *other) {
   std::vector<QuerySynonym *> common_synonyms{};
   for (auto *synonym : synonyms_) {
-    if (other.Uses(synonym)) {
+    if (other->Uses(synonym)) {
       common_synonyms.push_back(synonym);
     }
   }
   return common_synonyms;
 }
 
-EntityPointerUnorderedSet SubqueryResult::GetColumn(QuerySynonym *synonym) {
+EntityPointerUnorderedSet Table::GetColumn(QuerySynonym *synonym) {
   if (std::find(synonyms_.begin(), synonyms_.end(), synonym) == synonyms_.end()) {
     return EntityPointerUnorderedSet{};
   }
@@ -94,7 +94,7 @@ EntityPointerUnorderedSet SubqueryResult::GetColumn(QuerySynonym *synonym) {
   return results;
 }
 
-SubqueryResult SubqueryResult::GetColumns(const std::vector<QuerySynonym *> &synonyms) {
+Table *Table::GetColumns(const std::vector<QuerySynonym *> &synonyms) {
   std::vector<QuerySynonym *> new_synonyms{};
   for (auto *synonym : synonyms) {
     if (std::find(synonyms_.begin(), synonyms_.end(), synonym) != synonyms_.end()) {
@@ -109,15 +109,15 @@ SubqueryResult SubqueryResult::GetColumns(const std::vector<QuerySynonym *> &syn
     }
     new_rows.push_back(new_row);
   }
-  return SubqueryResult(new_synonyms, new_rows);
+  return new Table(new_synonyms, new_rows);
 }
 
-SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
+Table *Table::Join(Table *other) {
   auto common_synonyms = this->GetCommonSynonyms(other);
   std::vector<QuerySynonym *> all_synonyms{};
-  all_synonyms.reserve(synonyms_.size() + other.synonyms_.size());
+  all_synonyms.reserve(synonyms_.size() + other->synonyms_.size());
   all_synonyms.insert(all_synonyms.end(), synonyms_.begin(), synonyms_.end());
-  all_synonyms.insert(all_synonyms.end(), other.synonyms_.begin(), other.synonyms_.end());
+  all_synonyms.insert(all_synonyms.end(), other->synonyms_.begin(), other->synonyms_.end());
   std::sort(all_synonyms.begin(), all_synonyms.end(), QuerySynonymPointerComparison());
   all_synonyms.erase(std::unique(all_synonyms.begin(), all_synonyms.end(), QuerySynonymPointerEquality()),
                      all_synonyms.end());
@@ -128,10 +128,10 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
     first_copy.push_back(this->table_rows_.begin() + i);
   }
   std::vector<std::vector<ResultRow>::iterator> second_copy;
-  first_copy.reserve(other.table_rows_.size());
-  second_copy.reserve(other.table_rows_.size());
-  for (int i = 0; i < other.table_rows_.size(); ++i) {
-    second_copy.push_back(other.table_rows_.begin() + i);
+  first_copy.reserve(other->table_rows_.size());
+  second_copy.reserve(other->table_rows_.size());
+  for (int i = 0; i < other->table_rows_.size(); ++i) {
+    second_copy.push_back(other->table_rows_.begin() + i);
   }
   auto cmp =
       [common_synonyms](const std::vector<ResultRow>::iterator &first, const std::vector<ResultRow>::iterator &second) {
@@ -184,16 +184,16 @@ SubqueryResult SubqueryResult::Join(SubqueryResult &other) {
     }
   }
   spdlog::debug("Number of rows in result: {}", new_rows.size());
-  return SubqueryResult(all_synonyms, new_rows);
+  return new Table(all_synonyms, new_rows);
 }
-SubqueryResult SubqueryResult::Empty(std::vector<QuerySynonym *> synonyms) {
-  return SubqueryResult(std::move(synonyms), {});
+Table *Table::Empty(std::vector<QuerySynonym *> synonyms) {
+  return new Table(std::move(synonyms), {});
 }
 
-SubqueryResult SubqueryResult::FullNoSynonym() {
-  return SubqueryResult({}, {{}});
+Table *Table::FullNoSynonym() {
+  return new Table({}, {{}});
 }
-SubqueryResult SubqueryResult::AddColumn(QuerySynonym *synonym, const EntityPointerUnorderedSet &entities) {
+Table *Table::AddColumn(QuerySynonym *synonym, const EntityPointerUnorderedSet &entities) {
   std::vector<ResultRow> new_rows{};
   for (const auto &row : table_rows_) {
     for (auto *entity : entities) {
@@ -204,11 +204,18 @@ SubqueryResult SubqueryResult::AddColumn(QuerySynonym *synonym, const EntityPoin
   }
   std::vector<QuerySynonym *> new_synonyms = synonyms_;
   new_synonyms.push_back(synonym);
-  return SubqueryResult(new_synonyms, new_rows);
+  return new Table(new_synonyms, new_rows);
 }
-const std::vector<ResultRow> &SubqueryResult::GetRows() const {
+const std::vector<ResultRow> &Table::GetRows() const {
   return table_rows_;
 }
-int SubqueryResult::Size() const {
+int Table::Size() const {
   return this->table_rows_.size();
+}
+std::string Table::ToString() {
+  std::string synonym_string;
+  for (auto *synonym : synonyms_) {
+    synonym_string += synonym->ToString() + " ";
+  }
+  return fmt::format("Table with {} rows, synonyms: <{}>", table_rows_.size(), synonym_string);
 }
