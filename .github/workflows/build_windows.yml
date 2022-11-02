@@ -3,8 +3,6 @@ name: Windows Build
 on:
   workflow_dispatch: { }
   push:
-    paths:
-      - 'Team14/**'
 
 # If you are doing triggering your workflow from pushes or merging more than twice a day on average,
 # please execute your workflow on a schedule instead.
@@ -24,6 +22,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
       - name: Build Project
         shell: bash
         run: |
@@ -33,6 +38,36 @@ jobs:
           cmake -S ../ -B .
           cmake --build . --target unit_testing --config release
           cmake --build . --target integration_testing --config release
-          cmake --build . --target autotester --config Release
+          cmake --build . --target autotester --config release
+          cmake --build . --target runner --config release
           cd ../
-
+      - name: Run Unit Tests
+        shell: bash
+        run: |
+          cd Team14/Code14
+          ctest --build-config Release --output-on-failure --extra-verbose --test-dir build
+          cd ../../
+      - name: Run System Tests
+        shell: bash
+        run: |
+          cd scripts/windows
+          ./test-windows.bat
+          cd ../../
+      - name: Profiling (runner)
+        shell: bash
+        run: |
+          alias python3=python
+          cd scripts/windows
+          ./run-windows.bat
+          cd ../../
+      - name: Profiling (autotester)
+        shell: bash
+        run: |
+          alias python3=python
+          cd scripts/windows
+          ./profile-windows.bat
+          cd ../../
+      - name: Upload Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
