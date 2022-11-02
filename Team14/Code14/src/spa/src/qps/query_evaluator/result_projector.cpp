@@ -37,8 +37,8 @@ void ResultProjector::join() {
         merged_result = merged_result.Join(*irt);
       }
     }
-    for (const auto& match : matches) {
-      intermediate_results.erase(match);
+    for (auto match = matches.rbegin(); match != matches.rend(); ++match) {
+      intermediate_results.erase(*match);
     }
     intermediate_results.push_back(merged_result);
   }
@@ -70,7 +70,7 @@ std::vector<SubqueryResult> ElemSelectProjector::getEmptyFinalTable() {
 SubqueryResult ElemSelectProjector::selectResults(Context *ctx) {
   // Take the required synonyms from the existing tables via cross product
   SubqueryResult joined_result = SubqueryResult::FullNoSynonym();
-  for (SubqueryResult& result: joined_results_) {
+  for (SubqueryResult &result : joined_results_) {
     auto filtered_results = result.GetColumns(called_synonyms_);
     joined_result = joined_result.Join(filtered_results);
   }
