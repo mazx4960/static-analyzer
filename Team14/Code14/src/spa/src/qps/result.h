@@ -2,17 +2,7 @@
 
 #pragma once
 
-#include <algorithm>
-#include <iterator>
-#include <string>
-#include <unordered_set>
-#include <utility>
-#include <vector>
-
-#include "exceptions.h"
-#include "commons/entity.h"
-#include "qps/pql/query_synonym.h"
-#include "qps/query_evaluator/database/table.h"
+#include "qps/pql/query_reference.h"
 
 /**
  * Abstract base class;

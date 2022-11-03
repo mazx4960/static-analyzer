@@ -1,5 +1,6 @@
 #include "result_projector.h"
 #include "spdlog/spdlog.h"
+#include "qps/exceptions.h"
 
 ResultProjector *ResultProjector::NewProjector(SelectCall *select_call, Database *database) {
   switch (select_call->GetSelectType()) {
