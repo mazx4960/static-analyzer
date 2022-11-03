@@ -16,7 +16,7 @@ FOR %%i IN %test_names% DO (
     ECHO ==============================================================
     ECHO Profiling %%i
     python3 ..\..\run_with_mprof.py -t 0.001 -c ..\..\Team14\Code14\build\src\autotester\release\autotester %test_folder%\%%i_source.txt %test_folder%\%%i_queries.txt %result_folder%\%%i.xml
-    FOR /F %%s IN ('FINDSTR "missing additional exception timeout" %result_folder%\%%i.xml') DO (
+    FOR /F %%s IN ('FINDSTR /i "additional exception timeout" %result_folder%\%%i.xml') DO (
         ECHO Test %%i failed
         SET /A is_failure=1
     )
