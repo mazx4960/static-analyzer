@@ -39,7 +39,7 @@ Result *ElemSelectProjector::Project() {
       throw ResultCreationError("Synonym " + synonym->GetName() + " not found in table.");
     }
   }
-  std::list<std::string> results_list;
+  std::unordered_set<std::string> result_set;
   std::vector<ResultRow> rows = final_table->GetRows();
   for (auto &row : rows) {
     std::string row_string;
@@ -57,10 +57,10 @@ Result *ElemSelectProjector::Project() {
         row_string += entity->GetValue();
       }
     }
-    results_list.push_back(row_string);
+    result_set.insert(row_string);
   }
 
-  return new Result(selected_, results_list);
+  return new Result(selected_, result_set);
 }
 
 Result *BooleanSelectProjector::Project() {

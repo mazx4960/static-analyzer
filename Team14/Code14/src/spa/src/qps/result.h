@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <list>
+#include <unordered_set>
 #include "qps/pql/query_reference.h"
 
 /**
@@ -11,15 +11,15 @@
 class Result {
  protected:
   std::vector<ElemReference *> selected_;
-  std::list<std::string> results_;
+  std::unordered_set<std::string> results_;
 
  public:
   static Result *Empty();
   static Result *True();
   static Result *False();
-  explicit Result(const std::vector<ElemReference *> &selected, const std::list<std::string> &results)
+  explicit Result(const std::vector<ElemReference *> &selected, const std::unordered_set<std::string> &results)
       : selected_(std::move(selected)), results_(std::move(results)) {
   };
-  [[nodiscard]] std::list<std::string> GetResults() const;
+  [[nodiscard]] std::unordered_set<std::string> GetResults() const;
   [[nodiscard]] std::string ToString() const;
 };

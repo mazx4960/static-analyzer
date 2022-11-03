@@ -42,7 +42,8 @@ void TestWrapper::evaluate(std::string query, std::list<std::string> &results) {
   this->ui_->SetQueryString(query);
   try {
     auto *result = this->ui_->ExecuteQuery();
-    results = result->GetResults();
+    auto result_set = result->GetResults();
+    std::copy(result_set.begin(), result_set.end(), std::back_inserter(results));
   } catch (SemanticError &e) {
     results.emplace_back("SemanticError");
     return;
