@@ -9,22 +9,20 @@ void QueryEvaluator::InitContext() {
   }
 }
 
-std::vector<SubqueryResult> QueryEvaluator::EvaluateSubqueries() {
+void QueryEvaluator::EvaluateSubQueries() {
   std::vector<QueryClause *> subquery_clauses = getSortedQueries();
-  std::vector<SubqueryResult> subquery_results_list;
   for (auto *clause : subquery_clauses) {
     auto *strategy = EvaluationStrategy::getStrategy(this->pkb_, clause);
-    SubqueryResult subquery_result = strategy->evaluate(this->ctx_);
-    subquery_results_list.push_back(subquery_result);
+    Table *table = strategy->evaluate(this->ctx_);
+    database_->AddTable(table);
   }
-  return subquery_results_list;
 }
 
 Result *QueryEvaluator::Evaluate() {
   // Evaluate sub-queries, get individual result tables.
   std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
   this->InitContext();
-  std::vector<SubqueryResult> subquery_results = this->EvaluateSubqueries();
+  this->EvaluateSubQueries();
   std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
   spdlog::info("Time taken to fetch results from pkb: {} ms",
                std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
@@ -32,15 +30,17 @@ Result *QueryEvaluator::Evaluate() {
   this->pkb_->LogStatistics();
   this->ctx_->LogStatistics();
 
-  // Query declarations for whose subquery_results are to be returned.
+  // Merge tables.
   begin = std::chrono::steady_clock::now();
-  auto *select_call = this->query_.getQueryCall();
-
-  ResultProjector *result_projector = ResultProjector::getProjector(select_call, subquery_results);
-  auto *result = result_projector->project(this->ctx_);
+  this->database_->MergeTables();
   end = std::chrono::steady_clock::now();
-  spdlog::info("Time taken to project results: {} ms",
+  spdlog::info("Time taken to merge tables: {} ms",
                std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
+
+  // Project results
+  auto *select_call = this->query_.getQueryCall();
+  ResultProjector *result_projector = ResultProjector::NewProjector(select_call, database_);
+  auto *result = result_projector->Project();
 
   return result;
 }

@@ -6,7 +6,7 @@
 #include "pkb/pkb.h"
 #include "qps/exceptions.h"
 #include "qps/pql/query_clause.h"
-#include "qps/query_evaluator/subquery_result.h"
+#include "qps/query_evaluator/database/table.h"
 #include "qps/result.h"
 #include "types.h"
 #include "context.h"
@@ -30,8 +30,8 @@ class EvaluationStrategy {
 
   static void updateContext(Context *ctx, QueryReference *synonym_ref, EntitySet &entities);
 
-  virtual SubqueryResult evaluate(Context *ctx) = 0;
-  
+  virtual Table *evaluate(Context *ctx) = 0;
+
   /**
    * Get the candidates for the given query declaration.
    * @param query_declaration query declaration.
@@ -56,7 +56,7 @@ class SuchThatStrategy : public EvaluationStrategy {
    * Evaluate the SuchThat clause.
    * @return true if query clause has results, false otherwise.
    */
-  SubqueryResult evaluate(Context *ctx) override;
+  Table *evaluate(Context *ctx) override;
 
   /**
    * Evaluate pattern clause given parameters.
@@ -81,7 +81,7 @@ class PatternStrategy : public EvaluationStrategy {
   * Evaluate the Pattern clause.
   * @return true if query clause has results, false otherwise.
   */
-  SubqueryResult evaluate(Context *ctx) override;
+  Table *evaluate(Context *ctx) override;
 
   /**
    * Evaluate query parameter.
@@ -110,7 +110,7 @@ class WithStrategy : public EvaluationStrategy {
   * Evaluate the With clause.
   * @return true if query clause has results, false otherwise.
   */
-  SubqueryResult evaluate(Context *ctx) override;
+  Table *evaluate(Context *ctx) override;
 
   /**
    * Evaluate query parameter.

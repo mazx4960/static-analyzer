@@ -12,7 +12,7 @@
 #include "exceptions.h"
 #include "commons/entity.h"
 #include "qps/pql/query_synonym.h"
-#include "qps/query_evaluator/subquery_result.h"
+#include "qps/query_evaluator/database/table.h"
 
 /**
  * Abstract base class;
@@ -83,10 +83,10 @@ class ElemResult : public Result {
  private:
   std::vector<ElemReference *> elem_refs_;
 
-  int numSynonymsNotInTable(SubqueryResult &);
+  int numSynonymsNotInTable(Table *);
 
  public:
-  ElemResult(std::vector<ElemReference *> &, SubqueryResult &);
+  ElemResult(std::vector<ElemReference *> &, Table *);
 
   [[nodiscard]] std::string get_synonyms() const override;
 };
