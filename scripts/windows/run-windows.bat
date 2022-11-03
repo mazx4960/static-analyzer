@@ -7,7 +7,7 @@ SET /A counter=0
 SETLOCAL ENABLEDELAYEDEXPANSION
 :loop
     SET /A counter+=1
-    IF !counter! EQU 3 (
+    IF !counter! EQU 5 (
         GOTO done
     ) ELSE (
         ECHO ==============================================================
