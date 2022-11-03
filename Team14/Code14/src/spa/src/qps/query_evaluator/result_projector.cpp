@@ -33,15 +33,15 @@ Result *ElemSelectProjector::Project() {
   spdlog::info("Time taken to compute cross products: {} ms",
                std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count());
 
-  std::unordered_set<std::string> results_set;
-  std::vector<ResultRow> rows = final_table->GetRows();
-  results_set.reserve(rows.size());
   for (auto *synonym : selected_synonyms) {
     if (!final_table->Uses(synonym)) {
       throw ResultCreationError("Synonym " + synonym->GetName() + " not found in table.");
     }
   }
-  for (auto row : rows) {
+  std::unordered_set<std::string> results_set;
+  std::vector<ResultRow> rows = final_table->GetRows();
+  results_set.reserve(rows.size());
+  for (auto &row : rows) {
     std::string row_string;
     for (int i = 0; i < selected_.size(); i++) {
       auto *elem_ref = this->selected_[i];

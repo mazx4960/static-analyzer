@@ -16,8 +16,8 @@ class Result {
   static Result *Empty();
   static Result *True();
   static Result *False();
-  explicit Result(const std::vector<ElemReference *> &selected, const std::unordered_set<std::string> &results)
-      : selected_(std::move(selected)), results_(std::move(results)) {
+  explicit Result(std::vector<ElemReference *> selected, std::unordered_set<std::string> results) : selected_(std::move(
+      selected)), results_(std::move(results)) {
   };
   std::unordered_set<std::string> GetResults() const;
   std::string ToString() const;
