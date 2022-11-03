@@ -42,13 +42,8 @@ void TestWrapper::evaluate(std::string query, std::list<std::string> &results) {
   this->ui_->SetQueryString(query);
   try {
     auto *result = this->ui_->ExecuteQuery();
-    if (result->is_empty()) {
-      return;
-    }
-    // store the answers to the query in the results list (it is initially empty)
-    // each result must be a string.
-    std::unordered_set<std::string> results_set = result->get_results_set();
-    std::copy(results_set.begin(), results_set.end(), std::back_inserter(results));
+    auto result_set = result->GetResults();
+    std::copy(result_set.begin(), result_set.end(), std::back_inserter(results));
   } catch (SemanticError &e) {
     results.emplace_back("SemanticError");
     return;

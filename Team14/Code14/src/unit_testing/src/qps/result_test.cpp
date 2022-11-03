@@ -158,7 +158,7 @@ TEST(BoolResultCreationTest, NoResults) {
 }
 
 TEST(EmptyResultCreationTest, EmptyTable) {
-  Result *empty_table = Result::empty();
+  Result *empty_table = Result::Empty();
   ASSERT_EQ(empty_table->get_synonyms(), "{ EMPTY:EMPTY }");
   ASSERT_TRUE(empty_table->is_empty());
 

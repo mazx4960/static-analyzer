@@ -727,9 +727,3 @@ bool WithClause::operator==(const QueryClause &other) const {
   return (*other_clause.getFirst()) == (*this->getFirst()) && (*other_clause.getSecond()) == (*this->getSecond())
       && other_clause.getComparator() == this->getComparator();
 }
-void WithClause::setFirst(AttrReference *elem_reference) {
-  this->first_ = elem_reference;
-}
-void WithClause::setSecond(AttrReference *elem_reference) {
-  this->second_ = elem_reference;
-}

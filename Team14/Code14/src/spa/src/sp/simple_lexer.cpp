@@ -26,14 +26,16 @@ Token *SimpleLexer::next_token() {
   if (c == hashtag_) {
     ignore_comments();
     return next_token();
-  } else if (isalpha(c)) {
+  }
+  if (isalpha(c)) {
     // Symbol or keyword
     read_alphanumeric();
     if (valid_keywords_.find(tmp_) != valid_keywords_.end()) {
       return new KeywordToken(tmp_);
     }
     return new SymbolToken(tmp_);
-  } else if (isdigit(c)) {
+  }
+  if (isdigit(c)) {
     // Literal
     read_digits();
     return new LiteralToken(tmp_);
