@@ -67,9 +67,3 @@ jobs:
           cd scripts/windows
           ./profile-windows.bat
           cd ../../
-      - name: Upload Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          verbose: true
-          fail_ci_if_error: false
