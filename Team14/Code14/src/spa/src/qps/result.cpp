@@ -13,7 +13,7 @@ Result *Result::False() {
   return new Result({}, {"FALSE"});
 }
 
-std::unordered_set<std::string> Result::GetResults() const {
+std::list<std::string> Result::GetResults() const {
   return this->results_;
 }
 

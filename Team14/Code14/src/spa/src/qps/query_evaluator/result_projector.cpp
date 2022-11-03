@@ -1,3 +1,4 @@
+#include <list>
 #include "result_projector.h"
 #include "spdlog/spdlog.h"
 #include "qps/exceptions.h"
@@ -38,9 +39,8 @@ Result *ElemSelectProjector::Project() {
       throw ResultCreationError("Synonym " + synonym->GetName() + " not found in table.");
     }
   }
-  std::unordered_set<std::string> results_set;
+  std::list<std::string> results_list;
   std::vector<ResultRow> rows = final_table->GetRows();
-  results_set.reserve(rows.size());
   for (auto &row : rows) {
     std::string row_string;
     for (int i = 0; i < selected_.size(); i++) {
@@ -57,10 +57,10 @@ Result *ElemSelectProjector::Project() {
         row_string += entity->GetValue();
       }
     }
-    results_set.insert(row_string);
+    results_list.push_back(row_string);
   }
 
-  return new Result(selected_, results_set);
+  return new Result(selected_, results_list);
 }
 
 Result *BooleanSelectProjector::Project() {
