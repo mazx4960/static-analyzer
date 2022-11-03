@@ -54,21 +54,21 @@ ClauseVector QueryEvaluator::getSortedQueries() {
   auto clauses = this->query_.getClauses();
   for (int i = 0; i < clauses.size(); ++i) {
     for (auto *clause : clauses) {
-      updateWeight(clause);
+      updateWeight(clause, 1.0/i);
     }
     std::sort(clauses.begin(), clauses.end(), comparator);
   }
   return clauses;
 }
 
-QueryClause *QueryEvaluator::updateWeight(QueryClause *clause) {
+QueryClause *QueryEvaluator::updateWeight(QueryClause *clause, double multiplier) {
   switch (clause->getClauseType()) {
     case ClauseType::kSuchThat:
-      clause->setWeight(calculateWeight(static_cast<SuchThatClause *>(clause)->getFirst()->getUsage(),
+      clause->setWeight(multiplier * calculateWeight(static_cast<SuchThatClause *>(clause)->getFirst()->getUsage(),
                                         static_cast<SuchThatClause *>(clause)->getSecond()->getUsage()));
       break;
     case ClauseType::kPattern:
-      clause->setWeight(calculateWeight(static_cast<PatternClause *>(clause)->getStmtRef()->getUsage(),
+      clause->setWeight(multiplier * calculateWeight(static_cast<PatternClause *>(clause)->getStmtRef()->getUsage(),
                                         static_cast<PatternClause *>(clause)->getEntRef()->getUsage()));
       break;
     default:

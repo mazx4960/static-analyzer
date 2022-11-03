@@ -19,7 +19,7 @@ class QueryEvaluator {
   Database *database_;
 
   ClauseVector getSortedQueries();
-  static QueryClause *updateWeight(QueryClause *clause);
+  static QueryClause *updateWeight(QueryClause *clause, double multiplier);
   static double calculateWeight(int first_usage_count, int second_usage_count);
   /**
    * Calls PKB to fetch context for each query declaration.
