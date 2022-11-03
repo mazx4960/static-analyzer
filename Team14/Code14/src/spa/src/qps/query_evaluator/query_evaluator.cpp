@@ -51,12 +51,13 @@ ClauseVector QueryEvaluator::getSortedQueries() {
       return a->getWeight() < b->getWeight();
     }
   } comparator;
-
   auto clauses = this->query_.getClauses();
-  for (auto *clause : clauses) {
-    updateWeight(clause);
+  for (int i = 0; i < clauses.size(); ++i) {
+    for (auto *clause : clauses) {
+      updateWeight(clause);
+    }
+    std::sort(clauses.begin(), clauses.end(), comparator);
   }
-  std::sort(clauses.begin(), clauses.end(), comparator);
   return clauses;
 }
 
