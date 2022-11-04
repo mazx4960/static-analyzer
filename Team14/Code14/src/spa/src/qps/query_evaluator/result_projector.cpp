@@ -25,9 +25,11 @@ ResultProjector *ResultProjector::NewProjector(SelectCall *select_call, Database
 Result *ElemSelectProjector::Project() {
   auto begin = std::chrono::steady_clock::now();
   std::vector<QuerySynonym *> selected_synonyms;
+  selected_synonyms.reserve(this->selected_.size());
   for (auto *elem_ref : this->selected_) {
     selected_synonyms.push_back(elem_ref->getSynonym());
   }
+
   Table *final_table = this->database_->GetTable(selected_synonyms);
   spdlog::debug("Element Result table size: {}", final_table->Size());
   auto end = std::chrono::steady_clock::now();

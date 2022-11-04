@@ -5,29 +5,29 @@
 #include "commons/lexer/lexer_exceptions.h"
 #include "qps/pql/query_keywords.h"
 
-Token *QueryLexer::next_token() {
-  this->ignore_whitespace();
+Token *QueryLexer::NextToken() {
+  this->IgnoreWhitespace();
   if (this->source_stream_->eof()) {
     return nullptr;
   }
 
-  char c = this->advance();
+  char c = this->Advance();
   this->tmp_ = c;
   if (isalpha(c)) {
     // Keyword or symbol
-    this->read_alphanumeric();
+    this->ReadAlphanumeric();
     if (QueryKeywords::isValidKeyword(tmp_)) {
       return new KeywordToken(this->tmp_);
     }
     return new SymbolToken(this->tmp_);
   } else if (isdigit(c)) {
     // Literal
-    this->read_digits();
+    this->ReadDigits();
     return new LiteralToken(this->tmp_);
-  } else if (c == this->round_open_bracket_) {
+  } else if (c == this->kParenthesisOpen) {
     // Round Open Bracket
     return new RoundOpenBracketToken();
-  } else if (c == this->round_close_bracket_) {
+  } else if (c == this->kParenthesisClose) {
     // Round Close Bracket
     return new RoundCloseBracketToken();
   } else if (c == this->angle_open_bracket_) {
@@ -36,22 +36,22 @@ Token *QueryLexer::next_token() {
   } else if (c == this->angle_close_bracket_) {
     // Angle Close Bracket
     return new AngleCloseBracketToken();
-  } else if (c == this->semicolon_) {
+  } else if (c == this->kSemicolon) {
     // Semicolon
     return new SemicolonToken();
   } else if (c == this->dot_) {
     // Dot
     return new DotToken();
-  } else if (c == this->comma_) {
+  } else if (c == this->kComma) {
     // Comma
     return new CommaToken();
-  } else if (c == this->quote_) {
+  } else if (c == this->kQuote) {
     // Quote
     return new QuoteToken();
   } else if (c == this->wild_card_) {
     // Wild Card
     return new WildCardToken();
-  } else if (c == this->hashtag_) {
+  } else if (c == this->kHashtag) {
     // Hashtag
     return new HashtagToken();
   } else if (QueryKeywords::isValidComparator(tmp_)) {

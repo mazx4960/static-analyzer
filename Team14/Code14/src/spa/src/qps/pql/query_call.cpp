@@ -2,8 +2,6 @@
 
 #include "query_call.h"
 
-#include <utility>
-
 SelectType SelectCall::GetSelectType() const {
   return this->type_;
 }

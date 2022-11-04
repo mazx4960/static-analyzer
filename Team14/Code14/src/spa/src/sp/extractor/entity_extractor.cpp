@@ -78,17 +78,19 @@ Entity *EntityExtractor::GetStmtEntity(Node *node) {
       entity = new CallStmtEntity(std::to_string(stmt_no), proc_name);
       break;
     }
-    case EntityType::kReadStmt:
+    case EntityType::kReadStmt: {
       var_node = static_cast<ReadNode *>(stmt)->GetVariable();
       entity = new ReadStmtEntity(std::to_string(stmt_no), var_node->GetVariableName());
       break;
-    case EntityType::kPrintStmt:
+    }
+    case EntityType::kPrintStmt: {
       var_node = static_cast<PrintNode *>(stmt)->GetVariable();
       entity = new PrintStmtEntity(std::to_string(stmt_no), var_node->GetVariableName());
       break;
-    default:
+    }
+    default: {
       entity = new Entity(stmt_type, std::to_string(stmt_no));
-      break;
+    }
   }
   return entity;
 }

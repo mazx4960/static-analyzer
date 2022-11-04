@@ -13,9 +13,9 @@
 
 TEST(SimpleParserTest, TestBasic) {
   std::vector<Token *> input_tokens = {
-      new KeywordToken("procedure"), new SymbolToken("main"),      new CurlyOpenBracketToken(),
-      new SymbolToken("x"),          new OperatorToken("="),       new LiteralToken("1"),
-      new SemicolonToken(),          new CurlyCloseBracketToken(), new EndOfFileToken()};
+      new KeywordToken("procedure"), new SymbolToken("main"), new CurlyOpenBracketToken(),
+      new SymbolToken("x"), new OperatorToken("="), new LiteralToken("1"),
+      new SemicolonToken(), new CurlyCloseBracketToken(), new EndOfFileToken()};
   Node *program_node = SimpleParser::ParseProgram(input_tokens);
 
   ASSERT_EQ(NodeType::kProgram, program_node->GetNodeType());
@@ -46,7 +46,7 @@ TEST(SimpleParserTest, TestBasic) {
 TEST(SimpleParserTestAssignment, AdvancedTest) {
   std::istream *s = StreamReader::GetStreamFromFile("../Tests14/simple_code/assignment1.txt");
   SimpleLexer simple_lexer(s);
-  std::vector<Token *> tokens = simple_lexer.lex();
+  std::vector<Token *> tokens = simple_lexer.Lex();
   // The main purpose of this test is to see if it can parse complex programs
   Node *program_node = SimpleParser::ParseProgram(tokens);
   ASSERT_EQ(NodeType::kProgram, program_node->GetNodeType());
@@ -160,8 +160,8 @@ TEST(ExprParser, MixedExprTest) {
 
 TEST(ExprParser, BracketedExprTest) {
   auto *expr_parser = new ExprGrammarRule();
-  std::vector<Token *> tokens = {new RoundOpenBracketToken(), new LiteralToken("9"),        new OperatorToken("+"),
-                                 new SymbolToken("aasdf"),    new RoundCloseBracketToken(), new EndOfFileToken()};
+  std::vector<Token *> tokens = {new RoundOpenBracketToken(), new LiteralToken("9"), new OperatorToken("+"),
+                                 new SymbolToken("aasdf"), new RoundCloseBracketToken(), new EndOfFileToken()};
   auto token_stream = tokens.begin();
   Node *node = expr_parser->parseNode(token_stream);
   ASSERT_EQ(node->GetNodeType(), NodeType::kExpr);
@@ -178,8 +178,8 @@ TEST(RelExprParser, BasicRelExprTest) {
       {new LiteralToken("9"), new OperatorToken("=="), new SymbolToken("aasdf"), new EndOfFileToken()},
       {new LiteralToken("9"), new OperatorToken("!="), new SymbolToken("aasdf"), new EndOfFileToken()},
   };
-  std::vector<CondExprType> expected_expr_types = {CondExprType::kLt,  CondExprType::kLte, CondExprType::kGt,
-                                                   CondExprType::kGte, CondExprType::kEq,  CondExprType::kNeq};
+  std::vector<CondExprType> expected_expr_types = {CondExprType::kLt, CondExprType::kLte, CondExprType::kGt,
+                                                   CondExprType::kGte, CondExprType::kEq, CondExprType::kNeq};
   for (int i = 0; i < token_sets.size(); ++i) {
     auto token_stream = token_sets[i].begin();
     Node *node = expr_parser->parseNode(token_stream);
@@ -192,7 +192,7 @@ TEST(RelExprParser, LongRelExprTest) {
   auto *expr_parser = new RelExprGrammarRule();
   std::vector<Token *> tokens = {
       new LiteralToken("9"), new OperatorToken("+"), new SymbolToken("aasdf"), new OperatorToken("<="),
-      new LiteralToken("8"), new OperatorToken("-"), new LiteralToken("4"),    new EndOfFileToken(),
+      new LiteralToken("8"), new OperatorToken("-"), new LiteralToken("4"), new EndOfFileToken(),
   };
   auto token_stream = tokens.begin();
   Node *node = expr_parser->parseNode(token_stream);
@@ -221,10 +221,10 @@ TEST(CondParser, BasicCondTest) {
 
 TEST(CondParser, AndCondTest) {
   auto *cond_parser = new CondExprGrammarRule();
-  std::vector<Token *> tokens = {new RoundOpenBracketToken(), new LiteralToken("6"),        new OperatorToken("<"),
-                                 new SymbolToken("a"),        new RoundCloseBracketToken(), new OperatorToken("&&"),
-                                 new RoundOpenBracketToken(), new LiteralToken("6"),        new OperatorToken(">"),
-                                 new SymbolToken("a"),        new RoundCloseBracketToken(), new EndOfFileToken()};
+  std::vector<Token *> tokens = {new RoundOpenBracketToken(), new LiteralToken("6"), new OperatorToken("<"),
+                                 new SymbolToken("a"), new RoundCloseBracketToken(), new OperatorToken("&&"),
+                                 new RoundOpenBracketToken(), new LiteralToken("6"), new OperatorToken(">"),
+                                 new SymbolToken("a"), new RoundCloseBracketToken(), new EndOfFileToken()};
   auto token_stream = tokens.begin();
   Node *node = cond_parser->parseNode(token_stream);
   ASSERT_EQ(node->GetNodeType(), NodeType::kCondExpr);
@@ -233,10 +233,10 @@ TEST(CondParser, AndCondTest) {
 
 TEST(CondParser, OrCondTest) {
   auto *cond_parser = new CondExprGrammarRule();
-  std::vector<Token *> tokens = {new RoundOpenBracketToken(), new LiteralToken("6"),        new OperatorToken("<"),
-                                 new SymbolToken("a"),        new RoundCloseBracketToken(), new OperatorToken("||"),
-                                 new RoundOpenBracketToken(), new LiteralToken("6"),        new OperatorToken(">"),
-                                 new SymbolToken("a"),        new RoundCloseBracketToken(), new EndOfFileToken()};
+  std::vector<Token *> tokens = {new RoundOpenBracketToken(), new LiteralToken("6"), new OperatorToken("<"),
+                                 new SymbolToken("a"), new RoundCloseBracketToken(), new OperatorToken("||"),
+                                 new RoundOpenBracketToken(), new LiteralToken("6"), new OperatorToken(">"),
+                                 new SymbolToken("a"), new RoundCloseBracketToken(), new EndOfFileToken()};
   auto token_stream = tokens.begin();
   Node *node = cond_parser->parseNode(token_stream);
   ASSERT_EQ(node->GetNodeType(), NodeType::kCondExpr);
@@ -246,7 +246,7 @@ TEST(CondParser, OrCondTest) {
 TEST(CondParser, NotCondTest) {
   auto *cond_parser = new CondExprGrammarRule();
   std::vector<Token *> tokens = {new OperatorToken("!"), new RoundOpenBracketToken(), new LiteralToken("6"),
-                                 new OperatorToken("<"), new SymbolToken("a"),        new RoundCloseBracketToken(),
+                                 new OperatorToken("<"), new SymbolToken("a"), new RoundCloseBracketToken(),
                                  new EndOfFileToken()};
   auto token_stream = tokens.begin();
   Node *node = cond_parser->parseNode(token_stream);
@@ -312,12 +312,12 @@ TEST(StatementParser, AssignKeywordTest) {
 
 TEST(StatementParser, IfStatementBasicTest) {
   auto *stmt_parser = new StatementGrammarRule();
-  std::vector<Token *> tokens{new KeywordToken("if"),       new RoundOpenBracketToken(), new LiteralToken("12"),
-                              new OperatorToken("<"),       new SymbolToken("s"),        new RoundCloseBracketToken(),
-                              new KeywordToken("then"),     new CurlyOpenBracketToken(), new SymbolToken("x"),
-                              new OperatorToken("="),       new LiteralToken("12"),      new SemicolonToken(),
-                              new CurlyCloseBracketToken(), new KeywordToken("else"),    new CurlyOpenBracketToken(),
-                              new KeywordToken("print"),    new SymbolToken("a"),        new SemicolonToken(),
+  std::vector<Token *> tokens{new KeywordToken("if"), new RoundOpenBracketToken(), new LiteralToken("12"),
+                              new OperatorToken("<"), new SymbolToken("s"), new RoundCloseBracketToken(),
+                              new KeywordToken("then"), new CurlyOpenBracketToken(), new SymbolToken("x"),
+                              new OperatorToken("="), new LiteralToken("12"), new SemicolonToken(),
+                              new CurlyCloseBracketToken(), new KeywordToken("else"), new CurlyOpenBracketToken(),
+                              new KeywordToken("print"), new SymbolToken("a"), new SemicolonToken(),
                               new CurlyCloseBracketToken(), new EndOfFileToken()};
   auto token_stream = tokens.begin();
   Node *node = stmt_parser->parseNode(token_stream);
@@ -327,10 +327,10 @@ TEST(StatementParser, IfStatementBasicTest) {
 
 TEST(StatementParser, WhileStatementBasicTest) {
   auto *stmt_parser = new StatementGrammarRule();
-  std::vector<Token *> tokens{new KeywordToken("while"),   new RoundOpenBracketToken(),  new LiteralToken("12"),
-                              new OperatorToken("<"),      new SymbolToken("s"),         new RoundCloseBracketToken(),
-                              new CurlyOpenBracketToken(), new KeywordToken("call"),     new KeywordToken("a"),
-                              new SemicolonToken(),        new CurlyCloseBracketToken(), new EndOfFileToken()};
+  std::vector<Token *> tokens{new KeywordToken("while"), new RoundOpenBracketToken(), new LiteralToken("12"),
+                              new OperatorToken("<"), new SymbolToken("s"), new RoundCloseBracketToken(),
+                              new CurlyOpenBracketToken(), new KeywordToken("call"), new KeywordToken("a"),
+                              new SemicolonToken(), new CurlyCloseBracketToken(), new EndOfFileToken()};
   auto token_stream = tokens.begin();
   Node *node = stmt_parser->parseNode(token_stream);
   ASSERT_EQ(node->GetNodeType(), NodeType::kStatement);
@@ -339,27 +339,27 @@ TEST(StatementParser, WhileStatementBasicTest) {
 
 TEST(StatementParser, IfWhileAdvancedTest) {
   auto *stmt_parser = new StatementGrammarRule();
-  std::vector<Token *> tokens{new KeywordToken("if"),       new RoundOpenBracketToken(),  new LiteralToken("1"),
-                              new OperatorToken("<"),       new SymbolToken("s"),         new RoundCloseBracketToken(),
-                              new KeywordToken("then"),     new CurlyOpenBracketToken(),  new KeywordToken("if"),
-                              new RoundOpenBracketToken(),  new LiteralToken("2"),        new OperatorToken("<"),
-                              new SymbolToken("s"),         new RoundCloseBracketToken(), new KeywordToken("then"),
-                              new CurlyOpenBracketToken(),  new KeywordToken("if"),       new RoundOpenBracketToken(),
-                              new LiteralToken("3"),        new OperatorToken("<"),       new SymbolToken("s"),
-                              new RoundCloseBracketToken(), new KeywordToken("then"),     new CurlyOpenBracketToken(),
-                              new SymbolToken("x"),         new OperatorToken("="),       new LiteralToken("4"),
-                              new SemicolonToken(),         new CurlyCloseBracketToken(), new KeywordToken("else"),
-                              new CurlyOpenBracketToken(),  new KeywordToken("print"),    new SymbolToken("a"),
-                              new SemicolonToken(),         new CurlyCloseBracketToken(), new CurlyCloseBracketToken(),
-                              new KeywordToken("else"),     new CurlyOpenBracketToken(),  new KeywordToken("read"),
-                              new SymbolToken("a"),         new SemicolonToken(),         new CurlyCloseBracketToken(),
-                              new CurlyCloseBracketToken(), new KeywordToken("else"),     new CurlyOpenBracketToken(),
-                              new KeywordToken("while"),    new RoundOpenBracketToken(),  new LiteralToken("5"),
-                              new OperatorToken("<"),       new SymbolToken("s"),         new RoundCloseBracketToken(),
-                              new CurlyOpenBracketToken(),  new KeywordToken("while"),    new RoundOpenBracketToken(),
-                              new LiteralToken("6"),        new OperatorToken("<"),       new SymbolToken("s"),
-                              new RoundCloseBracketToken(), new CurlyOpenBracketToken(),  new KeywordToken("call"),
-                              new KeywordToken("a"),        new SemicolonToken(),         new CurlyCloseBracketToken(),
+  std::vector<Token *> tokens{new KeywordToken("if"), new RoundOpenBracketToken(), new LiteralToken("1"),
+                              new OperatorToken("<"), new SymbolToken("s"), new RoundCloseBracketToken(),
+                              new KeywordToken("then"), new CurlyOpenBracketToken(), new KeywordToken("if"),
+                              new RoundOpenBracketToken(), new LiteralToken("2"), new OperatorToken("<"),
+                              new SymbolToken("s"), new RoundCloseBracketToken(), new KeywordToken("then"),
+                              new CurlyOpenBracketToken(), new KeywordToken("if"), new RoundOpenBracketToken(),
+                              new LiteralToken("3"), new OperatorToken("<"), new SymbolToken("s"),
+                              new RoundCloseBracketToken(), new KeywordToken("then"), new CurlyOpenBracketToken(),
+                              new SymbolToken("x"), new OperatorToken("="), new LiteralToken("4"),
+                              new SemicolonToken(), new CurlyCloseBracketToken(), new KeywordToken("else"),
+                              new CurlyOpenBracketToken(), new KeywordToken("print"), new SymbolToken("a"),
+                              new SemicolonToken(), new CurlyCloseBracketToken(), new CurlyCloseBracketToken(),
+                              new KeywordToken("else"), new CurlyOpenBracketToken(), new KeywordToken("read"),
+                              new SymbolToken("a"), new SemicolonToken(), new CurlyCloseBracketToken(),
+                              new CurlyCloseBracketToken(), new KeywordToken("else"), new CurlyOpenBracketToken(),
+                              new KeywordToken("while"), new RoundOpenBracketToken(), new LiteralToken("5"),
+                              new OperatorToken("<"), new SymbolToken("s"), new RoundCloseBracketToken(),
+                              new CurlyOpenBracketToken(), new KeywordToken("while"), new RoundOpenBracketToken(),
+                              new LiteralToken("6"), new OperatorToken("<"), new SymbolToken("s"),
+                              new RoundCloseBracketToken(), new CurlyOpenBracketToken(), new KeywordToken("call"),
+                              new KeywordToken("a"), new SemicolonToken(), new CurlyCloseBracketToken(),
                               new CurlyCloseBracketToken(), new CurlyCloseBracketToken(), new EndOfFileToken()};
   auto token_stream = tokens.begin();
   Node *node = stmt_parser->parseNode(token_stream);
