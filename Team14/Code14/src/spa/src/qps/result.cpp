@@ -6,11 +6,11 @@ Result *Result::Empty() {
 }
 
 Result *Result::True() {
-  return new Result({}, {"TRUE"});
+  return new Result({}, {Result::kBooleanTrue});
 }
 
 Result *Result::False() {
-  return new Result({}, {"FALSE"});
+  return new Result({}, {Result::kBooleanFalse});
 }
 
 std::unordered_set<std::string> Result::GetResults() const {
