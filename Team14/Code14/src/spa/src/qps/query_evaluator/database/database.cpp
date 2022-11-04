@@ -10,6 +10,13 @@ std::vector<Table *> Database::Empty(std::vector<QuerySynonym *> synonyms) {
 void Database::AddTable(Table *table) {
   unmerged_tables_.push_back(table);
 }
+
+void Database::OrderTables() {
+  std::sort(unmerged_tables_.begin(), unmerged_tables_.end(), [](Table *first, Table *second) -> bool {
+    return first->Size() < second->Size();
+  });
+}
+
 void Database::MergeTables() {
   if (IsEmpty()) {
     spdlog::debug("Empty table encountered, terminating JOIN operation.");
