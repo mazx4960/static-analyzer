@@ -109,9 +109,6 @@ Table *Table::GetColumns(const std::vector<QuerySynonym *> &synonyms) {
   }
   return new Table(new_synonyms, new_rows);
 }
-int Table::GetSize() {
-  return table_rows_.size();
-}
 
 Table *Table::Join(Table *other) {
   auto common_synonyms = this->GetCommonSynonyms(other);

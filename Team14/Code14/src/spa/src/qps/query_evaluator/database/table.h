@@ -27,7 +27,6 @@ class Table {
   EntityPointerUnorderedSet GetColumn(QuerySynonym *);
   Table *Join(Table *other);
   Table *GetColumns(const std::vector<QuerySynonym *> &synonyms);
-  int GetSize();
   Table *AddColumn(QuerySynonym *, const EntityPointerUnorderedSet &);
   static Table *Empty(std::vector<QuerySynonym *> synonyms);
   static Table *FullNoSynonym();
