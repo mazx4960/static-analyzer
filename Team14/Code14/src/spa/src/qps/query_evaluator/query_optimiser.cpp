@@ -2,12 +2,12 @@
 #include <cmath>
 #include "query_optimiser.h"
 
-Query *QueryOptimiser::Optimise(Query *query, Context *context, IPKBQuerier pkb) {
-  auto declarations = query->getSynonymDeclarations();
-  auto *query_call = query->getQueryCall();
-  auto clauses = query->getClauses();
+Query QueryOptimiser::Optimise(const Query& query, Context *context, IPKBQuerier *pkb) {
+  auto declarations = query.getSynonymDeclarations();
+  auto *query_call = query.getQueryCall();
+  auto clauses = query.getClauses();
 
-  this->simple_stats_ = pkb.getSimpleStats();
+  this->simple_stats_ = pkb->getSimpleStats();
   this->context_ = context;
 
 
@@ -29,7 +29,7 @@ Query *QueryOptimiser::Optimise(Query *query, Context *context, IPKBQuerier pkb)
     clauses.pop_back();
   }
 
-  return new Query(declarations, query_call, new_clauses);
+  return Query(declarations, query_call, new_clauses);
 }
 
 void QueryOptimiser::updateSynonymUsage(const ClauseVector &clauses) {
@@ -102,6 +102,11 @@ void QueryOptimiser::updateInitialWeights(const ClauseVector& clauses) {
   }
 }
 
+void QueryOptimiser::updateSynonymWeight(const ClauseVector& clauses) {
+  for (auto *clause:clauses) {
+    updateSynonymWeight(clause);
+  }
+}
 
 void QueryOptimiser::updateSynonymWeight(QueryClause *query_clause) {
   auto clause_type = query_clause->getClauseType();
@@ -150,7 +155,7 @@ double QueryOptimiser::calculateInitialClauseWeight(QueryClause *query_clause) {
 
     // clause with 0 or 1 synonym
     if (first_usage == 0 || second_usage == 0) {
-      return first_usage == second_usage ? -1 : 0;
+      return second_usage == first_usage ? -1 : 0;
     }
 
     // clause with 2 synonym with empty context (false clause)
