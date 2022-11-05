@@ -123,10 +123,10 @@ variable v; procedure p;
 Select p such that Next(v, p)
 SemanticError
 5000
-215 - semantic error, wrong argument type in Affects
+215 - empty ans, wrong argument type in Affects but not a semantic error
 while w; assign a;
 Select w such that Affects(a, w)
-SemanticError
+none
 5000
 216 - semantic error, wrong synonym for pattern
 procedure p;
