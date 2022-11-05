@@ -26,7 +26,7 @@ class QueryOptimiser {
   EntitySet getReferenceContext(QueryReference *query_reference);
   double calculateInitialClauseWeight(QueryClause *query_clause);
   QueryClause *updateInitialWeight(QueryClause *clause);
-  void updateClauseWeight(const ClauseVector& clauses);
+  static void updateClauseWeight(const ClauseVector& clauses);
   static void updateClauseWeight(QueryClause *clause);
   static void updateSynonymWeight(QueryClause *query_clause);
   static void updateSynonymWeight(const ClauseVector& clauses);
