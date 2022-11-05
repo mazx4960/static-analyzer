@@ -1,3 +1,28 @@
+100
+if ifs; variable v; procedure p;
+Select <ifs,v,p> such that Calls*("check", p) and Calls*(p, "nestedLoops") pattern ifs(v,_)
+SyntaxError
+5000
+101
+if ifs; call c; variable v; procedure p;
+Select <ifs,c,v,p> pattern ifs("m1","x1",_) such that Calls*("nestedLoops", p) and Modifies(c, v)
+SemanticError
+5000
+102
+if ifs; while w; variable v1; variable v2; assign a;
+Select <ifs, v1, w, v2> pattern ifs(v1,"x1",_) pattern w(v2,_,_) pattern a(v2,_)
+SyntaxError
+5000
+103
+assign a; if ifs; variable v; while w; procedure p;
+Select v pattern a(v,_) pattern ifs(v,_,_) such that Parent* (w, a) and Calls("nestedLoop", p)
+a1 b1 s1 t1 m1 n1 y1 x1 sum x dog meow tiger
+5000
+104
+assign a; while w;
+Select <w, a> such that Calls("generation", p) such that Parent* (w, a) and Modifies (a, "sum")
+82 83
+5000
 601
 assign s1, s2; variable v1, v2;
 Select <s1, s2> such that Modifies(s1, v1) and Uses(s2, v2) and Modifies(s2, v1) and Uses(s1, v2) and Modifies(_, v)
