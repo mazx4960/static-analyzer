@@ -28,16 +28,16 @@ TEST(ExprParserTest, Plus) {
   ASSERT_EQ(actual, expected);
 
   // x + y + z
-  tokens = {new SymbolToken("x"),   new OperatorToken("+"), new SymbolToken("y"),
-            new OperatorToken("+"), new SymbolToken("z"),   new EndOfFileToken()};
+  tokens = {new SymbolToken("x"), new OperatorToken("+"), new SymbolToken("y"),
+            new OperatorToken("+"), new SymbolToken("z"), new EndOfFileToken()};
   expr = Parser::ParseExpression(tokens);
   actual = expr->ToString();
   expected = "(((x)+(y))+(z))";
   ASSERT_EQ(actual, expected);
 
   // x + (y + z)
-  tokens = {new SymbolToken("x"),   new OperatorToken("+"), new RoundOpenBracketToken(),  new SymbolToken("y"),
-            new OperatorToken("+"), new SymbolToken("z"),   new RoundCloseBracketToken(), new EndOfFileToken()};
+  tokens = {new SymbolToken("x"), new OperatorToken("+"), new RoundOpenBracketToken(), new SymbolToken("y"),
+            new OperatorToken("+"), new SymbolToken("z"), new RoundCloseBracketToken(), new EndOfFileToken()};
   expr = Parser::ParseExpression(tokens);
   actual = expr->ToString();
   expected = "((x)+((y)+(z)))";
@@ -54,16 +54,16 @@ TEST(ExprParserTest, Minus) {
   ASSERT_EQ(actual, expected);
 
   // x - y - z
-  tokens = {new SymbolToken("x"),   new OperatorToken("-"), new SymbolToken("y"),
-            new OperatorToken("-"), new SymbolToken("z"),   new EndOfFileToken()};
+  tokens = {new SymbolToken("x"), new OperatorToken("-"), new SymbolToken("y"),
+            new OperatorToken("-"), new SymbolToken("z"), new EndOfFileToken()};
   expr = Parser::ParseExpression(tokens);
   actual = expr->ToString();
   expected = "(((x)-(y))-(z))";
   ASSERT_EQ(actual, expected);
 
   // x - (y - z)
-  tokens = {new SymbolToken("x"),   new OperatorToken("-"), new RoundOpenBracketToken(),  new SymbolToken("y"),
-            new OperatorToken("-"), new SymbolToken("z"),   new RoundCloseBracketToken(), new EndOfFileToken()};
+  tokens = {new SymbolToken("x"), new OperatorToken("-"), new RoundOpenBracketToken(), new SymbolToken("y"),
+            new OperatorToken("-"), new SymbolToken("z"), new RoundCloseBracketToken(), new EndOfFileToken()};
   expr = Parser::ParseExpression(tokens);
   actual = expr->ToString();
   expected = "((x)-((y)-(z)))";
@@ -80,16 +80,16 @@ TEST(ExprParserTest, Times) {
   ASSERT_EQ(actual, expected);
 
   // x * y * z
-  tokens = {new SymbolToken("x"),   new OperatorToken("*"), new SymbolToken("y"),
-            new OperatorToken("*"), new SymbolToken("z"),   new EndOfFileToken()};
+  tokens = {new SymbolToken("x"), new OperatorToken("*"), new SymbolToken("y"),
+            new OperatorToken("*"), new SymbolToken("z"), new EndOfFileToken()};
   expr = Parser::ParseExpression(tokens);
   actual = expr->ToString();
   expected = "(((x)*(y))*(z))";
   ASSERT_EQ(actual, expected);
 
   // x * (y * z)
-  tokens = {new SymbolToken("x"),   new OperatorToken("*"), new RoundOpenBracketToken(),  new SymbolToken("y"),
-            new OperatorToken("*"), new SymbolToken("z"),   new RoundCloseBracketToken(), new EndOfFileToken()};
+  tokens = {new SymbolToken("x"), new OperatorToken("*"), new RoundOpenBracketToken(), new SymbolToken("y"),
+            new OperatorToken("*"), new SymbolToken("z"), new RoundCloseBracketToken(), new EndOfFileToken()};
   expr = Parser::ParseExpression(tokens);
   actual = expr->ToString();
   expected = "((x)*((y)*(z)))";
@@ -106,16 +106,16 @@ TEST(ExprParserTest, Div) {
   ASSERT_EQ(actual, expected);
 
   // x / y / z
-  tokens = {new SymbolToken("x"),   new OperatorToken("/"), new SymbolToken("y"),
-            new OperatorToken("/"), new SymbolToken("z"),   new EndOfFileToken()};
+  tokens = {new SymbolToken("x"), new OperatorToken("/"), new SymbolToken("y"),
+            new OperatorToken("/"), new SymbolToken("z"), new EndOfFileToken()};
   expr = Parser::ParseExpression(tokens);
   actual = expr->ToString();
   expected = "(((x)/(y))/(z))";
   ASSERT_EQ(actual, expected);
 
   // x / (y / z)
-  tokens = {new SymbolToken("x"),   new OperatorToken("/"), new RoundOpenBracketToken(),  new SymbolToken("y"),
-            new OperatorToken("/"), new SymbolToken("z"),   new RoundCloseBracketToken(), new EndOfFileToken()};
+  tokens = {new SymbolToken("x"), new OperatorToken("/"), new RoundOpenBracketToken(), new SymbolToken("y"),
+            new OperatorToken("/"), new SymbolToken("z"), new RoundCloseBracketToken(), new EndOfFileToken()};
   expr = Parser::ParseExpression(tokens);
   actual = expr->ToString();
   expected = "((x)/((y)/(z)))";
@@ -132,16 +132,16 @@ TEST(ExprParserTest, Mod) {
   ASSERT_EQ(actual, expected);
 
   // x % y % z
-  tokens = {new SymbolToken("x"),   new OperatorToken("%"), new SymbolToken("y"),
-            new OperatorToken("%"), new SymbolToken("z"),   new EndOfFileToken()};
+  tokens = {new SymbolToken("x"), new OperatorToken("%"), new SymbolToken("y"),
+            new OperatorToken("%"), new SymbolToken("z"), new EndOfFileToken()};
   expr = Parser::ParseExpression(tokens);
   actual = expr->ToString();
   expected = "(((x)%(y))%(z))";
   ASSERT_EQ(actual, expected);
 
   // x % (y % z)
-  tokens = {new SymbolToken("x"),   new OperatorToken("%"), new RoundOpenBracketToken(),  new SymbolToken("y"),
-            new OperatorToken("%"), new SymbolToken("z"),   new RoundCloseBracketToken(), new EndOfFileToken()};
+  tokens = {new SymbolToken("x"), new OperatorToken("%"), new RoundOpenBracketToken(), new SymbolToken("y"),
+            new OperatorToken("%"), new SymbolToken("z"), new RoundCloseBracketToken(), new EndOfFileToken()};
   expr = Parser::ParseExpression(tokens);
   actual = expr->ToString();
   expected = "((x)%((y)%(z)))";
@@ -150,10 +150,10 @@ TEST(ExprParserTest, Mod) {
 
 TEST(ExprParserTest, Mixed) {
   // x + (y + 1) / (z - 1)
-  std::vector<Token *> tokens = {new SymbolToken("x"),         new OperatorToken("+"), new RoundOpenBracketToken(),
-                                 new SymbolToken("y"),         new OperatorToken("+"), new LiteralToken("1"),
+  std::vector<Token *> tokens = {new SymbolToken("x"), new OperatorToken("+"), new RoundOpenBracketToken(),
+                                 new SymbolToken("y"), new OperatorToken("+"), new LiteralToken("1"),
                                  new RoundCloseBracketToken(), new OperatorToken("/"), new RoundOpenBracketToken(),
-                                 new SymbolToken("z"),         new OperatorToken("-"), new LiteralToken("1"),
+                                 new SymbolToken("z"), new OperatorToken("-"), new LiteralToken("1"),
                                  new RoundCloseBracketToken(), new EndOfFileToken()};
   Node *expr = Parser::ParseExpression(tokens);
   std::string actual = expr->ToString();
@@ -164,7 +164,7 @@ TEST(ExprParserTest, Mixed) {
 TEST(ExprParserTest, Brackets) {
   std::string expr = "v1*(v2+v3)/v4";
   SimpleLexer lexer(StreamReader::GetStreamFromString(expr));
-  std::vector<Token *> tokens = lexer.lex();
+  std::vector<Token *> tokens = lexer.Lex();
   Node *node = Parser::ParseExpression(tokens);
   std::string actual = node->ToString();
   std::string expected = "(((v1)*((v2)+(v3)))/(v4))";

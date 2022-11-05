@@ -18,6 +18,10 @@ void Database::MergeTables() {
     this->merged_tables_ = this->Empty(synonyms);
     return;
   }
+  // sort from largest to smallest table size
+  std::sort(unmerged_tables_.begin(), unmerged_tables_.end(), [](Table *a, Table *b) {
+    return a->Size() > b->Size();
+  });
   while (!unmerged_tables_.empty()) {
     Table *table = unmerged_tables_.back();
     unmerged_tables_.pop_back();

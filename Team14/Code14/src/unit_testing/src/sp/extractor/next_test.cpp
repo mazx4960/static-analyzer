@@ -108,7 +108,7 @@ TEST(ExtractorTest, TestNextWhileBlock) {
 TEST(ExtractorTest, TestNextIfNested) {
   std::istream *s = StreamReader::GetStreamFromFile("../Tests14/simple_code/next/nested_if.txt");
   SimpleLexer simple_lexer(s);
-  std::vector<Token *> tokens = simple_lexer.lex();
+  std::vector<Token *> tokens = simple_lexer.Lex();
   Node *program_node = SimpleParser::ParseProgram(tokens);
 
   std::vector<Relationship *> relationships;
@@ -138,7 +138,7 @@ TEST(ExtractorTest, TestNextIfNested) {
 TEST(ExtractorTest, TestNextWhileNested) {
   std::istream *s = StreamReader::GetStreamFromFile("../Tests14/simple_code/next/nested_while.txt");
   SimpleLexer simple_lexer(s);
-  std::vector<Token *> tokens = simple_lexer.lex();
+  std::vector<Token *> tokens = simple_lexer.Lex();
   Node *program_node = SimpleParser::ParseProgram(tokens);
 
   std::vector<Relationship *> relationships;
@@ -171,7 +171,7 @@ TEST(ExtractorTest, TestNextWhileNested) {
 TEST(ExtractorTest, TestNextIfWhileNested) {
   std::istream *s = StreamReader::GetStreamFromFile("../Tests14/simple_code/next/nested_if_while.txt");
   SimpleLexer simple_lexer(s);
-  std::vector<Token *> tokens = simple_lexer.lex();
+  std::vector<Token *> tokens = simple_lexer.Lex();
   Node *program_node = SimpleParser::ParseProgram(tokens);
 
   std::vector<Relationship *> relationships;

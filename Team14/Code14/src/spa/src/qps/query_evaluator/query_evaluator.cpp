@@ -15,6 +15,10 @@ void QueryEvaluator::EvaluateSubQueries() {
     auto *strategy = EvaluationStrategy::getStrategy(this->pkb_, clause);
     Table *table = strategy->evaluate(this->ctx_);
     database_->AddTable(table);
+    if (database_->IsEmpty()) {
+      spdlog::debug("Database contains an empty table.");
+      return;
+    }
   }
 }
 

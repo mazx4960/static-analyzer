@@ -12,7 +12,7 @@ void SP::SetPKB(IPKBPopulator *pkb) {
 }
 void SP::LoadSource(std::istream *source_stream) {
   SimpleLexer lexer(source_stream);
-  auto tokens = lexer.lex();
+  auto tokens = lexer.Lex();
   spdlog::info("Generated source tokens");
   std::string token_string = "Tokens: ";
   for (auto *token : tokens) {

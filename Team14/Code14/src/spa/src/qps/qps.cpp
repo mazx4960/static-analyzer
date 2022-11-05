@@ -7,7 +7,7 @@ void QPS::SetPKB(IPKBQuerier *pkb) {
 }
 Result *QPS::EvaluateQuery(std::istream *query_stream) {
   QueryLexer lexer(query_stream);
-  auto tokens = lexer.lex();
+  auto tokens = lexer.Lex();
   spdlog::info("Generated query tokens");
   std::string token_string = "Tokens: ";
   for (auto *token : tokens) {

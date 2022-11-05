@@ -19,7 +19,7 @@ std::string Query::toString() const {
   }
   str.append("}, ");
   str.append("QueryCall:");
-  str.append(query_call_->toString());
+  str.append(query_call_->ToString());
   str.append(", ");
   str.append("Clauses: {");
   for (auto *clause : query_clauses_) {
