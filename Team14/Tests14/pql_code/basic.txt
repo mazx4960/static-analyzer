@@ -1,2 +1,2 @@
-variable a;
-Select a
+if ifs; call c; variable v; procedure p;
+Select <ifs,c,v,p> pattern ifs("m1","x1",_) such that Calls*("nestedLoops", p) and Modifies(c, v)

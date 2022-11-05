@@ -148,3 +148,8 @@ assign s1, s2; procedure p; call c; variable v;
 Select <p, s1, s2, v> such that Affects(s1, s2) and Next*(s1, c) and Next*(c, s2) and Modifies(s1, v) and Uses(s2, v) and Modifies(c, v) with c.procName = p.procName
 none
 5000
+613
+read r; assign a;
+Select <r, a> such that Affects(r, a)
+none
+5000
