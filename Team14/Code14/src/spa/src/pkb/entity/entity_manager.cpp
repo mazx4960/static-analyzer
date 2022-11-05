@@ -115,10 +115,11 @@ std::vector<EntityType> EntityManager::GetAllEntityTypes() {
 bool EntityManager::IsTypeStatementEntity(EntityType type) {
   switch (type) {
     case EntityType::kPrintStmt:
-    case EntityType::kWhileStmt:
-    case EntityType::kCallStmt:
-    case EntityType::kIfStmt:
-    case EntityType::kAssignStmt:
+    case EntityType::kWhileStmt: //fallthrough
+    case EntityType::kCallStmt:  //fallthrough
+    case EntityType::kIfStmt:    //fallthrough
+    case EntityType::kAssignStmt://fallthrough
+    case EntityType::kReadStmt:  //fallthrough
       return true;
     default:
       return false;
