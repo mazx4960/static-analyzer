@@ -23,6 +23,51 @@ assign a; while w;
 Select <w, a> such that Calls("generation", p) such that Parent* (w, a) and Modifies (a, "sum")
 82 83
 5000
+301 - Syntax error, double semi-colon
+variable v; variable v1;;
+Select v
+SyntaxError
+5000
+302 - Syntax error, semi-colon on Select
+variable v; variable v1;
+Select v;
+SyntaxError
+5000
+303 - Syntax error, lower case Select
+variable v;
+select v
+SyntaxError
+5000
+304 - Semantic error, synonym not declared
+
+Select x
+SemanticError
+5000
+305 - Semantic error, synonym not declared, boolean
+
+Select BOOLEAN with x.varName = "x"
+SemanticError
+5000
+306 - Meaningless query
+stmt s1, s2;
+Select <s1,s2> such that Parent(s1,s2) and Parent(s2,s1)
+none
+5000
+307 - Multi clause, tuple
+stmt s1, s2; if if; while w;
+Select <s1,s2> such that Affects(s1,s2) and Parent(if,s1) and Parent(w,s2) and Parent(if,w)
+17 21, 18 20, 40 20, 41 47, 53 59, 66 72
+5000
+307 - Multi clause, tuple
+stmt s1, s2; variable v;
+Select <s1,s2,v> such that Modifies(s1,v) and Modifies(s2,v) and Parent(s1,s2) and Next*(73,s1) and Next*(s1,s2)
+82 83 sum, 82 84 m, 82 85 y, 82 86 z, 82 87 f, 82 90 count, 87 88 f, 87 89 f
+5000
+308 - Multi clause, tuple
+stmt s1,s2; variable v; while w;
+Select <s1,s2,v> such that Parent(s1,s2) and Modifies(s2,v) pattern w(v,_) such that Next(98,s1)
+99 101 icebear, 99 102 cat, 115 116 icebear, 115 118 lion, 115 118 meow, 115 124 dog, 115 124 meow
+5000
 601
 assign s1, s2; variable v1, v2;
 Select <s1, s2> such that Modifies(s1, v1) and Uses(s2, v2) and Modifies(s2, v1) and Uses(s1, v2) and Modifies(_, v)
