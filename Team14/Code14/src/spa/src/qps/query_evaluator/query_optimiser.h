@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include "qps/pql/query.h"
+#include "qps/query_evaluator/context.h"
 #include "types.h"
 #include "pkb/pkb.h"
 
