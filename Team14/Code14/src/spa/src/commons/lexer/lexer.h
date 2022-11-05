@@ -11,41 +11,41 @@
 
 class Lexer {
  protected:
+  static const char kSemicolon = ';';
+
+  static const char kComma = ',';
+
+  static const char kQuote = '\"';
+
+  static const char kParenthesisOpen = '(';
+
+  static const char kParenthesisClose = ')';
+
+  static const char kBraceOpen = '{';
+
+  static const char kBraceClose = '}';
+
+  static const char kHashtag = '#';
+
   int line_number_;
 
   int column_number_;
 
   std::istream *source_stream_;
 
-  std::string tmp_;// temporary string to store a value
-  const char semicolon_ = ';';
-
-  const char comma_ = ',';
-
-  const char quote_ = '\"';
-
-  const char round_open_bracket_ = '(';
-
-  const char round_close_bracket_ = ')';
-
-  const char curly_open_bracket_ = '{';
-
-  const char curly_close_bracket_ = '}';
-
-  const char hashtag_ = '#';
+  std::string tmp_;   // temporary string to store a value
 
   std::unordered_set<std::string> valid_whitespace_ = {" ", "\t", "\r", "\n"};
 
-  virtual char peek();
-  virtual char advance();
-  virtual void ignore_whitespace();
-  virtual void ignore_comments();
-  virtual void read_alpha();
-  virtual void read_digits();
-  virtual void read_alphanumeric();
+  virtual char Peek();
+  virtual char Advance();
+  virtual void IgnoreWhitespace();
+  virtual void IgnoreComments();
+  virtual void ReadDigits();
+  virtual void ReadAlphanumeric();
 
  public:
   explicit Lexer(std::istream *source_stream);
-  virtual Token *next_token();
-  virtual std::vector<Token *> lex();
+  virtual Token *NextToken();
+  virtual std::vector<Token *> Lex();
 };

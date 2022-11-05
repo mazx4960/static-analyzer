@@ -11,72 +11,64 @@ Lexer::Lexer(std::istream *s) {
   tmp_ = "";
 }
 
-char Lexer::peek() {
+char Lexer::Peek() {
   return static_cast<char>(source_stream_->peek());
 }
-char Lexer::advance() {
+char Lexer::Advance() {
   column_number_++;
   return static_cast<char>(source_stream_->get());
 }
 /*
  * Skips whitespace characters.
  */
-void Lexer::ignore_whitespace() {
+void Lexer::IgnoreWhitespace() {
   std::string s;
-  s = peek();
+  s = Peek();
   while (!source_stream_->eof() && valid_whitespace_.find(s) != valid_whitespace_.end()) {
-    if (peek() == '\n') {
+    if (Peek() == '\n') {
       line_number_++;
       column_number_ = 1;
     }
-    advance();
-    s = peek();
+    Advance();
+    s = Peek();
   }
 }
 /*
  * Ignore comments.
  */
-void Lexer::ignore_comments() {
-  while (!source_stream_->eof() && peek() != '\n') {
-    advance();
-  }
-}
-/*
- * Read letters from the source stream and updates the tmp attribute.
- */
-void Lexer::read_alpha() {
-  while (isalpha(peek())) {
-    tmp_ += advance();
+void Lexer::IgnoreComments() {
+  while (!source_stream_->eof() && Peek() != '\n') {
+    Advance();
   }
 }
 /*
  * Read digits from the source stream and updates the tmp attribute.
  */
-void Lexer::read_digits() {
-  while (isdigit(peek())) {
-    tmp_ += advance();
+void Lexer::ReadDigits() {
+  while (isdigit(Peek())) {
+    tmp_ += Advance();
   }
 }
 /*
  * Read letters or digits from the source stream and updates the tmp attribute.
  */
-void Lexer::read_alphanumeric() {
-  while (isalpha(peek()) || isdigit(peek())) {
-    this->tmp_ += this->advance();
+void Lexer::ReadAlphanumeric() {
+  while (isalpha(Peek()) || isdigit(Peek())) {
+    this->tmp_ += this->Advance();
   }
 }
 
-Token *Lexer::next_token() {
-  ignore_whitespace();
+Token *Lexer::NextToken() {
+  IgnoreWhitespace();
   if (source_stream_->eof()) {
     return nullptr;
   }
 
-  char c = advance();
+  char c = Advance();
   tmp_ = c;
   if (isalpha(c) || isdigit(c)) {
     // create symbol token
-    read_alphanumeric();
+    ReadAlphanumeric();
     return new SymbolToken(tmp_);
   }
 
@@ -84,12 +76,12 @@ Token *Lexer::next_token() {
   throw LexSyntaxError(line_number_, column_number_, "Unexpected character: " + tmp_);
 }
 
-std::vector<Token *> Lexer::lex() {
+std::vector<Token *> Lexer::Lex() {
   std::vector<Token *> tokens;
-  Token *token = this->next_token();
-  while (token) {
+  Token *token = this->NextToken();
+  while (token != nullptr) {
     tokens.push_back(token);
-    token = next_token();
+    token = NextToken();
   }
   tokens.push_back(new EndOfFileToken());
   return tokens;

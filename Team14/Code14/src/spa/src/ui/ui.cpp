@@ -8,8 +8,7 @@
 #include "spdlog/spdlog.h"
 
 UI::UI(std::string source_file, const std::string &query_file, int mode = 0)
-    : source_file_(std::move(source_file)),
-      query_stream_(StreamReader::GetStreamFromFile(query_file)) {
+    : source_file_(std::move(source_file)), query_stream_(StreamReader::GetStreamFromFile(query_file)) {
   // Setup logging
   if (mode == 2) {
     spdlog::set_level(spdlog::level::debug);
@@ -67,11 +66,11 @@ void UI::LoadSource() {
 Result *UI::ExecuteQuery() {
   if (this->query_stream_ == nullptr) {
     spdlog::error("Query file not found! Exiting program...");
-    return Result::empty();
+    return Result::Empty();
   }
   if (this->qps_ == nullptr) {
     spdlog::error("QPS not found! Exiting program...");
-    return Result::empty();
+    return Result::Empty();
   }
   spdlog::info("Reading query file...");
   std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
@@ -83,17 +82,7 @@ Result *UI::ExecuteQuery() {
   return result;
 }
 void UI::DisplayResults(const Result *result) {
-  spdlog::info("Sorting results...");
-  std::vector<std::string> results_string_list = result->get_sorted_results_string_list();
-
   spdlog::info("====================BEGIN QUERY RESULTS====================");
-  std::string result_string;
-  for (const auto &curr : results_string_list) {
-    result_string += curr + ", ";
-  }
-  spdlog::info("Results for '{}'[{}]: {}",
-               result->get_synonyms(),
-               results_string_list.size(),
-               result_string);
+  spdlog::info(result->ToString());
   spdlog::info("=====================END QUERY RESULTS=====================");
 }
