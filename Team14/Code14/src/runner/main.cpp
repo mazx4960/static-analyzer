@@ -3,7 +3,24 @@
 
 #include "spa.h"
 
-int main() {
-  auto *spa = new SPA("C:\\Users\\kelvi\\Desktop\\KelviRepo\\CS3203_repo\\Team14\\Tests14\\system\\stress_1_source.txt" , "C:\\Users\\kelvi\\Desktop\\KelviRepo\\CS3203_repo\\Team14\\Tests14\\system\\stress_1_queries.txt", 1);
+int main(int argc, char *argv[]) {
+  int verbosity = 1;
+  std::string source_file;
+  std::string query_file;
+  if (argc == 3) {
+    source_file = argv[1];
+    query_file = argv[2];
+  } else if (argc == 4) {
+    if (strcmp(argv[1], "-v") == 0) { verbosity = 2; }
+    source_file = argv[2];
+    query_file = argv[3];
+  } else {
+    std::cout << "Invalid number of arguments" << std::endl;
+    std::cout << "Usage: [-v]" << argv[0] << " <source file> <query file> ";
+    return 1;
+  }
+
+  // Initialize and run SPA
+  auto *spa = new SPA(source_file, query_file, verbosity);
   spa->Run();
 }
