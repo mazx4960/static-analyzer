@@ -1,15 +1,35 @@
 #include "context.h"
-#include "math.h"
+#include <cmath>
 #include "query_optimiser.h"
 
 Query *QueryOptimiser::Optimise(Query *query, Context *context, IPKBQuerier pkb) {
   auto declarations = query->getSynonymDeclarations();
   auto *query_call = query->getQueryCall();
   auto clauses = query->getClauses();
+
   this->simple_stats_ = pkb.getSimpleStats();
   this->context_ = context;
 
-  return new Query({}, nullptr, {});
+
+  updateSynonymUsage(clauses);
+  updateInitialWeights(clauses);
+  updateSynonymWeight(clauses);
+
+  ClauseVector new_clauses;
+  std::sort(clauses.begin(), clauses.end(), clause_comparator);
+  new_clauses.push_back(clauses.back());
+  clauses.pop_back();
+
+  int iter_size = clauses.size();
+  for (int i = 0; i < iter_size; ++i) {
+    updateClauseWeight(clauses);
+    updateSynonymWeight(clauses);
+    std::sort(clauses.begin(), clauses.end(), clause_comparator);
+    new_clauses.push_back(clauses.back());
+    clauses.pop_back();
+  }
+
+  return new Query(declarations, query_call, new_clauses);
 }
 
 void QueryOptimiser::updateSynonymUsage(const ClauseVector &clauses) {
@@ -53,23 +73,6 @@ void QueryOptimiser::updateSynonymUsage(QueryReference *query_reference) {
   this->synonym_usage_[synonym_ref->getSynonym()]++;
 }
 
-std::pair<int, int> QueryOptimiser::getSynonymUsage(QueryClause *clause) {
-  auto clause_type = clause->getClauseType();
-  if (clause_type == ClauseType::kSuchThat) {
-    auto *such_that_clause = static_cast<SuchThatClause *>(clause);
-    return {getReferenceUsage(such_that_clause->getFirst()), getReferenceUsage(such_that_clause->getSecond())};
-  }
-
-  if (clause_type == ClauseType::kPattern) {
-    auto *pattern_clause = static_cast<PatternClause *>(clause);
-    return {getReferenceUsage(pattern_clause->getStmtRef()), getReferenceUsage(pattern_clause->getEntRef())};
-  }
-
-  if (clause_type == ClauseType::kWith) {
-    auto *with_clause = static_cast<WithClause *>(clause);
-    return {getReferenceUsage(with_clause->getFirst()), getReferenceUsage(with_clause->getSecond())};
-  }
-}
 
 int QueryOptimiser::getReferenceUsage(QueryReference *query_reference) {
   if (query_reference->getRefType() != ReferenceType::kSynonym
@@ -93,6 +96,12 @@ QueryClause *QueryOptimiser::updateInitialWeight(QueryClause *clause) {
   clause->setWeight(calculateInitialClauseWeight(clause));
   return clause;
 }
+void QueryOptimiser::updateInitialWeights(const ClauseVector& clauses) {
+  for (auto *clause : clauses) {
+    updateInitialWeight(clause);
+  }
+}
+
 
 void QueryOptimiser::updateSynonymWeight(QueryClause *query_clause) {
   auto clause_type = query_clause->getClauseType();
@@ -286,4 +295,25 @@ double QueryOptimiser::calculateInitialClauseWeight(QueryClause *query_clause) {
 
   }
   return -100;
+}
+void QueryOptimiser::updateClauseWeight(const ClauseVector& clauses) {
+  for (auto *clause:clauses) {
+    updateClauseWeight(clause);
+  }
+}
+void QueryOptimiser::updateClauseWeight(QueryClause *clause) {
+  auto clause_type = clause->getClauseType();
+  if (clause_type == ClauseType::kSuchThat) {
+    auto *such_that_clause = static_cast<SuchThatClause *>(clause);
+    such_that_clause->setWeight((such_that_clause->getFirst()->GetWeight() + such_that_clause->getSecond()->GetWeight()) / 2.0);
+  }
+  if (clause_type == ClauseType::kPattern) {
+    auto *pattern_clause = static_cast<PatternClause *>(clause);
+    pattern_clause->setWeight((pattern_clause->getStmtRef()->GetWeight() + pattern_clause->getEntRef()->GetWeight()) / 2.0);
+
+  }
+  if (clause_type == ClauseType::kWith) {
+    auto *with_clause = static_cast<WithClause *>(clause);
+    with_clause->setWeight((with_clause->getFirst()->GetWeight() + with_clause->getSecond()->GetWeight()) / 2.0);
+  }
 }

@@ -24,12 +24,18 @@ class QueryOptimiser {
   std::pair<int, int> getSynonymUsage(QueryClause *clause);
   EntitySet getReferenceContext(QueryReference *query_reference);
   double calculateInitialClauseWeight(QueryClause *query_clause);
+  QueryClause *updateInitialWeight(QueryClause *clause);
+  void updateClauseWeight(const ClauseVector& clauses);
+  void updateClauseWeight(QueryClause *clause);
+  void updateSynonymWeight(QueryClause *query_clause);
+  void updateSynonymWeight(ClauseVector clauses);
+  void updateInitialWeights(const ClauseVector &clauses);
 };
 struct {
   bool operator()(QueryClause *first, QueryClause *second) const {
     return first->getWeight() < second->getWeight();
   }
-} cluase_comparator;
+} clause_comparator;
 
 inline std::function<double(int, int)> RsTypeToWeightFunction(RsType type) {
   switch (type) {
