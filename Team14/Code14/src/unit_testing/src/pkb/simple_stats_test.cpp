@@ -21,7 +21,7 @@ TEST(SimpleStats, MultipleEntities) {
       new VariableEntity("x"), new VariableEntity("y"), new VariableEntity("z"),
       new ConstantEntity("1"), new ConstantEntity("2"), new ConstantEntity("3"),
       new AssignStmtEntity("1"), new AssignStmtEntity("2"), new AssignStmtEntity("3"),
-      new AssignStmtEntity("4"),
+      new AssignStmtEntity("4"), new WhileStmtEntity("5"), new IfStmtEntity("6"),
   };
   PKB pkb;
   pkb.populate(entities);
@@ -31,4 +31,5 @@ TEST(SimpleStats, MultipleEntities) {
   ASSERT_EQ(map.find(EntityType::kConstant)->second, 3);
   ASSERT_EQ(map.find(EntityType::kAssignStmt)->second, 4);
   ASSERT_EQ(map.find(EntityType::kProcedure)->second, 0);
+  ASSERT_EQ(map.find(EntityType::kStatement)->second, 6);
 }
