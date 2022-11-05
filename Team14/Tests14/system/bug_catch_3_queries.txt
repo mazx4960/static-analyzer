@@ -6,7 +6,7 @@ SyntaxError
 101
 if ifs; call c; variable v; procedure p;
 Select <ifs,c,v,p> pattern ifs("m1","x1",_) such that Calls*("nestedLoops", p) and Modifies(c, v)
-SemanticError
+SyntaxError
 5000
 102
 if ifs; while w; variable v1; variable v2; assign a;
@@ -16,10 +16,10 @@ SyntaxError
 103
 assign a; if ifs; variable v; while w; procedure p;
 Select v pattern a(v,_) pattern ifs(v,_,_) such that Parent* (w, a) and Calls("nestedLoop", p)
-a1 b1 s1 t1 m1 n1 y1 x1 sum x dog meow tiger
+a1, b1, s1, t1, m1, n1, y1, x1, sum, x, dog, meow, tiger
 5000
 104
-assign a; while w;
+assign a; while w; procedure p;
 Select <w, a> such that Calls("generation", p) such that Parent* (w, a) and Modifies (a, "sum")
 82 83
 5000
@@ -122,6 +122,21 @@ Select such such that Modifies(such, that) with that.varName = "a1"
 procedure procName; variable varName;
 Select procName such that Modifies(procName, varName) with varName.varName = procName.procName
 animals
+5000
+604 - error in pattern, delayed error checking since pattern matches assign pattern
+while w;
+Select w pattern w ("x", "y")
+SemanticError
+5000
+605 - error in pattern, delayed error checking since pattern matches assign pattern
+while w;
+Select w pattern w ("x", _"y"_)
+SemanticError
+5000
+606
+assign a;
+Select a such that Follows("1", a)
+SyntaxError
 5000
 611 - control flow with path where called procedure modifies variable
 assign s1, s2; procedure p; call c; variable v;
