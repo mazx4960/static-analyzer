@@ -13,6 +13,7 @@ Token *QueryLexer::NextToken() {
 
   char c = this->Advance();
   this->tmp_ = c;
+
   if (isalpha(c)) {
     // Keyword or symbol
     this->ReadAlphanumeric();
@@ -24,6 +25,10 @@ Token *QueryLexer::NextToken() {
   if (isdigit(c)) {
     // Literal
     this->ReadDigits();
+    // Leading 0 in digits
+    if (this->tmp_[0] == '0' && this->tmp_.length() > 1) {
+      throw LexSyntaxError(this->line_number_, this->column_number_, "Leading 0 is not allowed in digits: " + this->tmp_);
+    }
     return new LiteralToken(this->tmp_);
   }
   if (c == QueryLexer::kParenthesisOpen) {
