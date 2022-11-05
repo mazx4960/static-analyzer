@@ -58,6 +58,11 @@ call c1, c2;
 Select c1 such that Calls(c1, c2)
 SemanticError
 5000
+208
+stmt s1;
+Select s1 with s1.stmt# = "hello"
+SemanticError
+5000
 301 - Syntax error, double semi-colon
 variable v; variable v1;;
 Select v
