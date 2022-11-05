@@ -36,6 +36,7 @@ Result *QueryEvaluator::Evaluate() {
 
   // Merge tables.
   begin = std::chrono::steady_clock::now();
+  this->database_->OrderTables();
   this->database_->MergeTables();
   end = std::chrono::steady_clock::now();
   spdlog::info("Time taken to merge tables: {} ms",
