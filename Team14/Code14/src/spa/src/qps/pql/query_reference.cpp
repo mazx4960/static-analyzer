@@ -14,12 +14,6 @@ bool QueryReference::operator==(const QueryReference *other) const {
   return this->reference_type_ == other->reference_type_;
 }
 
-double QueryReference::GetWeight() const {
-  return 0;
-}
-void QueryReference::SetWeight(double  /*weight*/) {
-  }
-
 // WildcardDeclaration
 EntityType WildcardReference::getEntityType() const {
   return this->entity_type_;
@@ -36,6 +30,11 @@ bool WildcardReference::operator==(const QueryReference *other) const {
 void WildcardReference::setEntityType(EntityType entity_type) {
   this->entity_type_ = entity_type;
 }
+void WildcardReference::SetWeight(double weight) {
+}
+double WildcardReference::GetWeight() const {
+  return 0;
+}
 
 // IdentDeclaration
 std::string IdentReference::getValue() const {
@@ -49,6 +48,11 @@ bool IdentReference::operator==(const QueryReference &other) const {
 }
 bool IdentReference::operator==(const QueryReference *other) const {
   return QueryReference::operator==(other) && this->value_ == (static_cast<const IdentReference *>(other))->value_;
+}
+void IdentReference::SetWeight(double weight) {
+}
+double IdentReference::GetWeight() const {
+  return 0;
 }
 
 // IntegerDeclaration
@@ -64,6 +68,12 @@ bool IntegerReference::operator==(const QueryReference &other) const {
 bool IntegerReference::operator==(const QueryReference *other) const {
   return QueryReference::operator==(other) && this->value_ == (static_cast<const IntegerReference *>(other))->value_;
 }
+void IntegerReference::SetWeight(double weight) {
+}
+double IntegerReference::GetWeight() const {
+  return 0;
+}
+
 
 // SynonymDeclaration
 QuerySynonym *SynonymReference::getSynonym() const {
@@ -82,10 +92,10 @@ bool SynonymReference::operator==(const QueryReference *other) const {
       && this->query_synonym_ == (static_cast<const SynonymReference *>(other))->query_synonym_;
 }
 void SynonymReference::SetWeight(double weight) {
-  this->weight_ = weight;
+  this->getSynonym()->SetWeight(weight);
 }
 double SynonymReference::GetWeight() const {
-  return this->weight_;
+  return this->getSynonym()->GetWeight();
 }
 
 // AttributeReference
@@ -193,8 +203,8 @@ bool AttrReference::operator==(const QueryReference *other) const {
       && this->attribute_type_ == (static_cast<const AttrReference *>(other))->attribute_type_;
 }
 void AttrReference::SetWeight(double weight) {
-  this->weight_ = weight;
+  this->getSynonym()->SetWeight(weight);
 }
 double AttrReference::GetWeight() const {
-  return this->weight_;
+  return this->getSynonym()->GetWeight();
 }

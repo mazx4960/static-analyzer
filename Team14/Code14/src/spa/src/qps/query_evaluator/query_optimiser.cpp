@@ -1,5 +1,7 @@
-#include "context.h"
+
 #include <cmath>
+#include <algorithm>
+#include "context.h"
 #include "query_optimiser.h"
 
 Query QueryOptimiser::Optimise(const Query& query, Context *context, IPKBQuerier *pkb) {
@@ -28,6 +30,7 @@ Query QueryOptimiser::Optimise(const Query& query, Context *context, IPKBQuerier
     new_clauses.push_back(clauses.back());
     clauses.pop_back();
   }
+  std::reverse(new_clauses.begin(), new_clauses.end());
 
   return Query(declarations, query_call, new_clauses);
 }
@@ -276,7 +279,7 @@ double QueryOptimiser::calculateInitialClauseWeight(QueryClause *query_clause) {
             * std::min(std::max(total_consts, total_variables), second_context_size))), 1);
   }
 
-  if (clause_type == ClauseType::kSuchThat) {
+  if (clause_type == ClauseType::kWith) {
     auto *with_clause = static_cast<WithClause *>(query_clause);
 
     auto first_usage = getReferenceUsage(with_clause->getFirst());
