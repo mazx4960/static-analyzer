@@ -39,19 +39,19 @@ Token *SimpleLexer::NextToken() {
     // Literal
     ReadDigits();
     return new LiteralToken(tmp_);
-  } else if (c == this->kSemicolon) {
+  } else if (c == Lexer::kSemicolon) {
     // Semicolon
     return new SemicolonToken();
-  } else if (c == this->kParenthesisOpen) {
+  } else if (c == Lexer::kParenthesisOpen) {
     // Round Open Bracket
     return new RoundOpenBracketToken();
-  } else if (c == this->kParenthesisClose) {
+  } else if (c == Lexer::kParenthesisClose) {
     // Round Close Bracket
     return new RoundCloseBracketToken();
-  } else if (c == this->kBraceOpen) {
+  } else if (c == Lexer::kBraceOpen) {
     // Curly Open Bracket
     return new CurlyOpenBracketToken();
-  } else if (c == this->kBraceClose) {
+  } else if (c == Lexer::kBraceClose) {
     // Curly Close Bracket
     return new CurlyCloseBracketToken();
   } else if (valid_single_operators_.find(tmp_) != valid_single_operators_.end()) {
