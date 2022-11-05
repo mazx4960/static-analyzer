@@ -2,24 +2,19 @@
 
 #include "query_call.h"
 
-#include <utility>
-
-SelectType SelectCall::getSelectType() const {
+SelectType SelectCall::GetSelectType() const {
   return this->type_;
 }
-std::string SelectCall::toString() const {
+std::string SelectCall::ToString() const {
   return "Select " + SelectTypeToString(this->type_);
 }
 
-std::vector<ElemReference *> ElemSelect::getReferences() const {
+std::vector<ElemReference *> ElemSelect::GetReferences() const {
   return this->elem_references_;
 }
-void ElemSelect::setReferences(std::vector<ElemReference *> elem_references) {
-  this->elem_references_ = std::move(elem_references);
-}
-std::string ElemSelect::toString() const {
-  std::string str = SelectCall::toString() + ": ";
-  for (auto *ref : getReferences()) {
+std::string ElemSelect::ToString() const {
+  std::string str = SelectCall::ToString() + ": ";
+  for (auto *ref : GetReferences()) {
     str.append(ref->toString() + ", ");
   }
   return str;

@@ -16,8 +16,8 @@ class SelectCall {
  public:
   explicit SelectCall(SelectType type_) : type_(type_) {
   };
-  [[nodiscard]] SelectType getSelectType() const;
-  [[nodiscard]] virtual std::string toString() const;
+  [[nodiscard]] SelectType GetSelectType() const;
+  [[nodiscard]] virtual std::string ToString() const;
 };
 
 /**
@@ -29,15 +29,11 @@ class ElemSelect : public SelectCall {
  private:
   std::vector<ElemReference *> elem_references_;
  public:
-  explicit ElemSelect(ElemReference *elem_reference)
-      : SelectCall(SelectType::kElem), elem_references_({elem_reference}) {
-  };
   explicit ElemSelect(std::vector<ElemReference *> elem_reference)
       : SelectCall(SelectType::kElem), elem_references_(std::move(elem_reference)) {
   };
-  void setReferences(std::vector<ElemReference *> elem_references);
-  [[nodiscard]] std::vector<ElemReference *> getReferences() const;
-  [[nodiscard]] std::string toString() const override;
+  [[nodiscard]] std::vector<ElemReference *> GetReferences() const;
+  [[nodiscard]] std::string ToString() const override;
 };
 
 /**

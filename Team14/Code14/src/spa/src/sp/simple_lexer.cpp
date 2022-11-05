@@ -9,61 +9,69 @@
  */
 void SimpleLexer::read_operators() {
   std::string s;
-  s = peek();
+  s = Peek();
   while (valid_single_operators_.find(s) != valid_single_operators_.end()) {
-    tmp_ += advance();
-    s = peek();
+    tmp_ += Advance();
+    s = Peek();
   }
 }
-Token *SimpleLexer::next_token() {
-  ignore_whitespace();
+Token *SimpleLexer::NextToken() {
+  IgnoreWhitespace();
   if (source_stream_->eof()) {
     return nullptr;
   }
 
-  char c = advance();
+  char c = Advance();
   tmp_ = c;
-  if (c == hashtag_) {
-    ignore_comments();
-    return next_token();
-  } else if (isalpha(c)) {
+  if (c == kHashtag) {
+    IgnoreComments();
+    return NextToken();
+  }
+  if (isalpha(c)) {
     // Symbol or keyword
-    read_alphanumeric();
+    ReadAlphanumeric();
     if (valid_keywords_.find(tmp_) != valid_keywords_.end()) {
       return new KeywordToken(tmp_);
     }
     return new SymbolToken(tmp_);
-  } else if (isdigit(c)) {
+  }
+  if (isdigit(c)) {
     // Literal
-    read_digits();
+    ReadDigits();
     return new LiteralToken(tmp_);
-  } else if (c == this->semicolon_) {
+  }
+  if (c == SimpleLexer::kSemicolon) {
     // Semicolon
     return new SemicolonToken();
-  } else if (c == this->round_open_bracket_) {
+  }
+  if (c == SimpleLexer::kParenthesisOpen) {
     // Round Open Bracket
     return new RoundOpenBracketToken();
-  } else if (c == this->round_close_bracket_) {
+  }
+  if (c == SimpleLexer::kParenthesisClose) {
     // Round Close Bracket
     return new RoundCloseBracketToken();
-  } else if (c == this->curly_open_bracket_) {
+  }
+  if (c == SimpleLexer::kBraceOpen) {
     // Curly Open Bracket
     return new CurlyOpenBracketToken();
-  } else if (c == this->curly_close_bracket_) {
+  }
+  if (c == SimpleLexer::kBraceClose) {
     // Curly Close Bracket
     return new CurlyCloseBracketToken();
-  } else if (valid_single_operators_.find(tmp_) != valid_single_operators_.end()) {
+  }
+  if (valid_single_operators_.find(tmp_) != valid_single_operators_.end()) {
     // Operator
     read_operators();
-    if (valid_operators_.find(tmp_) != valid_operators_.end()) {
-      return new OperatorToken(tmp_);
+    if (valid_operators_.find(tmp_) == valid_operators_.end()) {
+      throw LexSyntaxError(line_number_, column_number_, "Invalid operator " + tmp_);
     }
-    throw LexSyntaxError(line_number_, column_number_, "Invalid operator " + tmp_);
+    return new OperatorToken(tmp_);
   }
 
   // Something went wrong :/
   throw LexSyntaxError(line_number_, column_number_, "Unexpected character: " + tmp_);
 }
-std::vector<Token *> SimpleLexer::lex() {
-  return Lexer::lex();
+std::vector<Token *> SimpleLexer::Lex() {
+  return Lexer::Lex();
 }
