@@ -97,6 +97,9 @@ std::unordered_map<EntityType, int> EntityManager::Get() {
   std::vector<EntityType> all_entity_types = GetAllEntityTypes();
   for (auto type : all_entity_types) {
     map[type] = this->GetTable(type)->size();
+    if (IsTypeStatementEntity(type)) {
+      map[EntityType::kStatement] += map[type];
+    }
   }
   return map;
 }
@@ -107,6 +110,20 @@ std::vector<EntityType> EntityManager::GetAllEntityTypes() {
       EntityType::kCallStmt, EntityType::kIfStmt, EntityType::kPrintStmt, EntityType::kReadStmt, EntityType::kWhileStmt,
   };
   return list;
+}
+
+bool EntityManager::IsTypeStatementEntity(EntityType type) {
+  switch (type) {
+    case EntityType::kPrintStmt:
+    case EntityType::kWhileStmt: //fallthrough
+    case EntityType::kCallStmt:  //fallthrough
+    case EntityType::kIfStmt:    //fallthrough
+    case EntityType::kAssignStmt://fallthrough
+    case EntityType::kReadStmt:  //fallthrough
+      return true;
+    default:
+      return false;
+  }
 }
 
 void EntityManager::LogStatistics() {

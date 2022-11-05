@@ -11,6 +11,7 @@ class EntityManager {
  private:
   int num_queries_ = 0;
   std::unordered_map<EntityType, EntityTable *> entity_table_map_;
+  static bool IsTypeStatementEntity(EntityType);
   static std::vector<EntityType> GetAllEntityTypes();
   void CreateTable(EntityType);
 
