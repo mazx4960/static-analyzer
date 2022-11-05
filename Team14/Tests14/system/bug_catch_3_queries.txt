@@ -1,0 +1,25 @@
+601
+assign s1, s2; variable v1, v2;
+Select <s1, s2> such that Modifies(s1, v1) and Uses(s2, v2) and Modifies(s2, v1) and Uses(s1, v2) and Modifies(_, v)
+SemanticError
+5000
+602 - keyword as synonym in query
+assign such; variable that;
+Select such such that Modifies(such, that) with that.varName = "a1"
+5, 18
+5000
+603 - attribute as synonym name
+procedure procName; variable varName;
+Select procName such that Modifies(procName, varName) with varName.varName = procName.procName
+animals
+5000
+611 - control flow with path where called procedure modifies variable
+assign s1, s2; procedure p; call c; variable v;
+Select <p, s1, s2, v> such that Next*(s1, c) and Next*(c, s2) and Modifies(s1, v) and Uses(s2, v) and Modifies(c, v) with c.procName = p.procName
+generation 15 38 a, generation 38 38 a, check 74 92 x
+5000
+612 - control flow with path where called procedure modifies variable, same as 611, but with Affects(s1, s2)
+assign s1, s2; procedure p; call c; variable v;
+Select <p, s1, s2, v> such that Affects(s1, s2) and Next*(s1, c) and Next*(c, s2) and Modifies(s1, v) and Uses(s2, v) and Modifies(c, v) with c.procName = p.procName
+none
+5000
