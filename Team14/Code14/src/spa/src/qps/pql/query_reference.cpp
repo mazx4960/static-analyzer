@@ -14,6 +14,13 @@ bool QueryReference::operator==(const QueryReference *other) const {
   return this->reference_type_ == other->reference_type_;
 }
 
+double QueryReference::GetWeight() const {
+  return 0;
+}
+void QueryReference::SetWeight(double weight) {
+  return;
+}
+
 // WildcardDeclaration
 EntityType WildcardReference::getEntityType() const {
   return this->entity_type_;
@@ -77,6 +84,12 @@ bool SynonymReference::operator==(const QueryReference &other) const {
 bool SynonymReference::operator==(const QueryReference *other) const {
   return QueryReference::operator==(other)
       && this->query_synonym_ == (static_cast<const SynonymReference *>(other))->query_synonym_;
+}
+void SynonymReference::SetWeight(double weight) {
+  this->weight_ = weight;
+}
+double SynonymReference::GetWeight() const {
+  return this->weight_;
 }
 
 // AttributeReference
@@ -182,4 +195,10 @@ bool AttrReference::operator==(const QueryReference &other) const {
 bool AttrReference::operator==(const QueryReference *other) const {
   return QueryReference::operator==(other) && this->synonym_ == (static_cast<const AttrReference *>(other))->synonym_
       && this->attribute_type_ == (static_cast<const AttrReference *>(other))->attribute_type_;
+}
+void AttrReference::SetWeight(double weight) {
+  this->weight_ = weight;
+}
+double AttrReference::GetWeight() const {
+  return this->weight_;
 }
