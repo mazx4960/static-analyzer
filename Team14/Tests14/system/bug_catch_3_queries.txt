@@ -16,7 +16,7 @@ SemanticError
 103
 assign a; if ifs; variable v; while w; procedure p;
 Select v pattern a(v,_) pattern ifs(v,_,_) such that Parent* (w, a) and Calls*("nestedLoops", p)
-a1, b1, s1, t1, m1, n1, y1, x1, g1, sum, x, dog, meow, tiger
+a1, b1, s1, t1, m1, n1, y1, x1, g1, sum, dog, meow, tiger
 5000
 104
 assign a; while w; procedure p;
