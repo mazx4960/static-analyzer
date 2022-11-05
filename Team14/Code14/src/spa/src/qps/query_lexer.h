@@ -11,13 +11,13 @@
 
 class QueryLexer : public Lexer {
  protected:
-  const char dot_ = '.';
+  static const char kDot = '.';
 
-  const char angle_open_bracket_ = '<';
+  static const char kAngularOpen = '<';
 
-  const char angle_close_bracket_ = '>';
+  static const char kAngularClose = '>';
 
-  const char wild_card_ = '_';
+  static const char kWildCard = '_';
 
  public:
   explicit QueryLexer(std::istream *source_stream) : Lexer(source_stream) {

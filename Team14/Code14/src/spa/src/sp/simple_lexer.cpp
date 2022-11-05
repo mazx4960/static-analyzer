@@ -39,28 +39,34 @@ Token *SimpleLexer::NextToken() {
     // Literal
     ReadDigits();
     return new LiteralToken(tmp_);
-  } else if (c == Lexer::kSemicolon) {
+  }
+  if (c == SimpleLexer::kSemicolon) {
     // Semicolon
     return new SemicolonToken();
-  } else if (c == Lexer::kParenthesisOpen) {
+  }
+  if (c == SimpleLexer::kParenthesisOpen) {
     // Round Open Bracket
     return new RoundOpenBracketToken();
-  } else if (c == Lexer::kParenthesisClose) {
+  }
+  if (c == SimpleLexer::kParenthesisClose) {
     // Round Close Bracket
     return new RoundCloseBracketToken();
-  } else if (c == Lexer::kBraceOpen) {
+  }
+  if (c == SimpleLexer::kBraceOpen) {
     // Curly Open Bracket
     return new CurlyOpenBracketToken();
-  } else if (c == Lexer::kBraceClose) {
+  }
+  if (c == SimpleLexer::kBraceClose) {
     // Curly Close Bracket
     return new CurlyCloseBracketToken();
-  } else if (valid_single_operators_.find(tmp_) != valid_single_operators_.end()) {
+  }
+  if (valid_single_operators_.find(tmp_) != valid_single_operators_.end()) {
     // Operator
     read_operators();
-    if (valid_operators_.find(tmp_) != valid_operators_.end()) {
-      return new OperatorToken(tmp_);
+    if (valid_operators_.find(tmp_) == valid_operators_.end()) {
+      throw LexSyntaxError(line_number_, column_number_, "Invalid operator " + tmp_);
     }
-    throw LexSyntaxError(line_number_, column_number_, "Invalid operator " + tmp_);
+    return new OperatorToken(tmp_);
   }
 
   // Something went wrong :/

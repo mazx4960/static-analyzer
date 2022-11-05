@@ -20,44 +20,57 @@ Token *QueryLexer::NextToken() {
       return new KeywordToken(this->tmp_);
     }
     return new SymbolToken(this->tmp_);
-  } else if (isdigit(c)) {
+  }
+  if (isdigit(c)) {
     // Literal
     this->ReadDigits();
     return new LiteralToken(this->tmp_);
-  } else if (c == this->kParenthesisOpen) {
+  }
+  if (c == QueryLexer::kParenthesisOpen) {
     // Round Open Bracket
     return new RoundOpenBracketToken();
-  } else if (c == this->kParenthesisClose) {
+  }
+  if (c == QueryLexer::kParenthesisClose) {
     // Round Close Bracket
     return new RoundCloseBracketToken();
-  } else if (c == this->angle_open_bracket_) {
+  }
+  if (c == QueryLexer::kAngularOpen) {
     // Angle Open Bracket
     return new AngleOpenBracketToken();
-  } else if (c == this->angle_close_bracket_) {
+  }
+  if (c == QueryLexer::kAngularClose) {
     // Angle Close Bracket
     return new AngleCloseBracketToken();
-  } else if (c == this->kSemicolon) {
+  }
+  if (c == QueryLexer::kSemicolon) {
     // Semicolon
     return new SemicolonToken();
-  } else if (c == this->dot_) {
+  }
+  if (c == QueryLexer::kDot) {
     // Dot
     return new DotToken();
-  } else if (c == this->kComma) {
+  }
+  if (c == QueryLexer::kComma) {
     // Comma
     return new CommaToken();
-  } else if (c == this->kQuote) {
+  }
+  if (c == QueryLexer::kQuote) {
     // Quote
     return new QuoteToken();
-  } else if (c == this->wild_card_) {
+  }
+  if (c == QueryLexer::kWildCard) {
     // Wild Card
     return new WildCardToken();
-  } else if (c == this->kHashtag) {
+  }
+  if (c == QueryLexer::kHashtag) {
     // Hashtag
     return new HashtagToken();
-  } else if (QueryKeywords::isValidComparator(tmp_)) {
+  }
+  if (QueryKeywords::isValidComparator(tmp_)) {
     // Comparator
     return new ComparatorToken(tmp_);
-  } else if (QueryKeywords::isValidAssignOperator(tmp_)) {
+  }
+  if (QueryKeywords::isValidAssignOperator(tmp_)) {
     // Assign Operators
     return new OperatorToken(this->tmp_);
   }
