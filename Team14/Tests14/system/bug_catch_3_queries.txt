@@ -118,6 +118,21 @@ procedure procName; variable varName;
 Select procName such that Modifies(procName, varName) with varName.varName = procName.procName
 animals
 5000
+604 - error in pattern, delayed error checking since pattern matches assign pattern
+while w;
+Select w pattern w ("x", "y")
+SemanticError
+5000
+605 - error in pattern, delayed error checking since pattern matches assign pattern
+while w;
+Select w pattern w ("x", _"y"_)
+SemanticError
+5000
+606
+assign a;
+Select a such that Follows("1", a)
+SyntaxError
+5000
 611 - control flow with path where called procedure modifies variable
 assign s1, s2; procedure p; call c; variable v;
 Select <p, s1, s2, v> such that Next*(s1, c) and Next*(c, s2) and Modifies(s1, v) and Uses(s2, v) and Modifies(c, v) with c.procName = p.procName
