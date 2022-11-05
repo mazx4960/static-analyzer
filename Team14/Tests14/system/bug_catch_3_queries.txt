@@ -58,6 +58,11 @@ call c1, c2;
 Select c1 such that Calls(c1, c2)
 SemanticError
 5000
+208
+stmt s1;
+Select s1 with s1.stmt# = "hello"
+SemanticError
+5000
 301 - Syntax error, double semi-colon
 variable v; variable v1;;
 Select v
@@ -117,6 +122,21 @@ Select such such that Modifies(such, that) with that.varName = "a1"
 procedure procName; variable varName;
 Select procName such that Modifies(procName, varName) with varName.varName = procName.procName
 animals
+5000
+604 - error in pattern, delayed error checking since pattern matches assign pattern
+while w;
+Select w pattern w ("x", "y")
+SemanticError
+5000
+605 - error in pattern, delayed error checking since pattern matches assign pattern
+while w;
+Select w pattern w ("x", _"y"_)
+SemanticError
+5000
+606
+assign a;
+Select a such that Follows("1", a)
+SyntaxError
 5000
 611 - control flow with path where called procedure modifies variable
 assign s1, s2; procedure p; call c; variable v;
