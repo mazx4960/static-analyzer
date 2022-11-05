@@ -19,11 +19,11 @@ std::unordered_set<std::string> Result::GetResults() const {
 
 std::string Result::ToString() const {
   std::string result_string;
-  result_string += "Selected:";
+  result_string += "Selected: <";
   for (auto *elem_ref : this->selected_) {
     result_string += " " + elem_ref->toString();
   }
-  result_string += "}\n";
+  result_string += " >\n";
   result_string += "Results[" + std::to_string(this->results_.size()) + "]: ";
   for (const auto &result : this->results_) {
     result_string += result + ", ";
