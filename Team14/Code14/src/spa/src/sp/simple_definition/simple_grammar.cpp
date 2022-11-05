@@ -151,17 +151,36 @@ AssignNode *AssignGrammarRule::assembleNode(std::vector<Node *> &childNodes) {
 CondExprGrammarRule::CondExprGrammarRule()
     : EarlyChoiceGrammarRule(std::vector<ConditionalRule>{
     std::make_pair([](TokenIterator tokenStream) -> bool {
-                     return (**tokenStream).type == TokenType::kSymbol || (**tokenStream).type == TokenType::kLiteral;
+                     if (**tokenStream == RoundOpenBracketToken()) {
+                       auto cur = tokenStream + 1;
+                       int level = 1;
+                       while (level > 0) {
+                         if (**cur == EndOfFileToken()) {
+                           return false;
+                         }
+                         if (**cur == RoundOpenBracketToken()) {
+                           level += 1;
+                         }
+                         else if (**cur == RoundCloseBracketToken()) {
+                           level -= 1;
+                         }
+                         cur++;
+                         assert(cur != tokenStream);
+                       }
+                       return **cur == OperatorToken("&&") || **cur == OperatorToken("||");
+                     }
+                     return false;
+                   },
+                   new BinaryCondGrammarProducer()),
+    std::make_pair([](TokenIterator tokenStream) -> bool {
+                     return (**tokenStream).type == TokenType::kSymbol || (**tokenStream).type == TokenType::kLiteral
+                        || **tokenStream == RoundOpenBracketToken();
                    },
                    new RelExprGrammarProducer()),
     std::make_pair([](TokenIterator tokenStream) -> bool {
                      return **tokenStream == OperatorToken("!");
                    },
                    new NotExprGrammarProducer()),
-    std::make_pair([](TokenIterator tokenStream) -> bool {
-                     return **tokenStream == RoundOpenBracketToken();
-                   },
-                   new BinaryCondGrammarProducer()),
 }) {
 }
 
