@@ -5,8 +5,6 @@ SET result_folder=..\..\Team14\Code14\tests
 SET test_names=(^
 	affects_edge^
 	basic^
-	bug_catch_1^
-	bug_catch_2^
 	code_6^
 	compute_ave^
 	compute_centroid^
@@ -17,6 +15,10 @@ SET test_names=(^
 	pql_error^
 	sp_error^
 	select_attributes^
+	bug_catch_1^
+    bug_catch_2^
+    bug_catch_2_gabriel^
+    bug_catch_3^
 )
 SET /A num_failed=0
 SET /A num_tests=0
