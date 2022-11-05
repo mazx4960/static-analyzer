@@ -1,0 +1,35 @@
+201
+procedure p;
+Select p such that Parent(p, 1)
+SemanticError
+5000
+202
+stmt s;
+Select s such that Follows(01, s)
+SyntaxError
+5000
+203
+stmt s1, s2;
+Select s1 and Follows(s1, s2)
+SyntaxError
+5000
+204
+print p; read r;
+Select p such that Affects(p, r)
+none
+5000
+205
+while w; if i; assign a;
+Select w such that Affects(w, a) and Affects(i, a)
+none
+5000
+206
+assign a1, a2;
+Select a1 such that Calls(a1, a2)
+SemanticError
+5000
+207
+call c1, c2;
+Select c1 such that Calls(c1, c2)
+SemanticError
+5000
