@@ -16,7 +16,7 @@ Query QueryOptimiser::Optimise(const Query& query, Context *context, IPKBQuerier
   updateSynonymWeight(clauses);
 
   ClauseVector new_clauses;
-  std::sort(clauses.begin(), clauses.end(), clause_comparator);
+  std::sort(clauses.begin(), clauses.end(), clause_comparator_);
   new_clauses.push_back(clauses.back());
   clauses.pop_back();
 
@@ -24,7 +24,7 @@ Query QueryOptimiser::Optimise(const Query& query, Context *context, IPKBQuerier
   for (int i = 0; i < iter_size; ++i) {
     updateClauseWeight(clauses);
     updateSynonymWeight(clauses);
-    std::sort(clauses.begin(), clauses.end(), clause_comparator);
+    std::sort(clauses.begin(), clauses.end(), clause_comparator_);
     new_clauses.push_back(clauses.back());
     clauses.pop_back();
   }

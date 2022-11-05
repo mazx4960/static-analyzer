@@ -17,9 +17,8 @@ bool QueryReference::operator==(const QueryReference *other) const {
 double QueryReference::GetWeight() const {
   return 0;
 }
-void QueryReference::SetWeight(double weight) {
-  return;
-}
+void QueryReference::SetWeight(double  /*weight*/) {
+  }
 
 // WildcardDeclaration
 EntityType WildcardReference::getEntityType() const {
