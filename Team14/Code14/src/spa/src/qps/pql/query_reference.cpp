@@ -71,9 +71,6 @@ QuerySynonym *SynonymReference::getSynonym() const {
   return this->query_synonym_;
 }
 
-int SynonymReference::getUsage() const {
-  return this->getSynonym()->GetUsage();
-}
 std::string SynonymReference::toString() const {
   return this->getSynonym()->ToString();
 }
