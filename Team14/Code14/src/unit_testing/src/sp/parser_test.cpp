@@ -254,6 +254,258 @@ TEST(CondParser, NotCondTest) {
   ASSERT_EQ(static_cast<CondExprNode *>(node)->GetCondExprType(), CondExprType::kNot);
 }
 
+TEST(CondParserAdvanced, ValidBracketExpressionTest) {
+  auto *cond_parser = new CondExprGrammarRule();
+  auto *source_stream = new std::istringstream("(a + 1) * 2 == 3");
+  std::vector<Token *> tokens = SimpleLexer(source_stream).Lex();
+  auto stream = tokens.begin();
+  ASSERT_NO_THROW(cond_parser->parseNode(stream));
+  ASSERT_EQ(**stream, EndOfFileToken());
+
+  source_stream = new std::istringstream("(((a + 1) * 2) == 3) || (4 == 5)");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  ASSERT_NO_THROW(cond_parser->parseNode(stream));
+  ASSERT_EQ(**stream, EndOfFileToken());
+
+  source_stream = new std::istringstream("((1 == 1) || (1 == 1)) || (4 == 5)");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  ASSERT_NO_THROW(cond_parser->parseNode(stream));
+  ASSERT_EQ(**stream, EndOfFileToken());
+
+  source_stream = new std::istringstream("(1 == 1) && ((1 == 1) && (1 == 1))");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  ASSERT_NO_THROW(cond_parser->parseNode(stream));
+  ASSERT_EQ(**stream, EndOfFileToken());
+
+  source_stream = new std::istringstream("(!(1 == 1)) || (1 == 1)");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  ASSERT_NO_THROW(cond_parser->parseNode(stream));
+  ASSERT_EQ(**stream, EndOfFileToken());
+
+  source_stream = new std::istringstream("(1 == 1) || (!(1 == 1))");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  ASSERT_NO_THROW(cond_parser->parseNode(stream));
+  ASSERT_EQ(**stream, EndOfFileToken());
+
+  source_stream = new std::istringstream("(1 + 1) + 1 == (1 + 1) + 1");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  ASSERT_NO_THROW(cond_parser->parseNode(stream));
+  ASSERT_EQ(**stream, EndOfFileToken());
+
+  source_stream = new std::istringstream("1 + (1 + 1) == 1 + (1 + 1)");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  ASSERT_NO_THROW(cond_parser->parseNode(stream));
+  ASSERT_EQ(**stream, EndOfFileToken());
+
+  source_stream = new std::istringstream("(((1 + 2) + 3 == (1 + 2) + 3) || ((1 + 2) + 3 == (1 + 2) + 3)) || ((1 + 2) + 3 == (1 + 2) + 3)");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  ASSERT_NO_THROW(cond_parser->parseNode(stream));
+  ASSERT_EQ(**stream, EndOfFileToken());
+
+  source_stream = new std::istringstream("((1 + 2) + 3 == (1 + 2) + 3) || (((1 + 2) + 3 == (1 + 2) + 3) || ((1 + 2) + 3 == (1 + 2) + 3))");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  ASSERT_NO_THROW(cond_parser->parseNode(stream));
+  ASSERT_EQ(**stream, EndOfFileToken());
+
+  source_stream = new std::istringstream("!(1 == 1)");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  ASSERT_NO_THROW(cond_parser->parseNode(stream));
+  ASSERT_EQ(**stream, EndOfFileToken());
+
+  source_stream = new std::istringstream("(!(1 == 1)) || (!(1 == 1))");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  ASSERT_NO_THROW(cond_parser->parseNode(stream));
+  ASSERT_EQ(**stream, EndOfFileToken());
+
+  source_stream = new std::istringstream("((!(1 == 1)) || (!(1 == 1))) || (!(4 == 5))");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  ASSERT_NO_THROW(cond_parser->parseNode(stream));
+  ASSERT_EQ(**stream, EndOfFileToken());
+
+  source_stream = new std::istringstream("(!(1 == 1)) && ((!(1 == 1)) && (!(1 == 1)))");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  ASSERT_NO_THROW(cond_parser->parseNode(stream));
+  ASSERT_EQ(**stream, EndOfFileToken());
+
+  source_stream = new std::istringstream("!((1 + 1) == 1)");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  ASSERT_NO_THROW(cond_parser->parseNode(stream));
+  ASSERT_EQ(**stream, EndOfFileToken());
+
+  source_stream = new std::istringstream("(!((1 + 1) + 1 == 1)) || (1 == 1)");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  ASSERT_NO_THROW(cond_parser->parseNode(stream));
+  ASSERT_EQ(**stream, EndOfFileToken());
+}
+
+TEST(CondParserAdvanced, InvalidBracketExpressionTest) {
+  auto *cond_parser = new CondExprGrammarRule();
+  auto *source_stream = new std::istringstream("a == 1 || b == 2");
+  std::vector<Token *> tokens = SimpleLexer(source_stream).Lex();
+  auto stream = tokens.begin();
+  try {
+    cond_parser->parseNode(stream);
+    ASSERT_NE(**stream, EndOfFileToken());
+  } catch (ParseSyntaxError&) {
+    // pass
+  }
+
+  source_stream = new std::istringstream("!a == 1");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  try {
+    cond_parser->parseNode(stream);
+    ASSERT_NE(**stream, EndOfFileToken());
+  } catch (ParseSyntaxError&) {
+    // pass
+  }
+
+  source_stream = new std::istringstream("a == 1 && b == 2");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  try {
+    cond_parser->parseNode(stream);
+    ASSERT_NE(**stream, EndOfFileToken());
+  } catch (ParseSyntaxError&) {
+    // pass
+  }
+
+  source_stream = new std::istringstream("(a + 1) * 2 == 2 && b == 2");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  try {
+    cond_parser->parseNode(stream);
+    ASSERT_NE(**stream, EndOfFileToken());
+  } catch (ParseSyntaxError&) {
+    // pass
+  }
+
+  source_stream = new std::istringstream("(a + 1) * 2 == 2 && b == 2");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  try {
+    cond_parser->parseNode(stream);
+    ASSERT_NE(**stream, EndOfFileToken());
+  } catch (ParseSyntaxError&) {
+    // pass
+  }
+
+  source_stream = new std::istringstream("(a == 2) || (b + 1) == 2");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  try {
+    cond_parser->parseNode(stream);
+    ASSERT_NE(**stream, EndOfFileToken());
+  } catch (ParseSyntaxError&) {
+    // pass
+  }
+
+  source_stream = new std::istringstream("(1 == 1 || (1 == 1)) || (4 == 5)");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  try {
+    cond_parser->parseNode(stream);
+    ASSERT_NE(**stream, EndOfFileToken());
+  } catch (ParseSyntaxError&) {
+    // pass
+  }
+
+  source_stream = new std::istringstream("((1 == 1) || 1 == 1) || (4 == 5)");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  try {
+    cond_parser->parseNode(stream);
+    ASSERT_NE(**stream, EndOfFileToken());
+  } catch (ParseSyntaxError&) {
+    // pass
+  }
+
+  source_stream = new std::istringstream("(1 == 1) && (1 == 1 && (1 == 1))");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  try {
+    cond_parser->parseNode(stream);
+    ASSERT_NE(**stream, EndOfFileToken());
+  } catch (ParseSyntaxError&) {
+    // pass
+  }
+
+  source_stream = new std::istringstream("(1 == 1) && ((1 == 1) && 1 == 1)");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  try {
+    cond_parser->parseNode(stream);
+    ASSERT_NE(**stream, EndOfFileToken());
+  } catch (ParseSyntaxError&) {
+    // pass
+  }
+
+  source_stream = new std::istringstream("!(1 == 1) && (1 == 1)");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  try {
+    cond_parser->parseNode(stream);
+    ASSERT_NE(**stream, EndOfFileToken());
+  } catch (ParseSyntaxError&) {
+    // pass
+  }
+
+  source_stream = new std::istringstream("(1 == 1) || !(1 == 1)");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  try {
+    cond_parser->parseNode(stream);
+    ASSERT_NE(**stream, EndOfFileToken());
+  } catch (ParseSyntaxError&) {
+    // pass
+  }
+
+  source_stream = new std::istringstream("!(1 + 1) == 1");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  try {
+    cond_parser->parseNode(stream);
+    ASSERT_NE(**stream, EndOfFileToken());
+  } catch (ParseSyntaxError&) {
+    // pass
+  }
+
+  source_stream = new std::istringstream("(1 == 1) + 1 == 1");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  try {
+    cond_parser->parseNode(stream);
+    ASSERT_NE(**stream, EndOfFileToken());
+  } catch (ParseSyntaxError&) {
+    // pass
+  }
+
+  source_stream = new std::istringstream("(1 + 1) || (1 == 1)");
+  tokens = SimpleLexer(source_stream).Lex();
+  stream = tokens.begin();
+  try {
+    cond_parser->parseNode(stream);
+    ASSERT_NE(**stream, EndOfFileToken());
+  } catch (ParseSyntaxError&) {
+    // pass
+  }
+}
+
 TEST(StatementParser, ReadTest) {
   auto *stmt_parser = new StatementGrammarRule();
   std::vector<Token *> tokens{new KeywordToken("read"), new KeywordToken("a"), new SemicolonToken(),
