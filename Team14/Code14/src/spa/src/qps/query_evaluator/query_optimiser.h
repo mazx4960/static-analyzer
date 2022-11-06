@@ -6,12 +6,11 @@
 #include "types.h"
 #include "pkb/pkb.h"
 
-
 class QueryOptimiser {
  private:
   Context *context_;
   std::unordered_map<EntityType, int> simple_stats_;
-  std::unordered_map<QuerySynonym*, int> synonym_usage_;
+  std::unordered_map<QuerySynonym *, int> synonym_usage_;
 
   struct {
     bool operator()(QueryClause *first, QueryClause *second) const {
@@ -26,13 +25,16 @@ class QueryOptimiser {
   EntitySet getReferenceContext(QueryReference *query_reference);
   double calculateInitialClauseWeight(QueryClause *query_clause);
   QueryClause *updateInitialWeight(QueryClause *clause);
-  static void updateClauseWeight(const ClauseVector& clauses);
-  static void updateClauseWeight(QueryClause *clause);
   static void updateSynonymWeight(QueryClause *query_clause);
-  static void updateSynonymWeight(const ClauseVector& clauses);
+  static void updateSynonymWeight(const ClauseVector &clauses);
   void updateInitialWeights(const ClauseVector &clauses);
+  void updateClauseWeight(QueryClause *clause, int iteration);
+  void updateClauseWeight(const ClauseVector &clauses, int iteration);
+  void resetSynonymWeight(QueryClause *query_clause);
+  void resetSynonymWeight(const ClauseVector &clauses);
+
  public:
   QueryOptimiser() = default;
-  Query Optimise(const Query& query, Context *context, IPKBQuerier *pkb);
+  Query Optimise(const Query &query, Context *context, IPKBQuerier *pkb);
 };
 
