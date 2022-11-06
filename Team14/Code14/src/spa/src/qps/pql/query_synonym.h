@@ -9,7 +9,7 @@ class QuerySynonym {
  private:
   std::string name_;
   EntityType type_;
-  int usage_ = 0;
+  double weight_ = 0;
 
  public:
   explicit QuerySynonym(std::string name, EntityType type) : name_(std::move(name)), type_(type) {
@@ -17,11 +17,12 @@ class QuerySynonym {
 
   [[nodiscard]] std::string GetName() const;
   [[nodiscard]] EntityType GetEntityType() const;
-  [[nodiscard]] int GetUsage() const;
+  [[nodiscard]] double GetWeight() const;
   [[nodiscard]] std::string ToString() const;
-  void IncrementUsage();
+  void SetWeight(double weight);
   bool operator==(const QuerySynonym &) const;
   bool operator!=(const QuerySynonym &) const;
+
 };
 
 struct QuerySynonymHashFunction {

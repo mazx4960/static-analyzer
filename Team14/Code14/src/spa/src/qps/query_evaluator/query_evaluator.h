@@ -10,6 +10,7 @@
 #include "result_projector.h"
 #include "context.h"
 #include "qps/query_evaluator/database/database.h"
+#include "query_optimiser.h"
 
 class QueryEvaluator {
  private:
@@ -17,10 +18,6 @@ class QueryEvaluator {
   IPKBQuerier *pkb_;
   Context *ctx_;
   Database *database_;
-
-  ClauseVector getSortedQueries();
-  static QueryClause *updateWeight(QueryClause *clause);
-  static double calculateWeight(int first_usage_count, int second_usage_count);
   /**
    * Calls PKB to fetch context for each query declaration.
    */

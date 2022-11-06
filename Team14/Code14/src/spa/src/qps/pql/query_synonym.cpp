@@ -19,9 +19,11 @@ bool QuerySynonym::operator==(const QuerySynonym &other) const {
 bool QuerySynonym::operator!=(const QuerySynonym &other) const {
   return !(*this == other);
 }
-void QuerySynonym::IncrementUsage() {
-  this->usage_++;
+double QuerySynonym::GetWeight() const {
+  return this->weight_;
 }
-int QuerySynonym::GetUsage() const {
-  return this->usage_;
+void QuerySynonym::SetWeight(double weight) {
+  this->weight_ = weight;
+
 }
+
