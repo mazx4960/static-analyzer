@@ -1,6 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include <spdlog/spdlog.h>
+#include <set>
 #include "query_builder.h"
 #include "qps/pql/query_keywords.h"
 
@@ -76,7 +77,7 @@ SelectCall *QueryBuilder::BuildSelect() {
   return new ElemSelect(BuildElems(selected));
 }
 std::vector<QueryClause *> QueryBuilder::BuildClauses() {
-  auto clauses = std::vector<QueryClause *>();
+  auto clauses = std::set<QueryClause *, QueryClauseUniquePointerComparator>();
   for (auto *clause : clauses_bp_) {
     QueryClause *built_clause;
     switch (clause->getClauseType()) {
@@ -96,9 +97,10 @@ std::vector<QueryClause *> QueryBuilder::BuildClauses() {
         throw ParseSemanticError("Unsupported clause type!");
       }
     }
-    clauses.push_back(built_clause);
+    clauses.insert(built_clause);
   }
-  return clauses;
+  std::vector<QueryClause *> clause_vector(clauses.begin(), clauses.end());
+  return clause_vector;
 }
 
 std::vector<ElemReference *> QueryBuilder::BuildElems(const std::vector<ElemBlueprint *> &elem_blueprints) {
