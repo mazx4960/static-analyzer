@@ -511,12 +511,7 @@ ExpressionSpec *PatternClause::getFirstExpression() const {
 ExpressionSpec *PatternClause::getSecondExpression() const {
   return this->second_expression_;
 }
-void PatternClause::setSynonymReference(SynonymReference *stmt_ref) {
-  this->stmt_ref_ = stmt_ref;
-}
-void PatternClause::setEntReference(QueryReference *ent_ref) {
-  this->ent_ref_ = ent_ref;
-}
+
 bool PatternClause::isSemanticallyCorrect() const {
   auto *ent_ref = this->getEntRef();
   switch (getEntRef()->getRefType()) {
