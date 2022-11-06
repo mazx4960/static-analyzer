@@ -24,7 +24,6 @@ class Database {
   };
   static std::vector<Table *> Empty(std::vector<QuerySynonym *> synonyms);
   void AddTable(Table *table);
-  void OrderTables();
   void MergeTables();
   bool IsEmpty() const;
   bool HasResults() const;
