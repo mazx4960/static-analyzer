@@ -1,0 +1,2 @@
+if i; variable v;
+Select v pattern if (v, _, _)

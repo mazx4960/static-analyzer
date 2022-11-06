@@ -1,0 +1,155 @@
+100
+if ifs; variable v; procedure p;
+Select <ifs,v,p> such that Calls*("check", p) and Calls*(p, "nestedLoops") pattern ifs(v,_)
+SemanticError
+5000
+101
+if ifs; call c; variable v; procedure p;
+Select <ifs,c,v,p> pattern ifs("m1","x1",_) such that Calls*("nestedLoops", p) and Modifies(c, v)
+SemanticError
+5000
+102
+if ifs; while w; variable v1; variable v2; assign a;
+Select <ifs, v1, w, v2> pattern ifs(v1,"x1",_) pattern w(v2,_,_) pattern a(v2,_)
+SemanticError
+5000
+103
+assign a; if ifs; variable v; while w; procedure p;
+Select v pattern a(v,_) pattern ifs(v,_,_) such that Parent* (w, a) and Calls*("nestedLoops", p)
+a1, b1, s1, t1, m1, n1, y1, x1, g1, sum, dog, meow, tiger
+5000
+104
+assign a; while w; procedure p;
+Select <w, a> such that Calls("generation", p) such that Parent* (w, a) and Modifies (a, "sum")
+82 83
+5000
+201
+procedure p;
+Select p such that Parent(p, 1)
+SemanticError
+5000
+202
+stmt s;
+Select s such that Follows(01, s)
+SyntaxError
+5000
+203
+stmt s1, s2;
+Select s1 and Follows(s1, s2)
+SyntaxError
+5000
+204
+print p; read r;
+Select p such that Affects(p, r)
+none
+5000
+205
+while w; if i; assign a;
+Select w such that Affects(w, a) and Affects(i, a)
+none
+5000
+206
+assign a1, a2;
+Select a1 such that Calls(a1, a2)
+SemanticError
+5000
+207
+call c1, c2;
+Select c1 such that Calls(c1, c2)
+SemanticError
+5000
+208
+stmt s1;
+Select s1 with s1.stmt# = "hello"
+SemanticError
+5000
+301 - Syntax error, double semi-colon
+variable v; variable v1;;
+Select v
+SyntaxError
+5000
+302 - Syntax error, semi-colon on Select
+variable v; variable v1;
+Select v;
+SyntaxError
+5000
+303 - Syntax error, lower case Select
+variable v;
+select v
+SyntaxError
+5000
+304 - Semantic error, synonym not declared
+
+Select x
+SemanticError
+5000
+305 - Semantic error, synonym not declared, boolean
+
+Select BOOLEAN with x.varName = "x"
+SemanticError
+5000
+306 - Meaningless query
+stmt s1, s2;
+Select <s1,s2> such that Parent(s1,s2) and Parent(s2,s1)
+none
+5000
+307 - Multi clause, tuple
+stmt s1, s2; if if; while w;
+Select <s1,s2> such that Affects(s1,s2) and Parent(if,s1) and Parent(w,s2) and Parent(if,w)
+17 21, 18 20, 40 20, 41 47, 53 59, 66 72
+5000
+307 - Multi clause, tuple
+stmt s1, s2; variable v;
+Select <s1,s2,v> such that Modifies(s1,v) and Modifies(s2,v) and Parent(s1,s2) and Next*(73,s1) and Next*(s1,s2)
+82 83 sum, 82 84 m, 82 85 y, 82 86 z, 82 87 f, 82 90 count, 87 88 f, 87 89 f
+5000
+308 - Multi clause, tuple
+stmt s1,s2; variable v; while w;
+Select <s1,s2,v> such that Parent(s1,s2) and Modifies(s2,v) pattern w(v,_) such that Next(98,s1)
+99 101 icebear, 99 102 cat, 115 116 icebear, 115 118 lion, 115 118 meow, 115 124 dog, 115 124 meow
+5000
+601
+assign s1, s2; variable v1, v2;
+Select <s1, s2> such that Modifies(s1, v1) and Uses(s2, v2) and Modifies(s2, v1) and Uses(s1, v2) and Modifies(_, v)
+SemanticError
+5000
+602 - keyword as synonym in query
+assign such; variable that;
+Select such such that Modifies(such, that) with that.varName = "a1"
+5, 18
+5000
+603 - attribute as synonym name
+procedure procName; variable varName;
+Select procName such that Modifies(procName, varName) with varName.varName = procName.procName
+animals
+5000
+604 - error in pattern, delayed error checking since pattern matches assign pattern
+while w;
+Select w pattern w ("x", "y")
+SemanticError
+5000
+605 - error in pattern, delayed error checking since pattern matches assign pattern
+while w;
+Select w pattern w ("x", _"y"_)
+SemanticError
+5000
+606
+assign a;
+Select a such that Follows("1", a)
+SyntaxError
+5000
+611 - control flow with path where called procedure modifies variable
+assign s1, s2; procedure p; call c; variable v;
+Select <p, s1, s2, v> such that Next*(s1, c) and Next*(c, s2) and Modifies(s1, v) and Uses(s2, v) and Modifies(c, v) with c.procName = p.procName
+generation 15 38 a, generation 38 38 a, check 74 92 x
+5000
+612 - control flow with path where called procedure modifies variable, same as 611, but with Affects(s1, s2)
+assign s1, s2; procedure p; call c; variable v;
+Select <p, s1, s2, v> such that Affects(s1, s2) and Next*(s1, c) and Next*(c, s2) and Modifies(s1, v) and Uses(s2, v) and Modifies(c, v) with c.procName = p.procName
+none
+5000
+613
+read r; assign a;
+Select <r, a> such that Affects(r, a)
+none
+5000

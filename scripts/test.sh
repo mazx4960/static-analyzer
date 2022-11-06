@@ -6,9 +6,6 @@ result_folder="Team14/Code14/tests"
 test_names=(
   "affects_edge"
   "basic"
-  "bug_catch_1"
-  "bug_catch_2"
-  "bug_catch_2_gabriel"
   "code_6"
   "compute_ave"
   "compute_centroid"
@@ -19,6 +16,10 @@ test_names=(
   "pql_error"
   "sp_error"
   "select_attributes"
+  "bug_catch_1"
+  "bug_catch_2"
+  "bug_catch_2_gabriel"
+  "bug_catch_3"
 )
 num_failed=0
 

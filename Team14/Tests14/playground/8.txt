@@ -1,0 +1,8 @@
+procedure p {
+    if (((sin * sin + cos * cos) == 1) || (!(tan != (sin / cos)))) then {
+        x = y / 2;
+        y = x / 2;
+    } else {
+        x = 0;
+    }
+}
