@@ -28,10 +28,10 @@ class QueryOptimiser {
   static void updateSynonymWeight(QueryClause *query_clause);
   static void updateSynonymWeight(const ClauseVector &clauses);
   void updateInitialWeights(const ClauseVector &clauses);
-  void updateClauseWeight(QueryClause *clause, int iteration);
-  void updateClauseWeight(const ClauseVector &clauses, int iteration);
-  void resetSynonymWeight(QueryClause *query_clause);
-  void resetSynonymWeight(const ClauseVector &clauses);
+  static void updateClauseWeight(QueryClause *clause, int iteration);
+  static void updateClauseWeight(const ClauseVector &clauses, int iteration);
+  static void resetSynonymWeight(QueryClause *query_clause);
+  static void resetSynonymWeight(const ClauseVector &clauses);
 
  public:
   QueryOptimiser() = default;

@@ -232,7 +232,6 @@ double QueryOptimiser::calculateInitialClauseWeight(QueryClause *query_clause) {
 
     }
     if (such_that_type == RsType::kParent) {
-      int total_stmt = simple_stats_[EntityType::kStatement];
       // Value between 1 - 2
       return pow(2 - (1.0 / std::max(first_context_size, second_context_size)), 1);
 
