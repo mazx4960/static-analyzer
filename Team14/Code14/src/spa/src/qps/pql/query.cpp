@@ -17,11 +17,9 @@ std::string Query::toString() const {
   for (auto *declaration : synonym_declarations_) {
     str.append(declaration->ToString() + "; ");
   }
-  str.append("}, ");
-  str.append("QueryCall:");
+  str.append("}, QueryCall:");
   str.append(query_call_->ToString());
-  str.append(", ");
-  str.append("Clauses: {");
+  str.append(", Clauses: {");
   for (auto *clause : query_clauses_) {
     str.append(clause->toString() + " ");
   }

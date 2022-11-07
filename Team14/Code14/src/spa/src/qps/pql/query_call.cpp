@@ -19,3 +19,17 @@ std::string ElemSelect::ToString() const {
   }
   return str;
 }
+bool ElemSelect::operator==(const SelectCall &other) const {
+  if (this->GetSelectType() != other.GetSelectType()) {
+    return false;
+  }
+  auto this_references = this->GetReferences();
+  auto other_references = static_cast<const ElemSelect &>(other).GetReferences();
+  return std::equal(this_references.begin(),
+                    this_references.end(),
+                    other_references.begin(),
+                    [](const ElemReference *lhs, const ElemReference *rhs) { return *lhs == *rhs; });
+}
+bool BooleanSelect::operator==(const SelectCall &other) const {
+  return this->GetSelectType() == other.GetSelectType();
+}

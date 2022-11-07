@@ -18,6 +18,7 @@ class SelectCall {
   };
   [[nodiscard]] SelectType GetSelectType() const;
   [[nodiscard]] virtual std::string ToString() const;
+  virtual bool operator==(const SelectCall &other) const = 0;
 };
 
 /**
@@ -34,6 +35,7 @@ class ElemSelect : public SelectCall {
   };
   [[nodiscard]] std::vector<ElemReference *> GetReferences() const;
   [[nodiscard]] std::string ToString() const override;
+  bool operator==(const SelectCall &other) const override;
 };
 
 /**
@@ -44,4 +46,5 @@ class BooleanSelect : public SelectCall {
  public:
   BooleanSelect() : SelectCall(SelectType::kBoolean) {
   };
+  bool operator==(const SelectCall &other) const override;
 };

@@ -35,7 +35,7 @@ class QueryParser {
   void ParseSuchThat(std::vector<ClauseBlueprint *> &clauses);
   void ParsePattern(std::vector<ClauseBlueprint *> &clauses);
   void ParseWith(std::vector<ClauseBlueprint *> &clauses);
-  BaseBlueprint *ParseBase();
+  ReferenceBlueprint *ParseReference();
   SynonymBlueprint *ParseSynonym();
   ElemBlueprint *ParseElem();
   ExprBlueprint *ParseExpr();
