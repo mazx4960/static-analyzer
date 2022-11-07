@@ -9,6 +9,11 @@ Query QueryOptimiser::Optimise(const Query &query, Context *context, IPKBQuerier
   auto *query_call = query.getQueryCall();
   auto clauses = query.getClauses();
 
+  // do not need to optimise if there is no clauses
+  if (clauses.empty()) {
+    return query;
+  }
+
   this->simple_stats_ = pkb->getSimpleStats();
   this->context_ = context;
 
