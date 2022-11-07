@@ -1,20 +1,13 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
+#include "database.h"
 
 #include <spdlog/spdlog.h>
-
-#include "database.h"
 
 std::vector<Table *> Database::Empty(std::vector<QuerySynonym *> synonyms) {
   return {Table::Empty(std::move(synonyms))};
 }
 void Database::AddTable(Table *table) {
   unmerged_tables_.push_back(table);
-}
-
-void Database::OrderTables() {
-  std::sort(unmerged_tables_.begin(), unmerged_tables_.end(), [](Table *first, Table *second) -> bool {
-    return first->Size() < second->Size();
-  });
 }
 
 void Database::MergeTables() {
@@ -25,13 +18,12 @@ void Database::MergeTables() {
     this->merged_tables_ = this->Empty(synonyms);
     return;
   }
-  // sort from largest to smallest table size
-  std::sort(unmerged_tables_.begin(), unmerged_tables_.end(), [](Table *a, Table *b) {
-    return a->Size() > b->Size();
-  });
+
+  std::shuffle(unmerged_tables_.begin(), unmerged_tables_.end(), std::mt19937(std::random_device()()));
   while (!unmerged_tables_.empty()) {
     Table *table = unmerged_tables_.back();
     unmerged_tables_.pop_back();
+    spdlog::info("Merging {}, {} tables remaining.", table->ToString(), unmerged_tables_.size());
 
     std::vector<std::vector<Table *>::iterator> matches{};
     Table *merged_table = table;
@@ -48,7 +40,7 @@ void Database::MergeTables() {
   }
   spdlog::debug("Merged tables: {}", merged_tables_.size());
   for (auto *table : merged_tables_) {
-    spdlog::debug("Table: {}", table->ToString());
+    spdlog::debug(table->ToString());
   }
 }
 bool Database::IsEmpty() const {
