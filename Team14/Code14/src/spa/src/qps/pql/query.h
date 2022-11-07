@@ -31,4 +31,5 @@ class Query {
   [[nodiscard]] SelectCall *getQueryCall() const;
   [[nodiscard]] ClauseVector getClauses() const;
   [[nodiscard]] std::string toString() const;
+  bool operator==(const Query &other) const;
 };

@@ -1,6 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "query.h"
+#include "commons/helper/vector_comparator.h"
 
 SynonymSet Query::getSynonymDeclarations() const {
   return this->synonym_declarations_;
@@ -25,4 +26,11 @@ std::string Query::toString() const {
   }
   str.append("}");
   return str;
+}
+
+bool Query::operator==(const Query &other) const {
+  auto this_clauses = this->getClauses();
+  auto other_clauses = other.getClauses();
+  return *this->getQueryCall() == *other.getQueryCall()
+      && VectorComparator<QueryClause>::CompareVectors(this_clauses, other_clauses);
 }

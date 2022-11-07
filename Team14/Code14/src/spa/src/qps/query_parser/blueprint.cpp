@@ -1,4 +1,5 @@
 #include "blueprint.h"
+#include "commons/helper/vector_comparator.h"
 
 ReferenceType ReferenceBlueprint::getReferenceType() const {
   return this->reference_type_;
@@ -44,10 +45,7 @@ ElemBlueprint *SelectBlueprint::getSingleReference() const {
 bool SelectBlueprint::operator==(const SelectBlueprint &other) const {
   auto this_references = this->getBlueprintReferences();
   auto other_references = other.getBlueprintReferences();
-  return std::equal(this_references.begin(),
-                    this_references.end(),
-                    other_references.begin(),
-                    [](const ReferenceBlueprint *lhs, const ReferenceBlueprint *rhs) { return *lhs == *rhs; })
+  return VectorComparator<ElemBlueprint>::CompareVectors(this_references, other_references)
       && (*this->getSingleReference()) == (*other.getSingleReference());
 }
 RsType SuchThatBlueprint::getRsType() const {

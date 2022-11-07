@@ -1,6 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
 
 #include "query_call.h"
+#include "commons/helper/vector_comparator.h"
 
 SelectType SelectCall::GetSelectType() const {
   return this->type_;
@@ -25,10 +26,7 @@ bool ElemSelect::operator==(const SelectCall &other) const {
   }
   auto this_references = this->GetReferences();
   auto other_references = static_cast<const ElemSelect &>(other).GetReferences();
-  return std::equal(this_references.begin(),
-                    this_references.end(),
-                    other_references.begin(),
-                    [](const ElemReference *lhs, const ElemReference *rhs) { return *lhs == *rhs; });
+  return VectorComparator<ElemReference>::CompareVectors(this_references, other_references);
 }
 bool BooleanSelect::operator==(const SelectCall &other) const {
   return this->GetSelectType() == other.GetSelectType();

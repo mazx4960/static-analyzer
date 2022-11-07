@@ -1,9 +1,5 @@
 #include <gtest/gtest.h>
-
-#include <algorithm>
-
 #include "qps/query_parser/query_parser.h"
-#include "qps_test_helper.h"
 
 TEST(QueryParserTest, SynonymParseTest) {
   std::vector<Token *> tokens = {new KeywordToken("syn"), new EndOfFileToken()};
@@ -76,7 +72,7 @@ TEST(QueryParserTest, NoDeclarationsValidParseTest) {
   QueryParser parser = QueryParser(tokens);
   auto *query = parser.Parse();
   auto *expected = new Query(declarations, new BooleanSelect(), clauses);
-  ASSERT_EQ(query->toString(), expected->toString());
+  ASSERT_EQ(*query, *expected);
 }
 
 /*
@@ -97,11 +93,7 @@ TEST(QueryParserTest, NoClausesValidParseTest) {
   QueryParser parser = QueryParser(tokens);
   auto *query = parser.Parse();
   auto *expected = new Query(declarations, new ElemSelect({new AttrReference(synonym_1, AttributeType::kNone)}), clauses);
-  ASSERT_EQ(query->getSynonymDeclarations().size(), expected->getSynonymDeclarations().size());
-  ASSERT_EQ(query->getQueryCall()->ToString(), expected->getQueryCall()->ToString());
-  for (int i = 0; i < expected->getClauses().size(); i++) {
-    ASSERT_EQ(*query->getClauses().at(i), *expected->getClauses().at(i));
-  }
+  ASSERT_EQ(*query, *expected);
 }
 
 
@@ -146,12 +138,7 @@ TEST(QueryParserTest, ComplexValidParseTest1) {
   QueryParser parser = QueryParser(tokens);
   auto *query = parser.Parse();
   auto *expected = new Query(declarations, new ElemSelect({new AttrReference(synonym_1, AttributeType::kNone)}), clauses);
-  ASSERT_EQ(query->getSynonymDeclarations().size(), expected->getSynonymDeclarations().size());
-  ASSERT_EQ(query->getQueryCall()->ToString(), expected->getQueryCall()->ToString());
-
-  std::vector<QueryClause *> parsed_clauses = query->getClauses();
-  std::vector<QueryClause *> expected_clauses = expected->getClauses();
-  ASSERT_TRUE(QpsTestHelper<QueryClause>::CompareVectors(parsed_clauses, expected_clauses));
+  ASSERT_EQ(*query, *expected);
 }
 
 
@@ -208,12 +195,7 @@ TEST(QueryParserTest, ComplexValidParseTest2) {
   QueryParser parser = QueryParser(tokens);
   auto *query = parser.Parse();
   auto *expected = new Query(declarations, new ElemSelect({new AttrReference(synonym_1, AttributeType::kNone)}), clauses);
-  ASSERT_EQ(query->getSynonymDeclarations().size(), expected->getSynonymDeclarations().size());
-  ASSERT_EQ(query->getQueryCall()->ToString(), expected->getQueryCall()->ToString());
-
-  std::vector<QueryClause *> parsed_clauses = query->getClauses();
-  std::vector<QueryClause *> expected_clauses = expected->getClauses();
-  ASSERT_TRUE(QpsTestHelper<QueryClause>::CompareVectors(parsed_clauses, expected_clauses));
+  ASSERT_EQ(*query, *expected);
 }
 
 /*
@@ -282,10 +264,5 @@ TEST(QueryParserTest, DuplicateComplexValidParseTest) {
   QueryParser parser = QueryParser(tokens);
   auto *query = parser.Parse();
   auto *expected = new Query(declarations, new ElemSelect({new AttrReference(synonym_1, AttributeType::kNone)}), clauses);
-  ASSERT_EQ(query->getSynonymDeclarations().size(), expected->getSynonymDeclarations().size());
-  ASSERT_EQ(query->getQueryCall()->ToString(), expected->getQueryCall()->ToString());
-
-  std::vector<QueryClause *> parsed_clauses = query->getClauses();
-  std::vector<QueryClause *> expected_clauses = expected->getClauses();
-  ASSERT_TRUE(QpsTestHelper<QueryClause>::CompareVectors(parsed_clauses, expected_clauses));
+  ASSERT_EQ(*query, *expected);
 }

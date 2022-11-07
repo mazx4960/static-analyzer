@@ -3,7 +3,7 @@
 #include <vector>
 
 template<typename T>
-class QpsTestHelper {
+class VectorComparator {
  public:
   static bool CompareVectors(const std::vector<T *> &results, const std::vector<T *> &expected) {
     if (results.size() != expected.size()) {
