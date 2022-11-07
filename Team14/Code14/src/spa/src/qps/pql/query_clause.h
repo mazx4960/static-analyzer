@@ -161,9 +161,6 @@ class PatternClause : public QueryClause {
   ExpressionSpec *second_expression_;
  protected:
  public:
-  explicit PatternClause(SynonymReference *stmt_ref, QueryReference *ent_ref, ExpressionSpec *first_expression)
-      : QueryClause(ClauseType::kPattern), stmt_ref_(stmt_ref), ent_ref_(ent_ref), first_expression_(first_expression) {
-  };
   explicit PatternClause(SynonymReference *synonym_declaration,
                          QueryReference *ent_ref,
                          ExpressionSpec *first_expression,
@@ -174,8 +171,6 @@ class PatternClause : public QueryClause {
         first_expression_(first_expression),
         second_expression_(second_expression) {
   };
-  void setSynonymReference(SynonymReference *stmt_ref);
-  void setEntReference(QueryReference *ent_ref);
   [[nodiscard]] SynonymReference *getStmtRef() const;
   [[nodiscard]] QueryReference *getEntRef() const;
   [[nodiscard]] ExpressionSpec *getFirstExpression() const;
