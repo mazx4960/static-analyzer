@@ -20,8 +20,7 @@ class QueryReference : public IWeight {
   [[nodiscard]] double GetWeight() const override = 0;
   [[nodiscard]] ReferenceType getRefType() const;
   [[nodiscard]] virtual std::string toString() const = 0;
-  virtual bool operator==(const QueryReference &other) const;
-  virtual bool operator==(const QueryReference *other) const;
+  virtual bool operator==(const QueryReference &other) const = 0;
 };
 
 class WildcardReference : public QueryReference {
@@ -38,7 +37,6 @@ class WildcardReference : public QueryReference {
   [[nodiscard]] EntityType getEntityType() const;
   [[nodiscard]] std::string toString() const override;
   bool operator==(const QueryReference &other) const override;
-  bool operator==(const QueryReference *other) const override;
 };
 
 class IdentReference : public QueryReference {
@@ -53,7 +51,6 @@ class IdentReference : public QueryReference {
   [[nodiscard]] std::string getValue() const;
   [[nodiscard]] std::string toString() const override;
   bool operator==(const QueryReference &other) const override;
-  bool operator==(const QueryReference *other) const override;
 };
 
 class IntegerReference : public QueryReference {
@@ -68,7 +65,6 @@ class IntegerReference : public QueryReference {
   [[nodiscard]] std::string getValue() const;
   [[nodiscard]] std::string toString() const override;
   bool operator==(const QueryReference &other) const override;
-  bool operator==(const QueryReference *other) const override;
 };
 
 class ElemReference : public QueryReference {
@@ -78,6 +74,7 @@ class ElemReference : public QueryReference {
   explicit ElemReference(ReferenceType reference_type) : QueryReference(reference_type) {
   }
   [[nodiscard]] virtual QuerySynonym *getSynonym() const = 0;
+  bool operator==(const QueryReference &other) const override = 0;
 };
 
 class SynonymReference : public ElemReference {
@@ -94,7 +91,6 @@ class SynonymReference : public ElemReference {
   [[nodiscard]] QuerySynonym *getSynonym() const override;
   [[nodiscard]] std::string toString() const override;
   bool operator==(const QueryReference &other) const override;
-  bool operator==(const QueryReference *other) const override;
 };
 
 class AttrReference : public ElemReference, public ICheckSemantics {
@@ -115,7 +111,6 @@ class AttrReference : public ElemReference, public ICheckSemantics {
   [[nodiscard]] bool isSemanticallyCorrect() const override;
   [[nodiscard]] std::string toString() const override;
   bool operator==(const QueryReference &other) const override;
-  bool operator==(const QueryReference *other) const override;
 };
 
 struct SynonymReferenceHashFunction {

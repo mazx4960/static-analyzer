@@ -197,3 +197,9 @@ class WithClause : public QueryClause {
   [[nodiscard]] std::string toString() const override;
   bool operator==(const QueryClause &other) const override;
 };
+
+struct QueryClauseUniquePointerComparator {
+  bool operator()(const QueryClause *lhs, const QueryClause *rhs) const {
+    return !((*lhs) == (*rhs)) ;
+  }
+};
