@@ -39,5 +39,5 @@ class QueryBuilder {
   SuchThatClause *BuildSuchThat(SuchThatBlueprint *clause_blueprint);
   WithClause *BuildWith(WithBlueprint *clause_blueprint);
   std::vector<ElemReference *> BuildElems(const std::vector<ElemBlueprint *> &elem_blueprints);
-  QueryReference *BuildReference(BaseBlueprint *blueprint);
+  QueryReference *BuildReference(ReferenceBlueprint *blueprint);
 };

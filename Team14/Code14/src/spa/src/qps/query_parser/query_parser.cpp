@@ -127,9 +127,9 @@ void QueryParser::ParseSuchThat(std::vector<ClauseBlueprint *> &clauses) {
     throw ParseSyntaxError("Unknown such-that relationship: " + relationship->value);
   }
   Expect(RoundOpenBracketToken());
-  auto *first = ParseBase();
+  auto *first = ParseReference();
   Expect(CommaToken());
-  auto *second = ParseBase();
+  auto *second = ParseReference();
   Expect(RoundCloseBracketToken());
   auto *clause = new SuchThatBlueprint(rs_type, first, second);
   if (!clause->checkSyntax()) {
@@ -143,7 +143,7 @@ void QueryParser::ParsePattern(std::vector<ClauseBlueprint *> &clauses) {
   spdlog::debug("Parsing pattern");
   auto *synonym = ParseSynonym();
   Expect(RoundOpenBracketToken());
-  auto *ent = ParseBase();
+  auto *ent = ParseReference();
   Expect(CommaToken());
   auto *expr = ParseExpr();
   PatternBlueprint *clause;
@@ -165,9 +165,9 @@ void QueryParser::ParsePattern(std::vector<ClauseBlueprint *> &clauses) {
 
 void QueryParser::ParseWith(std::vector<ClauseBlueprint *> &clauses) {
   spdlog::debug("Parsing with");
-  auto *first = ParseBase();
+  auto *first = ParseReference();
   Expect(TokenType::kComparator);
-  auto *second = ParseBase();
+  auto *second = ParseReference();
   auto *clause = new WithBlueprint(Comparator::kEquals, first, second);
   if (!clause->checkSyntax()) {
     throw ParseSyntaxError("Incorrect parameter syntax for: " + clause->toString());
@@ -176,16 +176,16 @@ void QueryParser::ParseWith(std::vector<ClauseBlueprint *> &clauses) {
   clauses.push_back(clause);
 }
 
-BaseBlueprint *QueryParser::ParseBase() {
+ReferenceBlueprint *QueryParser::ParseReference() {
   if ((*token_stream_)->type == TokenType::kQuote) {
     Expect(QuoteToken());
     auto *token = Expect(TokenType::kSymbol);
     Expect(QuoteToken());
-    return new BaseBlueprint(ReferenceType::kIdent, token->value);
+    return new ReferenceBlueprint(ReferenceType::kIdent, token->value);
   }
   if ((*token_stream_)->type == TokenType::kLiteral) {
     auto *token = Expect(TokenType::kLiteral);
-    return new BaseBlueprint(ReferenceType::kInteger, token->value);
+    return new ReferenceBlueprint(ReferenceType::kInteger, token->value);
   }
   if ((*token_stream_)->type == TokenType::kSymbol) {
     if ((*(token_stream_ + 1))->type == TokenType::kDot) {
@@ -195,7 +195,7 @@ BaseBlueprint *QueryParser::ParseBase() {
   }
   if ((*token_stream_)->type == TokenType::kWildCard) {
     Expect(WildCardToken());
-    return new BaseBlueprint(ReferenceType::kWildcard, "");
+    return new ReferenceBlueprint(ReferenceType::kWildcard, "");
   }
   throw ParseSyntaxError("Unknown base type: " + (*token_stream_)->ToString());
 }

@@ -3,6 +3,7 @@
 #pragma once
 
 #include <string>
+
 #include "qps/pql/types.h"
 #include "qps/pql/query_clause.h"
 #include "rules.h"
@@ -10,48 +11,52 @@
 /**
  * Represents an atomic value in a PQL query.
  */
-class BaseBlueprint {
+class ReferenceBlueprint {
  private:
   ReferenceType reference_type_;
 
   std::string value_;
 
  public:
-  BaseBlueprint(ReferenceType reference_type, std::string value)
+  ReferenceBlueprint(ReferenceType reference_type, std::string value)
       : reference_type_(reference_type), value_(std::move(value)) {
   };
   [[nodiscard]] ReferenceType getReferenceType() const;
   [[nodiscard]] std::string getValue() const;
   [[nodiscard]] std::string toString() const;
+  virtual bool operator==(const ReferenceBlueprint &other) const;
 };
 
-class ExprBlueprint : public BaseBlueprint {
+class ExprBlueprint : public ReferenceBlueprint {
  private:
   bool is_exact_;
 
  public:
-  explicit ExprBlueprint(std::string value, bool is_exact) : BaseBlueprint(ReferenceType::kIdent, std::move(value)),
+  explicit ExprBlueprint(std::string value, bool is_exact) : ReferenceBlueprint(ReferenceType::kIdent, std::move(value)),
                                                              is_exact_(is_exact) {
   };
   [[nodiscard]] bool isExact() const;
+  bool operator==(const ReferenceBlueprint &other) const override;
 };
 
-class SynonymBlueprint : public BaseBlueprint {
+class SynonymBlueprint : public ReferenceBlueprint {
  public:
-  explicit SynonymBlueprint(std::string value) : BaseBlueprint(ReferenceType::kSynonym, std::move(value)) {
+  explicit SynonymBlueprint(std::string value) : ReferenceBlueprint(ReferenceType::kSynonym, std::move(value)) {
   };
+  bool operator==(const ReferenceBlueprint &other) const override;
 };
 
-class ElemBlueprint : public BaseBlueprint {
+class ElemBlueprint : public ReferenceBlueprint {
  private:
   AttributeType attribute_type_;
 
  public:
-  explicit ElemBlueprint(SynonymBlueprint *synonym_blueprint, AttributeType attribute_type) : BaseBlueprint(
+  explicit ElemBlueprint(SynonymBlueprint *synonym_blueprint, AttributeType attribute_type) : ReferenceBlueprint(
       ReferenceType::kAttr,
       synonym_blueprint->getValue()), attribute_type_(attribute_type) {
   };
   [[nodiscard]] AttributeType getAttributeType() const;
+  bool operator==(const ReferenceBlueprint &other) const override;
 };
 
 /**
@@ -69,6 +74,7 @@ class DeclarationBlueprint {
   };
   [[nodiscard]] std::string getName() const;
   [[nodiscard]] EntityType getEntityType() const;
+  bool operator==(const DeclarationBlueprint &other) const;
 };
 
 /**
@@ -88,6 +94,7 @@ class SelectBlueprint {
   };
   [[nodiscard]] std::vector<ElemBlueprint *> getBlueprintReferences() const;
   [[nodiscard]] ElemBlueprint *getSingleReference() const;
+  bool operator==(const SelectBlueprint &other) const;
 };
 
 /**
@@ -104,25 +111,27 @@ class ClauseBlueprint {
     return this->clause_type_;
   };
   [[nodiscard]] virtual std::string toString() const = 0;
+  virtual bool operator==(const ClauseBlueprint &other) const = 0;
 };
 
 class SuchThatBlueprint : public ClauseBlueprint {
  private:
   RsType rs_type_;
 
-  BaseBlueprint *first_;
+  ReferenceBlueprint *first_;
 
-  BaseBlueprint *second_;
+  ReferenceBlueprint *second_;
 
  public:
-  SuchThatBlueprint(RsType rs_type, BaseBlueprint *first, BaseBlueprint *second)
+  SuchThatBlueprint(RsType rs_type, ReferenceBlueprint *first, ReferenceBlueprint *second)
       : ClauseBlueprint(ClauseType::kSuchThat), rs_type_(rs_type), first_(first), second_(second) {
   };
   [[nodiscard]] RsType getRsType() const;
-  [[nodiscard]] BaseBlueprint *getFirst() const;
-  [[nodiscard]] BaseBlueprint *getSecond() const;
+  [[nodiscard]] ReferenceBlueprint *getFirst() const;
+  [[nodiscard]] ReferenceBlueprint *getSecond() const;
   [[nodiscard]] bool checkSyntax() const;
   [[nodiscard]] std::string toString() const override;
+  bool operator==(const ClauseBlueprint &other) const override;
 };
 
 /**
@@ -132,25 +141,26 @@ class PatternBlueprint : public ClauseBlueprint {
  private:
   SynonymBlueprint *stmt_;
 
-  BaseBlueprint *var_;
+  ReferenceBlueprint *var_;
 
   ExprBlueprint *expr_;
 
   ExprBlueprint *expr_2_;
 
  public:
-  PatternBlueprint(SynonymBlueprint *stmt, BaseBlueprint *var, ExprBlueprint *expr)
+  PatternBlueprint(SynonymBlueprint *stmt, ReferenceBlueprint *var, ExprBlueprint *expr)
       : ClauseBlueprint(ClauseType::kPattern), stmt_(stmt), var_(var), expr_(expr), expr_2_(nullptr) {
   };
-  PatternBlueprint(SynonymBlueprint *stmt, BaseBlueprint *var, ExprBlueprint *expr, ExprBlueprint *expr_2)
+  PatternBlueprint(SynonymBlueprint *stmt, ReferenceBlueprint *var, ExprBlueprint *expr, ExprBlueprint *expr_2)
       : ClauseBlueprint(ClauseType::kPattern), stmt_(stmt), var_(var), expr_(expr), expr_2_(expr_2) {
   };
   [[nodiscard]] SynonymBlueprint *getStmt() const;
-  [[nodiscard]] BaseBlueprint *getVar() const;
+  [[nodiscard]] ReferenceBlueprint *getVar() const;
   [[nodiscard]] ExprBlueprint *getExpr() const;
   [[nodiscard]] ExprBlueprint *getExpr2() const;
   [[nodiscard]] bool checkSyntax() const;
   [[nodiscard]] std::string toString() const override;
+  bool operator==(const ClauseBlueprint &other) const override;
 };
 
 /**
@@ -160,17 +170,18 @@ class WithBlueprint : public ClauseBlueprint {
  private:
   Comparator comparator_;
 
-  BaseBlueprint *first_;
+  ReferenceBlueprint *first_;
 
-  BaseBlueprint *second_;
+  ReferenceBlueprint *second_;
 
  public:
-  WithBlueprint(Comparator comparator, BaseBlueprint *first, BaseBlueprint *second)
+  WithBlueprint(Comparator comparator, ReferenceBlueprint *first, ReferenceBlueprint *second)
       : ClauseBlueprint(ClauseType::kWith), comparator_(comparator), first_(first), second_(second) {
   };
   [[nodiscard]] Comparator getComparator() const;
-  [[nodiscard]] BaseBlueprint *getFirst() const;
-  [[nodiscard]] BaseBlueprint *getSecond() const;
+  [[nodiscard]] ReferenceBlueprint *getFirst() const;
+  [[nodiscard]] ReferenceBlueprint *getSecond() const;
   [[nodiscard]] bool checkSyntax() const;
   [[nodiscard]] std::string toString() const override;
+  bool operator==(const ClauseBlueprint &other) const override;
 };

@@ -100,6 +100,7 @@ std::vector<QueryClause *> QueryBuilder::BuildClauses() {
     clauses.insert(built_clause);
   }
   std::vector<QueryClause *> clause_vector(clauses.begin(), clauses.end());
+  std::reverse(clause_vector.begin(), clause_vector.end());
   return clause_vector;
 }
 
@@ -117,7 +118,7 @@ std::vector<ElemReference *> QueryBuilder::BuildElems(const std::vector<ElemBlue
   return elems;
 }
 
-QueryReference *QueryBuilder::BuildReference(BaseBlueprint *blueprint) {
+QueryReference *QueryBuilder::BuildReference(ReferenceBlueprint *blueprint) {
   QueryReference *ref;
   switch (blueprint->getReferenceType()) {
     case ReferenceType::kSynonym: {
