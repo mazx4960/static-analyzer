@@ -1,10 +1,7 @@
 // Copyright 2022 CS3203 Team14. All rights reserved.
+#include "database.h"
 
 #include <spdlog/spdlog.h>
-
-#include <random>
-
-#include "database.h"
 
 std::vector<Table *> Database::Empty(std::vector<QuerySynonym *> synonyms) {
   return {Table::Empty(std::move(synonyms))};
