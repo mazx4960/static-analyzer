@@ -97,7 +97,7 @@ TEST(QueryParserTest, NoClausesValidParseTest) {
   auto *query = parser.Parse();
   auto *expected = new Query(declarations, new ElemSelect({new AttrReference(synonym_1, AttributeType::kNone)}), clauses);
   ASSERT_EQ(query->getSynonymDeclarations().size(), expected->getSynonymDeclarations().size());
-  ASSERT_EQ(*query->getQueryCall(), *expected->getQueryCall());
+  ASSERT_EQ(query->getQueryCall()->ToString(), expected->getQueryCall()->ToString());
   for (int i = 0; i < expected->getClauses().size(); i++) {
     ASSERT_EQ(*query->getClauses().at(i), *expected->getClauses().at(i));
   }
@@ -146,7 +146,7 @@ TEST(QueryParserTest, ComplexValidParseTest1) {
   auto *query = parser.Parse();
   auto *expected = new Query(declarations, new ElemSelect({new AttrReference(synonym_1, AttributeType::kNone)}), clauses);
   ASSERT_EQ(query->getSynonymDeclarations().size(), expected->getSynonymDeclarations().size());
-  ASSERT_EQ(*query->getQueryCall(), *expected->getQueryCall());
+  ASSERT_EQ(query->getQueryCall()->ToString(), expected->getQueryCall()->ToString());
   for (int i = 0; i < expected->getClauses().size(); i++) {
     ASSERT_EQ(*query->getClauses().at(i), *expected->getClauses().at(i));
   }
@@ -207,7 +207,7 @@ TEST(QueryParserTest, ComplexValidParseTest2) {
   auto *query = parser.Parse();
   auto *expected = new Query(declarations, new ElemSelect({new AttrReference(synonym_1, AttributeType::kNone)}), clauses);
   ASSERT_EQ(query->getSynonymDeclarations().size(), expected->getSynonymDeclarations().size());
-  ASSERT_EQ(*query->getQueryCall(), *expected->getQueryCall());
+  ASSERT_EQ(query->getQueryCall()->ToString(), expected->getQueryCall()->ToString());
   for (int i = 0; i < expected->getClauses().size(); i++) {
     ASSERT_EQ(*query->getClauses().at(i), *expected->getClauses().at(i));
   }
@@ -280,7 +280,7 @@ TEST(QueryParserTest, DuplicateComplexValidParseTest) {
   auto *query = parser.Parse();
   auto *expected = new Query(declarations, new ElemSelect({new AttrReference(synonym_1, AttributeType::kNone)}), clauses);
   ASSERT_EQ(query->getSynonymDeclarations().size(), expected->getSynonymDeclarations().size());
-  ASSERT_EQ(*query->getQueryCall(), *expected->getQueryCall());
+  ASSERT_EQ(query->getQueryCall()->ToString(), expected->getQueryCall()->ToString());
   for (int i = 0; i < expected->getClauses().size(); i++) {
     ASSERT_EQ(*query->getClauses().at(i), *expected->getClauses().at(i));
   }
