@@ -6,30 +6,16 @@ template<typename T>
 class QpsTestHelper {
  public:
   static bool CompareVectors(const std::vector<T *> &results, const std::vector<T *> &expected) {
-    bool result = true;
-
-    for (auto &r : results) {
-      bool found = false;
-      for (auto &e : expected) {
-        if (*r == *e) {
-          found = true;
-          break;
-        }
-      }
-      result = result && found;
+    if (results.size() != expected.size()) {
+      return false;
     }
 
-    for (auto &e : expected) {
-      bool found = false;
-      for (auto &r : results) {
-        if (*r == *e) {
-          found = true;
-          break;
-        }
-      }
-      result = result && found;
-    }
-
-    return result;
+    // iterate through all of results
+    return std::all_of(results.begin(), results.end(), [&expected](T *result) {
+      // iterate through all of expected
+      return std::any_of(expected.begin(), expected.end(), [&result](T *expected_result) {
+        return *result == *expected_result;
+      });
+    });
   };
 };
