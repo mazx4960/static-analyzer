@@ -1,0 +1,753 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="1564.5833px" preserveAspectRatio="none" style="width:1335px;height:1564px;background:#FFFFFF;" version="1.1" viewBox="0 0 1335 1564" width="1335.4167px" zoomAndPan="magnify"><defs/><g><rect fill="#DEDEFF" height="1534.729" rx="4.1667" ry="4.1667" style="stroke:#FFFFFF;stroke-width:1.0416666666666667;" width="95.8333" x="53.125" y="11.4583"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="14.5833" x="91.6667" y="33.96">SP</text><rect fill="#FFD1D3" height="1534.729" rx="4.1667" ry="4.1667" style="stroke:#FFFFFF;stroke-width:1.0416666666666667;" width="95.8333" x="234.375" y="11.4583"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="25" x="267.7083" y="33.96">QPS</text><rect fill="#FACAA0" height="1534.729" rx="4.1667" ry="4.1667" style="stroke:#FFFFFF;stroke-width:1.0416666666666667;" width="783.8542" x="540.625" y="11.4583"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="25" x="917.9688" y="33.96">PKB</text><rect fill="#FFFFFF" height="350.5758" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="95.8333" y="155.8085"/><rect fill="#FFFFFF" height="975.9379" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="277.0833" y="557.7494"/><rect fill="#FFFFFF" height="31.25" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="881.25" y="207.1737"/><rect fill="#FFFFFF" height="51.3652" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="881.25" y="609.1146"/><rect fill="#FFFFFF" height="51.3652" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="881.25" y="814.5752"/><rect fill="#FFFFFF" height="51.3652" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="881.25" y="1020.0358"/><rect fill="#FFFFFF" height="31.25" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="1056.7708" y="341.154"/><rect fill="#FFFFFF" height="51.3652" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="1056.7708" y="1225.4964"/><rect fill="#FFFFFF" height="31.25" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="1237.5" y="475.1343"/><rect fill="#FFFFFF" height="51.3652" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="1237.5" y="1430.957"/><line style="stroke:#000000;stroke-width:1.0416666666666667;stroke-dasharray:5.0,5.0;" x1="101.0417" x2="101.0417" y1="102.36" y2="1552.4373"/><line style="stroke:#000000;stroke-width:1.0416666666666667;stroke-dasharray:5.0,5.0;" x1="282.2917" x2="282.2917" y1="102.36" y2="1552.4373"/><line style="stroke:#000000;stroke-width:1.0416666666666667;stroke-dasharray:5.0,5.0;" x1="588.5417" x2="588.5417" y1="102.36" y2="1552.4373"/><line style="stroke:#000000;stroke-width:1.0416666666666667;stroke-dasharray:5.0,5.0;" x1="885.9375" x2="885.9375" y1="102.36" y2="1552.4373"/><line style="stroke:#000000;stroke-width:1.0416666666666667;stroke-dasharray:5.0,5.0;" x1="1061.9792" x2="1061.9792" y1="102.36" y2="1552.4373"/><line style="stroke:#000000;stroke-width:1.0416666666666667;stroke-dasharray:5.0,5.0;" x1="1242.1875" x2="1242.1875" y1="102.36" y2="1552.4373"/><rect fill="#C8C8FA" height="50.1383" rx="4.1667" ry="4.1667" style="stroke:#3333C4;stroke-width:1.0416666666666667;" width="66.6667" x="67.7083" y="51.18"/><text fill="#3333C4" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="17.7083" x="92.1875" y="80.9733">:SP</text><rect fill="#F97181" height="50.1383" rx="4.1667" ry="4.1667" style="stroke:#9D0012;stroke-width:1.0416666666666667;" width="66.6667" x="248.9583" y="51.18"/><text fill="#9D0012" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="27.0833" x="268.75" y="80.9733">:QPS</text><rect fill="#FFE374" height="50.1383" rx="4.1667" ry="4.1667" style="stroke:#A38300;stroke-width:1.0416666666666667;" width="66.6667" x="555.2083" y="51.18"/><text fill="#A38300" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="27.0833" x="575" y="80.9733">:PKB</text><rect fill="#FFE374" height="50.1383" rx="4.1667" ry="4.1667" style="stroke:#A38300;stroke-width:1.0416666666666667;" width="123.9583" x="824.4792" y="51.18"/><text fill="#A38300" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="88.5417" x="842.1875" y="80.9733">:EntityManager</text><rect fill="#FFE374" height="50.1383" rx="4.1667" ry="4.1667" style="stroke:#A38300;stroke-width:1.0416666666666667;" width="164.5833" x="979.6875" y="51.18"/><text fill="#A38300" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="129.1667" x="997.3958" y="80.9733">:RelationshipManager</text><rect fill="#FFE374" height="50.1383" rx="4.1667" ry="4.1667" style="stroke:#A38300;stroke-width:1.0416666666666667;" width="134.375" x="1175.5208" y="51.18"/><text fill="#A38300" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="98.9583" x="1193.2292" y="80.9733">:PatternManager</text><rect fill="#FFFFFF" height="350.5758" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="95.8333" y="155.8085"/><rect fill="#FFFFFF" height="975.9379" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="277.0833" y="557.7494"/><rect fill="#FFFFFF" height="31.25" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="881.25" y="207.1737"/><rect fill="#FFFFFF" height="51.3652" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="881.25" y="609.1146"/><rect fill="#FFFFFF" height="51.3652" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="881.25" y="814.5752"/><rect fill="#FFFFFF" height="51.3652" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="881.25" y="1020.0358"/><rect fill="#FFFFFF" height="31.25" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="1056.7708" y="341.154"/><rect fill="#FFFFFF" height="51.3652" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="1056.7708" y="1225.4964"/><rect fill="#FFFFFF" height="31.25" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="1237.5" y="475.1343"/><rect fill="#FFFFFF" height="51.3652" style="stroke:#000000;stroke-width:1.0416666666666667;" width="10.4167" x="1237.5" y="1430.957"/><polygon fill="#000000" points="576.0417,151.6418,586.4583,155.8085,576.0417,159.9752,580.2083,155.8085" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;" x1="106.25" x2="582.2917" y1="155.8085" y2="155.8085"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="103.125" x="295.8333" y="140.4521">populate(Entity)</text><polygon fill="#000000" points="868.75,203.007,879.1667,207.1737,868.75,211.3403,872.9167,207.1737" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;" x1="588.5417" x2="875" y1="207.1737" y2="207.1737"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="103.125" x="683.3333" y="191.8172">populate(Entity)</text><polygon fill="#000000" points="576.0417,285.6222,586.4583,289.7888,576.0417,293.9555,580.2083,289.7888" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;" x1="106.25" x2="582.2917" y1="289.7888" y2="289.7888"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="146.875" x="273.9583" y="274.4324">populate(Relationship)</text><polygon fill="#000000" points="1044.2708,336.9873,1054.6875,341.154,1044.2708,345.3206,1048.4375,341.154" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;" x1="588.5417" x2="1050.5208" y1="341.154" y2="341.154"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="146.875" x="749.2188" y="325.7975">populate(Relationship)</text><polygon fill="#000000" points="576.0417,419.6025,586.4583,423.7691,576.0417,427.9358,580.2083,423.7691" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;" x1="106.25" x2="582.2917" y1="423.7691" y2="423.7691"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="111.4583" x="291.6667" y="408.4127">populate(Pattern)</text><polygon fill="#000000" points="1225,470.9676,1235.4167,475.1343,1225,479.3009,1229.1667,475.1343" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;" x1="588.5417" x2="1231.25" y1="475.1343" y2="475.1343"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="111.4583" x="857.2917" y="459.7778">populate(Pattern)</text><polygon fill="#000000" points="576.0417,553.5828,586.4583,557.7494,576.0417,561.9161,580.2083,557.7494" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;" x1="287.5" x2="582.2917" y1="557.7494" y2="557.7494"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="146.875" x="364.5833" y="542.393">getEntities(EntityType)</text><polygon fill="#000000" points="868.75,604.9479,879.1667,609.1146,868.75,613.2813,872.9167,609.1146" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;" x1="588.5417" x2="875" y1="609.1146" y2="609.1146"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="97.9167" x="685.9375" y="593.7581">get(EntityType)</text><polygon fill="#000000" points="600,656.3131,589.5833,660.4797,600,664.6464,595.8333,660.4797" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;stroke-dasharray:2.0,2.0;" x1="593.75" x2="885.4167" y1="660.4797" y2="660.4797"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="45.8333" x="714.5833" y="645.1233">Entity[]</text><polygon fill="#000000" points="298.9583,707.6782,288.5417,711.8449,298.9583,716.0116,294.7917,711.8449" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;stroke-dasharray:2.0,2.0;" x1="292.7083" x2="587.5" y1="711.8449" y2="711.8449"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="45.8333" x="415.1042" y="696.4884">Entity[]</text><polygon fill="#000000" points="576.0417,759.0434,586.4583,763.21,576.0417,767.3767,580.2083,763.21" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;" x1="287.5" x2="582.2917" y1="763.21" y2="763.21"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="169.7917" x="353.125" y="747.8536">getEntitiesByString(String)</text><polygon fill="#000000" points="868.75,810.4085,879.1667,814.5752,868.75,818.7419,872.9167,814.5752" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;" x1="588.5417" x2="875" y1="814.5752" y2="814.5752"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="67.7083" x="701.0417" y="799.2188">get(String)</text><polygon fill="#000000" points="600,861.7737,589.5833,865.9403,600,870.107,595.8333,865.9403" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;stroke-dasharray:2.0,2.0;" x1="593.75" x2="885.4167" y1="865.9403" y2="865.9403"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="45.8333" x="714.5833" y="850.5839">Entity[]</text><polygon fill="#000000" points="298.9583,913.1388,288.5417,917.3055,298.9583,921.4722,294.7917,917.3055" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;stroke-dasharray:2.0,2.0;" x1="292.7083" x2="587.5" y1="917.3055" y2="917.3055"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="45.8333" x="415.1042" y="901.9491">Entity[]</text><polygon fill="#000000" points="576.0417,964.504,586.4583,968.6707,576.0417,972.8373,580.2083,968.6707" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;" x1="287.5" x2="582.2917" y1="968.6707" y2="968.6707"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="105.2083" x="385.4167" y="953.3142">getSimpleStats()</text><polygon fill="#000000" points="868.75,1015.8691,879.1667,1020.0358,868.75,1024.2025,872.9167,1020.0358" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;" x1="588.5417" x2="875" y1="1020.0358" y2="1020.0358"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="29.1667" x="720.3125" y="1004.6794">get()</text><polygon fill="#000000" points="600,1067.2343,589.5833,1071.401,600,1075.5676,595.8333,1071.401" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;stroke-dasharray:2.0,2.0;" x1="593.75" x2="885.4167" y1="1071.401" y2="1071.401"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="246.875" x="614.0625" y="1056.0445">std::unordered_map&lt;EntityType, int&gt;</text><polygon fill="#000000" points="298.9583,1118.5994,288.5417,1122.7661,298.9583,1126.9328,294.7917,1122.7661" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;stroke-dasharray:2.0,2.0;" x1="292.7083" x2="587.5" y1="1122.7661" y2="1122.7661"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="246.875" x="314.5833" y="1107.4097">std::unordered_map&lt;EntityType, int&gt;</text><polygon fill="#000000" points="576.0417,1169.9646,586.4583,1174.1313,576.0417,1178.2979,580.2083,1174.1313" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;" x1="287.5" x2="582.2917" y1="1174.1313" y2="1174.1313"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="255.2083" x="310.4167" y="1158.7748">getByRelationship(RsType, Entity, bool)</text><polygon fill="#000000" points="1044.2708,1221.3298,1054.6875,1225.4964,1044.2708,1229.6631,1048.4375,1225.4964" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;" x1="588.5417" x2="1050.5208" y1="1225.4964" y2="1225.4964"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="159.375" x="742.9688" y="1210.14">get(RsType, Entity, bool)</text><polygon fill="#000000" points="600,1272.6949,589.5833,1276.8616,600,1281.0282,595.8333,1276.8616" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;stroke-dasharray:2.0,2.0;" x1="593.75" x2="1060.9375" y1="1276.8616" y2="1276.8616"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="45.8333" x="802.3438" y="1261.5051">Entity[]</text><polygon fill="#000000" points="298.9583,1324.0601,288.5417,1328.2267,298.9583,1332.3934,294.7917,1328.2267" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;stroke-dasharray:2.0,2.0;" x1="292.7083" x2="587.5" y1="1328.2267" y2="1328.2267"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="45.8333" x="415.1042" y="1312.8703">Entity[]</text><polygon fill="#000000" points="576.0417,1375.4252,586.4583,1379.5919,576.0417,1383.7585,580.2083,1379.5919" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;" x1="287.5" x2="582.2917" y1="1379.5919" y2="1379.5919"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="211.4583" x="332.2917" y="1364.2354">getByPattern(Entity, String, bool)</text><polygon fill="#000000" points="1225,1426.7904,1235.4167,1430.957,1225,1435.1237,1229.1667,1430.957" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;" x1="588.5417" x2="1231.25" y1="1430.957" y2="1430.957"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="151.0417" x="837.5" y="1415.6006">get(Entity, String, bool)</text><polygon fill="#000000" points="600,1478.1555,589.5833,1482.3222,600,1486.4889,595.8333,1482.3222" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;stroke-dasharray:2.0,2.0;" x1="593.75" x2="1241.6667" y1="1482.3222" y2="1482.3222"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="45.8333" x="892.7083" y="1466.9657">Entity[]</text><polygon fill="#000000" points="293.75,1529.5207,283.3333,1533.6873,293.75,1537.854,289.5833,1533.6873" style="stroke:#000000;stroke-width:1.0416666666666667;"/><line style="stroke:#000000;stroke-width:1.1458333333333335;stroke-dasharray:2.0,2.0;" x1="287.5" x2="587.5" y1="1533.6873" y2="1533.6873"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="45.8333" x="412.5" y="1518.3309">Entity[]</text><!--MD5=[33ae221aebdb4d28a3bf258c363d8da4]
+@startuml
+!include Style.puml
+!include SequenceStyle.puml
+
+box SP SP_COLOR_LIGHT
+participant ":SP" as SP<<SP>>
+end box
+
+box QPS QPS_COLOR_LIGHT
+participant ":QPS" as QPS<<QPS>>
+end box
+
+box PKB PKB_COLOR_LIGHT
+participant ":PKB" as PKB<<PKB>>
+participant ":EntityManager" as EntityManager<<PKB>>
+participant ":RelationshipManager" as RelationshipManager<<PKB>>
+participant ":PatternManager" as PatternManager<<PKB>>
+end box
+
+
+SP -> PKB: populate(Entity)
+activate SP
+PKB -> EntityManager: populate(Entity)
+activate EntityManager
+deactivate EntityManager
+
+SP -> PKB: populate(Relationship)
+PKB -> RelationshipManager: populate(Relationship)
+activate RelationshipManager
+deactivate RelationshipManager
+SP -> PKB: populate(Pattern)
+PKB -> PatternManager: populate(Pattern)
+activate PatternManager
+deactivate PatternManager
+deactivate SP
+
+
+QPS -> PKB: getEntities(EntityType)
+activate QPS
+PKB -> EntityManager: get(EntityType)
+activate EntityManager
+EntityManager - -> PKB: Entity[]
+deactivate EntityManager
+PKB - -> QPS: Entity[]
+
+QPS -> PKB: getEntitiesByString(String)
+PKB -> EntityManager: get(String)
+activate EntityManager
+EntityManager - -> PKB: Entity[]
+deactivate EntityManager
+PKB - -> QPS: Entity[]
+
+QPS -> PKB: getSimpleStats()
+PKB -> EntityManager: get()
+activate EntityManager
+EntityManager - -> PKB: std::unordered_map<EntityType, int>
+deactivate EntityManager
+PKB - -> QPS: std::unordered_map<EntityType, int>
+
+QPS -> PKB: getByRelationship(RsType, Entity, bool)
+PKB -> RelationshipManager: get(RsType, Entity, bool)
+activate RelationshipManager
+RelationshipManager - -> PKB: Entity[]
+deactivate RelationshipManager
+PKB - -> QPS: Entity[]
+
+QPS -> PKB: getByPattern(Entity, String, bool)
+PKB -> PatternManager: get(Entity, String, bool)
+activate PatternManager
+PatternManager - -> PKB: Entity[]
+deactivate PatternManager
+PKB - -> QPS: Entity[]
+deactivate QPS
+
+
+@enduml
+
+@startuml
+
+
+
+
+skinparam backgroundColor transparent
+skinparam useBetaStyle false
+
+
+
+
+
+
+<style>
+  root {
+    BackgroundColor transparent
+    FontColor #2196F3
+    HyperLinkColor #fd7e14
+    LineColor #1a78c2
+    LineThickness 1
+    Margin 10
+    Padding 6
+    Shadowing 0.0
+  }
+  node {
+   Padding 15
+   roundcorner 20
+   BackgroundColor transparent
+  }
+  caption {
+    LineThickness 0
+  }
+  footer {
+    LineThickness 0
+  }
+  groupHeader {
+    BackgroundColor #fff
+    FontColor #9C27B0
+    FontStyle bold
+  }
+  header {
+    LineThickness 0
+  }
+  referenceHeader {
+    BackgroundColor transparent
+    FontColor #222
+    FontStyle bold
+  }
+  separator {
+    BackgroundColor #222
+    FontColor transparent
+    FontStyle bold
+  }
+  title {
+	FontSize 20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor  transparent
+	FontColor #2196F3
+	BorderColor #fff
+  }
+  nwdiagDiagram {
+	network {
+			FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent    
+		LineColor #2196F3
+		LineThickness 1.0
+		FontColor #1a78c2
+	}
+	server {
+			FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+	}
+	arrow {
+		FontColor #1a78c2
+		LineColor #1a78c2
+	}
+	group {
+		BackGroundColor #fff
+		LineColor $LIGHT_DARK
+		LineThickness 2.0
+		Margin 5
+		Padding 5
+	}
+  }
+  ganttDiagram {
+	task {
+			FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+		LineColor #2196F3
+		Margin 10
+		Padding 6
+	}
+	note {
+		FontColor #9C27B0
+		LineColor #7D1F8D
+		BackGroundColor transparent
+	}
+	separator {
+		LineColor #cccccc
+		BackGroundColor transparent
+		FontColor #cccccc
+	}
+	milestone {
+		FontColor #9C27B0
+		FontSize 16
+		FontStyle italic
+		BackGroundColor #fff
+		LineColor #cccccc
+	}
+	timeline {
+		BackgroundColor #fff
+		FontColor #cccccc
+	}
+	closed {
+		BackgroundColor #CC7A00
+		FontColor #ff9800
+	}
+  }
+</style>
+skinparam defaultFontName       "Verdana"
+skinparam defaultFontSize       12
+skinparam dpi                   100
+skinparam shadowing             true
+skinparam roundcorner           8
+skinparam ParticipantPadding    40
+skinparam BoxPadding            40
+skinparam Padding               10 
+skinparam TitleFontColor	    #222
+skinparam TitleFontSize	    	20
+skinparam TitleBorderThickness 	0
+skinparam ArrowColor            #666
+skinparam stereotype {
+    CBackgroundColor #fff
+    CBorderColor #cccccc
+    ABackgroundColor #70bf73
+    ABorderColor #3D8C40
+    IBackgroundColor #B7161C
+    IBorderColor $DANGER_DARK
+    EBackgroundColor #ffad33
+    EBorderColor #CC7A00
+    NBackgroundColor #b052c0
+    NBorderColor #7D1F8D
+}
+skinparam title {
+	FontColor	                 #2196F3
+	BorderColor	                 #cccccc
+	FontSize	    	         20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor              transparent
+}
+
+skinparam legend {
+	BackgroundColor transparent
+	BorderColor #cccccc
+	FontColor #222
+}
+
+skinparam swimlane {
+	BorderColor #9C27B0
+	BorderThickness 2
+	TitleBackgroundColor  #fff-#fff
+	TitleFontColor #2196F3
+}
+
+
+skinparam activity {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+	BarColor #4CAF50
+	StartColor #9C27B0
+	EndColor #9C27B0
+	DiamondBackgroundColor transparent
+  	DiamondBorderColor #cccccc
+	DiamondFontColor #cccccc
+}
+
+
+skinparam participant {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+	ParticipantBorderThickness 2
+}
+
+
+skinparam actor {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam arrow {
+	Thickness 3
+	Color #2196F3
+	FontColor #222
+}
+
+
+skinparam sequence {
+	BorderColor #2196F3
+	TitleFontColor #2196F3
+	BackgroundColor transparent
+	StartColor #2196F3
+	EndColor #2196F3
+	BoxBackgroundColor transparent
+	BoxBorderColor #666
+	BoxFontColor #222
+	DelayFontColor #222
+	LifeLineBorderColor #cccccc
+	LifeLineBorderThickness 2
+	LifeLineBackgroundColor transparent
+	GroupBorderColor #666
+	GroupFontColor #222
+	GroupHeaderFontColor #9C27B0
+	DividerBackgroundColor transparent
+    DividerBorderColor #666
+    DividerBorderThickness 2
+    DividerFontColor #222
+	ReferenceBackgroundColor transparent
+	ReferenceBorderColor #666
+	ReferenceFontColor #222
+	ReferenceHeaderFontColor #9C27B0
+	StereotypeFontColor #2196F3
+}
+
+
+skinparam partition {
+	BorderColor #2196F3
+	FontColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam collections {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam control {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam entity {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam boundary {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam agent {
+	BackgroundColor transparent
+	BorderColor #999999
+	FontColor #333333
+}
+
+
+skinparam note {
+	BorderThickness 1
+	BackgroundColor transparent
+	BorderColor #9C27B0
+	FontColor #9C27B0
+}
+
+
+skinparam artifact {
+	BackgroundColor transparent
+	BorderColor #666
+	FontColor #666
+}
+
+
+skinparam component {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam interface {
+	BackgroundColor  transparent
+	BorderColor  #e51c23
+	FontColor #222
+}
+
+
+skinparam storage {
+	BackgroundColor transparent
+  	BorderColor #ff9800
+	FontColor #ff9800
+}
+
+
+skinparam node {
+	BackgroundColor transparent
+	BorderColor #222
+	FontColor #222
+}
+
+
+skinparam cloud {
+	BackgroundColor #F2FCFE-#eeeeee
+	BorderColor #F2FCFE
+	FontColor #222
+}
+
+
+skinparam database {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam class {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+	FontColor #fff
+	HeaderBackgroundColor #2196F3-#1a78c2
+	StereotypeFontColor #222
+	BorderThickness 1
+	AttributeFontColor #222
+	AttributeFontSize 11
+}
+
+
+skinparam object {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+	StereotypeFontColor #222
+	BorderThickness 1
+	AttributeFontColor #cccccc
+	AttributeFontSize 11
+}
+
+
+skinparam usecase {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+	BorderThickness 2
+	StereotypeFontColor #2196F3
+}
+
+
+skinparam rectangle {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+	BorderThickness 2
+	StereotypeFontColor #2196F3
+}
+
+
+skinparam package {
+	BackgroundColor transparent
+  	BorderColor #2196F3
+	FontColor #2196F3
+	BorderThickness 2
+}
+
+
+skinparam folder {
+	BackgroundColor transparent
+  	BorderColor #ff9800
+	FontColor #ff9800
+	BorderThickness 2
+}
+
+
+skinparam frame {
+	BackgroundColor transparent
+  	BorderColor #9C27B0
+	FontColor #9C27B0
+	BorderThickness 2
+}
+
+
+skinparam state {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+	StartColor #9C27B0
+	EndColor #9C27B0
+	AttributeFontColor #cccccc
+	AttributeFontSize 11
+}
+
+
+skinparam queue {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam card {
+	BackgroundColor transparent
+	BorderColor #9C27B0
+	FontColor #9C27B0
+}
+
+
+skinparam file {
+	BackgroundColor transparent
+	BorderColor #666
+	FontColor #666
+
+}
+
+
+skinparam stack {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+
+
+
+
+
+skinparam BackgroundColor #FFFFFFF
+
+skinparam Arrow {
+    Color #000000
+    FontSize 13
+    Thickness 1.1
+}
+
+
+
+    skinparam Class {
+        FontColor<<Hidden>> #FFFFFF
+        StereotypeFontColor<<Hidden>> #FFFFFF
+        BorderColor<<Hidden>> #FFFFFF
+    }
+    hide <<Hidden>> stereotype
+    skinparam Class {
+        FontColor<<SP>> #3333C4
+        StereotypeFontColor<<SP>> #3333C4
+        BorderColor<<SP>> #3333C4
+    }
+    hide <<SP>> stereotype
+    skinparam Class {
+        FontColor<<UI>> #1D8900
+        StereotypeFontColor<<UI>> #1D8900
+        BorderColor<<UI>> #1D8900
+    }
+    hide <<UI>> stereotype
+    skinparam Class {
+        FontColor<<QPS>> #9D0012
+        StereotypeFontColor<<QPS>> #9D0012
+        BorderColor<<QPS>> #9D0012
+    }
+    hide <<QPS>> stereotype
+    skinparam Class {
+        FontColor<<PKB>> #A38300
+        StereotypeFontColor<<PKB>> #A38300
+        BorderColor<<PKB>> #A38300
+    }
+    hide <<PKB>> stereotype
+skinparam Class {
+    FontName Arial
+    FontSize 15
+    StereotypeFontSize 13
+    BorderThickness 1.1
+}
+
+    skinparam Package {
+        FontColor<<SP>> #3333C4
+        StereotypeFontColor<<SP>> #3333C4
+        BorderColor<<SP>> #3333C4
+    }
+    hide <<SP>> stereotype
+    skinparam Package {
+        FontColor<<UI>> #1D8900
+        StereotypeFontColor<<UI>> #1D8900
+        BorderColor<<UI>> #1D8900
+    }
+    hide <<UI>> stereotype
+    skinparam Package {
+        FontColor<<QPS>> #9D0012
+        StereotypeFontColor<<QPS>> #9D0012
+        BorderColor<<QPS>> #9D0012
+    }
+    hide <<QPS>> stereotype
+    skinparam Package {
+        FontColor<<PKB>> #A38300
+        StereotypeFontColor<<PKB>> #A38300
+        BorderColor<<PKB>> #A38300
+    }
+    hide <<PKB>> stereotype
+skinparam Package {
+    Style Rectangle
+}
+
+SKINPARAM MINCLASSWIDTH 50
+SKINPARAM SHADOWING FALSE
+SKINPARAM DEFAULTTEXTALIGNMENT CENTER
+SKINPARAM TITLEFONTSIZE 25
+
+SKINPARAM TITLEFONTCOLOR<<SP>> #3333C4
+SKINPARAM TITLEFONTCOLOR<<UI>>    #1D8900
+SKINPARAM TITLEFONTCOLOR<<QPS>> #9D0012
+SKINPARAM TITLEFONTCOLOR<<PKB>> #A38300
+
+
+hide footbox
+hide members
+hide circle
+skinparam Actor {
+    BorderColor #000000
+    Color #000000
+    FontName Arial
+}
+
+skinparam Sequence {
+    MessageAlign center
+
+    BoxFontSize 15
+    BoxPadding 0
+    BoxFontColor #FFFFFF
+    BoxBorderColor #FFFFFF
+
+    GroupFontColor #DF7800
+    GroupBackgroundColor #FF980032
+    GroupBorderColor #FF9800
+    GroupBorderThickness 1.8
+    GroupHeaderFontColor #DF7800
+    GroupHeaderFontStyle bold
+
+    ReferenceFontColor #DF7800
+    ReferenceBackgroundColor #FF9C0532
+    ReferenceHeaderBackgroundColor #FF980032
+    ReferenceBorderColor #FF9800
+    ReferenceBorderThickness 1.8
+    ReferenceHeaderFontColor #DF7800
+    ReferenceHeaderFontColor #DF7800
+    ReferenceHeaderFontStyle bold
+
+    LifelineBackgroundColor #FFFFFF
+    LifelineBorderColor #000000
+}
+
+skinparam Participant {
+    FontColor #FFFFFFF
+    Padding 10
+    BorderColor #000000
+}
+
+
+    skinparam Participant {
+        FontColor<<SP>> #3333C4
+        BorderColor<<SP>> #3333C4
+        BackgroundColor<<SP>> #C8C8FA
+    }
+    skinparam Participant {
+        FontColor<<UI>> #1D8900
+        BorderColor<<UI>> #1D8900
+        BackgroundColor<<UI>> #BDECB1
+    }
+    skinparam Participant {
+        FontColor<<QPS>> #9D0012
+        BorderColor<<QPS>> #9D0012
+        BackgroundColor<<QPS>> #F97181
+    }
+    skinparam Participant {
+        FontColor<<PKB>> #A38300
+        BorderColor<<PKB>> #A38300
+        BackgroundColor<<PKB>> #FFE374
+    }
+
+box SP #DEDEFF
+participant ":SP" as SP<<SP>>
+end box
+
+box QPS #FFD1D3
+participant ":QPS" as QPS<<QPS>>
+end box
+
+box PKB #FACAA0
+participant ":PKB" as PKB<<PKB>>
+participant ":EntityManager" as EntityManager<<PKB>>
+participant ":RelationshipManager" as RelationshipManager<<PKB>>
+participant ":PatternManager" as PatternManager<<PKB>>
+end box
+
+
+SP -> PKB: populate(Entity)
+activate SP
+PKB -> EntityManager: populate(Entity)
+activate EntityManager
+deactivate EntityManager
+
+SP -> PKB: populate(Relationship)
+PKB -> RelationshipManager: populate(Relationship)
+activate RelationshipManager
+deactivate RelationshipManager
+SP -> PKB: populate(Pattern)
+PKB -> PatternManager: populate(Pattern)
+activate PatternManager
+deactivate PatternManager
+deactivate SP
+
+
+QPS -> PKB: getEntities(EntityType)
+activate QPS
+PKB -> EntityManager: get(EntityType)
+activate EntityManager
+EntityManager - -> PKB: Entity[]
+deactivate EntityManager
+PKB - -> QPS: Entity[]
+
+QPS -> PKB: getEntitiesByString(String)
+PKB -> EntityManager: get(String)
+activate EntityManager
+EntityManager - -> PKB: Entity[]
+deactivate EntityManager
+PKB - -> QPS: Entity[]
+
+QPS -> PKB: getSimpleStats()
+PKB -> EntityManager: get()
+activate EntityManager
+EntityManager - -> PKB: std::unordered_map<EntityType, int>
+deactivate EntityManager
+PKB - -> QPS: std::unordered_map<EntityType, int>
+
+QPS -> PKB: getByRelationship(RsType, Entity, bool)
+PKB -> RelationshipManager: get(RsType, Entity, bool)
+activate RelationshipManager
+RelationshipManager - -> PKB: Entity[]
+deactivate RelationshipManager
+PKB - -> QPS: Entity[]
+
+QPS -> PKB: getByPattern(Entity, String, bool)
+PKB -> PatternManager: get(Entity, String, bool)
+activate PatternManager
+PatternManager - -> PKB: Entity[]
+deactivate PatternManager
+PKB - -> QPS: Entity[]
+deactivate QPS
+
+
+@enduml
+
+PlantUML version 1.2022.12(Mon Oct 24 02:12:26 SGT 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: US-ASCII
+Language: en
+Country: SG
+--></g></svg>

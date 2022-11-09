@@ -1,0 +1,89 @@
+@startuml
+!include Style.puml
+!include SequenceStyle.puml
+
+box QPS QPS_COLOR_LIGHT
+participant ":QueryEvaluator" as QueryEvaluator<<QPS>>
+participant ":QueryOptimiser" as QueryOptimiser<<QPS>>
+participant ":EvaluationStrategy" as EvaluationStrategy<<QPS>>
+participant ":ResultProjector" as ResultProjector<<QPS>>
+participant ":Database" as Database<<QPS>>
+participant ":Table" as Table<<QPS>>
+end box
+
+box PKB PKB_COLOR_LIGHT
+participant ":PKB" as PKB<<PKB>>
+end box
+
+[-> QueryEvaluator : Evaluate(Query)
+activate QueryEvaluator
+QueryEvaluator -> QueryEvaluator : InitContext()
+activate QueryEvaluator
+QueryEvaluator -> PKB : getEntities(EntityType)
+activate PKB
+PKB --> QueryEvaluator : Entity[]
+deactivate PKB
+QueryEvaluator --> QueryEvaluator
+deactivate QueryEvaluator
+
+QueryEvaluator -> QueryOptimiser : Optimise(Query)
+activate QueryOptimiser
+QueryOptimiser --> PKB : getSimpleStats()
+activate PKB
+PKB --> QueryOptimiser : <EntityType, int>[]
+deactivate PKB
+QueryOptimiser --> QueryEvaluator : Query
+deactivate QueryOptimiser
+
+loop clause : subquery_clauses
+    QueryEvaluator -> EvaluationStrategy : evaluate(QueryClause)
+    activate EvaluationStrategy
+    EvaluationStrategy -> PKB : getEntities(EntityType)
+    activate PKB
+    PKB --> EvaluationStrategy : Entity[]
+    deactivate PKB
+    EvaluationStrategy -> PKB : getByRelationship(RsType, Entity)
+    activate PKB
+    PKB --> EvaluationStrategy : Entity[]
+    deactivate PKB
+    EvaluationStrategy -> PKB : getByPattern(Pattern)
+    activate PKB
+    PKB --> EvaluationStrategy : Entity[]
+    deactivate PKB
+    EvaluationStrategy --> QueryEvaluator : Table
+    deactivate EvaluationStrategy
+    QueryEvaluator -> Database : AddTable(Table)
+    activate Database
+    Database --> QueryEvaluator : void
+    deactivate Database
+end
+QueryEvaluator -> Database : MergeTables()
+activate Database
+loop each table
+    Database -> Table : Join(Table)
+    activate Table
+    Table --> Database : Table
+    deactivate Table
+end
+Database --> QueryEvaluator : void
+deactivate Database
+
+QueryEvaluator -> ResultProjector : Project()
+activate ResultProjector
+ResultProjector -> Database : GetTable(selected_synonyms)
+activate Database
+Database --> ResultProjector : Table
+deactivate Database
+
+ResultProjector -> Table : GetRows()
+activate Table
+Table --> ResultProjector : ResultRow[]
+deactivate Table
+
+ResultProjector --> QueryEvaluator : Result
+deactivate ResultProjector
+
+[<-- QueryEvaluator : Result
+deactivate QueryEvaluator
+
+@enduml

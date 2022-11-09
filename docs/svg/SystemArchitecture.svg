@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="1013.5417px" preserveAspectRatio="none" style="width:1142px;height:1013px;background:#FFFFFF;" version="1.1" viewBox="0 0 1142 1013" width="1142.7083px" zoomAndPan="magnify"><defs/><g><!--MD5=[6d8b6b9263c9e98a1256f8b6d4cca82b]
+cluster Source Processor--><g id="cluster_Source Processor"><rect fill="none" height="295.8333" rx="4.1667" ry="4.1667" style="stroke:#3333C4;stroke-width:2.0833333333333335;" width="500" x="17.7083" y="333.3333"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="109.375" x="213.0208" y="357.9183">Source Processor</text></g><!--MD5=[70f1bf3ea8befe50c5858ccea272410e]
+cluster Query Processing System--><g id="cluster_Query Processing System"><rect fill="none" height="295.8333" rx="4.1667" ry="4.1667" style="stroke:#9D0012;stroke-width:2.0833333333333335;" width="529.1667" x="602.0833" y="333.3333"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="163.5417" x="784.8958" y="357.9183">Query Processing System</text></g><!--MD5=[2d39463064599ab2fa4fd07d9fec4384]
+cluster Program Knowledge Base--><g id="cluster_Program Knowledge Base"><path d="M304.1667,705.2083 C304.1667,694.7917 610.4167,694.7917 610.4167,694.7917 C610.4167,694.7917 916.6667,694.7917 916.6667,705.2083 L916.6667,980.2083 C916.6667,990.625 610.4167,990.625 610.4167,990.625 C610.4167,990.625 304.1667,990.625 304.1667,980.2083 L304.1667,705.2083 " fill="none" style="stroke:#A38300;stroke-width:1.0416666666666667;"/><path d="M304.1667,705.2083 C304.1667,715.625 610.4167,715.625 610.4167,715.625 C610.4167,715.625 916.6667,715.625 916.6667,705.2083 " fill="none" style="stroke:#A38300;stroke-width:1.0416666666666667;"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" font-weight="bold" lengthAdjust="spacing" textLength="164.5833" x="528.125" y="740.21">Program Knowledge Base</text></g><text fill="#2196F3" font-family="Verdana" font-size="12.5" lengthAdjust="spacing" textLength="20.8333" x="408.3333" y="301.5422">ISp</text><rect fill="none" height="12.5" style="stroke:#1A78C2;stroke-width:1.5625;" width="12.5" x="412.5" y="327.0833"/><!--MD5=[1f9d7956da66e9c3f40daf39666a1c09]
+entity SP--><g id="elem_SP"><rect fill="none" height="66.805" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="164.5833" x="336.4583" y="415.625"/><rect fill="none" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="480.2083" y="420.8333"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="478.125" y="422.9167"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="478.125" y="427.0833"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="102.0833" x="362.5" y="458.96">Source Processor</text></g><!--MD5=[b9b242c4163c944537862ed673bf2c8e]
+entity SimpleLexer--><g id="elem_SimpleLexer"><rect fill="none" height="66.805" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="135.4167" x="187.5" y="545.8333"/><rect fill="none" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="302.0833" y="551.0417"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="300" y="553.125"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="300" y="557.2917"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="72.9167" x="213.5417" y="589.1683">SimpleLexer</text></g><!--MD5=[44f11108d7e23a4fa34217838c2f000f]
+entity SimpleParser--><g id="elem_SimpleParser"><rect fill="none" height="66.805" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="140.625" x="359.8958" y="545.8333"/><rect fill="none" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="479.6875" y="551.0417"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="477.6042" y="553.125"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="477.6042" y="557.2917"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="78.125" x="385.9375" y="589.1683">SimpleParser</text></g><!--MD5=[f95f8e380d473a4cdf89e70b55a337de]
+entity Extractor--><g id="elem_Extractor"><rect fill="none" height="66.805" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="116.6667" x="34.375" y="545.8333"/><rect fill="none" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="130.2083" y="551.0417"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="128.125" y="553.125"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="128.125" y="557.2917"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="54.1667" x="60.4167" y="589.1683">Extractor</text></g><text fill="#2196F3" font-family="Verdana" font-size="12.5" lengthAdjust="spacing" textLength="28.125" x="705.7292" y="301.5422">IQps</text><rect fill="none" height="12.5" style="stroke:#1A78C2;stroke-width:1.5625;" width="12.5" x="713.5417" y="327.0833"/><!--MD5=[b382c6ac10870e743455a446acd06ac8]
+entity QPS--><g id="elem_QPS"><rect fill="none" height="66.805" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="211.4583" x="856.7708" y="415.625"/><rect fill="none" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="1047.3958" y="420.8333"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="1045.3125" y="422.9167"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="1045.3125" y="427.0833"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="148.9583" x="882.8125" y="458.96">Query Processing System</text></g><!--MD5=[f5db5ee8bda4c8dfe0d4d0f28afc8ab1]
+entity QueryLexer--><g id="elem_QueryLexer"><rect fill="none" height="66.805" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="131.25" x="809.375" y="545.8333"/><rect fill="none" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="919.7917" y="551.0417"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="917.7083" y="553.125"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="917.7083" y="557.2917"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="68.75" x="835.4167" y="589.1683">QueryLexer</text></g><!--MD5=[5b99f768c63c309df35e879202153c60]
+entity QueryParser--><g id="elem_QueryParser"><rect fill="none" height="66.805" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="136.4583" x="977.6042" y="545.8333"/><rect fill="none" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="1093.2292" y="551.0417"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="1091.1458" y="553.125"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="1091.1458" y="557.2917"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="73.9583" x="1003.6458" y="589.1683">QueryParser</text></g><!--MD5=[438f7226dbd19050edad653d29f83f3c]
+entity QueryEvaluator--><g id="elem_QueryEvaluator"><rect fill="none" height="66.805" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="153.125" x="619.2708" y="545.8333"/><rect fill="none" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="751.5625" y="551.0417"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="749.4792" y="553.125"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="749.4792" y="557.2917"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="90.625" x="645.3125" y="589.1683">QueryEvaluator</text></g><text fill="#2196F3" font-family="Verdana" font-size="12.5" lengthAdjust="spacing" textLength="85.4167" x="510.4167" y="663.0005">IPkbPopulator</text><rect fill="none" height="12.5" style="stroke:#1A78C2;stroke-width:1.5625;" width="12.5" x="546.875" y="688.5417"/><text fill="#2196F3" font-family="Verdana" font-size="12.5" lengthAdjust="spacing" textLength="72.9167" x="663.0208" y="663.0005">IPkbQuerier</text><rect fill="none" height="12.5" style="stroke:#1A78C2;stroke-width:1.5625;" width="12.5" x="693.2292" y="688.5417"/><!--MD5=[71bbb68889c51e6018cb8a958c685f14]
+entity PKB--><g id="elem_PKB"><rect fill="none" height="66.805" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="215.625" x="445.3125" y="777.0833"/><rect fill="none" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="640.1042" y="782.2917"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="638.0208" y="784.375"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="638.0208" y="788.5417"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="153.125" x="471.3542" y="820.4183">Program Knowledge Base</text></g><!--MD5=[5758c8dda0046b8e4a3e0a28adfde1a1]
+entity Entity Manager--><g id="elem_Entity Manager"><rect fill="none" height="66.805" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="151.0417" x="321.3542" y="907.2917"/><rect fill="none" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="451.5625" y="912.5"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="449.4792" y="914.5833"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="449.4792" y="918.75"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="88.5417" x="347.3958" y="950.6266">Entity Manager</text></g><!--MD5=[3b09c282d82e7d146a941dc80aa35792]
+entity Relationship Manager--><g id="elem_Relationship Manager"><rect fill="none" height="66.805" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="191.6667" x="509.375" y="907.2917"/><rect fill="none" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="680.2083" y="912.5"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="678.125" y="914.5833"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="678.125" y="918.75"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="129.1667" x="535.4167" y="950.6266">Relationship Manager</text></g><!--MD5=[d422866e2609c21e5d5ec90b1018abb1]
+entity Pattern Manager--><g id="elem_Pattern Manager"><rect fill="none" height="66.805" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="161.4583" x="738.0208" y="907.2917"/><rect fill="none" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="878.6458" y="912.5"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="876.5625" y="914.5833"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="876.5625" y="918.75"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="98.9583" x="764.0625" y="950.6266">Pattern Manager</text></g><!--MD5=[c42ed81cef7fdd2e33758127945b9a5b]
+entity UI--><g id="elem_UI"><rect fill="none" height="66.805" rx="4.1667" ry="4.1667" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="145.8333" x="495.8333" y="17.7083"/><rect fill="none" height="10.4167" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="15.625" x="620.8333" y="22.9167"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="618.75" y="25"/><rect fill="none" height="2.0833" style="stroke:#2196F3;stroke-width:1.0416666666666667;" width="4.1667" x="618.75" y="29.1667"/><text fill="#2196F3" font-family="&quot;Verdana&quot;" font-size="12.5" lengthAdjust="spacing" textLength="83.3333" x="521.875" y="61.0433">User Interface</text></g><!--MD5=[c411e199a755559fbc54c3404e8d2a95]
+link UI to ISp--><g id="link_UI_ISp"><path d="M551.25,84.7708 C517.7917,147.2813 446.1771,281.0625 424.8542,320.8854 " fill="none" id="UI-to-ISp" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="422.4271,325.4271,430.5185,319.1199,424.8804,320.8327,423.1675,315.1946,422.4271,325.4271" style="stroke:#000000;stroke-width:1.1458333333333335;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="75" x="510.4167" y="204.7587">LoadSource</text></g><!--MD5=[e8bf0c537bfbd16616f9a969a661210d]
+link UI to IQps--><g id="link_UI_IQps"><path d="M586.375,84.7708 C620.2083,147.5521 692.8125,282.2292 713.9167,321.3958 " fill="none" id="UI-to-IQps" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="716.3021,325.8229,715.5221,315.5934,713.831,321.2381,708.1863,319.5471,716.3021,325.8229" style="stroke:#000000;stroke-width:1.1458333333333335;"/><text fill="#222222" font-family="&quot;Verdana&quot;" font-size="13.5417" lengthAdjust="spacing" textLength="92.7083" x="669.7917" y="204.7587">EvaluateQuery</text></g><!--MD5=[26a7c9f974406630c10912fe8d2ca874]
+link IPkbPopulator to PKB--><g id="link_IPkbPopulator_PKB"><path d="M553.125,701.0104 C553.125,713.1146 553.125,744.2188 553.125,770.0104 " fill="none" id="IPkbPopulator-to-PKB" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="553.125,775.2083,557.2917,765.8333,553.125,770,548.9583,765.8333,553.125,775.2083" style="stroke:#000000;stroke-width:1.1458333333333335;"/></g><!--MD5=[85c8b29a293ab66fe746b4398a71763b]
+link IPkbQuerier to PKB--><g id="link_IPkbQuerier_PKB"><path d="M693.3125,701.0104 C677.0521,713.5729 634.2917,746.625 600.2396,772.9479 " fill="none" id="IPkbQuerier-to-PKB" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="596.5313,775.8125,606.4975,773.3782,600.6529,772.6283,601.4028,766.7837,596.5313,775.8125" style="stroke:#000000;stroke-width:1.1458333333333335;"/></g><!--MD5=[b365d67b5129073c87de9c9735abb852]
+link PKB to Entity Manager--><g id="link_PKB_Entity Manager"><path d="M513.2917,844.125 C491.4375,862.0417 464.2708,884.3229 441.6771,902.8438 " fill="none" id="PKB-to-Entity Manager" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="437.8542,905.9792,447.7419,903.2435,441.8772,902.6713,442.4494,896.8066,437.8542,905.9792" style="stroke:#000000;stroke-width:1.1458333333333335;"/></g><!--MD5=[5e8622e71ce8e0b340ba513544f3c648]
+link PKB to Relationship Manager--><g id="link_PKB_Relationship Manager"><path d="M566.4063,844.125 C573.4479,861.4375 582.1354,882.8229 589.5104,900.9688 " fill="none" id="PKB-to-Relationship Manager" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="591.3646,905.5208,591.6972,895.267,589.4047,900.6953,583.9764,898.4028,591.3646,905.5208" style="stroke:#000000;stroke-width:1.1458333333333335;"/></g><!--MD5=[0a0c18ed31bce637cf4895b99cca7eba]
+link PKB to Pattern Manager--><g id="link_PKB_Pattern Manager"><path d="M620.8438,844.125 C658.9271,862.4896 706.5104,885.4479 745.4792,904.2396 " fill="none" id="PKB-to-Pattern Manager" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="749.7396,906.2917,743.1174,898.456,745.0518,904.022,739.4858,905.9564,749.7396,906.2917" style="stroke:#000000;stroke-width:1.1458333333333335;"/></g><!--MD5=[1f6714083d7b833238f1a542ec0775ec]
+link ISp to SP--><g id="link_ISp_SP"><path d="M418.75,339.8542 C418.75,352.1771 418.75,383 418.75,408.5938 " fill="none" id="ISp-to-SP" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="418.75,413.7292,422.9167,404.3542,418.75,408.5208,414.5833,404.3542,418.75,413.7292" style="stroke:#000000;stroke-width:1.1458333333333335;"/></g><!--MD5=[05a2541e618700da43a43c0b447ad167]
+link SP to SimpleLexer--><g id="link_SP_SimpleLexer"><path d="M377.0625,482.6667 C354.1875,500.5833 325.75,522.8646 302.1042,541.3854 " fill="none" id="SP-to-SimpleLexer" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="298.0625,544.5521,308.0089,542.0379,302.1584,541.3349,302.8614,535.4845,298.0625,544.5521" style="stroke:#000000;stroke-width:1.1458333333333335;"/></g><!--MD5=[13305b8c38092f7732d8106a0f46e847]
+link SP to SimpleParser--><g id="link_SP_SimpleParser"><path d="M421.6667,482.6667 C423.2083,499.8333 425.1042,521 426.7083,539.0313 " fill="none" id="SP-to-SimpleParser" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="427.1563,543.9479,430.4746,534.2402,426.6941,538.7601,422.1742,534.9796,427.1563,543.9479" style="stroke:#000000;stroke-width:1.1458333333333335;"/></g><!--MD5=[b58d8a988f073bf99932fc1e948d2e93]
+link SP to Extractor--><g id="link_SP_Extractor"><path d="M336.0938,481.125 C287.5208,499.5833 225.0104,523.6458 169.7917,545.8333 C165.8125,547.4375 161.7188,549.0938 157.6042,550.7813 " fill="none" id="SP-to-Extractor" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="153.0104,552.6667,163.2654,552.9611,157.8286,550.6888,160.1009,545.252,153.0104,552.6667" style="stroke:#000000;stroke-width:1.1458333333333335;"/></g><!--MD5=[852dcade85dd6f846a57f8cb9df0da10]
+link SP to IPkbPopulator--><g id="link_SP_IPkbPopulator"><path d="M462.8646,482.4583 C482.75,499.2604 504.8333,521.3854 518.75,545.8333 C544.8646,591.7083 551.1563,656.3125 552.6563,682.2813 " fill="none" id="SP-to-IPkbPopulator" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="552.9063,687.2083,556.5859,677.6317,552.6387,682.0069,548.2636,678.0597,552.9063,687.2083" style="stroke:#000000;stroke-width:1.1458333333333335;"/></g><!--MD5=[0d5140a26ce573339a36d3ec1007d2b4]
+link IQps to QPS--><g id="link_IQps_QPS"><path d="M725.7917,337.1771 C747.8229,347.4896 826.1042,384.1146 886.6875,412.4479 " fill="none" id="IQps-to-QPS" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="891.0625,414.5,884.3304,406.7585,886.3432,412.2967,880.805,414.3094,891.0625,414.5" style="stroke:#000000;stroke-width:1.1458333333333335;"/></g><!--MD5=[ed4991a23f928a365cfe46f2f0f2dc9d]
+link QPS to QueryLexer--><g id="link_QPS_QueryLexer"><path d="M940.1979,482.6667 C928.2604,500.1354 913.5104,521.7396 901.0521,539.9792 " fill="none" id="QPS-to-QueryLexer" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="898.1563,544.2188,906.8796,538.8192,901.0898,539.9152,899.9938,534.1254,898.1563,544.2188" style="stroke:#000000;stroke-width:1.1458333333333335;"/></g><!--MD5=[47024cc42b47f4492c1f13c0c41e7e03]
+link QPS to QueryParser--><g id="link_QPS_QueryParser"><path d="M983.7396,482.6667 C995.1042,500.1354 1009.1563,521.7396 1021.0208,539.9792 " fill="none" id="QPS-to-QueryParser" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="1023.7708,544.1979,1022.1818,534.0625,1020.9439,539.8236,1015.1828,538.5856,1023.7708,544.1979" style="stroke:#000000;stroke-width:1.1458333333333335;"/></g><!--MD5=[c2259e0788ba13c6cf1e2efb24ccde20]
+link QPS to QueryEvaluator--><g id="link_QPS_QueryEvaluator"><path d="M894.5208,482.6667 C856.2813,501.0313 808.5104,523.9896 769.3958,542.7813 " fill="none" id="QPS-to-QueryEvaluator" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="765.1146,544.8438,775.3699,544.5612,769.814,542.5982,771.777,537.0422,765.1146,544.8438" style="stroke:#000000;stroke-width:1.1458333333333335;"/></g><!--MD5=[3d8afdf6dc67d3c2f42a7019d810228a]
+link QueryEvaluator to IPkbQuerier--><g id="link_QueryEvaluator_IPkbQuerier"><path d="M697.0313,612.75 C697.875,635.9479 698.9792,665.7917 699.5729,682 " fill="none" id="QueryEvaluator-to-IPkbQuerier" style="stroke:#000000;stroke-width:1.1458333333333335;"/><polygon fill="#000000" points="699.7604,687.1979,703.5752,677.6743,699.5665,681.9932,695.2477,677.9845,699.7604,687.1979" style="stroke:#000000;stroke-width:1.1458333333333335;"/></g><!--MD5=[bf1cc5e50b1cc536833f9e0431429e85]
+@startuml
+!include Style.puml
+
+[User Interface] as UI
+
+package "Source Processor"<<SP>> {
+    port ISp
+    [Source Processor] as SP
+    [SimpleLexer]
+    [SimpleParser]
+    [Extractor]
+}
+
+package "Query Processing System"<<QPS>> {
+    port IQps
+    [Query Processing System] as QPS
+    [QueryLexer]
+    [QueryParser]
+    [QueryEvaluator]
+}
+
+database "Program Knowledge Base"<<PKB>> {
+  port IPkbPopulator
+  port IPkbQuerier
+  [Program Knowledge Base] as PKB
+  [Entity Manager]
+  [Relationship Manager]
+  [Pattern Manager]
+}
+
+[UI] - -down- -> [ISp] : LoadSource
+[UI] - -down- -> [IQps] : EvaluateQuery
+
+[IPkbPopulator] -down-> [PKB]
+[IPkbQuerier] -down-> [PKB]
+[PKB] -down-> [Entity Manager]
+[PKB] -down-> [Relationship Manager]
+[PKB] -down-> [Pattern Manager]
+
+[ISp] -down-> [SP]
+[SP] -down-> [SimpleLexer]
+[SP] -down-> [SimpleParser]
+[SP] -down-> [Extractor]
+[SP] -down- -> IPkbPopulator
+
+[IQps] -down-> [QPS]
+[QPS] -down-> [QueryLexer]
+[QPS] -down-> [QueryParser]
+[QPS] -down-> [QueryEvaluator]
+[QueryEvaluator] -down-> IPkbQuerier
+
+@enduml
+
+@startuml
+
+
+
+
+skinparam backgroundColor transparent
+skinparam useBetaStyle false
+
+
+
+
+
+
+<style>
+  root {
+    BackgroundColor transparent
+    FontColor #2196F3
+    HyperLinkColor #fd7e14
+    LineColor #1a78c2
+    LineThickness 1
+    Margin 10
+    Padding 6
+    Shadowing 0.0
+  }
+  node {
+   Padding 15
+   roundcorner 20
+   BackgroundColor transparent
+  }
+  caption {
+    LineThickness 0
+  }
+  footer {
+    LineThickness 0
+  }
+  groupHeader {
+    BackgroundColor #fff
+    FontColor #9C27B0
+    FontStyle bold
+  }
+  header {
+    LineThickness 0
+  }
+  referenceHeader {
+    BackgroundColor transparent
+    FontColor #222
+    FontStyle bold
+  }
+  separator {
+    BackgroundColor #222
+    FontColor transparent
+    FontStyle bold
+  }
+  title {
+	FontSize 20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor  transparent
+	FontColor #2196F3
+	BorderColor #fff
+  }
+  nwdiagDiagram {
+	network {
+			FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent    
+		LineColor #2196F3
+		LineThickness 1.0
+		FontColor #1a78c2
+	}
+	server {
+			FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+	}
+	arrow {
+		FontColor #1a78c2
+		LineColor #1a78c2
+	}
+	group {
+		BackGroundColor #fff
+		LineColor $LIGHT_DARK
+		LineThickness 2.0
+		Margin 5
+		Padding 5
+	}
+  }
+  ganttDiagram {
+	task {
+			FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+		LineColor #2196F3
+		Margin 10
+		Padding 6
+	}
+	note {
+		FontColor #9C27B0
+		LineColor #7D1F8D
+		BackGroundColor transparent
+	}
+	separator {
+		LineColor #cccccc
+		BackGroundColor transparent
+		FontColor #cccccc
+	}
+	milestone {
+		FontColor #9C27B0
+		FontSize 16
+		FontStyle italic
+		BackGroundColor #fff
+		LineColor #cccccc
+	}
+	timeline {
+		BackgroundColor #fff
+		FontColor #cccccc
+	}
+	closed {
+		BackgroundColor #CC7A00
+		FontColor #ff9800
+	}
+  }
+</style>
+skinparam defaultFontName       "Verdana"
+skinparam defaultFontSize       12
+skinparam dpi                   100
+skinparam shadowing             true
+skinparam roundcorner           8
+skinparam ParticipantPadding    40
+skinparam BoxPadding            40
+skinparam Padding               10 
+skinparam TitleFontColor	    #222
+skinparam TitleFontSize	    	20
+skinparam TitleBorderThickness 	0
+skinparam ArrowColor            #666
+skinparam stereotype {
+    CBackgroundColor #fff
+    CBorderColor #cccccc
+    ABackgroundColor #70bf73
+    ABorderColor #3D8C40
+    IBackgroundColor #B7161C
+    IBorderColor $DANGER_DARK
+    EBackgroundColor #ffad33
+    EBorderColor #CC7A00
+    NBackgroundColor #b052c0
+    NBorderColor #7D1F8D
+}
+skinparam title {
+	FontColor	                 #2196F3
+	BorderColor	                 #cccccc
+	FontSize	    	         20
+	BorderRoundCorner            8
+	BorderThickness 	         1
+	BackgroundColor              transparent
+}
+
+skinparam legend {
+	BackgroundColor transparent
+	BorderColor #cccccc
+	FontColor #222
+}
+
+skinparam swimlane {
+	BorderColor #9C27B0
+	BorderThickness 2
+	TitleBackgroundColor  #fff-#fff
+	TitleFontColor #2196F3
+}
+
+
+skinparam activity {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+	BarColor #4CAF50
+	StartColor #9C27B0
+	EndColor #9C27B0
+	DiamondBackgroundColor transparent
+  	DiamondBorderColor #cccccc
+	DiamondFontColor #cccccc
+}
+
+
+skinparam participant {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+	ParticipantBorderThickness 2
+}
+
+
+skinparam actor {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam arrow {
+	Thickness 3
+	Color #2196F3
+	FontColor #222
+}
+
+
+skinparam sequence {
+	BorderColor #2196F3
+	TitleFontColor #2196F3
+	BackgroundColor transparent
+	StartColor #2196F3
+	EndColor #2196F3
+	BoxBackgroundColor transparent
+	BoxBorderColor #666
+	BoxFontColor #222
+	DelayFontColor #222
+	LifeLineBorderColor #cccccc
+	LifeLineBorderThickness 2
+	LifeLineBackgroundColor transparent
+	GroupBorderColor #666
+	GroupFontColor #222
+	GroupHeaderFontColor #9C27B0
+	DividerBackgroundColor transparent
+    DividerBorderColor #666
+    DividerBorderThickness 2
+    DividerFontColor #222
+	ReferenceBackgroundColor transparent
+	ReferenceBorderColor #666
+	ReferenceFontColor #222
+	ReferenceHeaderFontColor #9C27B0
+	StereotypeFontColor #2196F3
+}
+
+
+skinparam partition {
+	BorderColor #2196F3
+	FontColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam collections {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam control {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam entity {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam boundary {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam agent {
+	BackgroundColor transparent
+	BorderColor #999999
+	FontColor #333333
+}
+
+
+skinparam note {
+	BorderThickness 1
+	BackgroundColor transparent
+	BorderColor #9C27B0
+	FontColor #9C27B0
+}
+
+
+skinparam artifact {
+	BackgroundColor transparent
+	BorderColor #666
+	FontColor #666
+}
+
+
+skinparam component {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam interface {
+	BackgroundColor  transparent
+	BorderColor  #e51c23
+	FontColor #222
+}
+
+
+skinparam storage {
+	BackgroundColor transparent
+  	BorderColor #ff9800
+	FontColor #ff9800
+}
+
+
+skinparam node {
+	BackgroundColor transparent
+	BorderColor #222
+	FontColor #222
+}
+
+
+skinparam cloud {
+	BackgroundColor #F2FCFE-#eeeeee
+	BorderColor #F2FCFE
+	FontColor #222
+}
+
+
+skinparam database {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam class {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+	FontColor #fff
+	HeaderBackgroundColor #2196F3-#1a78c2
+	StereotypeFontColor #222
+	BorderThickness 1
+	AttributeFontColor #222
+	AttributeFontSize 11
+}
+
+
+skinparam object {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+	StereotypeFontColor #222
+	BorderThickness 1
+	AttributeFontColor #cccccc
+	AttributeFontSize 11
+}
+
+
+skinparam usecase {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+	BorderThickness 2
+	StereotypeFontColor #2196F3
+}
+
+
+skinparam rectangle {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+	BorderThickness 2
+	StereotypeFontColor #2196F3
+}
+
+
+skinparam package {
+	BackgroundColor transparent
+  	BorderColor #2196F3
+	FontColor #2196F3
+	BorderThickness 2
+}
+
+
+skinparam folder {
+	BackgroundColor transparent
+  	BorderColor #ff9800
+	FontColor #ff9800
+	BorderThickness 2
+}
+
+
+skinparam frame {
+	BackgroundColor transparent
+  	BorderColor #9C27B0
+	FontColor #9C27B0
+	BorderThickness 2
+}
+
+
+skinparam state {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+	StartColor #9C27B0
+	EndColor #9C27B0
+	AttributeFontColor #cccccc
+	AttributeFontSize 11
+}
+
+
+skinparam queue {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+skinparam card {
+	BackgroundColor transparent
+	BorderColor #9C27B0
+	FontColor #9C27B0
+}
+
+
+skinparam file {
+	BackgroundColor transparent
+	BorderColor #666
+	FontColor #666
+
+}
+
+
+skinparam stack {
+		FontColor #2196F3
+	BorderColor #2196F3
+	BackgroundColor transparent
+}
+
+
+
+
+
+
+
+skinparam BackgroundColor #FFFFFFF
+
+skinparam Arrow {
+    Color #000000
+    FontSize 13
+    Thickness 1.1
+}
+
+
+
+    skinparam Class {
+        FontColor<<Hidden>> #FFFFFF
+        StereotypeFontColor<<Hidden>> #FFFFFF
+        BorderColor<<Hidden>> #FFFFFF
+    }
+    hide <<Hidden>> stereotype
+    skinparam Class {
+        FontColor<<SP>> #3333C4
+        StereotypeFontColor<<SP>> #3333C4
+        BorderColor<<SP>> #3333C4
+    }
+    hide <<SP>> stereotype
+    skinparam Class {
+        FontColor<<UI>> #1D8900
+        StereotypeFontColor<<UI>> #1D8900
+        BorderColor<<UI>> #1D8900
+    }
+    hide <<UI>> stereotype
+    skinparam Class {
+        FontColor<<QPS>> #9D0012
+        StereotypeFontColor<<QPS>> #9D0012
+        BorderColor<<QPS>> #9D0012
+    }
+    hide <<QPS>> stereotype
+    skinparam Class {
+        FontColor<<PKB>> #A38300
+        StereotypeFontColor<<PKB>> #A38300
+        BorderColor<<PKB>> #A38300
+    }
+    hide <<PKB>> stereotype
+skinparam Class {
+    FontName Arial
+    FontSize 15
+    StereotypeFontSize 13
+    BorderThickness 1.1
+}
+
+    skinparam Package {
+        FontColor<<SP>> #3333C4
+        StereotypeFontColor<<SP>> #3333C4
+        BorderColor<<SP>> #3333C4
+    }
+    hide <<SP>> stereotype
+    skinparam Package {
+        FontColor<<UI>> #1D8900
+        StereotypeFontColor<<UI>> #1D8900
+        BorderColor<<UI>> #1D8900
+    }
+    hide <<UI>> stereotype
+    skinparam Package {
+        FontColor<<QPS>> #9D0012
+        StereotypeFontColor<<QPS>> #9D0012
+        BorderColor<<QPS>> #9D0012
+    }
+    hide <<QPS>> stereotype
+    skinparam Package {
+        FontColor<<PKB>> #A38300
+        StereotypeFontColor<<PKB>> #A38300
+        BorderColor<<PKB>> #A38300
+    }
+    hide <<PKB>> stereotype
+skinparam Package {
+    Style Rectangle
+}
+
+SKINPARAM MINCLASSWIDTH 50
+SKINPARAM SHADOWING FALSE
+SKINPARAM DEFAULTTEXTALIGNMENT CENTER
+SKINPARAM TITLEFONTSIZE 25
+
+SKINPARAM TITLEFONTCOLOR<<SP>> #3333C4
+SKINPARAM TITLEFONTCOLOR<<UI>>    #1D8900
+SKINPARAM TITLEFONTCOLOR<<QPS>> #9D0012
+SKINPARAM TITLEFONTCOLOR<<PKB>> #A38300
+
+
+hide footbox
+hide members
+hide circle
+
+[User Interface] as UI
+
+package "Source Processor"<<SP>> {
+    port ISp
+    [Source Processor] as SP
+    [SimpleLexer]
+    [SimpleParser]
+    [Extractor]
+}
+
+package "Query Processing System"<<QPS>> {
+    port IQps
+    [Query Processing System] as QPS
+    [QueryLexer]
+    [QueryParser]
+    [QueryEvaluator]
+}
+
+database "Program Knowledge Base"<<PKB>> {
+  port IPkbPopulator
+  port IPkbQuerier
+  [Program Knowledge Base] as PKB
+  [Entity Manager]
+  [Relationship Manager]
+  [Pattern Manager]
+}
+
+[UI] - -down- -> [ISp] : LoadSource
+[UI] - -down- -> [IQps] : EvaluateQuery
+
+[IPkbPopulator] -down-> [PKB]
+[IPkbQuerier] -down-> [PKB]
+[PKB] -down-> [Entity Manager]
+[PKB] -down-> [Relationship Manager]
+[PKB] -down-> [Pattern Manager]
+
+[ISp] -down-> [SP]
+[SP] -down-> [SimpleLexer]
+[SP] -down-> [SimpleParser]
+[SP] -down-> [Extractor]
+[SP] -down- -> IPkbPopulator
+
+[IQps] -down-> [QPS]
+[QPS] -down-> [QueryLexer]
+[QPS] -down-> [QueryParser]
+[QPS] -down-> [QueryEvaluator]
+[QueryEvaluator] -down-> IPkbQuerier
+
+@enduml
+
+PlantUML version 1.2022.12(Mon Oct 24 02:12:26 SGT 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: US-ASCII
+Language: en
+Country: SG
+--></g></svg>

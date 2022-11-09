@@ -5,118 +5,86 @@ class SP
 class QPS
 class PKB
 
-abstract class IPKBPopulator {
-	+void populate(Vector<Entity *>)
-    +void populate(Vector<Relationship *>)
-    +void populate(Vector<Pattern *>)
+interface IPKBPopulator {
+	void populate(Entity[])
+    void populate(Relationship[])
+    void populate(Pattern[])
 }
 
-abstract class IPKBQuerier {
-	+EntityPointerUnorderedSet getEntities(EntityType)
-	+EntityPointerUnorderedSet getByRelationship(RsType, Entity *, bool)
-	+EntityPointerUnorderedSet getByPattern(Entity *, String, bool)
-	+EntityPointerUnorderedSet getEntities(String)
+interface IPKBQuerier {
+	Entity[] getEntities(EntityType)
+	Entity[] getByRelationship(RsType, Entity, bool)
+	Entity[] getByPattern(Entity, String, bool)
+	Entity[] getEntities(String)
+	Map<EntityType, int> getSimpleStats()
 }
 
 class PKB {
-    -EntityManager entity_manager_
-    -PatternManager pattern_manager_
-    -RelationshipManager relationship_manager_
-	+void populate(Vector<Entity *>)
-    +void populate(Vector<Relationship *>)
-    +void populate(Vector<Pattern *>)
-	+EntityPointerUnorderedSet getEntities(EntityType)
-	+EntityPointerUnorderedSet getByRelationship(RsType, Entity *, bool)
-	+EntityPointerUnorderedSet getByPattern(Entity *, String, bool)
-	+EntityPointerUnorderedSet getEntities(String)
+	void populate(Entity[])
+    void populate(Relationship[])
+    void populate(Pattern[])
+	EntityPointerUnorderedSet getEntities(EntityType)
+	EntityPointerUnorderedSet getByRelationship(RsType, Entity, bool)
+	EntityPointerUnorderedSet getByPattern(Entity, String, bool)
+	EntityPointerUnorderedSet getEntities(String)
+	Map<EntityType, int> getSimpleStats()
 }
 
 class EntityManager {
-    -unordered_map entity_table_map_ 
-    -void CreateTable(EntityType)
-    +EntityTable* GetTable(EntityType) 
-    +void Populate(Vector<Entity *>)
-    +EntityPointerUnorderedSet Get(EntityType)
-    +EntityPointerUnorderedSet Get(String)
+    EntityTable GetTable(EntityType)
+    void Populate(Vector<Entity *>)
+    Entity[] Get(EntityType)
+    Entity[] Get(String)
+    Map<EntityType, int> Get()
 }
 
 class RelationshipManager {
-    -Cache *cache_
-    -unordered_map relationship_table_map_
-    -void CreateTable(RsType)
-    -void GetAffectsHelper(Stack<Pair<Entity *, EntityPointerUnorderedSet>> *, EntityPointerUnorderedSet *, EntityPointerUnorderedSet *)
-    -void GetAffectsInverseHelper(Stack<Pair<Entity *, EntityPointerUnorderedSet>> *, EntityPointerUnorderedSet *, EntityPointerUnorderedSet *)
-    -bool IsVariableModified(EntityPointerUnorderedSet *, Entity *)
-    -bool IsVariableUsed(EntityPointerUnorderedSet *, Entity*)
-    -bool IsEntityInWhileLoop(Entity *)
-    -Entity* GetProcedureEntity(Entity *, bool)
-    -EntityPointerUnorderedSet GetAffects(Entity *, bool)
-    -EntityPointerUnorderedSet GetCalls(Entity *, bool)
-    -EntityPointerUnorderedSet GetInference(RsType, Entity *, bool)
-    -EntityPointerUnorderedSet GetInferenceFromChildren(RelationshipTable *, Entity *)
-    -EntityPointerUnorderedSet GetInferenceGivenCallStatement(RelationshipTable *, Entity *)
-    -EntityPointerUnorderedSet GetInferenceGivenVariable(RelationshipTable *, Entity *)
-    -EntityPointerUnorderedSet GetSubMatches(RsType, Entity *, bool) 
-    -EntityPointerUnorderedSet Empty()
-    -EntityRsInv GetCacheQuery(Entity *, RsType, bool)
-    +void ClearCache()
-    +RelationshipTable* GetTable(RsType)
-    +void Populate(Vector<Relationship *>) 
-    +EntityPointerUnorderedSet Get(RsType, Entity *, bool)
-    +EntityPointerUnorderedSet GetAll(RsType, Entity *, bool)
+    void CreateTable(RsType)
+    void ClearCache()
+    void Populate(Relationship[])
+    RelationshipTable* GetTable(RsType)
+    Entity[] Get(RsType, Entity, bool)
+    Entity[] GetAll(RsType, Entity, bool)
 }
 
 class PatternManager {
-    -PatternTable *pattern_table_
-    +PatternTable* GetTable()
-    +void Populate(Vector<Pattern *>)
-    +EntityPointerUnorderedSet Get(Entity *, String, bool)
+    PatternTable GetTable()
+    void Populate(Pattern[])
+    Entity[] Get(Entity, String, bool)
 }
 
 class RelationshipTable {
-    #EntityPointerUnorderedMap table_
-    #EntityPointerUnorderedMap inverse_table_
-    -EntityPointerUnorderedSet Empty()
-    +void Populate(Relationship)
-    +EntityPointerUnorderedMap GetTable(bool)
-    +EntityPointerUnorderedSet get(Entity *, bool) 
+    void Populate(Relationship)
+    EntityPointerUnorderedMap GetTable(bool)
+    Entity[] Get(Entity, bool)
 }
 
 class EntityTable {
-    #EntityPointerUnorderedSet table_
-    +void Populate(Entity)
-    +EntityPointerUnorderedSet get()
+    void Populate(Entity)
+    Entity[] Get()
 }
 
 class PatternTable {
-    -PatternEntityUnorderedMap pattern_table_
-    +void Populate(Pattern)
-    +PatternEntityUnorderedMap GetTable()
-    +EntityPointerUnorderedSet Get(Entity *)
+    void Populate(Pattern)
+    PatternEntityUnorderedMap GetTable()
+    Entity[] Get(Entity)
 }
 
 class Cache {
-    -int hits_
-    -int misses_
-    -int capacity_
-    -List<Pair<K, V>> access_list_
-    -unordered_map<K, List<Pair<K,V>>, KHash> map_
-    -void UpdateAccess(K)
-    -void Evict()
-    +void Add(K, V)
-    +Result Get(K)
-    +void Clear()
-    +int Size()
-    +int Hits()
-    +int Misses()
+    void UpdateAccess(K)
+    void Evict()
+    void Add(K, V)
+    Result Get(K)
+    void Clear()
+    int Size()
+    int Hits()
+    int Misses()
 }
 
 struct Result {
-    +V value
-    +bool found
+    V value
+    bool found
 }
-
-abstract class "QueryPattern"
 
 class VariableTable {
 }
@@ -163,14 +131,14 @@ class CallsTable {
 class NextTable {
 } 
 
-IPKBPopulator *-down- PKB
-IPKBQuerier *-down- PKB
+IPKBPopulator <|.down. PKB
+IPKBQuerier <|.down. PKB
 SP -down- IPKBPopulator
 QPS -down- IPKBQuerier
 
-PKB <|.down EntityManager
-PKB <|.down.  PatternManager
-PKB <|.down.. RelationshipManager
+PKB *-down- EntityManager
+PKB *-down- PatternManager
+PKB *-down- RelationshipManager
 
 EntityTable -up-* EntityManager
 
@@ -194,8 +162,8 @@ CallsTable -up-|> RelationshipTable
 NextTable -up-|> RelationshipTable 
 
 PatternTable -up-* PatternManager
-PatternTable -down-|> QueryPattern
 
+RelationshipManager *-down- Cache
 Result -up-* Cache
 
 @enduml

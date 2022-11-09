@@ -1,6 +1,14 @@
 @startuml
 
-abstract class Node
+abstract class Node {
+    NodeType node_type_
+    NodeType GetNodeType()
+    Node[] GetChildren()
+    void VisitAll(Function<Node, void>)
+    void VisitChildren(Function<Node, void>)
+    String ToString()
+}
+
 class SymbolNode
 class LiteralNode
 class CallNode
@@ -13,37 +21,37 @@ class ProcedureNode
 class StmtListNode
 
 'base nodes
-ProgramNode .up.|> Node
-ProcedureNode .up.|> Node
-StmtListNode .up.|> Node
-StatementNode .up.|> Node
-CondExprNode .up.|> Node
-RelFactorNode .up.|> Node
+ProgramNode -up-|> Node
+ProcedureNode -up-|> Node
+StmtListNode -up-|> Node
+StatementNode -up-|> Node
+CondExprNode -up-|> Node
+RelFactorNode -up-|> Node
 
 'atomic nodes
-ReferenceNode ..up.|> RelFactorNode
-SymbolNode .up.|> ReferenceNode
-LiteralNode .up.|> ReferenceNode
+ReferenceNode --up-|> RelFactorNode
+SymbolNode -up-|> ReferenceNode
+LiteralNode -up-|> ReferenceNode
 
 'expression nodes
-ExprNode ..up.|> RelFactorNode
-PlusNode .up.|> ExprNode
-MinusNode .up.|> ExprNode
-TimesNode .up.|> ExprNode
-DivNode .up.|> ExprNode
-ModNode .up.|> ExprNode
+ExprNode --up-|> RelFactorNode
+PlusNode -up-|> ExprNode
+MinusNode -up-|> ExprNode
+TimesNode -up-|> ExprNode
+DivNode -up-|> ExprNode
+ModNode -up-|> ExprNode
 
 'cond expr nodes
-NotExprNode .up.|> CondExprNode
-BinaryCondExprNode .up.|> CondExprNode
-RelExprNode .up.|> CondExprNode
+NotExprNode -up-|> CondExprNode
+BinaryCondExprNode -up-|> CondExprNode
+RelExprNode -up-|> CondExprNode
 
 'statements
-CallNode ..up..|> StatementNode
-AssignNode ..up..|> StatementNode
-ReadNode ..up..|> StatementNode
-PrintNode ..up..|> StatementNode
-IfNode ..up..|> StatementNode
-WhileNode ..up..|> StatementNode
+CallNode -up-|> StatementNode
+AssignNode -up-|> StatementNode
+ReadNode -up-|> StatementNode
+PrintNode -up-|> StatementNode
+IfNode -up-|> StatementNode
+WhileNode -up-|> StatementNode
 
 @enduml

@@ -1,12 +1,12 @@
 @startuml
 
 abstract class Node {
-    -NodeType node_type_
-    +NodeType GetNodeType()
-    +std::vector<Node*> GetChildren()
-    +std::string ToString()
-    +void VisitAll(std::function<void(Node *)>)
-    +void VisitChildren(std::function<void(Node *)>)
+    NodeType node_type_
+    NodeType GetNodeType()
+    Node[] GetChildren()
+    void VisitAll(Function<Node, void>)
+    void VisitChildren(Function<Node, void>)
+    String ToString()
 }
 
 class ProgramNode
@@ -17,11 +17,11 @@ class CondExprNode
 class RelFactorNode
 
 'base nodes
-ProgramNode .up.|> Node
-ProcedureNode .up.|> Node
-StmtListNode .up.|> Node
-StatementNode .up.|> Node
-CondExprNode .up.|> Node
-RelFactorNode .up.|> Node
+ProgramNode -up-|> Node
+ProcedureNode -up-|> Node
+StmtListNode -up-|> Node
+StatementNode -up-|> Node
+CondExprNode -up-|> Node
+RelFactorNode -up-|> Node
 
 @enduml

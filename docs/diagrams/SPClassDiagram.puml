@@ -4,24 +4,24 @@ interface UI
 interface IPKBPopulator
 
 class SP {
-    +void LoadSource()
+    void LoadSource()
 }
 class Lexer {
-    +Token next_token()
-    +Token*[] lex()
+    Token NextToken()
+    Token[] Lex()
 }
 abstract class Token
 
 class Parser {
-    +Node* ParseProgram(Token*[])
-    +void ValidateProgram(Node*)
+    Node ParseProgram(Token[])
+    void ValidateProgram(Node)
 }
 class ProgramGrammarRule {
-    +Node *parseNode(TokenIterator)
+    Node ParseNode(TokenIterator)
 }
 
 abstract class Extractor {
-    +Design*[] ExtractAll(Node*)
+    Design[] ExtractAll(Node)
 }
 class EntityExtractor
 class PatternExtractor
@@ -30,16 +30,16 @@ class RelationshipExtractor
 SP -up-> IPKBPopulator
 SP <-up- UI: LoadSource
 
-SP -down-> Lexer: lex
+SP -down-> Lexer: Lex
 SP -down-> Parser: ParseProgram
 SP -down-> Extractor: ExtractAll
 
 Lexer o-- Token
-Parser -down-> ProgramGrammarRule: parseNode()
+Parser -down-> ProgramGrammarRule: ParseNode
 
-Extractor <|.. EntityExtractor
-Extractor <|.. PatternExtractor
-Extractor <|.. RelationshipExtractor
+Extractor <|-down- EntityExtractor
+Extractor <|-down- PatternExtractor
+Extractor <|-down- RelationshipExtractor
 
 @enduml
 

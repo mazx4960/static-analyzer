@@ -1,97 +1,116 @@
 @startuml
 
-abstract class  "Token" {
-    TokenType type
-    String value
-}
-
-
-class Query {
-    SynonymReference[] getSynonymDeclarations()
-    QueryCall getQueryCall()
-    QueryClause[] getClauses()
-    String toString()
-}
-
-abstract class "EvaluationStrategy" {
-    EvaluationStrategy getStrategy()
-    SubqueryResult evaluate()
-    Entity[] getCandidates()
-    Entity[] intersect()
-}
-
-interface UIInterface {
-    void SetQueryString(String)
-    Result ExecuteQuery()
-}
-
-interface PKBInterface {
+interface IPKBQuerier {
     Entity[] getEntities(EntityType)
     Entity[] getByRelationship(RsType, Entity)
     Entity[] getEntitiesByString(String)
 }
 
 class QPS {
-    void SetPKB()
-	Result *EvaluateQuery()
+    void SetPKB(IPKBQuerier)
+	Result EvaluateQuery()
 }
 
-class QueryParser {
-	Query parse(Token[])
-}
-
-class QueryBuilder {
-	Query build()
+abstract class  "Token" {
+    TokenType type
+    String value
 }
 
 class Lexer {
-	Token getNext()
-    Token[] lex()
+	Token GetNext()
+    Token[] Lex()
 }
 
 class QueryLexer {
-	Token getNext()
+}
+
+class QueryParser {
+	Query Parse()
+}
+
+class QueryBuilder {
+	Query Build()
+	void AddDeclaration(DeclarationBlueprint declaration);
+    void SetSelect(SelectBlueprint select);
+    void AddClauses(ClauseBlueprint[] clauses);
 }
 
 class QueryEvaluator {
-	Result evaluate()
+    void InitContext()
+	Result Evaluate()
 }
 
-class SubqueryEvaluator {
-	SubqueryResult evaluate()
+class Context {
+    EntitySet Get(QuerySynonym)
+    void Set(QuerySynonym, EntitySet)
 }
 
-class SubqueryResult {
-	SubqueryResult Join()
+class Database {
+    Table[] Empty(QuerySynonym[])
+    void AddTable(Table)
+    void MergeTables()
+    bool IsEmpty()
+    bool HasResults()
+    Table GetTable(QuerySynonym[])
 }
+
+class Table {
+	Table Join()
+}
+
+abstract class "EvaluationStrategy" {
+    Table evaluate(Context)
+}
+class SuchThatStrategy
+class PatternStrategy
+class WithStrategy
 
 class ResultProjector {
-    SubqueryResult Project()
+    Result Project()
 }
 
-UI -down- UIInterface
-PKB -down- PKBInterface
+class QueryOptimiser {
+    Query Optimise(Query, Context, IPKBQuerier)
+}
 
-QPS *-up- UIInterface
-QPS *-up- PKBInterface
-QPS *-down- QueryLexer
-QPS *-down- QueryParser
+class Result {
+    Result Empty()
+    Result True()
+    Result False()
+    Set<String> GetResults()
+    String ToString()
+}
+
+PKB -down- IPKBQuerier
+
+QPS *-up- IPKBQuerier
+QPS *-left- QueryParser
+QPS *-left- QueryLexer
 QPS *-down- QueryEvaluator
 
-QueryParser *-down- QueryBuilder
-QueryParser *-down- Query
 
 Lexer <|-down- QueryLexer
-
 QueryLexer *-down- Token
+QueryParser *-down- QueryBuilder
+QueryParser *-down- Blueprint
 
-QueryBuilder o-right- Query
+QueryEvaluator *-left- Context
+QueryEvaluator *-right- Database
+QueryEvaluator *-down- QueryOptimiser
+QueryEvaluator *-down- EvaluationStrategy
 
-QueryEvaluator *-down- SubqueryEvaluator
-QueryEvaluator *-down- SubqueryResult
+
+QueryBuilder o-down- Query
+QueryBuilder o-left- Blueprint
+
 QueryEvaluator *-down- ResultProjector
 
-SubqueryEvaluator <|-down- EvaluationStrategy
-SubqueryEvaluator -right- SubqueryResult
-SubqueryResult -right- ResultProjector
+Database o-down- Table
+
+ResultProjector o-down- Result
+
+SuchThatStrategy -up-|> EvaluationStrategy
+PatternStrategy -up-|> EvaluationStrategy
+WithStrategy -up-|> EvaluationStrategy
+
 @enduml

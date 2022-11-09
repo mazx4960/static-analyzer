@@ -7,7 +7,7 @@ participant ":SP" as SP<<SP>>
 participant ":SimpleLexer" as SimpleLexer<<SP>>
 participant ":SimpleParser" as SimpleParser<<SP>>
 participant ":Extractor" as Extractor<<SP>>
-participant "CFGBuilder" as CFGBuilder<<SP>>
+participant ":CFGBuilder" as CFGBuilder<<SP>>
 end box
 
 box PKB PKB_COLOR_LIGHT

@@ -1,0 +1,103 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class SP
+class QPS
+class PKB
+
+interface IPKBPopulator {
+	void populate(Entity[])
+    void populate(Relationship[])
+    void populate(Pattern[])
+}
+
+interface IPKBQuerier {
+	Entity[] getEntities(EntityType)
+	Entity[] getByRelationship(RsType, Entity, bool)
+	Entity[] getByPattern(Entity, String, bool)
+	Entity[] getEntities(String)
+	Map<EntityType, int> getSimpleStats()
+}
+
+class PKB {
+	void populate(Entity[])
+    void populate(Relationship[])
+    void populate(Pattern[])
+	EntityPointerUnorderedSet getEntities(EntityType)
+	EntityPointerUnorderedSet getByRelationship(RsType, Entity, bool)
+	EntityPointerUnorderedSet getByPattern(Entity, String, bool)
+	EntityPointerUnorderedSet getEntities(String)
+	Map<EntityType, int> getSimpleStats()
+}
+
+class EntityManager {
+    EntityTable GetTable(EntityType)
+    void Populate(Vector<Entity *>)
+    Entity[] Get(EntityType)
+    Entity[] Get(String)
+    Map<EntityType, int> Get()
+}
+
+class RelationshipManager {
+    void CreateTable(RsType)
+    void ClearCache()
+    void Populate(Relationship[])
+    RelationshipTable* GetTable(RsType)
+    Entity[] Get(RsType, Entity, bool)
+    Entity[] GetAll(RsType, Entity, bool)
+}
+
+class PatternManager {
+    PatternTable GetTable()
+    void Populate(Pattern[])
+    Entity[] Get(Entity, String, bool)
+}
+
+class RelationshipTable {
+    void Populate(Relationship)
+    EntityPointerUnorderedMap GetTable(bool)
+    Entity[] Get(Entity, bool)
+}
+
+class EntityTable {
+    void Populate(Entity)
+    Entity[] Get()
+}
+
+class PatternTable {
+    void Populate(Pattern)
+    PatternEntityUnorderedMap GetTable()
+    Entity[] Get(Entity)
+}
+
+class Cache {
+    void UpdateAccess(K)
+    void Evict()
+    void Add(K, V)
+    Result Get(K)
+    void Clear()
+    int Size()
+    int Hits()
+    int Misses()
+}
+
+
+IPKBPopulator <|.down. PKB
+IPKBQuerier <|.down. PKB
+SP -down- IPKBPopulator
+QPS -down- IPKBQuerier
+
+PKB *-down- EntityManager
+PKB *-down- PatternManager
+PKB *-down- RelationshipManager
+
+EntityTable -up-* EntityManager
+
+
+RelationshipTable -up-* RelationshipManager
+
+PatternTable -up-* PatternManager
+
+RelationshipManager *-down- Cache
+
+@enduml

@@ -1,0 +1,112 @@
+@startuml
+
+interface IPKBQuerier {
+    Entity[] getEntities(EntityType)
+    Entity[] getByRelationship(RsType, Entity)
+    Entity[] getEntitiesByString(String)
+}
+
+class QPS {
+    void SetPKB(IPKBQuerier)
+	Result EvaluateQuery()
+}
+
+abstract class  "Token" {
+    TokenType type
+    String value
+}
+
+class Lexer {
+	Token GetNext()
+    Token[] Lex()
+}
+
+class QueryLexer {
+}
+
+class QueryParser {
+	Query Parse()
+}
+
+class QueryBuilder {
+	Query Build()
+	void AddDeclaration(DeclarationBlueprint declaration);
+    void SetSelect(SelectBlueprint select);
+    void AddClauses(ClauseBlueprint[] clauses);
+}
+
+class QueryEvaluator {
+    void InitContext()
+	Result Evaluate()
+}
+
+class Context {
+    EntitySet Get(QuerySynonym)
+    void Set(QuerySynonym, EntitySet)
+}
+
+class Database {
+    Table[] Empty(QuerySynonym[])
+    void AddTable(Table)
+    void MergeTables()
+    bool IsEmpty()
+    bool HasResults()
+    Table GetTable(QuerySynonym[])
+}
+
+class Table {
+	Table Join()
+}
+
+abstract class "EvaluationStrategy" {
+    Table evaluate(Context)
+}
+class SuchThatStrategy
+class PatternStrategy
+class WithStrategy
+
+class ResultProjector {
+    Result Project()
+}
+
+class QueryOptimiser {
+    Query Optimise(Query, Context, IPKBQuerier)
+}
+
+class Result {
+    Result Empty()
+    Result True()
+    Result False()
+    Set<String> GetResults()
+    String ToString()
+}
+
+PKB -down- IPKBQuerier
+
+QPS *-up- IPKBQuerier
+QPS *-left- QueryParser
+QPS *-left- QueryLexer
+QPS *-down- QueryEvaluator
+
+
+Lexer <|-down- QueryLexer
+QueryLexer *-down- Token
+QueryParser *-down- QueryBuilder
+
+QueryEvaluator *-left- Context
+QueryEvaluator *-right- Database
+QueryEvaluator *-down- QueryOptimiser
+QueryEvaluator *-down- EvaluationStrategy
+QueryBuilder o-down- Query
+
+QueryEvaluator *-down- ResultProjector
+
+Database o-down- Table
+
+ResultProjector o-down- Result
+
+SuchThatStrategy -up-|> EvaluationStrategy
+PatternStrategy -up-|> EvaluationStrategy
+WithStrategy -up-|> EvaluationStrategy
+
+@enduml

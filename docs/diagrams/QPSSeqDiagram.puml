@@ -8,10 +8,6 @@ participant ":QueryLexer" as QueryLexer<<QPS>>
 participant ":QueryParser" as QueryParser<<QPS>>
 participant ":QueryBuilder" as QueryBuilder<<QPS>>
 participant ":QueryEvaluator" as QueryEvaluator<<QPS>>
-participant ":SubqueryEvaluator" as SubqueryEvaluator<<QPS>>
-participant ":ResultProjector" as ResultProjector<<QPS>>
-participant ":SubqueryResult" as SubqueryResult<<QPS>>
-
 end box
 
 box PKB PKB_COLOR_LIGHT
@@ -21,55 +17,23 @@ end box
 [-> QPS : ExecuteQuery()
 activate QPS
 
-QPS -> QueryLexer : lex()
+QPS -> QueryLexer : Lex()
 activate QueryLexer
-QueryLexer -> QueryLexer : next_token()
+QueryLexer -> QueryLexer : NextToken()
 QueryLexer --> QPS : tokens
 deactivate QueryLexer
 
-QPS -> QueryParser : parse(Token[])
+QPS -> QueryParser : Parse(Token[])
 activate QueryParser
-QueryParser -> QueryBuilder : build()
+QueryParser -> QueryBuilder : Build()
 activate QueryBuilder
 QueryBuilder --> QueryParser : Query
 deactivate QueryBuilder
 QueryParser --> QPS : Query
 deactivate QueryParser
 
-
-
-
-
-QPS -> QueryEvaluator : evaluate(Query)
+QPS -> QueryEvaluator : Evaluate(Query)
 activate QueryEvaluator
-loop clause : subquery_clauses
-    QueryEvaluator --> SubqueryEvaluator : evaluate(QueryClause)
-    activate SubqueryEvaluator
-    SubqueryEvaluator --> PKB : getEntities(EntityType)
-    activate PKB
-    PKB --> SubqueryEvaluator : Entity[]
-    deactivate PKB
-    SubqueryEvaluator --> PKB : getByRelationship(RsType, Entity)
-    activate PKB
-    PKB --> SubqueryEvaluator : Entity[]
-    deactivate PKB
-    SubqueryEvaluator --> PKB : getByPattern(Pattern)
-    activate PKB
-    PKB --> SubqueryEvaluator : Entity[]
-    deactivate PKB
-    SubqueryEvaluator --> QueryEvaluator : SubqueryResult
-    deactivate SubqueryEvaluator
-end
-QueryEvaluator --> ResultProjector : project()
-activate ResultProjector
-loop each subquery_result
-    ResultProjector --> SubqueryResult : join(SubqueryResult)
-    activate SubqueryResult
-    SubqueryResult --> ResultProjector : SubqueryResult
-    deactivate SubqueryResult
-end
-ResultProjector --> QueryEvaluator : SubqueryResult
-deactivate ResultProjector
 QueryEvaluator --> QPS : Result
 deactivate QueryEvaluator
 

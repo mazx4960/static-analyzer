@@ -2,149 +2,91 @@
 
 class Query {
     SynonymReference[] getSynonymDeclarations()
-    QueryCall getQueryCall()
+    SelectCall getQueryCall()
     QueryClause[] getClauses()
     String toString()
 }
 
+interface ICheckSemantics {
+  bool isSemanticallyCorrect();
+}
+
+interface IWeight {
+    void setWeight(double)
+    double GetWeight()
+}
+
+class QuerySynonym {
+    String GetName()
+    String GetEntityType()
+}
+
+abstract SelectCall {
+    SelectType GetSelectType()
+    String ToString()
+}
+class ElemSelect {
+    ElemReference[] GetReferences()
+}
+class BooleanSelect
+
 abstract QueryReference{
     ReferenceType getRefType()
-    EntityPointerUnorderedSet getContext()
-    void setContext(EntityPointerUnorderedSet)
-    String getReferenceValue()
-    String toString()
 }
-
-class WildcardReference {
-}
-
-class IdentReference {
-}
-
-class IntegerReference {
-}
-
+class WildcardReference
+class IdentReference
+class IntegerReference
 abstract ElemReference {
-    virtual ReferenceType getRefType()
     virtual QuerySynonym getSynonym()
 }
-
+class SynonymReference
 class AttrReference  {
-    SynonymReference synonym_reference_;
-    AttributeType attribute_type_;
-    SynonymReference getSynonymReference()
     AttributeType getAttribute()
 }
 
-abstract SynonymReference {
-    QuerySynonym query_synonym_
-}
-
-class QuerySynonym{
-    String synonym_
-    String toString()
-}
-abstract QueryCall {
-    CallType type_
-    ElemReference[] elem_references_
-    ElemReference[] getReferences()
-    CallType getCallType()
-    String toString()
-}
-
-class SelectCall {
-}
-
 abstract class QueryClause {
-    ClauseType clause_type_
     ClauseType getClauseType()
 }
-
 abstract class SuchThatClause {
-    RsType type_;
-    QueryReference first_;
-    QueryReference second_;
     RsType getSuchThatType()
     QueryReference getFirst()
     QueryReference getSecond()
 }
-
 class WithClause {
-    Comparator comparator_
-    QueryReference first_
-    QueryReference second_
     Comparator getComparator()
     QueryReference getFirst()
     QueryReference getSecond()
 }
-
-class Comparator {
-    String toString()
-}
-
+class Comparator
 class PatternClause  {
-    SynonymReference synonym_declaration_
-    QueryReference ent_ref_
-    ExpressionSpec expression_
-    SynonymReference getSynonymDeclaration()
+    SynonymReference getStmtRef()
     QueryReference getEntRef()
-    ExpressionSpec getExpression()
-}
-
-
-abstract class PatternClause {
-    QueryDeclaration getFirst()
-    QueryDeclaration getSecond()
-    QueryDeclaration getThird()
+    ExpressionSpec getFirstExpression()
+    ExpressionSpec getSecondExpression()
 }
 
 abstract ExpressionSpec {
-    String expr_
     bool isWild()
     String toString()
 }
 
-class ExactExpression {
-}
-
-class WildExpression {
-}
-
-interface ICheckSyntax {
-    bool isSyntacticallyCorrect()
-}
-
-interface ICheckSemantics {
-    bool isSemanticallyCorrect()
-}
-
-Query *-down- SynonymReference
-Query *-down- QueryCall
+Query *-left- SelectCall
 Query *-down- QueryClause
 
-QueryCall o-down- ElemReference
-QueryCall <|-down- SelectCall
+SelectCall <|-down- ElemSelect
+SelectCall <|-down- BooleanSelect
 
-ICheckSyntax <|.down QueryReference
-
+IWeight <|.down. QueryReference
 QueryReference <|-down- IdentReference
 QueryReference <|-down- IntegerReference
-QueryReference <|-down- SynonymReference
-QueryReference <|-down- AttrReference
 QueryReference <|-down- WildcardReference
+QueryReference <|-right- ElemReference
 
 ElemReference <|-down- SynonymReference
 ElemReference <|-down- AttrReference
+ElemReference o-right- QuerySynonym
 
-ExpressionSpec <|-down- ExactExpression
-ExpressionSpec <|-down- WildExpression
-
-SynonymReference o-right- QuerySynonym
-
-AttrReference o-right- SynonymReference
-AttrReference *-down- AttributeType
-
-ICheckSemantics <|.down QueryClause
+ICheckSemantics <|.left. QueryClause
 
 QueryClause <|-down- SuchThatClause
 QueryClause <|-down- PatternClause
@@ -153,8 +95,7 @@ QueryClause <|-down- WithClause
 SuchThatClause o-down- QueryReference
 
 PatternClause o-down- QueryReference
-PatternClause o-down- SynonymReference
-PatternClause *-down- ExpressionSpec
+PatternClause *-left- ExpressionSpec
 
 WithClause o-down- QueryReference
 WithClause *-down- Comparator

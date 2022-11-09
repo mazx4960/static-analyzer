@@ -50,6 +50,13 @@ EntityManager --> PKB: Entity[]
 deactivate EntityManager
 PKB --> QPS: Entity[]
 
+QPS -> PKB: getSimpleStats()
+PKB -> EntityManager: get()
+activate EntityManager
+EntityManager --> PKB: std::unordered_map<EntityType, int>
+deactivate EntityManager
+PKB --> QPS: std::unordered_map<EntityType, int>
+
 QPS -> PKB: getByRelationship(RsType, Entity, bool)
 PKB -> RelationshipManager: get(RsType, Entity, bool)
 activate RelationshipManager
