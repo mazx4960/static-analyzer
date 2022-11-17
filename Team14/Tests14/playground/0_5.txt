@@ -1,0 +1,2 @@
+stmt s1, s2, s3, s4, s5; variable v;
+Select s1 such that Parent*(s1, s2) and Follows(s3, s4) and Modifies(s5, v)

@@ -99,6 +99,9 @@ Table *Table::GetColumns(const std::vector<QuerySynonym *> &synonyms) {
       new_synonyms.push_back(synonym);
     }
   }
+  if (new_synonyms.empty()) {
+    return FullNoSynonym();
+  }
   std::vector<ResultRow> new_rows{};
   for (auto row : table_rows_) {
     ResultRow new_row{};
